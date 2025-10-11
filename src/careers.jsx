@@ -84,171 +84,6 @@ function loadActiveJobs() {
   }
 }
 
-function JobsFeed({ initialQuery = "" }) {
-  const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [q, setQ] = useState(initialQuery);
-  const [loc, setLoc] = useState(0);
-  const [type, setType] = useState(0);
-  const [sort, setSort] = useState(1); // Newest
-  const [page, setPage] = useState(1);
-  const pageSize = 8;
-
-  useEffect(() => {
-    try {
-      setLoading(true);
-      const activeJobs = loadActiveJobs();
-      setJobs(activeJobs);
-      setError("");
-    } catch (e) {
-      console.error("Error loading jobs:", e);
-      setError("Could not load jobs.");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  // React to initialQuery changes
-  useEffect(() => {
-    setQ(initialQuery || "");
-    setPage(1);
-  }, [initialQuery]);
-
-  // derived
-  const filtered = jobs
-    .filter((j) => (loc ? j.jobLocation === LOCATION_KEY[loc] : true))
-    .filter((j) => (type ? j.workType === WORK_TYPE[type] : true))
-    .filter((j) => (q ? (j.jobTitle?.toLowerCase().includes(q.toLowerCase()) || j.employerName?.toLowerCase().includes(q.toLowerCase())) : true));
-
-  const sorted = [...filtered].sort((a, b) => {
-    if (sort === 3) return (b.maximumAmount || 0) - (a.maximumAmount || 0); // SalaryHighLow
-    if (sort === 4) return (a.minimumAmount || 0) - (b.minimumAmount || 0); // SalaryLowHigh
-    if (sort === 2) {
-      // EndsSoon asc - handle Date objects
-      const aTime = a.endDate instanceof Date ? a.endDate.getTime() : parseDateDMY(a.endDate).getTime();
-      const bTime = b.endDate instanceof Date ? b.endDate.getTime() : parseDateDMY(b.endDate).getTime();
-      return aTime - bTime;
-    }
-    // Newest default — approval/start date desc
-    const aDate = a.approvalDate instanceof Date ? a.approvalDate : (a.startDate instanceof Date ? a.startDate : parseDateDMY(a.approvalDate || a.startDate));
-    const bDate = b.approvalDate instanceof Date ? b.approvalDate : (b.startDate instanceof Date ? b.startDate : parseDateDMY(b.approvalDate || b.startDate));
-    return bDate.getTime() - aDate.getTime();
-  });
-
-  const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
-  const view = sorted.slice((page - 1) * pageSize, page * pageSize);
-
-  useEffect(() => {
-    // Animate list on data changes
-    if (loading || error) return;
-    const cards = document.querySelectorAll('#jobs .job-card');
-    if (!cards.length) return;
-    gsap.fromTo(cards, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: "power3.out" });
-  }, [loading, error, page, sort, q, loc, type]);
-
-  return (
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div className="flex items-end justify-between gap-4 mb-6">
-        <div>
-          <h3 className="text-2xl md:text-3xl font-semibold tracking-tight">Active Job Postings</h3>
-          <p className="text-neutral-400 text-sm">{jobs.length} active jobs with future end dates</p>
-        </div>
-        <a href="https://my.egov.ky/web/myworc/find-a-job#/" target="_blank" rel="noreferrer" className="text-cyan-300 text-sm hover:underline">Open WORC portal ↗</a>
-      </div>
-
-      {/* Controls */}
-      <div className="grid md:grid-cols-4 gap-3 mb-6">
-        <div className="md:col-span-2 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
-          <Input value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} placeholder="Search by title or employer…" className="pl-10 bg-white/5 border-white/10" />
-        </div>
-        <select value={loc} onChange={(e) => { setLoc(Number(e.target.value)); setPage(1); }} className="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
-          {Object.entries(LOCATION_KEY).map(([k, v]) => (
-            <option key={k} value={k}>{v}</option>
-          ))}
-        </select>
-        <div className="flex gap-3">
-          <select value={type} onChange={(e) => { setType(Number(e.target.value)); setPage(1); }} className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
-            {Object.entries(WORK_TYPE).map(([k, v]) => (
-              <option key={k} value={k}>{v}</option>
-            ))}
-          </select>
-          <select value={sort} onChange={(e) => setSort(Number(e.target.value))} className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
-            {Object.entries(SORT_KEY).map(([k, v]) => (
-              <option key={k} value={k}>{v}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* Results */}
-      {loading && (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-40 rounded-2xl bg-white/5 border border-white/10 animate-pulse" />
-          ))}
-        </div>
-      )}
-
-      {!loading && error && (
-        <div className="rounded-xl border border-white/10 bg-red-500/10 text-red-200 p-4 text-sm">{error}</div>
-      )}
-
-      {!loading && !error && (
-        <>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {view.map((j, idx) => (
-              <Card key={`${j.jobPostId || idx}`} className="job-card group bg-white/5 border-white/10 hover:border-white/20 transition h-full">
-                <CardContent className="p-5 h-full flex flex-col">
-                  <div className="text-xs uppercase tracking-wide text-emerald-300 mb-2">{j.workType || "Role"}</div>
-                  
-                  <div className="font-medium leading-tight group-hover:text-white mb-2 line-clamp-2 min-h-[2.5rem] flex items-start">
-                    {j.jobTitle || "Untitled role"}
-                  </div>
-                  
-                  <div className="text-sm text-neutral-400 mb-2 line-clamp-1">{j.employerName}</div>
-                  
-                  <div className="text-xs text-neutral-400 mb-3">{j.jobLocation || "Location"} · {j.hoursPerWeek ? `${j.hoursPerWeek} hrs/wk` : ""}</div>
-                  
-                  <div className="text-sm text-neutral-200 mb-4 line-clamp-2">{fmtSalary(j)}</div>
-                  
-                  <div className="flex flex-wrap gap-1 mb-4">
-                    <Badge className="bg-neutral-800 border-white/10 text-neutral-300 text-xs px-2 py-1 whitespace-nowrap max-w-full truncate" title={j.educationLevel}>
-                      {truncateText(j.educationLevel, 18)}
-                    </Badge>
-                    <Badge className="bg-neutral-800 border-white/10 text-neutral-300 text-xs px-2 py-1 whitespace-nowrap max-w-full truncate" title={j.yearsOfExperience}>
-                      {truncateText(j.yearsOfExperience, 18)}
-                    </Badge>
-                  </div>
-                  
-                  <div className="text-xs text-neutral-500 mb-3">WORC ID: {j.jobPostIdString || j.jobPostId}</div>
-                  
-                  <div className="mt-auto">
-                    <a href="https://my.egov.ky/web/myworc/find-a-job#/" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-white/10 text-white border border-white/20 hover:bg-white/15 w-full gap-2 h-10 px-4 py-2">
-                      Apply on WORC
-                    </a>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          {/* Pagination */}
-          <div className="flex items-center justify-between mt-6 text-sm text-neutral-300">
-            <div>Showing {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, sorted.length)} of {sorted.length}</div>
-            <div className="flex gap-2">
-              <Button variant="secondary" disabled={page === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>Prev</Button>
-              <Button variant="secondary" disabled={page === totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>Next</Button>
-            </div>
-          </div>
-        </>
-      )}
-
-      <DevTests />
-    </div>
-  );
-}
 
 // ————————————————————————————————————————————————————————————————
 // Page content data
@@ -288,10 +123,21 @@ export default function CareersKYLanding({ onNavigate }) {
   const [onboardingOpen, setOnboardingOpen] = useState(false);
   const [prefillQuery, setPrefillQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [jobs, setJobs] = useState([]);
 
   const addRevealEl = (el) => {
     if (el && !revealEls.current.includes(el)) revealEls.current.push(el);
   };
+
+  // Load jobs for stats display
+  useEffect(() => {
+    try {
+      const activeJobs = loadActiveJobs();
+      setJobs(activeJobs);
+    } catch (e) {
+      console.error("Error loading jobs:", e);
+    }
+  }, []);
 
   useHeroIntro(hero);
   useFadeInOnScroll(revealEls);
@@ -340,7 +186,7 @@ export default function CareersKYLanding({ onNavigate }) {
           <nav className="hidden md:flex items-center gap-6 text-sm text-neutral-300">
             <a href="#map" className="hover:text-white transition">Career Mapper</a>
             <button onClick={() => onNavigate?.('career-tracks')} className="hover:text-white transition">Career Tracks</button>
-            <a href="#jobs" className="hover:text-white transition">Live Search</a>
+            <button onClick={() => onNavigate?.('live-search')} className="hover:text-white transition">Live Search</button>
             <a href="#faq" className="hover:text-white transition">FAQ</a>
           </nav>
 
@@ -365,7 +211,7 @@ export default function CareersKYLanding({ onNavigate }) {
               >
                 Career Mapper
               </a>
-              <button 
+              <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   onNavigate?.('career-tracks');
@@ -374,13 +220,15 @@ export default function CareersKYLanding({ onNavigate }) {
               >
                 Career Tracks
               </button>
-              <a 
-                href="#jobs" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white"
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onNavigate?.('live-search');
+                }}
+                className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white text-left"
               >
                 Live Search
-              </a>
+              </button>
               <a 
                 href="#faq" 
                 onClick={() => setMobileMenuOpen(false)}
@@ -395,59 +243,124 @@ export default function CareersKYLanding({ onNavigate }) {
 
       {/* Hero */}
       <section ref={hero} className="relative overflow-hidden">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 pb-20">
-          <div className="grid lg:grid-cols-12 gap-10 items-center">
-            <div className="lg:col-span-7 space-y-8">
-              <Badge className="w-fit bg-cyan-500/10 text-cyan-300 border-cyan-300/30">Cayman lifestyle × career fit</Badge>
-              <h1 className="text-4xl/tight sm:text-5xl/tight md:text-6xl/tight font-semibold tracking-tight">Map your <span className="text-cyan-300">lifestyle goals</span> to real <span className="text-white">career paths</span> in Cayman.</h1>
-              <p className="text-neutral-300 max-w-2xl">A sleek, modern way to discover roles aligned to how you want to live — beach‑time balance, financial upside, or impact.</p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
-                    <Input placeholder="Search roles, skills, or companies…" className="pl-10 bg-white/5 border-white/10" />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-12 md:pt-16 pb-16 md:pb-20">
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+            <div className="lg:col-span-7 space-y-6 md:space-y-8">
+              <Badge className="w-fit bg-cyan-500/10 text-cyan-300 border-cyan-300/30">Live Job Market Data</Badge>
+              <h1 className="text-4xl/tight sm:text-5xl/tight md:text-6xl/tight font-semibold tracking-tight">
+                <span className="text-cyan-300">Real-time insights</span> into Cayman's <span className="text-white">job market</span>.
+              </h1>
+              <p className="text-neutral-300 text-base md:text-lg max-w-2xl">
+                Access live job postings, salary data, industry trends, and career planning tools.
+                Built with real WORC data to help Caymanians make informed career decisions.
+              </p>
+
+              {/* Key Features */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10">
+                  <div className="h-8 w-8 rounded-lg bg-cyan-400/15 grid place-items-center flex-shrink-0">
+                    <Sparkles className="w-4 h-4 text-cyan-300" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-sm mb-1">Career Mapper</div>
+                    <div className="text-xs text-neutral-400">Match your lifestyle to careers</div>
                   </div>
                 </div>
-                <Button className="gap-2" onClick={() => setOnboardingOpen(true)}>Build my plan <ChevronRight className="w-4 h-4" /></Button>
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10">
+                  <div className="h-8 w-8 rounded-lg bg-emerald-400/15 grid place-items-center flex-shrink-0">
+                    <Compass className="w-4 h-4 text-emerald-300" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-sm mb-1">Career Tracks</div>
+                    <div className="text-xs text-neutral-400">Explore by industry & salary</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10">
+                  <div className="h-8 w-8 rounded-lg bg-purple-400/15 grid place-items-center flex-shrink-0">
+                    <Search className="w-4 h-4 text-purple-300" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-sm mb-1">Live Search</div>
+                    <div className="text-xs text-neutral-400">Browse active job postings</div>
+                  </div>
+                </div>
               </div>
+
+              {/* CTAs */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button size="lg" className="gap-2 h-12 text-base" onClick={() => setOnboardingOpen(true)}>
+                  <Sparkles className="w-4 h-4" />
+                  Start Career Mapper
+                </Button>
+                <Button size="lg" variant="secondary" className="gap-2 h-12 text-base" onClick={() => onNavigate?.('live-search')}>
+                  <Search className="w-4 h-4" />
+                  Browse Jobs
+                </Button>
+              </div>
+
               <div className="flex flex-wrap gap-2">
                 {featuredBadges.map((b, i) => (
-                  <Badge key={i} variant="secondary" className="bg-white/5 border-white/10 text-neutral-200">{b}</Badge>
+                  <Badge key={i} variant="secondary" className="bg-white/5 border-white/10 text-neutral-200 text-xs">{b}</Badge>
                 ))}
               </div>
             </div>
             <div className="lg:col-span-5">
               <div className="rounded-3xl p-1.5 bg-gradient-to-b from-cyan-300/30 via-cyan-300/5 to-transparent">
-                <div className="rounded-2xl bg-neutral-900/60 border border-white/10 p-6">
-                  <div className="text-sm text-neutral-400 mb-4">Lifestyle → Career Mapper</div>
-                  <div className="grid grid-cols-2 gap-3">
-                    {lifestyleGoals.map((g, i) => (
-                      <Card key={i} ref={addRevealEl} className="bg-white/5 border-white/10 hover:border-cyan-300/40 transition group">
-                        <CardContent className="p-4">
-                          <div className="flex items-center gap-2 text-cyan-300 mb-1">{g.icon}<span className="text-xs uppercase tracking-wide opacity-90">Goal</span></div>
-                          <div className="font-medium mb-2 group-hover:text-white transition">{g.title}</div>
-                          <div className="flex flex-wrap gap-1">
-                            {g.tags.map((t, k) => (
-                              <Badge key={k} className="bg-neutral-800 border-white/10 text-neutral-200">{t}</Badge>
-                            ))}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
+                <div className="rounded-2xl bg-neutral-900/60 border border-white/10 p-4 md:p-6">
+                  <div className="text-sm text-neutral-400 mb-4">Market Snapshot</div>
+
+                  {/* Live Stats */}
+                  <div className="grid grid-cols-2 gap-3 mb-6">
+                    <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                      <div className="text-3xl font-semibold text-cyan-300 mb-1">{jobs.length}</div>
+                      <div className="text-xs text-neutral-400">Active Jobs</div>
+                    </div>
+                    <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                      <div className="text-3xl font-semibold text-emerald-300 mb-1">{new Set(jobs.map(j => j.occupation)).size}+</div>
+                      <div className="text-xs text-neutral-400">Industries</div>
+                    </div>
                   </div>
-                  <div className="h-px my-6 bg-gradient-to-r from-transparent via-white/15 to-transparent" />
-                  <div className="grid grid-cols-2 gap-3">
-                    {careerTracks.map((t, i) => (
-                      <Card key={i} ref={addRevealEl} className="bg-white/5 border-white/10 hover:border-emerald-300/40 transition group">
-                        <CardContent className="p-4">
-                          <div className="flex items-center gap-2 text-emerald-300 mb-1">{t.icon}<span className="text-xs uppercase tracking-wide opacity-90">Track</span></div>
-                          <div className="font-medium mb-1 group-hover:text-white transition">{t.title}</div>
-                          <p className="text-xs text-neutral-400">{t.desc}</p>
-                        </CardContent>
-                      </Card>
-                    ))}
+
+                  <div className="h-px my-4 bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+
+                  {/* Quick Links to Tools */}
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => setOnboardingOpen(true)}
+                      className="w-full text-left p-3 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-300/40 transition group"
+                    >
+                      <div className="flex items-center gap-2 text-cyan-300 mb-1">
+                        <Sparkles className="w-4 h-4" />
+                        <span className="text-xs uppercase tracking-wide">Tool</span>
+                      </div>
+                      <div className="font-medium group-hover:text-white transition">Career Mapper</div>
+                      <p className="text-xs text-neutral-400">Lifestyle-first career matching</p>
+                    </button>
+
+                    <button
+                      onClick={() => onNavigate?.('career-tracks')}
+                      className="w-full text-left p-3 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-300/40 transition group"
+                    >
+                      <div className="flex items-center gap-2 text-emerald-300 mb-1">
+                        <Compass className="w-4 h-4" />
+                        <span className="text-xs uppercase tracking-wide">Data</span>
+                      </div>
+                      <div className="font-medium group-hover:text-white transition">Career Tracks</div>
+                      <p className="text-xs text-neutral-400">Industry insights & salary ranges</p>
+                    </button>
+
+                    <button
+                      onClick={() => onNavigate?.('live-search')}
+                      className="w-full text-left p-3 rounded-xl bg-white/5 border border-white/10 hover:border-purple-300/40 transition group"
+                    >
+                      <div className="flex items-center gap-2 text-purple-300 mb-1">
+                        <Search className="w-4 h-4" />
+                        <span className="text-xs uppercase tracking-wide">Search</span>
+                      </div>
+                      <div className="font-medium group-hover:text-white transition">Live Job Search</div>
+                      <p className="text-xs text-neutral-400">Browse & filter active postings</p>
+                    </button>
                   </div>
-                  <div className="mt-4 text-xs text-neutral-400 flex items-center gap-2"><Clock className="w-4 h-4" /> Smart matching engine coming soon.</div>
                 </div>
               </div>
             </div>
@@ -537,9 +450,34 @@ export default function CareersKYLanding({ onNavigate }) {
         </div>
       </section>
 
-      {/* Jobs (active postings) */}
+      {/* Jobs CTA Section - removed JobsFeed, now on dedicated page */}
       <section id="jobs" className="py-20">
-        <JobsFeed initialQuery={prefillQuery} />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Card className="bg-gradient-to-br from-cyan-500/10 via-emerald-500/10 to-purple-500/10 border-white/10">
+            <CardContent className="p-8 md:p-12 text-center">
+              <div className="inline-flex h-12 w-12 rounded-xl bg-cyan-400/20 grid place-items-center ring-1 ring-cyan-300/30 mb-6">
+                <Search className="w-6 h-6 text-cyan-300" />
+              </div>
+              <h3 className="text-2xl md:text-3xl font-semibold tracking-tight mb-4">
+                Ready to explore <span className="text-cyan-300">{jobs.length}+ active jobs</span>?
+              </h3>
+              <p className="text-neutral-300 text-lg mb-8 max-w-2xl mx-auto">
+                Browse real-time job postings from WORC, filter by location, salary, and industry.
+                Find your next opportunity in Cayman.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" className="gap-2" onClick={() => onNavigate?.('live-search')}>
+                  <Search className="w-4 h-4" />
+                  Browse All Jobs
+                </Button>
+                <Button size="lg" variant="secondary" className="gap-2" onClick={() => setOnboardingOpen(true)}>
+                  <Sparkles className="w-4 h-4" />
+                  Get Personalized Matches
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </section>
 
       {/* FAQ */}
@@ -592,14 +530,18 @@ export default function CareersKYLanding({ onNavigate }) {
               </div>
               <div>
                 <div className="font-medium text-neutral-200">careers.ky</div>
-                <div className="text-xs">Lifestyle × Career platform for Cayman</div>
+                <div className="text-xs">Live Job Market Data for Caymanians</div>
               </div>
             </div>
-            <div className="flex gap-6">
-              <a href="#" className="hover:text-neutral-200">Privacy</a>
-              <a href="#" className="hover:text-neutral-200">Terms</a>
-              <a href="#" className="hover:text-neutral-200">Contact</a>
+            <div className="flex flex-wrap gap-4 md:gap-6">
+              <button onClick={() => onNavigate?.('career-tracks')} className="hover:text-neutral-200">Career Tracks</button>
+              <button onClick={() => onNavigate?.('live-search')} className="hover:text-neutral-200">Live Search</button>
+              <a href="#faq" className="hover:text-neutral-200">FAQ</a>
+              <a href="https://my.egov.ky/web/myworc/find-a-job#/" target="_blank" rel="noreferrer" className="hover:text-neutral-200">WORC Portal ↗</a>
             </div>
+          </div>
+          <div className="mt-6 pt-6 border-t border-white/5 text-xs text-center md:text-left">
+            <p>Built with real WORC data. Job postings updated regularly from official government sources.</p>
           </div>
         </div>
       </footer>
