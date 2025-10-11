@@ -76,4 +76,3 @@ react_webapp/
 ## License
 
 Private
-
