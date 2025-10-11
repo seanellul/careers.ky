@@ -12,14 +12,20 @@ import {
   MapPin,
   Clock,
   ChevronRight,
-  ExternalLink
+  ExternalLink,
+  Rocket,
+  Menu,
+  X
 } from "lucide-react";
 import { getCiscoUnit, loadAggregates, loadWorkTypes, loadEducationTypes, loadExperienceTypes, searchTitles } from "@/lib/data";
+import JobPostings from "@/components/JobPostings";
 
 export default function JobDetail({ ciscoCode, onNavigate }) {
   const [unit, setUnit] = useState(null);
   const [stats, setStats] = useState(null);
   const [relatedJobs, setRelatedJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const workTypes = useMemo(() => loadWorkTypes(), []);
   const eduTypes = useMemo(() => loadEducationTypes(), []);
@@ -28,6 +34,7 @@ export default function JobDetail({ ciscoCode, onNavigate }) {
 
   useEffect(() => {
     if (ciscoCode) {
+      setLoading(true);
       const unitData = getCiscoUnit(ciscoCode);
       const unitStats = aggregates.get(ciscoCode);
       
@@ -39,15 +46,28 @@ export default function JobDetail({ ciscoCode, onNavigate }) {
         const related = searchTitles(unitData.title, 10);
         setRelatedJobs(related.slice(0, 6)); // Show top 6 related
       }
+      
+      setLoading(false);
     }
   }, [ciscoCode, aggregates]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen w-full bg-neutral-950 text-neutral-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-cyan-300/30 border-t-cyan-300 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-neutral-400">Loading career details...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!unit) {
     return (
       <div className="min-h-screen w-full bg-neutral-950 text-neutral-100 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-semibold mb-4">Job Not Found</h1>
-          <Button onClick={() => window.history.back()}>Go Back</Button>
+          <Button onClick={() => onNavigate('home')}>Go Back</Button>
         </div>
       </div>
     );
@@ -72,21 +92,62 @@ export default function JobDetail({ ciscoCode, onNavigate }) {
       }} />
 
       {/* Header */}
-      <header className="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/60 border-b border-white/5">
+      <header className="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/80 border-b border-white/5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Button variant="secondary" size="sm" onClick={() => window.history.back()} className="gap-2">
+            <div className="h-8 w-8 rounded-xl bg-cyan-400/20 grid place-items-center ring-1 ring-cyan-300/30">
+              <Rocket className="w-4 h-4 text-cyan-300" />
+            </div>
+            <span className="font-semibold tracking-tight">careers<span className="text-cyan-300">.ky</span></span>
+          </div>
+          
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-3">
+            <Button variant="secondary" size="sm" onClick={() => onNavigate('career-tracks')} className="gap-2">
               <ArrowLeft className="w-4 h-4" />
-              Back
+              Back to Careers
             </Button>
-            <span className="font-semibold tracking-tight">Career Details</span>
+            <Button variant="secondary" onClick={() => onNavigate('home')}>
+              Home
+            </Button>
           </div>
-          <div className="flex items-center gap-3">
-                  <Button variant="secondary" onClick={() => onNavigate?.('career-tracks')}>
-                    Browse All Careers
-                  </Button>
-          </div>
+
+          {/* Mobile Menu Button */}
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-lg bg-white/5 hover:bg-white/10 transition"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
+
+        {/* Mobile Navigation Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-white/5 bg-neutral-950/95 backdrop-blur">
+            <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex flex-col gap-3">
+              <button 
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onNavigate('career-tracks');
+                }}
+                className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white text-left gap-2 flex items-center"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back to Careers
+              </button>
+              <button 
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onNavigate('home');
+                }}
+                className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white text-left"
+              >
+                Home
+              </button>
+            </nav>
+          </div>
+        )}
       </header>
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8">
@@ -291,6 +352,11 @@ export default function JobDetail({ ciscoCode, onNavigate }) {
               </CardContent>
             </Card>
           </div>
+        </div>
+
+        {/* Job Postings History */}
+        <div className="mt-12 pt-8 border-t border-white/10">
+          <JobPostings ciscoCode={ciscoCode} unitTitle={unit.title} />
         </div>
 
         {/* SEO Content */}

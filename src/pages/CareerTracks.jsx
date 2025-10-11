@@ -16,7 +16,10 @@ import {
   BookOpen,
   Briefcase,
   ArrowUpDown,
-  Eye
+  Eye,
+  Rocket,
+  Menu,
+  X
 } from "lucide-react";
 import { buildCiscoTree, loadAggregates, loadWorkTypes, loadEducationTypes, loadExperienceTypes, searchTitles } from "@/lib/data";
 
@@ -25,9 +28,10 @@ export default function CareerTracks({ onNavigate }) {
   const [selectedMajor, setSelectedMajor] = useState(null);
   const [selectedSubMajor, setSelectedSubMajor] = useState(null);
   const [selectedMinor, setSelectedMinor] = useState(null);
-  const [viewMode, setViewMode] = useState("tree"); // tree | market
+  const [viewMode, setViewMode] = useState("market"); // tree | market
   const [sortBy, setSortBy] = useState("count"); // count | min | max | mean
   const [sortOrder, setSortOrder] = useState("desc"); // asc | desc
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [filters, setFilters] = useState({
     education: "",
     experience: "",
@@ -130,15 +134,46 @@ export default function CareerTracks({ onNavigate }) {
       }} />
 
       {/* Header */}
-      <header className="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/60 border-b border-white/5">
+      <header className="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/80 border-b border-white/5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="font-semibold tracking-tight">Career <span className="text-cyan-300">Tracks</span></span>
+            <div className="h-8 w-8 rounded-xl bg-cyan-400/20 grid place-items-center ring-1 ring-cyan-300/30">
+              <Rocket className="w-4 h-4 text-cyan-300" />
+            </div>
+            <span className="font-semibold tracking-tight">careers<span className="text-cyan-300">.ky</span></span>
           </div>
-          <div className="flex items-center gap-3">
-            <Button variant="secondary" onClick={() => window.history.back()}>Back to Home</Button>
+          
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-3">
+            <Button variant="secondary" onClick={() => onNavigate('home')}>Back to Home</Button>
           </div>
+
+          {/* Mobile Menu Button */}
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-lg bg-white/5 hover:bg-white/10 transition"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
+
+        {/* Mobile Navigation Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-white/5 bg-neutral-950/95 backdrop-blur">
+            <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex flex-col gap-3">
+              <button 
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onNavigate('home');
+                }}
+                className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white text-left"
+              >
+                ← Back to Home
+              </button>
+            </nav>
+          </div>
+        )}
       </header>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
@@ -166,14 +201,7 @@ export default function CareerTracks({ onNavigate }) {
               />
             </div>
             <div className="flex gap-2">
-              <Button 
-                variant={viewMode === "tree" ? "default" : "secondary"}
-                onClick={() => setViewMode("tree")}
-                className="gap-2"
-              >
-                <Briefcase className="w-4 h-4" />
-                Browse by Industry
-              </Button>
+
               <Button 
                 variant={viewMode === "market" ? "default" : "secondary"}
                 onClick={() => setViewMode("market")}
@@ -181,6 +209,14 @@ export default function CareerTracks({ onNavigate }) {
               >
                 <TrendingUp className="w-4 h-4" />
                 Market Analytics
+              </Button>
+              <Button 
+                variant={viewMode === "tree" ? "default" : "secondary"}
+                onClick={() => setViewMode("tree")}
+                className="gap-2"
+              >
+                <Briefcase className="w-4 h-4" />
+                Browse by Industry
               </Button>
             </div>
           </div>
@@ -294,6 +330,7 @@ export default function CareerTracks({ onNavigate }) {
             setSelectedSubMajor={setSelectedSubMajor}
             selectedMinor={selectedMinor}
             setSelectedMinor={setSelectedMinor}
+            onNavigate={onNavigate}
           />
         ) : (
           <MarketAnalyticsView 
@@ -302,6 +339,7 @@ export default function CareerTracks({ onNavigate }) {
             workTypes={workTypes}
             eduTypes={eduTypes}
             expTypes={expTypes}
+            onNavigate={onNavigate}
           />
         )}
       </div>
@@ -309,7 +347,7 @@ export default function CareerTracks({ onNavigate }) {
   );
 }
 
-function TaxonomyTreeView({ tree, aggregates, selectedMajor, setSelectedMajor, selectedSubMajor, setSelectedSubMajor, selectedMinor, setSelectedMinor }) {
+function TaxonomyTreeView({ tree, aggregates, selectedMajor, setSelectedMajor, selectedSubMajor, setSelectedSubMajor, selectedMinor, setSelectedMinor, onNavigate }) {
   const majors = tree.children || [];
   
   return (
@@ -420,7 +458,7 @@ function TaxonomyTreeView({ tree, aggregates, selectedMajor, setSelectedMajor, s
   );
 }
 
-function MarketAnalyticsView({ units, aggregates, workTypes, eduTypes, expTypes }) {
+function MarketAnalyticsView({ units, aggregates, workTypes, eduTypes, expTypes, onNavigate }) {
   const Bar = ({ label, value, total, color = "bg-cyan-400" }) => (
     <div className="flex items-center gap-2">
       <div className="w-32 text-xs text-neutral-300 truncate" title={label}>{label}</div>

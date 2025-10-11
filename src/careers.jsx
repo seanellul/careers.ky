@@ -4,17 +4,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
-import { Briefcase, Compass, Heart, Plane, SunMedium, Search, Building2, ChevronRight, Clock, Sparkles, CircleDollarSign, GraduationCap, Users, Rocket } from "lucide-react";
+import { Briefcase, Compass, Heart, Plane, SunMedium, Search, Building2, ChevronRight, Clock, Sparkles, CircleDollarSign, GraduationCap, Users, Rocket, Menu, X } from "lucide-react";
 import OnboardingFlow from "@/components/OnboardingFlow.jsx";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useHeroIntro, useFadeInOnScroll, useParallaxBackground, useMarqueeControl, useHoverFloat, useAccordionMotion, useStaggerList, useCTAGradientPulse, useFooterReveal } from "@/animations/gsapEffects";
+import { getActiveJobPostings, loadLocationTypes } from "@/lib/data";
 
 // ————————————————————————————————————————————————————————————————
 // careers.ky — Cayman Lifestyle → Career Landing (GSAP + Tailwind + shadcn)
 // This file defines a single React component export. It also includes a
-// JobsFeed section that pulls listings from WORC (my.egov.ky) and a
-// lightweight DevTests panel to sanity‑check core helpers at runtime.
+// JobsFeed section that displays active job postings from local CSV data
+// and a lightweight DevTests panel to sanity‑check core helpers at runtime.
 // ————————————————————————————————————————————————————————————————
 
 // ——— WORC mapping tables (from user-provided picklists) ———
@@ -46,53 +47,44 @@ function parseDateDMY(s) {
   return new Date(`${y}-${String(mth).padStart(2, "0")}-${String(d).padStart(2, "0")}T00:00:00Z`);
 }
 
-// ——— Minimal client for WORC search ———
-async function fetchWORCJobs({ pAuth, proxy, signal }) {
-  const buildUrl = () => {
-    const qp = `?p_auth=${encodeURIComponent(pAuth || "")}`;
-    return proxy ? `${proxy}${qp}` : `https://my.egov.ky/o/worc-job-post-search/${qp}`;
-  };
-  const tryFetch = async (url) => {
-    const res = await fetch(url, { headers: { Accept: "application/json" }, signal });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return res.json();
-  };
+// Helper to truncate text for badges
+function truncateText(text, maxLength = 20) {
+  if (!text || text.length <= maxLength) return text;
+  return text.substring(0, maxLength - 3) + '...';
+}
+
+// ——— Load active jobs from local data ———
+function loadActiveJobs() {
   try {
-    const data = await tryFetch(buildUrl());
-    // Some endpoints wrap list in {data: [...]} or may already be an array
-    const list = Array.isArray(data) ? data : Array.isArray(data?.data) ? data.data : data?.jobs || [];
-    return list;
+    const activeJobs = getActiveJobPostings();
+    // Transform CSV data to match expected structure
+    return activeJobs.map(job => ({
+      educationLevel: job.sEducation || "Unavailable",
+      employerName: job.Employer || "Employer not listed",
+      hoursPerWeek: parseFloat(job["Hours Per Week"]) || 40,
+      minimumAmount: job.fMinSalary || 0,
+      maximumAmount: job.fMaxSalary || 0,
+      jobLocation: job.sLocation || "Undefined",
+      jobPostId: job.cJobId,
+      jobPostIdString: job.cJobId,
+      yearsOfExperience: job.sExperience || "Unavailable",
+      workType: job.sWork || "Undefined",
+      jobTitle: job.cTitle || "Untitled Role",
+      currency: job.Currency || "KYD",
+      salaryShort: job["Salary Description"] || null,
+      startDate: job.startDate,
+      endDate: job.endDate,
+      approvalDate: job.createdDate,
+      occupation: job.Occupation || "",
+      sOccupation: job.sOccupation || "",
+    }));
   } catch (err) {
-    console.warn("WORC fetch failed, using sample:", err?.message || err);
-    // Fallback to a single sample (provided by user) so UI renders
-    return [
-      {
-        educationLevel: 8,
-        employerName: "MAPLESFS SERVICE COMPANY LIMITED",
-        employmentType: 0,
-        hoursPerWeek: 37.5,
-        approvalDate: "08/10/2025",
-        displayFrequency: "perAnnum",
-        kydPerAnnum: 300000,
-        minimumAmount: 150000,
-        maximumAmount: 300000,
-        jobLocation: 4,
-        jobPostId: 414311,
-        jobPostIdString: "G2Q5C4",
-        yearsOfExperience: 8,
-        workType: 1,
-        jobTitle: "Regional Head of Fund Services (Americas)",
-        currency: "USD",
-        salaryShort: "USD$150,000 - USD$300,000 Per Annum",
-        startDate: "08/10/2025",
-        endDate: "22/10/2025",
-        employerId: 0,
-      },
-    ];
+    console.error("Error loading jobs:", err);
+    return [];
   }
 }
 
-function JobsFeed({ pAuth, proxy, initialQuery = "" }) {
+function JobsFeed({ initialQuery = "" }) {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -104,21 +96,18 @@ function JobsFeed({ pAuth, proxy, initialQuery = "" }) {
   const pageSize = 8;
 
   useEffect(() => {
-    const abort = new AbortController();
-    (async () => {
-      try {
-        setLoading(true);
-        const list = await fetchWORCJobs({ pAuth, proxy, signal: abort.signal });
-        setJobs(Array.isArray(list) ? list : []);
-        setError("");
-      } catch (e) {
-        setError("Could not load jobs.");
-      } finally {
-        setLoading(false);
-      }
-    })();
-    return () => abort.abort();
-  }, [pAuth, proxy]);
+    try {
+      setLoading(true);
+      const activeJobs = loadActiveJobs();
+      setJobs(activeJobs);
+      setError("");
+    } catch (e) {
+      console.error("Error loading jobs:", e);
+      setError("Could not load jobs.");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   // React to initialQuery changes
   useEffect(() => {
@@ -128,16 +117,23 @@ function JobsFeed({ pAuth, proxy, initialQuery = "" }) {
 
   // derived
   const filtered = jobs
-    .filter((j) => (loc ? j.jobLocation === Number(loc) : true))
-    .filter((j) => (type ? j.workType === Number(type) : true))
+    .filter((j) => (loc ? j.jobLocation === LOCATION_KEY[loc] : true))
+    .filter((j) => (type ? j.workType === WORK_TYPE[type] : true))
     .filter((j) => (q ? (j.jobTitle?.toLowerCase().includes(q.toLowerCase()) || j.employerName?.toLowerCase().includes(q.toLowerCase())) : true));
 
   const sorted = [...filtered].sort((a, b) => {
     if (sort === 3) return (b.maximumAmount || 0) - (a.maximumAmount || 0); // SalaryHighLow
     if (sort === 4) return (a.minimumAmount || 0) - (b.minimumAmount || 0); // SalaryLowHigh
-    if (sort === 2) return parseDateDMY(a.endDate).getTime() - parseDateDMY(b.endDate).getTime(); // EndsSoon asc
+    if (sort === 2) {
+      // EndsSoon asc - handle Date objects
+      const aTime = a.endDate instanceof Date ? a.endDate.getTime() : parseDateDMY(a.endDate).getTime();
+      const bTime = b.endDate instanceof Date ? b.endDate.getTime() : parseDateDMY(b.endDate).getTime();
+      return aTime - bTime;
+    }
     // Newest default — approval/start date desc
-    return parseDateDMY(b.approvalDate || b.startDate).getTime() - parseDateDMY(a.approvalDate || a.startDate).getTime();
+    const aDate = a.approvalDate instanceof Date ? a.approvalDate : (a.startDate instanceof Date ? a.startDate : parseDateDMY(a.approvalDate || a.startDate));
+    const bDate = b.approvalDate instanceof Date ? b.approvalDate : (b.startDate instanceof Date ? b.startDate : parseDateDMY(b.approvalDate || b.startDate));
+    return bDate.getTime() - aDate.getTime();
   });
 
   const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
@@ -152,11 +148,11 @@ function JobsFeed({ pAuth, proxy, initialQuery = "" }) {
   }, [loading, error, page, sort, q, loc, type]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="flex items-end justify-between gap-4 mb-6">
         <div>
-          <h3 className="text-2xl md:text-3xl font-semibold tracking-tight">Live jobs from WORC</h3>
-          <p className="text-neutral-400 text-sm">Pulling directly from my.egov.ky — filter by location and type.</p>
+          <h3 className="text-2xl md:text-3xl font-semibold tracking-tight">Active Job Postings</h3>
+          <p className="text-neutral-400 text-sm">{jobs.length} active jobs with future end dates</p>
         </div>
         <a href="https://my.egov.ky/web/myworc/find-a-job#/" target="_blank" rel="noreferrer" className="text-cyan-300 text-sm hover:underline">Open WORC portal ↗</a>
       </div>
@@ -203,20 +199,35 @@ function JobsFeed({ pAuth, proxy, initialQuery = "" }) {
         <>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {view.map((j, idx) => (
-              <Card key={`${j.jobPostId || idx}`} className="job-card group bg-white/5 border-white/10 hover:border-white/20 transition">
-                <CardContent className="p-5 space-y-2">
-                  <div className="text-xs uppercase tracking-wide text-emerald-300">{WORK_TYPE[j.workType || 0] || "Role"}</div>
-                  <div className="font-medium leading-snug group-hover:text-white">{j.jobTitle || "Untitled role"}</div>
-                  <div className="text-sm text-neutral-400">{j.employerName}</div>
-                  <div className="text-xs text-neutral-400">{LOCATION_KEY[j.jobLocation || 0] || "Location"} · {j.hoursPerWeek ? `${j.hoursPerWeek} hrs/wk` : ""}</div>
-                  <div className="text-sm text-neutral-200">{fmtSalary(j)}</div>
-                  <div className="flex gap-2 pt-2">
-                    <Badge className="bg-neutral-800 border-white/10 text-neutral-300">Edu: {EDUCATION[j.educationLevel || 0]}</Badge>
-                    <Badge className="bg-neutral-800 border-white/10 text-neutral-300">Exp: {EXPERIENCE[j.yearsOfExperience || 0]}</Badge>
+              <Card key={`${j.jobPostId || idx}`} className="job-card group bg-white/5 border-white/10 hover:border-white/20 transition h-full">
+                <CardContent className="p-5 h-full flex flex-col">
+                  <div className="text-xs uppercase tracking-wide text-emerald-300 mb-2">{j.workType || "Role"}</div>
+                  
+                  <div className="font-medium leading-tight group-hover:text-white mb-2 line-clamp-2 min-h-[2.5rem] flex items-start">
+                    {j.jobTitle || "Untitled role"}
                   </div>
-                  <div className="text-xs text-neutral-500">WORC ID: {j.jobPostIdString || j.jobPostId}</div>
-                  <div className="pt-1">
-                    <a href="https://my.egov.ky/web/myworc/find-a-job#/" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-white/10 text-white border border-white/20 hover:bg-white/15 w-full gap-2 h-10 px-4 py-2">Apply on WORC</a>
+                  
+                  <div className="text-sm text-neutral-400 mb-2 line-clamp-1">{j.employerName}</div>
+                  
+                  <div className="text-xs text-neutral-400 mb-3">{j.jobLocation || "Location"} · {j.hoursPerWeek ? `${j.hoursPerWeek} hrs/wk` : ""}</div>
+                  
+                  <div className="text-sm text-neutral-200 mb-4 line-clamp-2">{fmtSalary(j)}</div>
+                  
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    <Badge className="bg-neutral-800 border-white/10 text-neutral-300 text-xs px-2 py-1 whitespace-nowrap max-w-full truncate" title={j.educationLevel}>
+                      {truncateText(j.educationLevel, 18)}
+                    </Badge>
+                    <Badge className="bg-neutral-800 border-white/10 text-neutral-300 text-xs px-2 py-1 whitespace-nowrap max-w-full truncate" title={j.yearsOfExperience}>
+                      {truncateText(j.yearsOfExperience, 18)}
+                    </Badge>
+                  </div>
+                  
+                  <div className="text-xs text-neutral-500 mb-3">WORC ID: {j.jobPostIdString || j.jobPostId}</div>
+                  
+                  <div className="mt-auto">
+                    <a href="https://my.egov.ky/web/myworc/find-a-job#/" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-white/10 text-white border border-white/20 hover:bg-white/15 w-full gap-2 h-10 px-4 py-2">
+                      Apply on WORC
+                    </a>
                   </div>
                 </CardContent>
               </Card>
@@ -269,23 +280,6 @@ const featuredBadges = [
 // Main export — page wrapper + GSAP interactions
 // ————————————————————————————————————————————————————————————————
 export default function CareersKYLanding({ onNavigate }) {
-  // Read p_auth from env or window for flexibility (NO direct reference to `import` identifier)
-  let P_AUTH = "SqdJVQxo";
-  if (typeof window !== "undefined" && window.WORC_P_AUTH) P_AUTH = window.WORC_P_AUTH;
-  if (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_WORC_P_AUTH) P_AUTH = process.env.NEXT_PUBLIC_WORC_P_AUTH;
-  try {
-    // Vite support — guarded access to import.meta
-    // @ts-ignore
-    if (typeof import.meta !== "undefined" && import.meta.env?.VITE_WORC_P_AUTH) {
-      // @ts-ignore
-      P_AUTH = import.meta.env.VITE_WORC_P_AUTH;
-    }
-  } catch {}
-
-  // Optional CORS proxy (e.g., '/api/proxy?url=') — leave empty to try direct
-  let PROXY = "/api/worc";
-  if (typeof window !== "undefined" && window.WORC_PROXY) PROXY = window.WORC_PROXY;
-
   const root = useRef(null);
   const hero = useRef(null);
   const revealEls = useRef([]);
@@ -293,6 +287,7 @@ export default function CareersKYLanding({ onNavigate }) {
   const faqRef = useRef(null);
   const [onboardingOpen, setOnboardingOpen] = useState(false);
   const [prefillQuery, setPrefillQuery] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const addRevealEl = (el) => {
     if (el && !revealEls.current.includes(el)) revealEls.current.push(el);
@@ -332,7 +327,7 @@ export default function CareersKYLanding({ onNavigate }) {
       <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={{ backgroundImage: "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)", backgroundPosition: "0% 50%" }} />
 
       {/* Nav */}
-      <header className="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/60 border-b border-white/5">
+      <header className="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/80 border-b border-white/5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-xl bg-cyan-400/20 grid place-items-center ring-1 ring-cyan-300/30">
@@ -340,17 +335,62 @@ export default function CareersKYLanding({ onNavigate }) {
             </div>
             <span className="font-semibold tracking-tight">careers<span className="text-cyan-300">.ky</span></span>
           </div>
+          
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6 text-sm text-neutral-300">
-            <a href="#map" className="hover:text-white transition">Career Mapper </a>
+            <a href="#map" className="hover:text-white transition">Career Mapper</a>
             <button onClick={() => onNavigate?.('career-tracks')} className="hover:text-white transition">Career Tracks</button>
             <a href="#jobs" className="hover:text-white transition">Live Search</a>
             <a href="#faq" className="hover:text-white transition">FAQ</a>
           </nav>
-          {/* <div className="flex items-center gap-2">
-            <Button variant="secondary" className="hidden sm:inline-flex">Post a role</Button>
-            <Button>Sign in</Button>
-          </div> */}
+
+          {/* Mobile Menu Button */}
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-lg bg-white/5 hover:bg-white/10 transition"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
+
+        {/* Mobile Navigation Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-white/5 bg-neutral-950/95 backdrop-blur">
+            <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex flex-col gap-3">
+              <a 
+                href="#map" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white"
+              >
+                Career Mapper
+              </a>
+              <button 
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onNavigate?.('career-tracks');
+                }}
+                className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white text-left"
+              >
+                Career Tracks
+              </button>
+              <a 
+                href="#jobs" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white"
+              >
+                Live Search
+              </a>
+              <a 
+                href="#faq" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white"
+              >
+                FAQ
+              </a>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Hero */}
@@ -497,9 +537,9 @@ export default function CareersKYLanding({ onNavigate }) {
         </div>
       </section>
 
-      {/* Jobs (live from WORC) */}
+      {/* Jobs (active postings) */}
       <section id="jobs" className="py-20">
-        <JobsFeed pAuth={P_AUTH} proxy={PROXY} initialQuery={prefillQuery} />
+        <JobsFeed initialQuery={prefillQuery} />
       </section>
 
       {/* FAQ */}
@@ -636,13 +676,13 @@ function DevTests() {
     setReport({ passed, failed, logs });
   }, []);
 
-  return (
-    <details className="mt-8 text-xs text-neutral-400">
-      <summary className="cursor-pointer">Dev tests: {report.passed} passed, {report.failed} failed</summary>
-      <ul className="mt-2 list-disc pl-5 space-y-1">
-        {report.logs.map((l, i) => (<li key={i}>{l}</li>))}
-      </ul>
-    </details>
-  );
+  // return (
+  //   <details className="mt-8 text-xs text-neutral-400">
+  //     <summary className="cursor-pointer">Dev tests: {report.passed} passed, {report.failed} failed</summary>
+  //     <ul className="mt-2 list-disc pl-5 space-y-1">
+  //       {report.logs.map((l, i) => (<li key={i}>{l}</li>))}
+  //     </ul>
+  //   </details>
+  // );
 }
 

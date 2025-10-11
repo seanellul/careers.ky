@@ -13,11 +13,15 @@ import JOB_TITLES_RAW from "@/data/keys/JobTitles.csv?raw";
 // eslint-disable-next-line
 import JOB_DATA_RAW from "@/data/content/JobData.csv?raw";
 // eslint-disable-next-line
+import JOB_POSTINGS_DETAILED_RAW from "@/data/content/job_postings_detailed.csv?raw";
+// eslint-disable-next-line
 import WORK_TYPES_RAW from "@/data/keys/WorkTypes.csv?raw";
 // eslint-disable-next-line
 import EDUCATION_TYPES_RAW from "@/data/keys/EducationTypes.csv?raw";
 // eslint-disable-next-line
 import EXPERIENCE_TYPES_RAW from "@/data/keys/ExperienceTypes.csv?raw";
+// eslint-disable-next-line
+import LOCATION_TYPES_RAW from "@/data/keys/LocationTypes.csv?raw";
 
 let cache = {
   cisco: null,
@@ -28,6 +32,8 @@ let cache = {
   workTypes: null,
   eduTypes: null,
   expTypes: null,
+  locationTypes: null,
+  jobPostingsDetailed: null,
 };
 
 // Clear cache function for development
@@ -41,6 +47,8 @@ export function clearCache() {
     workTypes: null,
     eduTypes: null,
     expTypes: null,
+    locationTypes: null,
+    jobPostingsDetailed: null,
   };
 }
 
@@ -90,6 +98,52 @@ export function loadJobData() {
   }
   cache.jobData = rows;
   return cache.jobData;
+}
+
+export function loadJobPostingsDetailed() {
+  if (cache.jobPostingsDetailed) return cache.jobPostingsDetailed;
+  const { rows } = parseCSV(JOB_POSTINGS_DETAILED_RAW);
+  
+  // Helper to parse dates in "DD-MMM-YY" format (e.g., "01-Jan-25")
+  const parseDate = (dateStr) => {
+    if (!dateStr) return new Date(0);
+    // Match DD-MMM-YY format
+    const match = dateStr.match(/^(\d{1,2})-([A-Za-z]{3})-(\d{2})$/);
+    if (match) {
+      const [_, day, monthStr, year] = match;
+      const monthMap = {
+        'jan': 0, 'feb': 1, 'mar': 2, 'apr': 3, 'may': 4, 'jun': 5,
+        'jul': 6, 'aug': 7, 'sep': 8, 'oct': 9, 'nov': 10, 'dec': 11
+      };
+      const month = monthMap[monthStr.toLowerCase()];
+      const fullYear = 2000 + parseInt(year, 10); // Assuming 20xx
+      return new Date(fullYear, month, parseInt(day, 10));
+    }
+    return new Date(dateStr);
+  };
+  
+  // Cast numbers and dates where appropriate
+  for (const r of rows) {
+    r.fMinSalary = Number(r.fMinSalary || 0);
+    r.fMaxSalary = Number(r.fMaxSalary || 0);
+    r.fMeanSalary = Number(r.fMeanSalary || 0);
+    r.sOccupation = String(r.sOccupation);
+    r.sWork = String(r.sWork || 0);
+    r.sEducation = String(r.sEducation || 0);
+    r.sExperience = String(r.sExperience || 0);
+    r.sLocation = String(r.sLocation || 0);
+    
+    // Parse dates
+    r.createdDate = parseDate(r["Created Date"]);
+    r.startDate = parseDate(r["Start Date"]);
+    r.endDate = parseDate(r["End Date"]);
+    
+    // Check if job is active (has future end date)
+    const now = new Date();
+    r.isActive = r.Status?.toLowerCase() === 'active' && r.endDate > now;
+  }
+  cache.jobPostingsDetailed = rows;
+  return cache.jobPostingsDetailed;
 }
 
 // Aggregations — by sOccupation
@@ -247,6 +301,51 @@ export function loadExperienceTypes() {
   const map = new Map(rows.map((r) => [String(r.sExperience), r.cDescription]));
   cache.expTypes = map;
   return cache.expTypes;
+}
+
+export function loadLocationTypes() {
+  if (cache.locationTypes) return cache.locationTypes;
+  const { rows } = parseCSV(LOCATION_TYPES_RAW);
+  const map = new Map(rows.map((r) => [String(r.sLocation), r.cDescription]));
+  cache.locationTypes = map;
+  return cache.locationTypes;
+}
+
+// Get job postings by CISCO code
+export function getJobPostingsByCiscoCode(ciscoCode) {
+  const postings = loadJobPostingsDetailed();
+  const occCisco = loadOccupationCisco();
+  const occToCisco = new Map(occCisco.map((r) => [String(r.sOccupation), String(r.sCISCO)]));
+  
+  // Find all occupations that map to this CISCO code
+  const matchingOccupations = Array.from(occToCisco.entries())
+    .filter(([occ, cisco]) => cisco === String(ciscoCode))
+    .map(([occ]) => occ);
+  
+  // Return postings for matching occupations
+  return postings.filter(posting => matchingOccupations.includes(String(posting.sOccupation)));
+}
+
+// Generate WORC search URL for a job posting
+export function generateWORCSearchURL(jobPosting) {
+  const baseURL = "https://my.egov.ky/web/myworc/find-a-job#/";
+  const params = new URLSearchParams();
+  
+  if (jobPosting.cTitle) {
+    params.append('search', jobPosting.cTitle);
+  }
+  if (jobPosting.Employer) {
+    params.append('employer', jobPosting.Employer);
+  }
+  
+  return params.toString() ? `${baseURL}?${params.toString()}` : baseURL;
+}
+
+// Get active job postings (future end date)
+export function getActiveJobPostings() {
+  const postings = loadJobPostingsDetailed();
+  const now = new Date();
+  return postings.filter(p => p.isActive || (p.Status?.toLowerCase() === 'active' && p.endDate > now));
 }
 
 
