@@ -302,7 +302,10 @@ export default function CareersKYLanding({ onNavigate }) {
 
               {/* Key Features */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
-                <div className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10">
+                <button
+                  onClick={() => setOnboardingOpen(true)}
+                  className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-300/40 hover:bg-white/10 transition cursor-pointer text-left"
+                >
                   <div className="h-8 w-8 rounded-lg bg-cyan-400/15 grid place-items-center flex-shrink-0">
                     <Sparkles className="w-4 h-4 text-cyan-300" />
                   </div>
@@ -310,8 +313,11 @@ export default function CareersKYLanding({ onNavigate }) {
                     <div className="font-medium text-sm mb-1">Career Mapper</div>
                     <div className="text-xs text-neutral-400">Match your lifestyle to careers</div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10">
+                </button>
+                <button
+                  onClick={() => onNavigate?.('career-tracks')}
+                  className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-300/40 hover:bg-white/10 transition cursor-pointer text-left"
+                >
                   <div className="h-8 w-8 rounded-lg bg-emerald-400/15 grid place-items-center flex-shrink-0">
                     <Compass className="w-4 h-4 text-emerald-300" />
                   </div>
@@ -319,8 +325,11 @@ export default function CareersKYLanding({ onNavigate }) {
                     <div className="font-medium text-sm mb-1">Career Tracks</div>
                     <div className="text-xs text-neutral-400">Explore by industry & salary</div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10">
+                </button>
+                <button
+                  onClick={() => onNavigate?.('live-search')}
+                  className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-purple-300/40 hover:bg-white/10 transition cursor-pointer text-left"
+                >
                   <div className="h-8 w-8 rounded-lg bg-purple-400/15 grid place-items-center flex-shrink-0">
                     <Search className="w-4 h-4 text-purple-300" />
                   </div>
@@ -328,7 +337,7 @@ export default function CareersKYLanding({ onNavigate }) {
                     <div className="font-medium text-sm mb-1">Live Search</div>
                     <div className="text-xs text-neutral-400">Browse active job postings</div>
                   </div>
-                </div>
+                </button>
               </div>
 
               {/* CTAs */}

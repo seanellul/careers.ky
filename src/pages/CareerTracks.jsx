@@ -32,6 +32,7 @@ export default function CareerTracks({ onNavigate }) {
   const [sortBy, setSortBy] = useState("count"); // count | min | max | mean
   const [sortOrder, setSortOrder] = useState("desc"); // asc | desc
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [selectedCiscoCodes, setSelectedCiscoCodes] = useState(new Set());
   const [filters, setFilters] = useState({
     education: "",
     experience: "",
@@ -85,6 +86,9 @@ export default function CareerTracks({ onNavigate }) {
       const stats = aggregates.get(unit.id);
       if (!stats) return false;
       
+      // Filter by search selection (CISCO codes)
+      if (selectedCiscoCodes.size > 0 && !selectedCiscoCodes.has(unit.id)) return false;
+      
       if (filters.education && !stats.dist?.edu?.[filters.education]) return false;
       if (filters.experience && !stats.dist?.exp?.[filters.experience]) return false;
       if (filters.workType && !stats.dist?.work?.[filters.workType]) return false;
@@ -110,7 +114,7 @@ export default function CareerTracks({ onNavigate }) {
     });
 
     return filtered;
-  }, [allUnits, aggregates, filters, sortBy, sortOrder]);
+  }, [allUnits, aggregates, filters, sortBy, sortOrder, selectedCiscoCodes]);
 
   // Search results
   const searchResults = useMemo(() => {
@@ -120,9 +124,23 @@ export default function CareerTracks({ onNavigate }) {
 
   const clearFilters = () => {
     setFilters({ education: "", experience: "", workType: "" });
+    setSelectedCiscoCodes(new Set());
+    setSearchQuery("");
     setSelectedMajor(null);
     setSelectedSubMajor(null);
     setSelectedMinor(null);
+  };
+
+  const toggleCiscoCode = (code) => {
+    setSelectedCiscoCodes(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(code)) {
+        newSet.delete(code);
+      } else {
+        newSet.add(code);
+      }
+      return newSet;
+    });
   };
 
   return (
@@ -242,24 +260,45 @@ export default function CareerTracks({ onNavigate }) {
           {searchQuery && searchResults.length > 0 && (
             <Card className="bg-white/5 border-white/10 mb-6">
               <CardContent className="p-4">
-                <h3 className="font-semibold mb-3">Search Results ({searchResults.length})</h3>
+                <h3 className="font-semibold mb-3">
+                  Search Results ({searchResults.length})
+                  {selectedCiscoCodes.size > 0 && (
+                    <span className="text-cyan-300 ml-2">
+                      · {selectedCiscoCodes.size} selected
+                    </span>
+                  )}
+                </h3>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                  {searchResults.map((result, i) => (
-                    <button 
-                      key={i}
-                      onClick={() => {
-                        if (result.sCISCO) {
-                          onNavigate('job-detail', { ciscoCode: result.sCISCO });
-                        }
-                      }}
-                      className="text-left p-3 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-300/40 hover:bg-cyan-400/10 transition cursor-pointer"
-                    >
-                      <div className="font-medium">{result.label}</div>
-                      <div className="text-sm text-neutral-400">
-                        CISCO Code: {result.sCISCO}
-                      </div>
-                    </button>
-                  ))}
+                  {searchResults.map((result, i) => {
+                    const isSelected = selectedCiscoCodes.has(result.sCISCO);
+                    return (
+                      <button 
+                        key={i}
+                        onClick={() => {
+                          if (result.sCISCO) {
+                            toggleCiscoCode(result.sCISCO);
+                          }
+                        }}
+                        className={`text-left p-3 rounded-xl border transition cursor-pointer ${
+                          isSelected 
+                            ? "bg-cyan-400/20 border-cyan-300/60 ring-2 ring-cyan-300/30" 
+                            : "bg-white/5 border-white/10 hover:border-cyan-300/40 hover:bg-cyan-400/10"
+                        }`}
+                      >
+                        <div className="font-medium flex items-center justify-between">
+                          <span>{result.label}</span>
+                          {isSelected && (
+                            <Badge className="bg-cyan-500 text-white text-xs">
+                              ✓
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="text-sm text-neutral-400">
+                          CISCO Code: {result.sCISCO}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>
@@ -274,6 +313,12 @@ export default function CareerTracks({ onNavigate }) {
                     <Filter className="w-4 h-4" />
                     <span className="text-sm font-medium">Filters:</span>
                   </div>
+                  
+                  {selectedCiscoCodes.size > 0 && (
+                    <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30">
+                      {selectedCiscoCodes.size} job{selectedCiscoCodes.size !== 1 ? 's' : ''} selected
+                    </Badge>
+                  )}
                   
                   <select 
                     value={filters.education}
