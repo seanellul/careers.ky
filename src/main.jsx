@@ -1,11 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import CareersKYLanding from './careers.jsx'
+import App from './App.jsx'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <CareersKYLanding />
+    <App />
   </React.StrictMode>,
 )
 

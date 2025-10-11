@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { Briefcase, Compass, Heart, Plane, SunMedium, Search, Building2, ChevronRight, Clock, Sparkles, CircleDollarSign, GraduationCap, Users, Rocket } from "lucide-react";
+import OnboardingFlow from "@/components/OnboardingFlow.jsx";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useHeroIntro, useFadeInOnScroll, useParallaxBackground, useMarqueeControl, useHoverFloat, useAccordionMotion, useStaggerList, useCTAGradientPulse, useFooterReveal } from "@/animations/gsapEffects";
@@ -91,11 +92,11 @@ async function fetchWORCJobs({ pAuth, proxy, signal }) {
   }
 }
 
-function JobsFeed({ pAuth, proxy }) {
+function JobsFeed({ pAuth, proxy, initialQuery = "" }) {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(initialQuery);
   const [loc, setLoc] = useState(0);
   const [type, setType] = useState(0);
   const [sort, setSort] = useState(1); // Newest
@@ -118,6 +119,12 @@ function JobsFeed({ pAuth, proxy }) {
     })();
     return () => abort.abort();
   }, [pAuth, proxy]);
+
+  // React to initialQuery changes
+  useEffect(() => {
+    setQ(initialQuery || "");
+    setPage(1);
+  }, [initialQuery]);
 
   // derived
   const filtered = jobs
@@ -261,7 +268,7 @@ const featuredBadges = [
 // ————————————————————————————————————————————————————————————————
 // Main export — page wrapper + GSAP interactions
 // ————————————————————————————————————————————————————————————————
-export default function CareersKYLanding() {
+export default function CareersKYLanding({ onNavigate }) {
   // Read p_auth from env or window for flexibility (NO direct reference to `import` identifier)
   let P_AUTH = "SqdJVQxo";
   if (typeof window !== "undefined" && window.WORC_P_AUTH) P_AUTH = window.WORC_P_AUTH;
@@ -284,6 +291,8 @@ export default function CareersKYLanding() {
   const revealEls = useRef([]);
   revealEls.current = [];
   const faqRef = useRef(null);
+  const [onboardingOpen, setOnboardingOpen] = useState(false);
+  const [prefillQuery, setPrefillQuery] = useState("");
 
   const addRevealEl = (el) => {
     if (el && !revealEls.current.includes(el)) revealEls.current.push(el);
@@ -298,6 +307,24 @@ export default function CareersKYLanding() {
   useCTAGradientPulse("#cta-gradient");
   useFooterReveal("footer a");
 
+
+  // Show onboarding page if open
+  if (onboardingOpen) {
+    return (
+      <OnboardingFlow
+        open={onboardingOpen}
+        onClose={() => setOnboardingOpen(false)}
+        onComplete={(res) => {
+          setPrefillQuery(res?.title || "");
+          setOnboardingOpen(false);
+          // Scroll to jobs section after a tick
+          setTimeout(() => {
+            document.querySelector('#jobs')?.scrollIntoView({ behavior: 'smooth' });
+          }, 50);
+        }}
+      />
+    );
+  }
 
   return (
     <div ref={root} className="min-h-screen w-full bg-neutral-950 text-neutral-100">
@@ -314,16 +341,15 @@ export default function CareersKYLanding() {
             <span className="font-semibold tracking-tight">careers<span className="text-cyan-300">.ky</span></span>
           </div>
           <nav className="hidden md:flex items-center gap-6 text-sm text-neutral-300">
-            <a href="#map" className="hover:text-white transition">Lifestyle → Career</a>
-            <a href="#tracks" className="hover:text-white transition">Tracks</a>
-            <a href="#explore" className="hover:text-white transition">Explore</a>
+            <a href="#map" className="hover:text-white transition">Career Mapper </a>
+            <button onClick={() => onNavigate?.('career-tracks')} className="hover:text-white transition">Career Tracks</button>
+            <a href="#jobs" className="hover:text-white transition">Live Search</a>
             <a href="#faq" className="hover:text-white transition">FAQ</a>
-            <a href="#jobs" className="hover:text-white transition">Jobs</a>
           </nav>
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <Button variant="secondary" className="hidden sm:inline-flex">Post a role</Button>
             <Button>Sign in</Button>
-          </div>
+          </div> */}
         </div>
       </header>
 
@@ -342,7 +368,7 @@ export default function CareersKYLanding() {
                     <Input placeholder="Search roles, skills, or companies…" className="pl-10 bg-white/5 border-white/10" />
                   </div>
                 </div>
-                <Button className="gap-2">Explore matches <ChevronRight className="w-4 h-4" /></Button>
+                <Button className="gap-2" onClick={() => setOnboardingOpen(true)}>Build my plan <ChevronRight className="w-4 h-4" /></Button>
               </div>
               <div className="flex flex-wrap gap-2">
                 {featuredBadges.map((b, i) => (
@@ -400,8 +426,8 @@ export default function CareersKYLanding() {
               <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-4">Design your week, then find roles that fit it.</h2>
               <p className="text-neutral-300">Slide through the pathway: choose vibes, time blocks, and growth targets — we surface roles that respect your rhythm.</p>
               <div className="mt-6 flex gap-3">
-                <Button variant="secondary" className="gap-2"><Sparkles className="w-4 h-4" /> Try a demo</Button>
-                <Button className="gap-2">Build my plan <ChevronRight className="w-4 h-4" /></Button>
+                <Button variant="secondary" className="gap-2" onClick={() => setOnboardingOpen(true)}><Sparkles className="w-4 h-4" /> Try the planner</Button>
+                <Button className="gap-2" onClick={() => setOnboardingOpen(true)}>Build my plan <ChevronRight className="w-4 h-4" /></Button>
               </div>
             </div>
             <div className="lg:col-span-7 space-y-4">
@@ -428,7 +454,9 @@ export default function CareersKYLanding() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between mb-8">
             <h3 className="text-2xl md:text-3xl font-semibold tracking-tight">Explore career tracks</h3>
-            <Button variant="secondary" className="gap-2">Browse all <ChevronRight className="w-4 h-4" /></Button>
+            <Button variant="secondary" className="gap-2" onClick={() => onNavigate?.('career-tracks')}>
+              Browse all <ChevronRight className="w-4 h-4" />
+            </Button>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
             {careerTracks.map((t, i) => (
@@ -471,7 +499,7 @@ export default function CareersKYLanding() {
 
       {/* Jobs (live from WORC) */}
       <section id="jobs" className="py-20">
-        <JobsFeed pAuth={P_AUTH} proxy={PROXY} />
+        <JobsFeed pAuth={P_AUTH} proxy={PROXY} initialQuery={prefillQuery} />
       </section>
 
       {/* FAQ */}
@@ -617,3 +645,4 @@ function DevTests() {
     </details>
   );
 }
+
