@@ -71,17 +71,19 @@ function loadActiveJobs() {
   }
 }
 
-export default function LiveSearch({ onNavigate }) {
+export default function LiveSearch({ onNavigate, searchParams = {} }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(searchParams.searchQuery || "");
   const [loc, setLoc] = useState(0);
   const [type, setType] = useState(0);
   const [sort, setSort] = useState(1); // Newest
   const [page, setPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
+  const [employerFilter, setEmployerFilter] = useState(searchParams.employer || "");
+  const [showActiveOnly, setShowActiveOnly] = useState(searchParams.showActiveOnly || false);
   const pageSize = 12; // Increased for dedicated page
 
   const revealEls = useRef([]);
@@ -112,7 +114,9 @@ export default function LiveSearch({ onNavigate }) {
   const filtered = jobs
     .filter((j) => (loc ? j.jobLocation === LOCATION_KEY[loc] : true))
     .filter((j) => (type ? j.workType === WORK_TYPE[type] : true))
-    .filter((j) => (q ? (j.jobTitle?.toLowerCase().includes(q.toLowerCase()) || j.employerName?.toLowerCase().includes(q.toLowerCase())) : true));
+    .filter((j) => (q ? (j.jobTitle?.toLowerCase().includes(q.toLowerCase()) || j.employerName?.toLowerCase().includes(q.toLowerCase())) : true))
+    .filter((j) => (employerFilter ? j.employerName?.toLowerCase().includes(employerFilter.toLowerCase()) : true))
+    .filter((j) => (showActiveOnly ? j.isActive : true));
 
   const sorted = [...filtered].sort((a, b) => {
     if (sort === 3) return (b.maximumAmount || 0) - (a.maximumAmount || 0);
@@ -137,12 +141,12 @@ export default function LiveSearch({ onNavigate }) {
     gsap.fromTo(cards, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: "power3.out" });
   }, [loading, error, page, sort, q, loc, type]);
 
-  // Calculate market stats
+  // Calculate market stats based on filtered results
   const stats = {
-    total: jobs.length,
-    avgSalary: jobs.reduce((acc, j) => acc + (j.maximumAmount || j.minimumAmount || 0), 0) / Math.max(1, jobs.length),
-    locations: new Set(jobs.map(j => j.jobLocation)).size,
-    industries: new Set(jobs.map(j => j.occupation)).size,
+    total: filtered.length,
+    avgSalary: filtered.reduce((acc, j) => acc + (j.maximumAmount || j.minimumAmount || 0), 0) / Math.max(1, filtered.length),
+    locations: new Set(filtered.map(j => j.jobLocation)).size,
+    industries: new Set(filtered.map(j => j.occupation)).size,
   };
 
   return (
@@ -221,6 +225,25 @@ export default function LiveSearch({ onNavigate }) {
               <p className="text-neutral-300 text-lg max-w-3xl">
                 Browse {stats.total} active job postings across {stats.industries}+ industries in Cayman. Real-time data from WORC.
               </p>
+              {(searchParams.searchQuery || searchParams.employer || searchParams.showActiveOnly) && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {searchParams.searchQuery && (
+                    <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30">
+                      Job: {searchParams.searchQuery}
+                    </Badge>
+                  )}
+                  {searchParams.employer && (
+                    <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-300/30">
+                      Employer: {searchParams.employer}
+                    </Badge>
+                  )}
+                  {searchParams.showActiveOnly && (
+                    <Badge className="bg-orange-500/20 text-orange-300 border-orange-300/30">
+                      Active Jobs Only
+                    </Badge>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -313,7 +336,7 @@ export default function LiveSearch({ onNavigate }) {
             {showFilters && (
               <Card className="bg-white/5 border-white/10">
                 <CardContent className="p-4 md:p-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                     <div>
                       <label className="text-sm font-medium mb-2 block">Location</label>
                       <select
@@ -341,6 +364,28 @@ export default function LiveSearch({ onNavigate }) {
                     </div>
 
                     <div>
+                      <label className="text-sm font-medium mb-2 block">Employer</label>
+                      <Input
+                        value={employerFilter}
+                        onChange={(e) => { setEmployerFilter(e.target.value); setPage(1); }}
+                        placeholder="Filter by employer..."
+                        className="bg-white/5 border-white/10"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Status</label>
+                      <select
+                        value={showActiveOnly ? 1 : 0}
+                        onChange={(e) => { setShowActiveOnly(Boolean(Number(e.target.value))); setPage(1); }}
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200"
+                      >
+                        <option value={0}>All Jobs</option>
+                        <option value={1}>Active Only</option>
+                      </select>
+                    </div>
+
+                    <div>
                       <label className="text-sm font-medium mb-2 block">Sort By</label>
                       <select
                         value={sort}
@@ -352,17 +397,25 @@ export default function LiveSearch({ onNavigate }) {
                         ))}
                       </select>
                     </div>
-
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Actions</label>
-                      <Button
-                        variant="secondary"
-                        onClick={() => { setQ(""); setLoc(0); setType(0); setSort(1); setPage(1); }}
-                        className="w-full"
-                      >
-                        Clear All
-                      </Button>
-                    </div>
+                  </div>
+                  
+                  <div className="mt-4 flex justify-end">
+                    <Button
+                      variant="secondary"
+                      onClick={() => {
+                        setQ("");
+                        setLoc(0);
+                        setType(0);
+                        setEmployerFilter("");
+                        setShowActiveOnly(false);
+                        setSort(1);
+                        setPage(1);
+                      }}
+                      className="gap-2"
+                    >
+                      <Filter className="w-4 h-4" />
+                      Clear All Filters
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

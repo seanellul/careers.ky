@@ -21,7 +21,7 @@ import {
   Menu,
   X
 } from "lucide-react";
-import { buildCiscoTree, loadAggregates, loadWorkTypes, loadEducationTypes, loadExperienceTypes, searchTitles } from "@/lib/data";
+import { buildCiscoTree, loadAggregates, loadWorkTypes, loadEducationTypes, loadExperienceTypes, titleSuggestions } from "@/lib/data";
 
 export default function CareerTracks({ onNavigate }) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -115,7 +115,7 @@ export default function CareerTracks({ onNavigate }) {
   // Search results
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
-    return searchTitles(searchQuery, 20);
+    return titleSuggestions(searchQuery, 20);
   }, [searchQuery]);
 
   const clearFilters = () => {
@@ -136,17 +136,22 @@ export default function CareerTracks({ onNavigate }) {
       {/* Header */}
       <header className="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/80 border-b border-white/5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <button 
+            onClick={() => onNavigate('home')}
+            className="flex items-center gap-3 hover:opacity-80 transition"
+          >
             <div className="h-8 w-8 rounded-xl bg-cyan-400/20 grid place-items-center ring-1 ring-cyan-300/30">
               <Rocket className="w-4 h-4 text-cyan-300" />
             </div>
             <span className="font-semibold tracking-tight">careers<span className="text-cyan-300">.ky</span></span>
-          </div>
+          </button>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-3">
-            <Button variant="secondary" onClick={() => onNavigate('home')}>Back to Home</Button>
-          </div>
+          <nav className="hidden md:flex items-center gap-6 text-sm text-neutral-300">
+            <button onClick={() => onNavigate('home')} className="hover:text-white transition">Home</button>
+            <span className="text-cyan-300 font-medium">Career Tracks</span>
+            <button onClick={() => onNavigate('live-search')} className="hover:text-white transition">Live Search</button>
+          </nav>
 
           {/* Mobile Menu Button */}
           <button 
@@ -169,7 +174,19 @@ export default function CareerTracks({ onNavigate }) {
                 }}
                 className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white text-left"
               >
-                ← Back to Home
+                Home
+              </button>
+              <div className="px-4 py-3 rounded-lg bg-cyan-500/20 border border-cyan-300/30 text-cyan-300 font-medium">
+                Career Tracks (current)
+              </div>
+              <button 
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onNavigate('live-search');
+                }}
+                className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white text-left"
+              >
+                Live Search
               </button>
             </nav>
           </div>
@@ -230,10 +247,17 @@ export default function CareerTracks({ onNavigate }) {
                   {searchResults.map((result, i) => (
                     <button 
                       key={i}
-                      className="text-left p-3 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-300/40 transition"
+                      onClick={() => {
+                        if (result.sCISCO) {
+                          onNavigate('job-detail', { ciscoCode: result.sCISCO });
+                        }
+                      }}
+                      className="text-left p-3 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-300/40 hover:bg-cyan-400/10 transition cursor-pointer"
                     >
-                      <div className="font-medium">{result.cTitle}</div>
-                      <div className="text-sm text-neutral-400">Occupation #{result.sOccupation}</div>
+                      <div className="font-medium">{result.label}</div>
+                      <div className="text-sm text-neutral-400">
+                        CISCO Code: {result.sCISCO}
+                      </div>
                     </button>
                   ))}
                 </div>
@@ -434,21 +458,21 @@ function TaxonomyTreeView({ tree, aggregates, selectedMajor, setSelectedMajor, s
             {selectedMinor.children?.map((unit) => {
               const stats = aggregates.get(unit.id);
               return (
-                <Card 
-                  key={unit.id} 
-                  className="bg-white/5 border-white/10 hover:border-cyan-300/40 transition cursor-pointer"
-                  onClick={() => onNavigate?.('job-detail', unit.id)}
-                >
-                  <CardContent className="p-3">
-                    <div className="font-medium mb-1">{unit.title}</div>
-                    {stats && (
-                      <div className="flex gap-2 text-xs">
-                        <Badge className="bg-neutral-800">{stats.count} posts</Badge>
-                        <Badge className="bg-emerald-800">CI$ {Math.round(stats.mean).toLocaleString()}</Badge>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+              <Card 
+                key={unit.id} 
+                className="bg-white/5 border-white/10 hover:border-cyan-300/40 transition cursor-pointer"
+                onClick={() => onNavigate?.('job-detail', { ciscoCode: unit.id })}
+              >
+                <CardContent className="p-3">
+                  <div className="font-medium mb-1">{unit.title}</div>
+                  {stats && (
+                    <div className="flex gap-2 text-xs">
+                      <Badge className="bg-neutral-800">{stats.count} posts</Badge>
+                      <Badge className="bg-emerald-800">CI$ {Math.round(stats.mean).toLocaleString()}</Badge>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
               );
             })}
           </div>
@@ -553,7 +577,7 @@ function MarketAnalyticsView({ units, aggregates, workTypes, eduTypes, expTypes,
 
               <Button 
                 className="w-full gap-2"
-                onClick={() => onNavigate?.('job-detail', unit.id)}
+                onClick={() => onNavigate?.('job-detail', { ciscoCode: unit.id })}
               >
                 <Eye className="w-4 h-4" />
                 View Details

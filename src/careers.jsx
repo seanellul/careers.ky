@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,7 @@ import OnboardingFlow from "@/components/OnboardingFlow.jsx";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useHeroIntro, useFadeInOnScroll, useParallaxBackground, useMarqueeControl, useHoverFloat, useAccordionMotion, useStaggerList, useCTAGradientPulse, useFooterReveal } from "@/animations/gsapEffects";
-import { getActiveJobPostings, loadLocationTypes } from "@/lib/data";
+import { getActiveJobPostings, loadLocationTypes, buildCiscoTree, loadAggregates } from "@/lib/data";
 
 // ————————————————————————————————————————————————————————————————
 // careers.ky — Cayman Lifestyle → Career Landing (GSAP + Tailwind + shadcn)
@@ -88,20 +88,6 @@ function loadActiveJobs() {
 // ————————————————————————————————————————————————————————————————
 // Page content data
 // ————————————————————————————————————————————————————————————————
-const lifestyleGoals = [
-  { icon: <SunMedium className="w-5 h-5" />, title: "Beach‑time balance", tags: ["9–5 Flex", "Remote days"] },
-  { icon: <Heart className="w-5 h-5" />, title: "Wellness & nature", tags: ["Parks", "Diving"] },
-  { icon: <CircleDollarSign className="w-5 h-5" />, title: "Financial upside", tags: ["Tax‑efficient", "Growth"] },
-  { icon: <Users className="w-5 h-5" />, title: "Community impact", tags: ["Youth", "Civic tech"] },
-];
-
-const careerTracks = [
-  { icon: <Briefcase className="w-5 h-5" />, title: "Tech & Product", desc: "Engineering, Design, Data, PM" },
-  { icon: <Building2 className="w-5 h-5" />, title: "Financial Services", desc: "Compliance, Ops, Risk, Funds" },
-  { icon: <GraduationCap className="w-5 h-5" />, title: "Education & Research", desc: "EdTech, Training, Academia" },
-  { icon: <Compass className="w-5 h-5" />, title: "Tourism & Hospitality", desc: "Hotels, F&B, Experiences" },
-];
-
 const featuredBadges = [
   "Remote‑friendly",
   "Graduate‑ready",
@@ -129,6 +115,61 @@ export default function CareersKYLanding({ onNavigate }) {
     if (el && !revealEls.current.includes(el)) revealEls.current.push(el);
   };
 
+  // Load career data
+  const careerTree = useMemo(() => {
+    try {
+      return buildCiscoTree();
+    } catch (error) {
+      console.error('Error building career tree:', error);
+      return { id: "root", title: "Occupations", children: [] };
+    }
+  }, []);
+
+  const aggregates = useMemo(() => loadAggregates(), []);
+
+  // Get major categories with stats
+  const careerTracks = useMemo(() => {
+    const majors = careerTree.children || [];
+    return majors.slice(0, 8).map((major) => {
+      // Calculate total jobs in this major category
+      let totalJobs = 0;
+      let avgSalary = 0;
+      let salaryCount = 0;
+
+      const countJobs = (node) => {
+        if (node.children) {
+          node.children.forEach(child => {
+            if (child.id && child.id.length === 4) {
+              // This is a CISCO unit
+              const stats = aggregates.get(child.id);
+              if (stats) {
+                totalJobs += stats.count || 0;
+                if (stats.mean) {
+                  avgSalary += stats.mean * stats.count;
+                  salaryCount += stats.count;
+                }
+              }
+            } else {
+              countJobs(child);
+            }
+          });
+        }
+      };
+
+      countJobs(major);
+      const finalAvgSalary = salaryCount > 0 ? Math.round(avgSalary / salaryCount) : 0;
+
+      return {
+        id: major.id,
+        title: major.title,
+        description: major.description || `${major.children?.length || 0} subcategories`,
+        jobCount: totalJobs,
+        avgSalary: finalAvgSalary,
+        subcategories: major.children?.length || 0
+      };
+    });
+  }, [careerTree, aggregates]);
+
   // Load jobs for stats display
   useEffect(() => {
     try {
@@ -142,8 +183,8 @@ export default function CareersKYLanding({ onNavigate }) {
   useHeroIntro(hero);
   useFadeInOnScroll(revealEls);
   useParallaxBackground(root, "#bg-gradient");
-  useMarqueeControl("#explore .animate-[marquee_24s_linear_infinite]");
-  useHoverFloat("#tracks .group, #map .group, #explore .group");
+  useMarqueeControl("#tracks .animate-[marquee_24s_linear_infinite]");
+  useHoverFloat("#tracks .group, #map .group, #jobs .group");
   useAccordionMotion(faqRef);
   useCTAGradientPulse("#cta-gradient");
   useFooterReveal("footer a");
@@ -176,8 +217,12 @@ export default function CareersKYLanding({ onNavigate }) {
       <header className="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/80 border-b border-white/5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-xl bg-cyan-400/20 grid place-items-center ring-1 ring-cyan-300/30">
-              <Rocket className="w-4 h-4 text-cyan-300" />
+            <div className="h-8 w-8">
+              <img 
+                src="/src/images/logo-careers.png" 
+                alt="careers.ky logo" 
+                className="w-full h-full object-contain"
+              />
             </div>
             <span className="font-semibold tracking-tight">careers<span className="text-cyan-300">.ky</span></span>
           </div>
@@ -298,11 +343,11 @@ export default function CareersKYLanding({ onNavigate }) {
                 </Button>
               </div>
 
-              <div className="flex flex-wrap gap-2">
+              {/* <div className="flex flex-wrap gap-2">
                 {featuredBadges.map((b, i) => (
                   <Badge key={i} variant="secondary" className="bg-white/5 border-white/10 text-neutral-200 text-xs">{b}</Badge>
                 ))}
-              </div>
+              </div> */}
             </div>
             <div className="lg:col-span-5">
               <div className="rounded-3xl p-1.5 bg-gradient-to-b from-cyan-300/30 via-cyan-300/5 to-transparent">
@@ -372,7 +417,7 @@ export default function CareersKYLanding({ onNavigate }) {
       </section>
 
       {/* Lifestyle → Career Pathway (scrollytelling) */}
-      <section id="map" className="relative py-20">
+      {/* <section id="map" className="relative py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-12 gap-12 items-start">
             <div className="lg:col-span-5 sticky top-24 self-start">
@@ -400,64 +445,88 @@ export default function CareersKYLanding({ onNavigate }) {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Tracks grid */}
       <section id="tracks" className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between mb-8">
-            <h3 className="text-2xl md:text-3xl font-semibold tracking-tight">Explore career tracks</h3>
+            <div>
+              <h3 className="text-2xl md:text-3xl font-semibold tracking-tight">Explore career tracks</h3>
+              <p className="text-neutral-400 text-sm mt-2">Browse by industry category with live market data</p>
+            </div>
             <Button variant="secondary" className="gap-2" onClick={() => onNavigate?.('career-tracks')}>
-              Browse all <ChevronRight className="w-4 h-4" />
+              View all <ChevronRight className="w-4 h-4" />
             </Button>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {careerTracks.map((t, i) => (
-              <Card key={i} ref={addRevealEl} className="group bg-white/5 border-white/10 hover:border-white/20 hover:shadow-2xl hover:shadow-cyan-300/10 transition">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {careerTracks.map((track) => (
+              <Card 
+                key={track.id} 
+                ref={addRevealEl} 
+                className="group bg-white/5 border-white/10 hover:border-cyan-300/40 hover:shadow-2xl hover:shadow-cyan-300/10 transition cursor-pointer"
+                onClick={() => onNavigate?.('career-tracks')}
+              >
                 <CardContent className="p-5">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2 text-emerald-300">{t.icon}<span className="text-xs uppercase tracking-wide opacity-90">Track</span></div>
-                    <Badge className="bg-neutral-800 border-white/10">Cayman</Badge>
+                  <div className="flex items-center justify-between mb-3">
+                    <Badge variant="secondary" className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30 text-xs">
+                      {track.id}
+                    </Badge>
+                    <ChevronRight className="w-4 h-4 text-neutral-400 group-hover:text-cyan-300 transition" />
                   </div>
-                  <div className="font-medium text-lg mb-1 group-hover:text-white">{t.title}</div>
-                  <p className="text-sm text-neutral-400">{t.desc}</p>
+                  <div className="font-semibold text-base mb-2 group-hover:text-cyan-300 transition line-clamp-2 min-h-[2.5rem]">
+                    {track.title}
+                  </div>
+                  <p className="text-xs text-neutral-400 mb-4">{track.subcategories} specializations</p>
+                  
+                  <div className="space-y-2 pt-3 border-t border-white/10">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-neutral-400">Active Jobs</span>
+                      <span className="font-semibold text-emerald-300">{track.jobCount}</span>
+                    </div>
+                    {track.avgSalary > 0 && (
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-neutral-400">Avg. Salary</span>
+                        <span className="font-semibold text-cyan-300">CI$ {track.avgSalary.toLocaleString()}</span>
+                      </div>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Explore carousel (marquee style) */}
-      <section id="explore" className="py-16 border-y border-white/5 bg-neutral-950/40">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 mb-6">
-            <Plane className="w-5 h-5 text-cyan-300" />
-            <h4 className="text-xl font-semibold tracking-tight">Live like Cayman, work on what you love</h4>
-          </div>
-          <div className="overflow-hidden">
-            <div className="flex gap-3 animate-[marquee_24s_linear_infinite] will-change-transform">
-              {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} className="group min-w-[260px] rounded-2xl p-4 bg-white/5 border border-white/10">
-                  <div className="text-sm text-neutral-400 mb-2">Featured role</div>
-                  <div className="font-medium mb-1">UI Designer · FinTech</div>
-                  <div className="text-xs text-neutral-400">CI$ 52k–72k · Hybrid · Visa</div>
-                </div>
-              ))}
+          
+          {/* Job carousel under tracks grid */}
+          <div className="mt-16">
+            <div className="flex items-center gap-2 mb-6">
+              <Plane className="w-5 h-5 text-cyan-300" />
+              <h4 className="text-xl font-semibold tracking-tight">Work on what you love.</h4>
+            </div>
+            <div className="overflow-hidden">
+              <div className="flex gap-3 animate-[marquee_24s_linear_infinite] will-change-transform">
+                {Array.from({ length: 2 }).map((_, duplicateIndex) => 
+                  jobs.slice(0, Math.min(8, jobs.length)).map((job, i) => (
+                    <div key={`${duplicateIndex}-${i}`} className="group min-w-[260px] rounded-2xl p-4 bg-white/10 border border-white/20 backdrop-blur-sm">
+                      <div className="text-sm text-neutral-300 mb-2">Live posting</div>
+                      <div className="font-medium mb-1 text-white">{truncateText(job.jobTitle, 25)}</div>
+                      <div className="text-xs text-neutral-300">
+                        {fmtSalary(job)} · {WORK_TYPE[job.workType] || job.workType}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+              <style>{`@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
             </div>
           </div>
-          <style>{`@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
         </div>
       </section>
 
-      {/* Jobs CTA Section - removed JobsFeed, now on dedicated page */}
+      {/* Jobs CTA Section */}
       <section id="jobs" className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Card className="bg-gradient-to-br from-cyan-500/10 via-emerald-500/10 to-purple-500/10 border-white/10">
+          <Card className="bg-gradient-to-br from-cyan-500/15 via-emerald-500/15 to-purple-500/15 border-white/20 backdrop-blur-md shadow-2xl">
             <CardContent className="p-8 md:p-12 text-center">
-              <div className="inline-flex h-12 w-12 rounded-xl bg-cyan-400/20 grid place-items-center ring-1 ring-cyan-300/30 mb-6">
-                <Search className="w-6 h-6 text-cyan-300" />
-              </div>
               <h3 className="text-2xl md:text-3xl font-semibold tracking-tight mb-4">
                 Ready to explore <span className="text-cyan-300">{jobs.length}+ active jobs</span>?
               </h3>
@@ -486,16 +555,52 @@ export default function CareersKYLanding({ onNavigate }) {
           <h5 className="text-2xl md:text-3xl font-semibold tracking-tight mb-6">Frequently asked</h5>
           <Accordion type="single" collapsible className="bg-white/5 border border-white/10 rounded-2xl" ref={faqRef}>
             <AccordionItem value="item-1">
-              <AccordionTrigger className="px-6">How does the lifestyle → career match work?</AccordionTrigger>
-              <AccordionContent className="px-6 text-neutral-300">We weight your priorities (time, commute, compensation, impact) against role metadata to surface the closest fits.</AccordionContent>
+              <AccordionTrigger className="px-6">What is careers.ky?</AccordionTrigger>
+              <AccordionContent className="px-6 text-neutral-300">
+                careers.ky is a comprehensive job market platform for the Cayman Islands, providing real-time insights into active job postings, salary data, and industry trends. We pull live data from WORC (Workforce Opportunities & Residency Cayman) to help you make informed career decisions with three powerful tools: Career Mapper for lifestyle-first job matching, Career Tracks for exploring industries and salary ranges, and Live Search for browsing all active postings.
+              </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
-              <AccordionTrigger className="px-6">Do you list remote roles?</AccordionTrigger>
-              <AccordionContent className="px-6 text-neutral-300">Yes — fully remote, hybrid, and on‑site roles are supported with clear labels and filters.</AccordionContent>
+              <AccordionTrigger className="px-6">Where does your job data come from?</AccordionTrigger>
+              <AccordionContent className="px-6 text-neutral-300">
+                All job postings, salary information, and market data are sourced directly from WORC (my.egov.ky), the official government portal for job opportunities in the Cayman Islands. Our data is regularly updated to ensure you have access to the most current job market information available.
+              </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
-              <AccordionTrigger className="px-6">Is this for Caymanians only?</AccordionTrigger>
-              <AccordionContent className="px-6 text-neutral-300">Our focus is Cayman — residents, Caymanians, and inbound talent — with local compliance and pathways.</AccordionContent>
+              <AccordionTrigger className="px-6">How does the Career Mapper work?</AccordionTrigger>
+              <AccordionContent className="px-6 text-neutral-300">
+                Career Mapper is our lifestyle-first job matching tool. It asks you about your priorities—like work-life balance, commute preferences, salary expectations, and personal interests—then matches you with career paths and job opportunities that align with your lifestyle goals, not just your skills. It's designed to help you find work that fits your life, not the other way around.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-4">
+              <AccordionTrigger className="px-6">What's the difference between Career Tracks and Live Search?</AccordionTrigger>
+              <AccordionContent className="px-6 text-neutral-300">
+                Career Tracks lets you explore the job market by industry category, showing you aggregated data like average salaries, number of active jobs, and career pathways within each sector. It's perfect for researching industries and planning your career direction. Live Search, on the other hand, is a real-time job board where you can browse, filter, and search through all active job postings with detailed information about each role.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-5">
+              <AccordionTrigger className="px-6">Can I apply to jobs directly through careers.ky?</AccordionTrigger>
+              <AccordionContent className="px-6 text-neutral-300">
+                careers.ky is a job discovery and research platform. When you find a position you're interested in, we'll direct you to the official WORC portal or the employer's application page where you can submit your application. We help you discover opportunities and make informed decisions, but applications are processed through the official channels.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-6">
+              <AccordionTrigger className="px-6">Who can use this platform?</AccordionTrigger>
+              <AccordionContent className="px-6 text-neutral-300">
+                careers.ky is designed for anyone interested in working in the Cayman Islands—Caymanians, residents, and international talent exploring opportunities. Whether you're a student planning your career path, a professional considering a career change, or someone relocating to Cayman, our platform provides valuable insights into the local job market.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-7">
+              <AccordionTrigger className="px-6">How often is the job data updated?</AccordionTrigger>
+              <AccordionContent className="px-6 text-neutral-300">
+                Our job listings are synced regularly with the WORC database to ensure you're seeing current, active postings. The job counts, salary statistics, and industry trends you see on the platform reflect the latest available data from official government sources.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-8">
+              <AccordionTrigger className="px-6">What types of jobs are listed? Are remote roles available?</AccordionTrigger>
+              <AccordionContent className="px-6 text-neutral-300">
+                We list all types of employment opportunities available through WORC, including full-time, part-time, temporary positions, internships, and apprenticeships. Job types range from entry-level to senior positions across all major industries in the Cayman Islands. Each job posting clearly indicates the work arrangement, location requirements, and whether remote or hybrid options are available.
+              </AccordionContent>
             </AccordionItem>
           </Accordion>
         </div>
@@ -525,8 +630,12 @@ export default function CareersKYLanding({ onNavigate }) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-sm text-neutral-400">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-xl bg-cyan-400/20 grid place-items-center ring-1 ring-cyan-300/30">
-                <Rocket className="w-4 h-4 text-cyan-300" />
+              <div className="h-8 w-8">
+                <img 
+                  src="/src/images/logo-careers.png" 
+                  alt="careers.ky logo" 
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div>
                 <div className="font-medium text-neutral-200">careers.ky</div>

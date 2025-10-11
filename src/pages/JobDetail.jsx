@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { 
-  ArrowLeft, 
   DollarSign, 
   Users, 
   BookOpen,
@@ -12,12 +11,17 @@ import {
   MapPin,
   Clock,
   ChevronRight,
+  ChevronLeft,
   ExternalLink,
   Rocket,
   Menu,
-  X
+  X,
+  FileText,
+  CheckCircle,
+  Building2,
+  AlertCircle
 } from "lucide-react";
-import { getCiscoUnit, loadAggregates, loadWorkTypes, loadEducationTypes, loadExperienceTypes, searchTitles } from "@/lib/data";
+import { getCiscoUnit, loadAggregates, loadWorkTypes, loadEducationTypes, loadExperienceTypes, searchTitles, getJobPostingsByCiscoCode, generateWORCSearchURL } from "@/lib/data";
 import JobPostings from "@/components/JobPostings";
 
 export default function JobDetail({ ciscoCode, onNavigate }) {
@@ -26,11 +30,56 @@ export default function JobDetail({ ciscoCode, onNavigate }) {
   const [relatedJobs, setRelatedJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showCareerPlan, setShowCareerPlan] = useState(false);
 
   const workTypes = useMemo(() => loadWorkTypes(), []);
   const eduTypes = useMemo(() => loadEducationTypes(), []);
   const expTypes = useMemo(() => loadExperienceTypes(), []);
   const aggregates = useMemo(() => loadAggregates(), []);
+
+  // Generate employer data for career plan
+  const employerData = useMemo(() => {
+    if (!ciscoCode) return [];
+    
+    const postings = getJobPostingsByCiscoCode(ciscoCode);
+    const employerMap = new Map();
+    
+    postings.forEach(posting => {
+      const employer = posting.Employer;
+      if (!employer) return;
+      
+      if (!employerMap.has(employer)) {
+        employerMap.set(employer, {
+          name: employer,
+          totalPostings: 0,
+          activePostings: 0,
+          recentPosting: null,
+          isActiveHiring: false
+        });
+      }
+      
+      const empData = employerMap.get(employer);
+      empData.totalPostings++;
+      
+      if (posting.isActive) {
+        empData.activePostings++;
+        empData.isActiveHiring = true;
+      }
+      
+      // Track most recent posting
+      if (!empData.recentPosting || posting.createdDate > empData.recentPosting.createdDate) {
+        empData.recentPosting = posting;
+      }
+    });
+    
+    // Convert to array and sort by active hiring first, then by total postings
+    return Array.from(employerMap.values()).sort((a, b) => {
+      if (a.isActiveHiring !== b.isActiveHiring) {
+        return a.isActiveHiring ? -1 : 1;
+      }
+      return b.totalPostings - a.totalPostings;
+    });
+  }, [ciscoCode]);
 
   useEffect(() => {
     if (ciscoCode) {
@@ -94,23 +143,22 @@ export default function JobDetail({ ciscoCode, onNavigate }) {
       {/* Header */}
       <header className="sticky top-0 z-30 backdrop-blur supports-[backdrop-filter]:bg-neutral-950/80 border-b border-white/5">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <button 
+            onClick={() => onNavigate('home')}
+            className="flex items-center gap-3 hover:opacity-80 transition"
+          >
             <div className="h-8 w-8 rounded-xl bg-cyan-400/20 grid place-items-center ring-1 ring-cyan-300/30">
               <Rocket className="w-4 h-4 text-cyan-300" />
             </div>
             <span className="font-semibold tracking-tight">careers<span className="text-cyan-300">.ky</span></span>
-          </div>
+          </button>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-3">
-            <Button variant="secondary" size="sm" onClick={() => onNavigate('career-tracks')} className="gap-2">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Careers
-            </Button>
-            <Button variant="secondary" onClick={() => onNavigate('home')}>
-              Home
-            </Button>
-          </div>
+          <nav className="hidden md:flex items-center gap-6 text-sm text-neutral-300">
+            <button onClick={() => onNavigate('home')} className="hover:text-white transition">Home</button>
+            <button onClick={() => onNavigate('career-tracks')} className="hover:text-white transition">Career Tracks</button>
+            <button onClick={() => onNavigate('live-search')} className="hover:text-white transition">Live Search</button>
+          </nav>
 
           {/* Mobile Menu Button */}
           <button 
@@ -129,21 +177,29 @@ export default function JobDetail({ ciscoCode, onNavigate }) {
               <button 
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  onNavigate('career-tracks');
-                }}
-                className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white text-left gap-2 flex items-center"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Careers
-              </button>
-              <button 
-                onClick={() => {
-                  setMobileMenuOpen(false);
                   onNavigate('home');
                 }}
                 className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white text-left"
               >
                 Home
+              </button>
+              <button 
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onNavigate('career-tracks');
+                }}
+                className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white text-left"
+              >
+                Career Tracks
+              </button>
+              <button 
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onNavigate('live-search');
+                }}
+                className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white text-left"
+              >
+                Live Search
               </button>
             </nav>
           </div>
@@ -151,6 +207,18 @@ export default function JobDetail({ ciscoCode, onNavigate }) {
       </header>
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8">
+        {/* Back Button */}
+        <div className="mb-6">
+          <Button 
+            variant="secondary" 
+            onClick={() => onNavigate('career-tracks')}
+            className="gap-2"
+          >
+            <ChevronLeft className="w-4 h-4" />
+            Back to Career Tracks
+          </Button>
+        </div>
+
         {/* Hero Section */}
         <div className="mb-8">
           <div className="flex items-start justify-between mb-6">
@@ -158,12 +226,12 @@ export default function JobDetail({ ciscoCode, onNavigate }) {
               <Badge className="mb-3 bg-cyan-500/20 text-cyan-300 border-cyan-300/30">
                 CISCO Unit {unit.id}
               </Badge>
-              <h1 className="text-4xl font-semibold tracking-tight mb-4">
+              <h1 className="text-4xl font-semibold tracking-tight">
                 {unit.title} <span className="text-cyan-300">Jobs in Cayman</span>
               </h1>
-              <p className="text-neutral-300 text-lg max-w-3xl mb-6">
+              {/* <p className="text-neutral-300 text-lg max-w-3xl mb-6">
                 {unit.description}
-              </p>
+              </p> */}
             </div>
           </div>
 
@@ -340,12 +408,19 @@ export default function JobDetail({ ciscoCode, onNavigate }) {
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold mb-4">Take Action</h3>
                 <div className="space-y-3">
-                  <Button className="w-full gap-2">
+                  <Button 
+                    className="w-full gap-2"
+                    onClick={() => onNavigate('live-search', { searchQuery: unit.title })}
+                  >
                     <ExternalLink className="w-4 h-4" />
                     Search Live Jobs
                   </Button>
-                  <Button variant="secondary" className="w-full gap-2">
-                    <ChevronRight className="w-4 h-4" />
+                  <Button 
+                    variant="secondary" 
+                    className="w-full gap-2"
+                    onClick={() => setShowCareerPlan(true)}
+                  >
+                    <FileText className="w-4 h-4" />
                     Build Career Plan
                   </Button>
                 </div>
@@ -384,6 +459,272 @@ export default function JobDetail({ ciscoCode, onNavigate }) {
           </div>
         </div>
       </div>
+
+      {/* Career Plan Modal */}
+      {showCareerPlan && (
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/80 backdrop-blur-sm overflow-y-auto py-8 px-4">
+          <div className="relative w-full max-w-4xl bg-neutral-900 border border-white/10 rounded-2xl shadow-2xl">
+            {/* Header */}
+            <div className="sticky top-0 z-20 bg-neutral-900/95 backdrop-blur border-b border-white/10 p-6 rounded-t-2xl">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h2 className="text-3xl font-semibold mb-2 flex items-center gap-3">
+                    <FileText className="w-8 h-8 text-cyan-300" />
+                    Career Plan: {unit.title}
+                  </h2>
+                  <p className="text-neutral-400">Your roadmap to entering this career track in Cayman</p>
+                </div>
+                <button
+                  onClick={() => setShowCareerPlan(false)}
+                  className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition"
+                  aria-label="Close"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="relative z-10 p-6 space-y-6">
+              {/* Overview Stats */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <Card className="bg-white/5 border-white/10">
+                  <CardContent className="p-4 text-center">
+                    <div className="text-2xl font-semibold text-cyan-300">{employerData.length}</div>
+                    <div className="text-sm text-neutral-400">Employers</div>
+                  </CardContent>
+                </Card>
+                <Card className="bg-white/5 border-white/10">
+                  <CardContent className="p-4 text-center">
+                    <div className="text-2xl font-semibold text-emerald-300">
+                      {employerData.filter(e => e.isActiveHiring).length}
+                    </div>
+                    <div className="text-sm text-neutral-400">Active Hirers</div>
+                  </CardContent>
+                </Card>
+                <Card className="bg-white/5 border-white/10">
+                  <CardContent className="p-4 text-center">
+                    <div className="text-2xl font-semibold text-purple-300">
+                      {stats ? stats.count : 0}
+                    </div>
+                    <div className="text-sm text-neutral-400">Total Postings</div>
+                  </CardContent>
+                </Card>
+                <Card className="bg-white/5 border-white/10">
+                  <CardContent className="p-4 text-center">
+                    <div className="text-2xl font-semibold text-orange-300">
+                      CI$ {stats ? Math.round(stats.mean).toLocaleString() : 0}
+                    </div>
+                    <div className="text-sm text-neutral-400">Avg Salary</div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Key Tasks & Responsibilities */}
+              {unit.tasks && (
+                <Card className="bg-white/5 border-white/10">
+                  <CardContent className="p-6">
+                    <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 text-cyan-300" />
+                      Key Tasks & Responsibilities
+                    </h3>
+                    <div className="prose prose-invert max-w-none">
+                      <div className="text-neutral-300 whitespace-pre-line leading-relaxed">
+                        {unit.tasks}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Requirements Section */}
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Experience Required */}
+                {stats && stats.dist && stats.dist.exp && (
+                  <Card className="bg-white/5 border-white/10">
+                    <CardContent className="p-6">
+                      <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                        <Clock className="w-5 h-5 text-orange-300" />
+                        Experience Required
+                      </h3>
+                      <div className="space-y-3">
+                        {Object.entries(stats.dist.exp)
+                          .sort((a, b) => b[1] - a[1])
+                          .map(([key, value]) => {
+                            const percentage = Math.round((value / stats.count) * 100);
+                            return (
+                              <div key={key} className="space-y-1">
+                                <div className="flex justify-between text-sm">
+                                  <span className="text-neutral-300">{expTypes.get(key) || key}</span>
+                                  <span className="text-neutral-400">{percentage}%</span>
+                                </div>
+                                <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                                  <div 
+                                    className="h-full bg-orange-400" 
+                                    style={{ width: `${percentage}%` }}
+                                  />
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {/* Education Required */}
+                {stats && stats.dist && stats.dist.edu && (
+                  <Card className="bg-white/5 border-white/10">
+                    <CardContent className="p-6">
+                      <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                        <BookOpen className="w-5 h-5 text-purple-300" />
+                        Education Required
+                      </h3>
+                      <div className="space-y-3">
+                        {Object.entries(stats.dist.edu)
+                          .sort((a, b) => b[1] - a[1])
+                          .map(([key, value]) => {
+                            const percentage = Math.round((value / stats.count) * 100);
+                            return (
+                              <div key={key} className="space-y-1">
+                                <div className="flex justify-between text-sm">
+                                  <span className="text-neutral-300">{eduTypes.get(key) || key}</span>
+                                  <span className="text-neutral-400">{percentage}%</span>
+                                </div>
+                                <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                                  <div 
+                                    className="h-full bg-purple-400" 
+                                    style={{ width: `${percentage}%` }}
+                                  />
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+
+              {/* Employers in Cayman */}
+              <Card className="bg-white/5 border-white/10">
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <Building2 className="w-5 h-5 text-cyan-300" />
+                    Employers in Cayman Islands
+                  </h3>
+                  <p className="text-neutral-400 mb-4">
+                    {employerData.length} employers have hired for this position. 
+                    {employerData.filter(e => e.isActiveHiring).length > 0 && (
+                      <span className="text-emerald-300 font-medium">
+                        {' '}{employerData.filter(e => e.isActiveHiring).length} are actively hiring now.
+                      </span>
+                    )}
+                  </p>
+
+                  <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
+                    {employerData.map((employer, idx) => {
+                      // Create a mock job posting object for WORC search URL generation
+                      const mockPosting = {
+                        cTitle: unit.title,
+                        Employer: employer.name
+                      };
+                      
+                      return (
+                        <div
+                          key={idx}
+                          className={`p-4 rounded-lg border transition ${
+                            employer.isActiveHiring
+                              ? 'bg-emerald-500/10 border-emerald-300/30 hover:bg-emerald-500/15 cursor-pointer'
+                              : 'bg-white/5 border-white/10'
+                          }`}
+                          onClick={employer.isActiveHiring ? () => {
+                            // Close the career plan modal first
+                            setShowCareerPlan(false);
+                            // Navigate to live search with employer-only search
+                            onNavigate('live-search', {
+                              searchQuery: '',
+                              employer: employer.name,
+                              showActiveOnly: false
+                            });
+                          } : undefined}
+                        >
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-2">
+                                <h4 className="font-semibold text-lg truncate">{employer.name}</h4>
+                                {employer.isActiveHiring && (
+                                  <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-300/30 shrink-0 hover:bg-emerald-500/30 transition">
+                                    <AlertCircle className="w-3 h-3 mr-1" />
+                                    Actively Hiring
+                                  </Badge>
+                                )}
+                              </div>
+                              <div className="flex flex-wrap items-center gap-3 text-sm text-neutral-400">
+                                <span>{employer.totalPostings} posting{employer.totalPostings !== 1 ? 's' : ''}</span>
+                                {employer.activePostings > 0 && (
+                                  <span className="text-emerald-300">
+                                    {employer.activePostings} active
+                                  </span>
+                                )}
+                                {employer.recentPosting && (
+                                  <span>
+                                    Last posted: {new Date(employer.recentPosting.createdDate).toLocaleDateString('en-US', {
+                                      year: 'numeric',
+                                      month: 'short',
+                                      day: 'numeric'
+                                    })}
+                                  </span>
+                                )}
+                              </div>
+                              {employer.isActiveHiring && (
+                                <div className="mt-2 text-xs text-emerald-300/80">
+                                  Click to view active job postings in our live search
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {employerData.length === 0 && (
+                    <div className="text-center py-8 text-neutral-400">
+                      <Building2 className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                      <p>No employer data available for this position.</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Action Footer */}
+              <Card className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border-cyan-300/30">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-semibold text-lg mb-1">Ready to take the next step?</h4>
+                      <p className="text-neutral-400 text-sm">
+                        Search for live job opportunities in this career track
+                      </p>
+                    </div>
+                    <Button 
+                      onClick={() => {
+                        setShowCareerPlan(false);
+                        onNavigate('live-search', { searchQuery: unit.title });
+                      }}
+                      className="gap-2 shrink-0"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Find Jobs
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

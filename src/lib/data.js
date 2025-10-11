@@ -122,11 +122,19 @@ export function loadJobPostingsDetailed() {
     return new Date(dateStr);
   };
   
+  // Helper function to parse salary strings like "$24,700" to numbers
+  const parseSalary = (salaryStr) => {
+    if (!salaryStr) return 0;
+    const cleaned = String(salaryStr).replace(/[$,]/g, '');
+    const parsed = Number(cleaned);
+    return isNaN(parsed) ? 0 : parsed;
+  };
+
   // Cast numbers and dates where appropriate
   for (const r of rows) {
-    r.fMinSalary = Number(r.fMinSalary || 0);
-    r.fMaxSalary = Number(r.fMaxSalary || 0);
-    r.fMeanSalary = Number(r.fMeanSalary || 0);
+    r.fMinSalary = parseSalary(r.fMinSalary);
+    r.fMaxSalary = parseSalary(r.fMaxSalary);
+    r.fMeanSalary = parseSalary(r.fMeanSalary);
     r.sOccupation = String(r.sOccupation);
     r.sWork = String(r.sWork || 0);
     r.sEducation = String(r.sEducation || 0);
