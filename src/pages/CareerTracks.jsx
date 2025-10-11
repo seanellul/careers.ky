@@ -116,11 +116,17 @@ export default function CareerTracks({ onNavigate }) {
     return filtered;
   }, [allUnits, aggregates, filters, sortBy, sortOrder, selectedCiscoCodes]);
 
-  // Search results
+  // Search results - only show jobs that have actual market data
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
-    return titleSuggestions(searchQuery, 20);
-  }, [searchQuery]);
+    const suggestions = titleSuggestions(searchQuery, 20);
+    
+    // Filter to only show suggestions that have actual job data in aggregates
+    return suggestions.filter(suggestion => {
+      const stats = aggregates.get(suggestion.sCISCO);
+      return stats && stats.count > 0; // Only show if there are actual job postings
+    });
+  }, [searchQuery, aggregates]);
 
   const clearFilters = () => {
     setFilters({ education: "", experience: "", workType: "" });
