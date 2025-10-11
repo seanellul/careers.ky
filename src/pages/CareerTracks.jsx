@@ -23,8 +23,8 @@ import {
 } from "lucide-react";
 import { buildCiscoTree, loadAggregates, loadWorkTypes, loadEducationTypes, loadExperienceTypes, titleSuggestions } from "@/lib/data";
 
-export default function CareerTracks({ onNavigate }) {
-  const [searchQuery, setSearchQuery] = useState("");
+export default function CareerTracks({ onNavigate, initialFilters = {} }) {
+  const [searchQuery, setSearchQuery] = useState(initialFilters.searchQuery || "");
   const [selectedMajor, setSelectedMajor] = useState(null);
   const [selectedSubMajor, setSelectedSubMajor] = useState(null);
   const [selectedMinor, setSelectedMinor] = useState(null);
@@ -32,12 +32,15 @@ export default function CareerTracks({ onNavigate }) {
   const [sortBy, setSortBy] = useState("count"); // count | min | max | mean
   const [sortOrder, setSortOrder] = useState("desc"); // asc | desc
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [selectedCiscoCodes, setSelectedCiscoCodes] = useState(new Set());
+  const [selectedCiscoCodes, setSelectedCiscoCodes] = useState(
+    initialFilters.ciscoCode ? new Set([initialFilters.ciscoCode]) : new Set()
+  );
   const [filters, setFilters] = useState({
     education: "",
     experience: "",
     workType: ""
   });
+  const [filtersApplied, setFiltersApplied] = useState(false);
 
   const tree = useMemo(() => {
     try {
@@ -148,6 +151,20 @@ export default function CareerTracks({ onNavigate }) {
       return newSet;
     });
   };
+
+  // Apply initial filters on mount
+  useEffect(() => {
+    if (!filtersApplied && (initialFilters.searchQuery || initialFilters.ciscoCode)) {
+      if (initialFilters.searchQuery) {
+        setSearchQuery(initialFilters.searchQuery);
+      }
+      if (initialFilters.ciscoCode) {
+        setSelectedCiscoCodes(new Set([initialFilters.ciscoCode]));
+      }
+      setViewMode("market"); // Switch to market view to show results
+      setFiltersApplied(true);
+    }
+  }, [initialFilters, filtersApplied]);
 
   return (
     <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">

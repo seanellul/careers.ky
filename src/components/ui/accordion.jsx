@@ -3,6 +3,7 @@ import { ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const AccordionContext = React.createContext({})
+const AccordionItemContext = React.createContext(null)
 
 const Accordion = React.forwardRef(({ type, collapsible, className, children, ...props }, ref) => {
   const [openItems, setOpenItems] = React.useState([])
@@ -29,18 +30,21 @@ const Accordion = React.forwardRef(({ type, collapsible, className, children, ..
 })
 Accordion.displayName = "Accordion"
 
-const AccordionItem = React.forwardRef(({ className, value, ...props }, ref) => (
-  <div ref={ref} data-value={value} className={cn("border-b", className)} {...props} />
+const AccordionItem = React.forwardRef(({ className, value, children, ...props }, ref) => (
+  <AccordionItemContext.Provider value={value}>
+    <div ref={ref} data-value={value} className={cn("border-b border-white/10", className)} {...props}>
+      {children}
+    </div>
+  </AccordionItemContext.Provider>
 ))
 AccordionItem.displayName = "AccordionItem"
 
 const AccordionTrigger = React.forwardRef(({ className, children, ...props }, ref) => {
   const { openItems, toggleItem } = React.useContext(AccordionContext)
-  const value = props["data-value"] || ref?.current?.parentElement?.getAttribute("data-value")
+  const value = React.useContext(AccordionItemContext)
   
   const handleClick = () => {
-    const itemValue = ref?.current?.closest("[data-value]")?.getAttribute("data-value")
-    if (itemValue) toggleItem(itemValue)
+    if (value) toggleItem(value)
   }
 
   const isOpen = value && openItems.includes(value)
@@ -65,7 +69,7 @@ AccordionTrigger.displayName = "AccordionTrigger"
 
 const AccordionContent = React.forwardRef(({ className, children, ...props }, ref) => {
   const { openItems } = React.useContext(AccordionContext)
-  const value = ref?.current?.closest("[data-value]")?.getAttribute("data-value")
+  const value = React.useContext(AccordionItemContext)
   const isOpen = value && openItems.includes(value)
 
   return (

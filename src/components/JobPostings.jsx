@@ -301,10 +301,10 @@ export default function JobPostings({ ciscoCode, unitTitle }) {
                 </div>
                 
                 <div className="flex gap-2">
-                  <Button variant="secondary" size="sm" className="gap-2">
+                  {/* <Button variant="secondary" size="sm" className="gap-2">
                     <Eye className="w-4 h-4" />
                     View Details
-                  </Button>
+                  </Button> */}
                   
                   {posting.isActive && (
                     <Button 

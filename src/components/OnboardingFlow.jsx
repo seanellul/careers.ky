@@ -64,6 +64,38 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
     } catch {}
   };
 
+  // ——— Navigation helpers ———
+  const navigateToCareerTracksWithUnit = (unit) => {
+    saveState();
+    onClose?.();
+    // Pass the CISCO code and search query to Career Tracks
+    onComplete?.({
+      persona,
+      cisco: unit,
+      title: unit?.title || "",
+      education,
+      experience,
+      targetPage: 'career-tracks',
+      ciscoCode: unit?.id,
+      searchQuery: unit?.title
+    });
+  };
+
+  const navigateToLiveSearchWithQuery = (q) => {
+    saveState();
+    onClose?.();
+    // Pass the search query to Live Search
+    onComplete?.({
+      persona,
+      cisco: pickedUnit,
+      title: q,
+      education,
+      experience,
+      targetPage: 'live-search',
+      searchQuery: q
+    });
+  };
+
   if (!open) return null;
 
   const majors = tree.children || [];
@@ -134,10 +166,12 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
       title,
       education,
       experience,
+      targetPage: 'live-search',
+      searchQuery: title,
+      ciscoCode: pickedUnit?.id
     };
     saveState();
-    onComplete?.(payload);
-    onClose?.();
+    navigateToLiveSearchWithQuery(title);
   };
 
   return (
@@ -153,7 +187,7 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
           </div>
           <div className="flex items-center gap-3">
             {persisted && (
-              <button onClick={() => { localStorage.removeItem("ck_onboarding"); setPersisted(false); setStep(0); setPersona("unemployed"); setPickedMajor(""); setPickedUnit(null); setQuery(""); }} className="text-neutral-400 hover:text-white text-sm">Start again</button>
+              <button onClick={() => { localStorage.removeItem("ck_onboarding"); setPersisted(false); setStep(0); setPersona("unemployed"); setPickedMajor(""); setPickedUnit(null); setQuery(""); setEducation(""); setExperience(""); setEverEmployed(undefined); setSelectedTitle(null); }} className="text-neutral-400 hover:text-white text-sm">Start again</button>
             )}
             <Button variant="secondary" onClick={onClose}>Back to home</Button>
           </div>
@@ -188,9 +222,8 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
             {sequence[step]?.id === "ever" && (
               <EverEmployedStep value={everEmployed} onChange={(v) => {
+                // Simply update value; sequence will adapt without forcing restart
                 setEverEmployed(v);
-                // Reset to step 0 when everEmployed changes to ensure proper flow
-                setTimeout(() => setStep(0), 0);
               }} onBack={prev} onNext={next} />
             )}
 
@@ -199,7 +232,15 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
             )}
 
             {sequence[step]?.id === "search" && (
-              <SearchStep query={query} onQuery={setQuery} titleResults={titleResults} onPickTitle={(t) => { setQuery(t.cTitle); setSelectedTitle(null); }} onBack={prev} onNext={next} />
+              <SearchStep 
+                query={query} 
+                onQuery={setQuery} 
+                suggestions={titleSuggests} 
+                selected={selectedTitle}
+                onSelect={(s) => { setSelectedTitle(s); setPickedUnit(s?.ciscoUnit || null); setQuery(s?.label || s?.cTitle || query); }} 
+                onBack={prev} 
+                onNext={next} 
+              />
             )}
 
             {sequence[step]?.id === "currentJob" && (
@@ -211,7 +252,22 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
             )}
 
             {sequence[step]?.id === "insights" && (
-              <InsightsStep pickedUnit={pickedUnit} aggregates={agg} allUnits={flattenedUnits} query={query} onBack={prev} onFinish={finish} />
+              <InsightsStep 
+                pickedUnit={pickedUnit} 
+                aggregates={agg} 
+                allUnits={flattenedUnits} 
+                query={query} 
+                onBack={prev} 
+                onFinish={finish}
+                relatedSuggestions={titleSuggestions(pickedUnit?.title || query, 8)}
+                onSelectSuggestion={(s) => { setSelectedTitle(s); setPickedUnit(s?.ciscoUnit || null); setQuery(s?.label || s?.cTitle || query); }}
+                onExploreFields={() => {
+                  saveState();
+                  navigateToCareerTracksWithUnit(pickedUnit);
+                }}
+                education={education}
+                experience={experience}
+              />
             )}
           </CardContent>
         </Card>
@@ -382,7 +438,7 @@ function TaxonomyStep({ majors, pickedMajor, onPickMajor, units, pickedUnit, onP
   );
 }
 
-function SearchStep({ query, onQuery, titleResults, onPickTitle, onBack, onNext }) {
+function SearchStep({ query, onQuery, suggestions, selected, onSelect, onBack, onNext }) {
   return (
     <div>
       <h3 className="text-xl font-semibold mb-2">Search related job titles</h3>
@@ -392,19 +448,32 @@ function SearchStep({ query, onQuery, titleResults, onPickTitle, onBack, onNext 
         <Input value={query} onChange={(e) => onQuery(e.target.value)} placeholder="e.g. Psychiatrist, Compliance Analyst" className="pl-10 bg-white/5 border-white/10" />
       </div>
       <div className="grid sm:grid-cols-2 gap-2">
-        {titleResults.map((t, i) => (
-          <button key={i} onClick={() => onPickTitle(t)} className="text-left rounded-xl bg-white/5 border border-white/10 px-3 py-2 text-sm text-neutral-200 hover:bg-white/10">{t.cTitle}</button>
+        {suggestions.map((s, i) => (
+          <button key={i} onClick={() => onSelect(s)} className={`text-left rounded-xl px-3 py-2 border ${selected?.label === s.label ? "border-emerald-400/60 bg-emerald-300/10" : "border-white/10 bg-white/5"}`}>
+            <div className="font-medium">{s.label}</div>
+            <div className="text-xs text-neutral-400">{s.ciscoUnit?.title}</div>
+          </button>
         ))}
       </div>
+      {selected?.ciscoUnit && (
+        <Card className="bg-white/5 border-white/10 mt-4">
+          <CardContent className="p-4">
+            <div className="text-sm text-neutral-400">Mapped occupation</div>
+            <div className="font-medium">{selected.ciscoUnit.title}</div>
+            <p className="text-sm text-neutral-300 whitespace-pre-line">{selected.ciscoUnit.description}</p>
+            {selected.ciscoUnit.tasks && <details className="text-sm text-neutral-400"><summary className="cursor-pointer">Tasks</summary><div className="mt-1 whitespace-pre-line">{selected.ciscoUnit.tasks}</div></details>}
+          </CardContent>
+        </Card>
+      )}
       <div className="mt-6 flex justify-between">
         <Button variant="secondary" onClick={onBack} className="gap-2"><ChevronLeft className="w-4 h-4" /> Back</Button>
-        <Button onClick={onNext} className="gap-2">Next <ChevronRight className="w-4 h-4" /></Button>
+        <Button onClick={onNext} disabled={!selected} className="gap-2">Next <ChevronRight className="w-4 h-4" /></Button>
       </div>
     </div>
   );
 }
 
-function InsightsStep({ pickedUnit, aggregates, allUnits, query, onBack, onFinish }) {
+function InsightsStep({ pickedUnit, aggregates, allUnits, query, onBack, onFinish, relatedSuggestions = [], onSelectSuggestion, onExploreFields, education, experience }) {
   const stats = pickedUnit ? aggregates.get(String(pickedUnit.id)) : null;
   const workTypes = loadWorkTypes();
   const eduTypes = loadEducationTypes();
@@ -467,9 +536,47 @@ function InsightsStep({ pickedUnit, aggregates, allUnits, query, onBack, onFinis
           </CardContent>
         </Card>
       </div>
+      {/* Related titles and planning */}
+      {(relatedSuggestions?.length > 0 || pickedUnit) && (
+        <div className="mt-6 grid md:grid-cols-2 gap-4">
+          {relatedSuggestions?.length > 0 && (
+            <Card className="bg-white/5 border-white/10">
+              <CardContent className="p-4">
+                <div className="text-sm text-neutral-400 mb-2">Related titles</div>
+                <div className="grid sm:grid-cols-2 gap-2">
+                  {relatedSuggestions.map((s, i) => (
+                    <button key={i} onClick={() => onSelectSuggestion?.(s)} className="text-left rounded-xl px-3 py-2 border border-white/10 bg-white/5 hover:bg-white/10">
+                      <div className="font-medium">{s.label}</div>
+                      <div className="text-xs text-neutral-400">{s.ciscoUnit?.title}</div>
+                    </button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+          {pickedUnit && (
+            <Card className="bg-white/5 border-white/10">
+              <CardContent className="p-4">
+                <div className="text-sm text-neutral-400 mb-2">Career plan hints</div>
+                <ul className="list-disc pl-5 text-sm text-neutral-300 space-y-1">
+                  {education === "4" && <li>Consider certificate programs to stand out for {pickedUnit.title} roles.</li>}
+                  {experience === "1" && <li>Target internships or apprenticeships; filter by Work Type in Live Search.</li>}
+                  {stats?.mean && <li>Typical pay averages around CI$ {Math.round(stats.mean).toLocaleString()} — plan savings and goals accordingly.</li>}
+                  <li>Explore adjacent roles via Related titles to broaden opportunities.</li>
+                </ul>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
       <div className="mt-6 flex justify-between">
         <Button variant="secondary" onClick={onBack} className="gap-2"><ChevronLeft className="w-4 h-4" /> Back</Button>
-        <Button onClick={onFinish} className="gap-2">See live jobs <ChevronRight className="w-4 h-4" /></Button>
+        <div className="flex gap-2">
+          {onExploreFields && (
+            <Button variant="secondary" onClick={onExploreFields} className="gap-2">Explore fields</Button>
+          )}
+          <Button onClick={onFinish} className="gap-2">See live jobs <ChevronRight className="w-4 h-4" /></Button>
+        </div>
       </div>
     </div>
   );

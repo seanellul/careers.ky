@@ -408,21 +408,24 @@ export default function JobDetail({ ciscoCode, onNavigate }) {
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold mb-4">Take Action</h3>
                 <div className="space-y-3">
+
                   <Button 
-                    className="w-full gap-2"
-                    onClick={() => onNavigate('live-search', { searchQuery: unit.title })}
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    Search Live Jobs
-                  </Button>
-                  <Button 
-                    variant="secondary" 
+                    // variant="secondary" 
                     className="w-full gap-2"
                     onClick={() => setShowCareerPlan(true)}
                   >
                     <FileText className="w-4 h-4" />
                     Build Career Plan
                   </Button>
+                  <Button 
+
+className="w-full gap-2"
+variant="secondary"
+onClick={() => onNavigate('live-search', { searchQuery: unit.title })}
+>
+<ExternalLink className="w-4 h-4" />
+Search Live Jobs
+</Button>
                 </div>
               </CardContent>
             </Card>

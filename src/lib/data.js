@@ -339,13 +339,17 @@ export function generateWORCSearchURL(jobPosting) {
   const baseURL = "https://my.egov.ky/web/myworc/find-a-job#/";
   const params = new URLSearchParams();
   
+  // Add job title to search parameter
   if (jobPosting.cTitle) {
     params.append('search', jobPosting.cTitle);
   }
+  
+  // Add employer to employer parameter
   if (jobPosting.Employer) {
     params.append('employer', jobPosting.Employer);
   }
   
+  // Return URL with properly encoded parameters
   return params.toString() ? `${baseURL}?${params.toString()}` : baseURL;
 }
 

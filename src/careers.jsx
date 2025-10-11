@@ -199,10 +199,24 @@ export default function CareersKYLanding({ onNavigate }) {
         onComplete={(res) => {
           setPrefillQuery(res?.title || "");
           setOnboardingOpen(false);
-          // Scroll to jobs section after a tick
-          setTimeout(() => {
-            document.querySelector('#jobs')?.scrollIntoView({ behavior: 'smooth' });
-          }, 50);
+          
+          // Navigate to the target page with filters
+          if (res?.targetPage === 'live-search') {
+            onNavigate?.('live-search', {
+              searchQuery: res.searchQuery,
+              ciscoCode: res.ciscoCode
+            });
+          } else if (res?.targetPage === 'career-tracks') {
+            onNavigate?.('career-tracks', {
+              searchQuery: res.searchQuery,
+              ciscoCode: res.ciscoCode
+            });
+          } else {
+            // Default: scroll to jobs section
+            setTimeout(() => {
+              document.querySelector('#jobs')?.scrollIntoView({ behavior: 'smooth' });
+            }, 50);
+          }
         }}
       />
     );

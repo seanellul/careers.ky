@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, Rocket, Menu, X, Filter, TrendingUp, MapPin, Building2, Calendar } from "lucide-react";
-import { getActiveJobPostings } from "@/lib/data";
+import { getActiveJobPostings, generateWORCSearchURL } from "@/lib/data";
 import { useFadeInOnScroll, useHoverFloat } from "@/animations/gsapEffects";
 import gsap from "gsap";
 
@@ -116,7 +116,8 @@ export default function LiveSearch({ onNavigate, searchParams = {} }) {
     .filter((j) => (type ? j.workType === WORK_TYPE[type] : true))
     .filter((j) => (q ? (j.jobTitle?.toLowerCase().includes(q.toLowerCase()) || j.employerName?.toLowerCase().includes(q.toLowerCase())) : true))
     .filter((j) => (employerFilter ? j.employerName?.toLowerCase().includes(employerFilter.toLowerCase()) : true))
-    .filter((j) => (showActiveOnly ? j.isActive : true));
+    .filter((j) => (showActiveOnly ? j.isActive : true))
+    .filter((j) => (searchParams.ciscoCode ? j.sOccupation === searchParams.ciscoCode : true));
 
   const sorted = [...filtered].sort((a, b) => {
     if (sort === 3) return (b.maximumAmount || 0) - (a.maximumAmount || 0);
@@ -225,11 +226,16 @@ export default function LiveSearch({ onNavigate, searchParams = {} }) {
               <p className="text-neutral-300 text-lg max-w-3xl">
                 Browse {stats.total} active job postings across {stats.industries}+ industries in Cayman. Real-time data from WORC.
               </p>
-              {(searchParams.searchQuery || searchParams.employer || searchParams.showActiveOnly) && (
+              {(searchParams.searchQuery || searchParams.employer || searchParams.showActiveOnly || searchParams.ciscoCode) && (
                 <div className="mt-4 flex flex-wrap gap-2">
                   {searchParams.searchQuery && (
                     <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30">
-                      Job: {searchParams.searchQuery}
+                      Search: {searchParams.searchQuery}
+                    </Badge>
+                  )}
+                  {searchParams.ciscoCode && (
+                    <Badge className="bg-purple-500/20 text-purple-300 border-purple-300/30">
+                      CISCO Code: {searchParams.ciscoCode}
                     </Badge>
                   )}
                   {searchParams.employer && (
@@ -470,7 +476,13 @@ export default function LiveSearch({ onNavigate, searchParams = {} }) {
                     <div className="text-xs text-neutral-500 mb-3">WORC ID: {j.jobPostIdString || j.jobPostId}</div>
 
                     <div className="mt-auto">
-                      <a href="https://my.egov.ky/web/myworc/find-a-job#/" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-white/10 text-white border border-white/20 hover:bg-white/15 w-full gap-2 h-10 px-4 py-2">
+                      <a 
+                        href={generateWORCSearchURL({ cTitle: j.jobTitle, Employer: j.employerName })} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        title={`Search for "${j.jobTitle}" at "${j.employerName}" on WORC`}
+                        className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-white/10 text-white border border-white/20 hover:bg-white/15 w-full gap-2 h-10 px-4 py-2"
+                      >
                         Apply on WORC
                       </a>
                     </div>
