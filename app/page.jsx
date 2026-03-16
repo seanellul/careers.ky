@@ -7,6 +7,8 @@ import {
 import { getDb } from "@/lib/db";
 import HomeClient from "./HomeClient";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const [ciscoRows, aggregates, activePostings, employerCount] = await Promise.all([
     loadCISCO(),

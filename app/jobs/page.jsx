@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { getActiveJobPostings } from "@/lib/data";
 import LiveSearchClient from "./LiveSearchClient";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Live Job Search — Browse Active Cayman Postings",
   description:

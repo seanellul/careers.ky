@@ -9,6 +9,8 @@ import {
 } from "@/lib/data";
 import CareerTracksClient from "./CareerTracksClient";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Career Tracks — Explore Cayman Industries",
   description:
