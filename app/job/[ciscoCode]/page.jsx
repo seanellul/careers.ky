@@ -6,6 +6,7 @@ import {
   loadExperienceTypes,
   searchTitles,
   getJobPostingsByCiscoCode,
+  getSkillsForCisco,
 } from "@/lib/data";
 import { notFound } from "next/navigation";
 import JobDetailClient from "./JobDetailClient";
@@ -32,7 +33,7 @@ export async function generateMetadata({ params }) {
 
 export default async function JobDetailPage({ params }) {
   const { ciscoCode } = await params;
-  const [unit, aggregates, workTypes, eduTypes, expTypes, postings, related] =
+  const [unit, aggregates, workTypes, eduTypes, expTypes, postings, related, ciscoSkills] =
     await Promise.all([
       getCiscoUnit(ciscoCode),
       loadAggregates(),
@@ -41,6 +42,7 @@ export default async function JobDetailPage({ params }) {
       loadExperienceTypes(),
       getJobPostingsByCiscoCode(ciscoCode),
       searchTitles(ciscoCode, 6),
+      getSkillsForCisco(ciscoCode),
     ]);
 
   if (!unit) notFound();
@@ -110,6 +112,7 @@ export default async function JobDetailPage({ params }) {
         employerData={employerData}
         relatedJobs={relatedTitles}
         postings={postings}
+        skills={ciscoSkills}
       />
     </>
   );

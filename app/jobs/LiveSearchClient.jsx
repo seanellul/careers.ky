@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Filter, TrendingUp, MapPin, Building2, Calendar } from "lucide-react";
+import { Search, Filter, TrendingUp, MapPin, Building2, Calendar, X, Plus } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { generateWORCSearchURL } from "@/lib/data";
@@ -45,12 +45,55 @@ export default function LiveSearchClient({ jobs: allJobs }) {
   const [employerFilter, setEmployerFilter] = useState(initialEmployer);
   const pageSize = 12;
 
+  // Skills filter
+  const [skillQuery, setSkillQuery] = useState("");
+  const [skillSuggestions, setSkillSuggestions] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [skillCiscoCodes, setSkillCiscoCodes] = useState(new Set());
+
+  // Search skills
+  useEffect(() => {
+    if (!skillQuery.trim()) { setSkillSuggestions([]); return; }
+    const ctrl = new AbortController();
+    fetch(`/api/skills/search?q=${encodeURIComponent(skillQuery)}`, { signal: ctrl.signal })
+      .then(r => r.json())
+      .then(d => {
+        const existing = new Set(selectedSkills.map(s => s.id));
+        setSkillSuggestions((d.skills || []).filter(s => !existing.has(s.id)).slice(0, 8));
+      })
+      .catch(() => {});
+    return () => ctrl.abort();
+  }, [skillQuery]);
+
+  // Fetch CISCO codes when skills change
+  useEffect(() => {
+    if (selectedSkills.length === 0) { setSkillCiscoCodes(new Set()); return; }
+    const ids = selectedSkills.map(s => s.id).join(",");
+    fetch(`/api/skills/cisco-codes?skillIds=${ids}`)
+      .then(r => r.json())
+      .then(d => setSkillCiscoCodes(new Set(d.ciscoCodes || [])))
+      .catch(() => setSkillCiscoCodes(new Set()));
+  }, [selectedSkills]);
+
+  const addSkill = (skill) => {
+    setSelectedSkills([...selectedSkills, skill]);
+    setSkillQuery("");
+    setSkillSuggestions([]);
+    setPage(1);
+  };
+
+  const removeSkill = (id) => {
+    setSelectedSkills(selectedSkills.filter(s => s.id !== id));
+    setPage(1);
+  };
+
   const filtered = allJobs
     .filter((j) => (loc ? j.jobLocation === LOCATION_KEY[loc] : true))
     .filter((j) => (type ? j.workType === WORK_TYPE[type] : true))
     .filter((j) => (q ? (j.jobTitle?.toLowerCase().includes(q.toLowerCase()) || j.employerName?.toLowerCase().includes(q.toLowerCase())) : true))
     .filter((j) => (employerFilter ? j.employerName?.toLowerCase().includes(employerFilter.toLowerCase()) : true))
-    .filter((j) => (initialCisco ? j.sOccupation === initialCisco : true));
+    .filter((j) => (initialCisco ? j.sOccupation === initialCisco : true))
+    .filter((j) => (skillCiscoCodes.size > 0 ? skillCiscoCodes.has(j.sOccupation) : true));
 
   const sorted = [...filtered].sort((a, b) => {
     if (sort === 3) return (b.maximumAmount || 0) - (a.maximumAmount || 0);
@@ -123,7 +166,7 @@ export default function LiveSearchClient({ jobs: allJobs }) {
             </div>
             {showFilters && (
               <Card className="bg-white/5 border-white/10">
-                <CardContent className="p-4 md:p-6">
+                <CardContent className="p-4 md:p-6 space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                     <div>
                       <label className="text-sm font-medium mb-2 block">Location</label>
@@ -148,10 +191,47 @@ export default function LiveSearchClient({ jobs: allJobs }) {
                       </select>
                     </div>
                     <div className="flex items-end">
-                      <Button variant="secondary" onClick={() => { setQ(""); setLoc(0); setType(0); setEmployerFilter(""); setSort(1); setPage(1); }} className="gap-2 w-full">
+                      <Button variant="secondary" onClick={() => { setQ(""); setLoc(0); setType(0); setEmployerFilter(""); setSort(1); setSelectedSkills([]); setPage(1); }} className="gap-2 w-full">
                         <Filter className="w-4 h-4" /> Clear All
                       </Button>
                     </div>
+                  </div>
+
+                  {/* Skills Filter */}
+                  <div className="pt-3 border-t border-white/10">
+                    <label className="text-sm font-medium mb-2 block">Skills</label>
+                    <div className="relative mb-2">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                      <Input
+                        value={skillQuery}
+                        onChange={(e) => setSkillQuery(e.target.value)}
+                        placeholder="Search skills (e.g. compliance, accounting)"
+                        className="pl-10 bg-white/5 border-white/10"
+                      />
+                    </div>
+                    {skillSuggestions.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {skillSuggestions.map(s => (
+                          <button key={s.id} onClick={() => addSkill(s)}>
+                            <Badge className="bg-white/5 border-white/10 text-neutral-300 hover:border-purple-300/40 cursor-pointer">
+                              <Plus className="w-3 h-3 mr-1" /> {s.name}
+                            </Badge>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {selectedSkills.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {selectedSkills.map(s => (
+                          <Badge key={s.id} className="bg-purple-500/20 text-purple-300 border-purple-300/30 pr-1 flex items-center gap-1">
+                            {s.name}
+                            <button onClick={() => removeSkill(s.id)} className="ml-1 hover:text-red-400">
+                              <X className="w-3 h-3" />
+                            </button>
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -170,7 +250,9 @@ export default function LiveSearchClient({ jobs: allJobs }) {
               <CardContent className="p-5 h-full flex flex-col">
                 <div className="text-xs uppercase tracking-wide text-emerald-300 mb-2">{j.workType || "Role"}</div>
                 <div className="font-medium leading-tight group-hover:text-white mb-2 line-clamp-2 min-h-[2.5rem] flex items-start">{j.jobTitle || "Untitled role"}</div>
-                <div className="text-sm text-neutral-400 mb-2 line-clamp-1">{j.employerName}</div>
+                <div className="text-sm text-neutral-400 mb-2 line-clamp-1">
+                  <Link href={`/employer/${encodeURIComponent(j.employerName?.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`} className="hover:text-cyan-300 transition">{j.employerName}</Link>
+                </div>
                 <div className="text-xs text-neutral-400 mb-3">{j.jobLocation || "Location"} · {j.hoursPerWeek ? `${j.hoursPerWeek} hrs/wk` : ""}</div>
                 <div className="text-sm text-neutral-200 mb-4 line-clamp-2">{fmtSalary(j)}</div>
                 <div className="flex flex-wrap gap-1 mb-4">
@@ -203,7 +285,7 @@ export default function LiveSearchClient({ jobs: allJobs }) {
               <Search className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-400" />
               <h3 className="text-lg font-medium mb-2">No jobs found</h3>
               <p className="text-neutral-400 mb-4">Try adjusting your search or filters</p>
-              <Button onClick={() => { setQ(""); setLoc(0); setType(0); setPage(1); }}>Clear Filters</Button>
+              <Button onClick={() => { setQ(""); setLoc(0); setType(0); setSelectedSkills([]); setPage(1); }}>Clear Filters</Button>
             </CardContent>
           </Card>
         )}

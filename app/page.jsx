@@ -4,13 +4,23 @@ import {
   buildCiscoTree,
   getActiveJobPostings,
 } from "@/lib/data";
+import { getDb } from "@/lib/db";
 import HomeClient from "./HomeClient";
 
 export default async function HomePage() {
-  const [ciscoRows, aggregates, activePostings] = await Promise.all([
+  const [ciscoRows, aggregates, activePostings, employerCount] = await Promise.all([
     loadCISCO(),
     loadAggregates(),
     getActiveJobPostings(),
+    (async () => {
+      try {
+        const sql = getDb();
+        const rows = await sql`SELECT COUNT(*) as count FROM employers`;
+        return Number(rows[0].count);
+      } catch {
+        return 0;
+      }
+    })(),
   ]);
 
   const tree = buildCiscoTree(ciscoRows);
@@ -71,6 +81,7 @@ export default async function HomePage() {
       jobs={jobs}
       jobCount={activePostings.length}
       industryCount={new Set(activePostings.map((j) => j.Occupation)).size}
+      employerCount={employerCount}
     />
   );
 }

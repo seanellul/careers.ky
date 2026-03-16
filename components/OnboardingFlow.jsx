@@ -7,9 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, ChevronRight, ChevronLeft } from "lucide-react";
 
-// OnboardingFlow works entirely client-side with localStorage.
-// It uses a local copy of taxonomy data fetched from API routes.
-
 export default function OnboardingFlow({ open, onClose, onComplete }) {
   const [step, setStep] = useState(0);
   const [persona, setPersona] = useState("unemployed");
@@ -22,7 +19,6 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
   const [everEmployed, setEverEmployed] = useState(undefined);
   const [selectedTitle, setSelectedTitle] = useState(null);
 
-  // Client-side data (fetched once)
   const [tree, setTree] = useState({ id: "root", title: "Occupations", children: [] });
   const [agg, setAgg] = useState(new Map());
   const [eduTypes, setEduTypes] = useState(new Map());
@@ -30,7 +26,6 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
   const [workTypeMap, setWorkTypeMap] = useState(new Map());
   const [suggestions, setSuggestions] = useState([]);
 
-  // Fetch taxonomy data on mount
   useEffect(() => {
     if (!open) return;
     fetch("/api/taxonomy")
@@ -45,7 +40,6 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
       .catch(() => {});
   }, [open]);
 
-  // Search suggestions
   useEffect(() => {
     if (!query.trim() || !open) {
       setSuggestions([]);
@@ -75,7 +69,6 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
     }
   }, [open]);
 
-  // Load from localStorage
   useEffect(() => {
     try {
       const raw = localStorage.getItem("ck_onboarding");
@@ -103,8 +96,33 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
     } catch {}
   };
 
+  // Save to profile when authenticated
+  const saveToProfile = async () => {
+    try {
+      const sessionRes = await fetch("/api/auth/session");
+      const session = await sessionRes.json();
+      if (!session?.authenticated || !session?.candidateId) return;
+
+      const payload = {};
+      if (education) payload.educationCode = education;
+      if (experience) payload.experienceCode = experience;
+
+      const ciscoCode = pickedUnit?.id || selectedTitle?.ciscoUnit?.id;
+      if (ciscoCode) payload.ciscoCodes = [ciscoCode];
+
+      if (Object.keys(payload).length > 0) {
+        await fetch("/api/profile", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      }
+    } catch {}
+  };
+
   const navigateToCareerTracksWithUnit = (unit) => {
     saveState();
+    saveToProfile();
     onClose?.();
     onComplete?.({
       persona,
@@ -120,6 +138,7 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
   const navigateToLiveSearchWithQuery = (q) => {
     saveState();
+    saveToProfile();
     onClose?.();
     onComplete?.({
       persona,
@@ -138,11 +157,6 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
   const majorChildren = pickedMajor
     ? majors.find((m) => m.id === pickedMajor)?.children || []
     : [];
-  const flattenedUnits = [];
-  for (const maj of majors)
-    for (const sub of maj.children || [])
-      for (const min of sub.children || [])
-        for (const u of min.children || []) flattenedUnits.push(u);
 
   const sequence = (() => {
     if (persona === "employed") {
@@ -194,7 +208,6 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
   const currentStepId = sequence[safeStep]?.id;
 
-  // Steps progress bar
   const Steps = () => (
     <div
       className="grid gap-2 mb-6"

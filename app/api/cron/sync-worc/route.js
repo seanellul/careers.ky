@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { fetchWORCJobs } from "@/lib/worc-client";
+import { runMatchAlerts } from "@/lib/match-alerts";
 
 export async function GET(request) {
   // Verify cron secret
@@ -62,9 +63,33 @@ export async function GET(request) {
       AND status = 'Active'
     `;
 
+    // Upsert new employers (safe — table may not exist pre-migration)
+    try {
+      await sql`
+        INSERT INTO employers (slug, name)
+        SELECT DISTINCT
+          LOWER(REGEXP_REPLACE(REGEXP_REPLACE(TRIM(employer), '[^a-zA-Z0-9\\s-]', '', 'g'), '\\s+', '-', 'g')),
+          TRIM(employer)
+        FROM job_postings
+        WHERE employer IS NOT NULL AND TRIM(employer) != ''
+        ON CONFLICT (slug) DO NOTHING
+      `;
+    } catch (e) {
+      console.error("Employer upsert error (non-fatal):", e.message);
+    }
+
+    // Run match alerts for candidates
+    let alertsProcessed = 0;
+    try {
+      alertsProcessed = await runMatchAlerts();
+    } catch (alertErr) {
+      console.error("Match alerts error (non-fatal):", alertErr.message);
+    }
+
     return NextResponse.json({
       success: true,
       synced: count,
+      alertsProcessed,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

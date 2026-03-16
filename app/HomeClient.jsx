@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
@@ -20,8 +19,9 @@ import {
   Search,
   ChevronRight,
   Sparkles,
-  Menu,
-  X,
+  Users,
+  Building2,
+  User,
 } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -74,6 +74,7 @@ export default function HomeClient({
   jobs,
   jobCount,
   industryCount,
+  employerCount,
 }) {
   const router = useRouter();
   const root = useRef(null);
@@ -156,7 +157,7 @@ export default function HomeClient({
               </p>
 
               {/* Key Features */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
                 <button
                   onClick={() => setOnboardingOpen(true)}
                   className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-300/40 hover:bg-white/10 transition cursor-pointer text-left"
@@ -199,6 +200,20 @@ export default function HomeClient({
                     </div>
                   </div>
                 </Link>
+                <Link
+                  href="/talent"
+                  className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-orange-300/40 hover:bg-white/10 transition cursor-pointer text-left"
+                >
+                  <div className="h-8 w-8 rounded-lg bg-orange-400/15 grid place-items-center flex-shrink-0">
+                    <Users className="w-4 h-4 text-orange-300" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-sm mb-1">Find Talent</div>
+                    <div className="text-xs text-neutral-400">
+                      Search local talent pool
+                    </div>
+                  </div>
+                </Link>
               </div>
 
               {/* CTAs */}
@@ -231,7 +246,7 @@ export default function HomeClient({
                   </div>
 
                   {/* Live Stats */}
-                  <div className="grid grid-cols-2 gap-3 mb-6">
+                  <div className="grid grid-cols-3 gap-3 mb-6">
                     <div className="p-4 rounded-xl bg-white/5 border border-white/10">
                       <div className="text-3xl font-semibold text-cyan-300 mb-1">
                         {jobCount}
@@ -243,6 +258,12 @@ export default function HomeClient({
                         {industryCount}+
                       </div>
                       <div className="text-xs text-neutral-400">Industries</div>
+                    </div>
+                    <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                      <div className="text-3xl font-semibold text-orange-300 mb-1">
+                        {employerCount > 0 ? employerCount.toLocaleString() : "—"}
+                      </div>
+                      <div className="text-xs text-neutral-400">Employers</div>
                     </div>
                   </div>
 
@@ -301,6 +322,24 @@ export default function HomeClient({
                       </div>
                       <p className="text-xs text-neutral-400">
                         Browse & filter active postings
+                      </p>
+                    </Link>
+
+                    <Link
+                      href="/talent"
+                      className="block w-full text-left p-3 rounded-xl bg-white/5 border border-white/10 hover:border-orange-300/40 transition group"
+                    >
+                      <div className="flex items-center gap-2 text-orange-300 mb-1">
+                        <Users className="w-4 h-4" />
+                        <span className="text-xs uppercase tracking-wide">
+                          Employer
+                        </span>
+                      </div>
+                      <div className="font-medium group-hover:text-white transition">
+                        Search Local Talent
+                      </div>
+                      <p className="text-xs text-neutral-400">
+                        Find candidates in Cayman
                       </p>
                     </Link>
                   </div>
@@ -510,6 +549,12 @@ export default function HomeClient({
                 We list all types of employment opportunities available through WORC, including full-time, part-time, temporary positions, internships, and apprenticeships across all major industries in the Cayman Islands.
               </AccordionContent>
             </AccordionItem>
+            <AccordionItem value="item-9">
+              <AccordionTrigger className="px-6">What are talent profiles and how does talent search work?</AccordionTrigger>
+              <AccordionContent className="px-6 text-neutral-300">
+                Job seekers can create a talent profile with their career interests, skills, education, and experience. When you opt in to be discoverable, employers can find you through talent search and request an introduction — but your name and contact details stay hidden until you choose to accept. It's a double opt-in system designed to protect your privacy while connecting you with relevant opportunities.
+              </AccordionContent>
+            </AccordionItem>
           </Accordion>
         </div>
       </section>
@@ -521,24 +566,32 @@ export default function HomeClient({
             className="rounded-3xl p-1.5 bg-gradient-to-r from-cyan-300/30 via-emerald-300/20 to-fuchsia-300/20"
             id="cta-gradient"
           >
-            <div className="rounded-[20px] bg-neutral-900/60 border border-white/10 p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-              <div>
-                <div className="text-sm text-neutral-400 mb-1">Next up</div>
-                <div className="text-2xl font-semibold">
-                  Get early access to the mapping demo
+            <div className="rounded-[20px] bg-neutral-900/60 border border-white/10 p-8">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <div className="text-sm text-neutral-400">For Job Seekers</div>
+                  <div className="text-xl font-semibold">Looking for work?</div>
+                  <p className="text-neutral-300 text-sm">
+                    Create your talent profile and let Cayman employers find you.
+                  </p>
+                  <Link href="/profile/setup">
+                    <Button className="gap-2 mt-2">
+                      <User className="w-4 h-4" /> Create Profile <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </Link>
                 </div>
-                <p className="text-neutral-300">
-                  Be first to try lifestyle-aligned job search for Cayman.
-                </p>
-              </div>
-              <div className="flex gap-3 w-full md:w-auto">
-                <Input
-                  placeholder="Enter your email"
-                  className="bg-white/5 border-white/10"
-                />
-                <Button className="gap-2">
-                  Notify me <ChevronRight className="w-4 h-4" />
-                </Button>
+                <div className="space-y-3 md:border-l md:border-white/10 md:pl-6">
+                  <div className="text-sm text-neutral-400">For Employers</div>
+                  <div className="text-xl font-semibold">Hiring in Cayman?</div>
+                  <p className="text-neutral-300 text-sm">
+                    Search our local talent pool and request introductions.
+                  </p>
+                  <Link href="/talent">
+                    <Button variant="secondary" className="gap-2 mt-2">
+                      <Users className="w-4 h-4" /> Search Talent <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { getDb } from "@/lib/db";
 
 export async function GET() {
@@ -16,18 +18,35 @@ export async function GET() {
   const now = new Date().toISOString();
   const baseUrl = "https://careers.ky";
 
+  // Get all employers (safe — table may not exist yet)
+  let employers = [];
+  try {
+    employers = await sql`SELECT slug FROM employers ORDER BY slug`;
+  } catch (e) {
+    // employers table not yet migrated
+  }
+
   const staticPages = [
     { url: "/", changefreq: "daily", priority: "1.0" },
     { url: "/career-tracks", changefreq: "daily", priority: "0.9" },
     { url: "/jobs", changefreq: "daily", priority: "0.9" },
+    { url: "/employers", changefreq: "daily", priority: "0.8" },
+    { url: "/talent", changefreq: "weekly", priority: "0.7" },
   ];
 
-  const dynamicPages = rows.map((r) => ({
-    url: `/job/${r.cisco_code}`,
-    lastmod: r.last_synced ? new Date(r.last_synced).toISOString() : now,
-    changefreq: "daily",
-    priority: "0.8",
-  }));
+  const dynamicPages = [
+    ...rows.map((r) => ({
+      url: `/job/${r.cisco_code}`,
+      lastmod: r.last_synced ? new Date(r.last_synced).toISOString() : now,
+      changefreq: "daily",
+      priority: "0.8",
+    })),
+    ...employers.map((e) => ({
+      url: `/employer/${e.slug}`,
+      changefreq: "weekly",
+      priority: "0.7",
+    })),
+  ];
 
   const allPages = [...staticPages, ...dynamicPages];
 

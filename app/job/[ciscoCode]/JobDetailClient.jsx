@@ -42,6 +42,7 @@ export default function JobDetailClient({
   employerData,
   relatedJobs,
   postings,
+  skills = [],
 }) {
   const router = useRouter();
   const [showCareerPlan, setShowCareerPlan] = useState(false);
@@ -169,6 +170,23 @@ export default function JobDetailClient({
               <Card className="bg-white/5 border-white/10"><CardContent className="p-6"><h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><DollarSign className="w-5 h-5" /> Salary Range</h3><div className="space-y-3"><div className="flex justify-between"><span className="text-neutral-400">Minimum</span><span className="font-medium">CI$ {Math.round(stats.min).toLocaleString()}</span></div><div className="flex justify-between"><span className="text-neutral-400">Average</span><span className="font-medium">CI$ {Math.round(stats.mean).toLocaleString()}</span></div><div className="flex justify-between"><span className="text-neutral-400">Maximum</span><span className="font-medium">CI$ {Math.round(stats.max).toLocaleString()}</span></div></div></CardContent></Card>
             )}
 
+            {skills.length > 0 && (
+              <Card className="bg-white/5 border-white/10">
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <Briefcase className="w-5 h-5" /> Top Skills
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {skills.map((s) => (
+                      <Badge key={s.id} className="bg-purple-500/20 text-purple-300 border-purple-300/30">
+                        {s.name}
+                      </Badge>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {relatedJobs.length > 0 && (
               <Card className="bg-white/5 border-white/10"><CardContent className="p-6"><h3 className="text-lg font-semibold mb-4">Related Positions</h3><div className="space-y-3">{relatedJobs.map((job, i) => (<div key={i} className="p-3 bg-white/5 border border-white/10 rounded-lg"><div className="font-medium text-sm">{job.cTitle}</div><div className="text-xs text-neutral-400">Occupation #{job.sOccupation}</div></div>))}</div></CardContent></Card>
             )}
@@ -246,7 +264,7 @@ export default function JobDetailClient({
                         {p.isActive ? <Badge className="bg-green-500/20 text-green-300 border-green-300/30">Active</Badge> : <Badge className="bg-neutral-500/20 text-neutral-300 border-neutral-300/30">Closed</Badge>}
                       </div>
                       <div className="flex items-center gap-4 text-sm text-neutral-400 mb-3">
-                        <div className="flex items-center gap-1"><Building2 className="w-4 h-4" /> {p.Employer}</div>
+                        <Link href={`/employer/${encodeURIComponent(p.Employer?.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`} className="flex items-center gap-1 hover:text-cyan-300 transition"><Building2 className="w-4 h-4" /> {p.Employer}</Link>
                       </div>
                     </div>
                     <div className="text-right">
