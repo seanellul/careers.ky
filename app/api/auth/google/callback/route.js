@@ -71,7 +71,11 @@ export async function GET(request) {
       account = await upsertEmployerAccount(email, { name });
     }
     await createSession(null, account.id);
-    return NextResponse.redirect(new URL("/talent", request.url));
+    // Redirect to setup if no employer linked, otherwise dashboard
+    if (!account.employer_id) {
+      return NextResponse.redirect(new URL("/employer/setup", request.url));
+    }
+    return NextResponse.redirect(new URL("/employer/dashboard", request.url));
   }
 
   // Candidate flow

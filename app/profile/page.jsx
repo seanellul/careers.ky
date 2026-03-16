@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { getSession } from "@/lib/auth";
-import { getCandidateById, getCandidateInterests, getCandidateSkills, getNotifications, getUnreadCount, loadEducationTypes, loadExperienceTypes, loadLocationTypes } from "@/lib/data";
+import { getCandidateById, getCandidateInterests, getCandidateSkills, getNotifications, getUnreadCount, getIntroductionsForCandidate, loadEducationTypes, loadExperienceTypes, loadLocationTypes } from "@/lib/data";
 import { redirect } from "next/navigation";
 import ProfileClient from "./ProfileClient";
 
@@ -14,18 +14,21 @@ export default async function ProfilePage() {
   const session = await getSession();
   if (!session?.candidateId) redirect("/");
 
-  const [candidate, interests, skills, notifications, unreadCount, eduTypes, expTypes, locTypes] = await Promise.all([
+  const [candidate, interests, skills, notifications, unreadCount, introductions, eduTypes, expTypes, locTypes] = await Promise.all([
     getCandidateById(session.candidateId),
     getCandidateInterests(session.candidateId),
     getCandidateSkills(session.candidateId),
     getNotifications("candidate", session.candidateId, 10),
     getUnreadCount("candidate", session.candidateId),
+    getIntroductionsForCandidate(session.candidateId),
     loadEducationTypes(),
     loadExperienceTypes(),
     loadLocationTypes(),
   ]);
 
   if (!candidate) redirect("/");
+
+  const pendingIntroCount = introductions.filter(i => i.status === "pending").length;
 
   return (
     <ProfileClient
@@ -34,6 +37,7 @@ export default async function ProfilePage() {
       skills={skills}
       notifications={notifications}
       unreadCount={unreadCount}
+      pendingIntroCount={pendingIntroCount}
       eduTypes={Object.fromEntries(eduTypes)}
       expTypes={Object.fromEntries(expTypes)}
       locTypes={Object.fromEntries(locTypes)}

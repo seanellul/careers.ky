@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -143,6 +143,11 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
   const expTypes = useMemo(() => new Map(Object.entries(exObj)), [exObj]);
   const locTypes = useMemo(() => new Map(Object.entries(ltObj)), [ltObj]);
 
+  const [session, setSession] = useState(null);
+  useEffect(() => {
+    fetch("/api/auth/session").then(r => r.json()).then(d => setSession(d.authenticated ? d : null)).catch(() => {});
+  }, []);
+
   const daysLeft = daysUntil(job.endDate);
   const isExpiring = daysLeft !== null && daysLeft <= 5 && daysLeft > 0;
 
@@ -192,12 +197,19 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
 
           {/* Apply CTA */}
           {job.isActive && (
-            <div className="mt-4">
+            <div className="mt-4 flex flex-wrap gap-3">
               <a href={worcUrl} target="_blank" rel="noreferrer">
                 <Button size="lg" className="gap-2">
                   <ExternalLink className="w-4 h-4" /> Apply on WORC
                 </Button>
               </a>
+              {session?.employerAccountId && (
+                <Link href={`/talent?jobId=${job.cJobId}`}>
+                  <Button size="lg" variant="secondary" className="gap-2">
+                    <Users className="w-4 h-4" /> Find Matching Candidates
+                  </Button>
+                </Link>
+              )}
             </div>
           )}
         </div>

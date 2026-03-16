@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import {
   User, BookOpen, Clock, MapPin, Eye, EyeOff, Bell, Shield,
   CheckCircle, Edit3, LogOut, Briefcase, Star, ChevronRight,
-  X, Plus, Search,
+  X, Plus, Search, Send, Loader2,
 } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -21,7 +21,24 @@ const AVAILABILITY_OPTIONS = [
   { value: "not_looking", label: "Not Looking", color: "bg-neutral-500/20 text-neutral-300 border-neutral-300/30" },
 ];
 
-export default function ProfileClient({ candidate, interests, skills, notifications, unreadCount, eduTypes: etObj, expTypes: exObj, locTypes: ltObj }) {
+function calcProfileStrength(candidate, interests, skills) {
+  let score = 0;
+  const items = [];
+  if (candidate.name) { score += 12; } else { items.push("Add your name"); }
+  if (candidate.bio) { score += 12; } else { items.push("Write a bio"); }
+  if (candidate.education_code) { score += 10; } else { items.push("Set education level"); }
+  if (candidate.experience_code) { score += 10; } else { items.push("Set experience level"); }
+  if (candidate.location_code) { score += 8; } else { items.push("Set your location"); }
+  if (interests.length > 0) { score += 13; } else { items.push("Add career interests"); }
+  if (skills.length > 0) { score += 13; } else { items.push("Add skills"); }
+  if (candidate.is_discoverable) { score += 7; } else { items.push("Make profile discoverable"); }
+  if (candidate.salary_min || candidate.salary_max) { score += 5; } else { items.push("Add salary expectations"); }
+  if (candidate.work_type_preferences?.length > 0) { score += 5; } else { items.push("Set work type preferences"); }
+  if (candidate.linkedin_url) { score += 5; } else { items.push("Add LinkedIn URL"); }
+  return { score, missing: items };
+}
+
+export default function ProfileClient({ candidate, interests, skills, notifications, unreadCount, pendingIntroCount = 0, eduTypes: etObj, expTypes: exObj, locTypes: ltObj }) {
   const router = useRouter();
   const eduTypes = useMemo(() => new Map(Object.entries(etObj)), [etObj]);
   const expTypes = useMemo(() => new Map(Object.entries(exObj)), [exObj]);
@@ -38,6 +55,11 @@ export default function ProfileClient({ candidate, interests, skills, notificati
     educationCode: candidate.education_code || "",
     experienceCode: candidate.experience_code || "",
     locationCode: candidate.location_code || "",
+    salaryMin: candidate.salary_min || "",
+    salaryMax: candidate.salary_max || "",
+    workTypePreferences: candidate.work_type_preferences || [],
+    linkedinUrl: candidate.linkedin_url || "",
+    resumeSummary: candidate.resume_summary || "",
   });
 
   // Editable interests
@@ -57,6 +79,8 @@ export default function ProfileClient({ candidate, interests, skills, notificati
   const [alerts, setAlerts] = useState([]);
   const [alertsLoaded, setAlertsLoaded] = useState(false);
 
+  const [showPreview, setShowPreview] = useState(false);
+  const profileStrength = calcProfileStrength(candidate, interests, skills);
   const availOption = AVAILABILITY_OPTIONS.find(o => o.value === (editing ? form.availability : candidate.availability));
 
   // Search interests
@@ -129,6 +153,8 @@ export default function ProfileClient({ candidate, interests, skills, notificati
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
+          salaryMin: form.salaryMin ? Number(form.salaryMin) : null,
+          salaryMax: form.salaryMax ? Number(form.salaryMax) : null,
           ciscoCodes: editInterests.map(i => i.ciscoCode),
           skillIds: editSkills.map(s => s.id),
         }),
@@ -231,7 +257,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
             ) : (
               <>
                 <Button variant="secondary" onClick={() => setEditing(false)}>Cancel</Button>
-                <Button onClick={handleSave} disabled={saving} className="gap-2"><CheckCircle className="w-4 h-4" /> {saving ? "Saving..." : "Save"}</Button>
+                <Button onClick={handleSave} disabled={saving} className="gap-2">{saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />} {saving ? "Saving..." : "Save"}</Button>
               </>
             )}
             <Link href="/notifications">
@@ -244,8 +270,90 @@ export default function ProfileClient({ candidate, interests, skills, notificati
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="md:col-span-2 space-y-6">
+        {/* Profile Strength */}
+        <Card className="bg-white/5 border-white/10 mb-6">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-semibold">Profile Strength</h3>
+              <span className="text-sm font-semibold text-cyan-300">{profileStrength.score}%</span>
+            </div>
+            <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden mb-3">
+              <div
+                className={`h-full rounded-full transition-all duration-500 ${
+                  profileStrength.score >= 80 ? "bg-emerald-400" : profileStrength.score >= 50 ? "bg-cyan-400" : "bg-yellow-400"
+                }`}
+                style={{ width: `${profileStrength.score}%` }}
+              />
+            </div>
+            {profileStrength.missing.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {profileStrength.missing.map((item) => (
+                  <span key={item} className="text-xs px-2 py-1 rounded-lg bg-white/5 border border-white/10 text-neutral-400">{item}</span>
+                ))}
+              </div>
+            )}
+            <div className="mt-3">
+              <Button variant="secondary" size="sm" onClick={() => setShowPreview(true)} className="gap-2">
+                <Eye className="w-3 h-3" /> Preview how employers see you
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Employer Preview Modal */}
+        {showPreview && (
+          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowPreview(false)}>
+            <Card className="bg-neutral-900 border-white/10 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold">Employer View</h3>
+                  <button onClick={() => setShowPreview(false)} className="text-neutral-400 hover:text-white"><X className="w-5 h-5" /></button>
+                </div>
+                <p className="text-xs text-neutral-500 mb-4">This is what employers see in talent search (your name and email are hidden).</p>
+
+                <div className="p-4 rounded-xl border border-white/10 bg-white/5 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-10 h-10 rounded-full bg-white/10 grid place-items-center"><User className="w-5 h-5 text-neutral-400" /></div>
+                    <div>
+                      <div className="font-medium">Anonymous Candidate</div>
+                      <div className="flex gap-2">
+                        <Badge className={availOption?.color}>{availOption?.label || "Not set"}</Badge>
+                        {candidate.is_caymanian && <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30"><Shield className="w-3 h-3 mr-1" /> Caymanian</Badge>}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-xs">
+                    <div className="flex items-center gap-1"><BookOpen className="w-3 h-3 text-purple-300" /> {eduTypes.get(candidate.education_code) || "Not set"}</div>
+                    <div className="flex items-center gap-1"><Clock className="w-3 h-3 text-orange-300" /> {expTypes.get(candidate.experience_code) || "Not set"}</div>
+                    <div className="flex items-center gap-1"><MapPin className="w-3 h-3 text-pink-300" /> {locTypes.get(candidate.location_code) || "Not set"}</div>
+                  </div>
+                  {interests.length > 0 && (
+                    <div className="flex flex-wrap gap-1">
+                      {interests.map(i => (
+                        <Badge key={i.cisco_code} className="bg-white/5 border-white/10 text-neutral-300 text-xs">{i.title || i.cisco_code}</Badge>
+                      ))}
+                    </div>
+                  )}
+                  {skills.length > 0 && (
+                    <div className="flex flex-wrap gap-1">
+                      {skills.map(s => (
+                        <Badge key={s.id} className="bg-purple-500/10 text-purple-300 border-purple-300/20 text-xs">{s.name}</Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-4 flex gap-2">
+                  <Button variant="secondary" onClick={() => setShowPreview(false)} className="flex-1">Close</Button>
+                  {!editing && <Button onClick={() => { setShowPreview(false); setEditing(true); }} className="flex-1 gap-2"><Edit3 className="w-3 h-3" /> Edit Profile</Button>}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        <div className="grid lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
             {/* Basic Info */}
             <Card className="bg-white/5 border-white/10">
               <CardContent className="p-6 space-y-4">
@@ -489,6 +597,115 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                     </div>
                   </div>
                 )}
+              </CardContent>
+            </Card>
+
+            {/* Preferences */}
+            <Card className="bg-white/5 border-white/10">
+              <CardContent className="p-4 sm:p-6 space-y-4">
+                <h3 className="text-lg font-semibold">Preferences</h3>
+                {editing ? (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium mb-1 block">Salary Range (KYD/year)</label>
+                      <div className="flex gap-2">
+                        <Input
+                          type="number"
+                          value={form.salaryMin}
+                          onChange={(e) => setForm({ ...form, salaryMin: e.target.value })}
+                          placeholder="Min"
+                          className="bg-white/5 border-white/10"
+                        />
+                        <Input
+                          type="number"
+                          value={form.salaryMax}
+                          onChange={(e) => setForm({ ...form, salaryMax: e.target.value })}
+                          placeholder="Max"
+                          className="bg-white/5 border-white/10"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Work Type</label>
+                      <div className="space-y-2">
+                        {[["1", "Full-time"], ["2", "Part-time"], ["3", "Contract"]].map(([code, label]) => (
+                          <label key={code} className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={form.workTypePreferences.includes(code)}
+                              onChange={(e) => {
+                                const next = e.target.checked
+                                  ? [...form.workTypePreferences, code]
+                                  : form.workTypePreferences.filter(c => c !== code);
+                                setForm({ ...form, workTypePreferences: next });
+                              }}
+                              className="rounded"
+                            />
+                            <span className="text-sm">{label}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium mb-1 block">LinkedIn URL</label>
+                      <Input
+                        value={form.linkedinUrl}
+                        onChange={(e) => setForm({ ...form, linkedinUrl: e.target.value })}
+                        placeholder="https://linkedin.com/in/..."
+                        className="bg-white/5 border-white/10"
+                      />
+                      <p className="text-xs text-neutral-500 mt-1">Shared with employers only after you accept an introduction.</p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium mb-1 block">Resume Summary</label>
+                      <textarea
+                        value={form.resumeSummary}
+                        onChange={(e) => setForm({ ...form, resumeSummary: e.target.value })}
+                        rows={3}
+                        placeholder="Anything the structured fields don't capture..."
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3 text-sm">
+                    {(candidate.salary_min || candidate.salary_max) ? (
+                      <div><span className="text-neutral-400">Salary:</span> KYD {candidate.salary_min?.toLocaleString() || "?"} - {candidate.salary_max?.toLocaleString() || "?"}</div>
+                    ) : (
+                      <div className="text-neutral-500">No salary expectations set</div>
+                    )}
+                    {candidate.work_type_preferences?.length > 0 ? (
+                      <div className="flex flex-wrap gap-1">
+                        {candidate.work_type_preferences.map(c => (
+                          <Badge key={c} className="bg-white/5 border-white/10 text-neutral-300 text-xs">
+                            {c === "1" ? "Full-time" : c === "2" ? "Part-time" : c === "3" ? "Contract" : c}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-neutral-500">No work type preferences set</div>
+                    )}
+                    {candidate.linkedin_url && (
+                      <div><span className="text-neutral-400">LinkedIn:</span> <a href={candidate.linkedin_url} target="_blank" rel="noreferrer" className="text-cyan-300 hover:underline">Profile</a></div>
+                    )}
+                    {candidate.resume_summary && (
+                      <div><span className="text-neutral-400">Summary:</span> <span className="text-neutral-300">{candidate.resume_summary}</span></div>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Introductions */}
+            <Card className="bg-white/5 border-white/10">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-lg font-semibold flex items-center gap-2"><Send className="w-5 h-5" /> Introductions</h3>
+                  {pendingIntroCount > 0 && <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-300/30">{pendingIntroCount} pending</Badge>}
+                </div>
+                <Link href="/introductions" className="text-sm text-cyan-300 hover:underline flex items-center gap-1">
+                  View all introductions <ChevronRight className="w-3 h-3" />
+                </Link>
               </CardContent>
             </Card>
 

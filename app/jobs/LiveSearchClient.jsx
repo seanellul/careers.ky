@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -32,18 +32,40 @@ function truncateText(text, maxLength = 20) {
 
 export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {}, eduTypes: etObj = {}, expTypes: exObj = {}, locTypes: ltObj = {} }) {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const initialQ = searchParams.get("q") || "";
   const initialEmployer = searchParams.get("employer") || "";
   const initialCisco = searchParams.get("cisco") || "";
+  const initialLoc = Number(searchParams.get("loc") || 0);
+  const initialType = Number(searchParams.get("type") || 0);
+  const initialSort = Number(searchParams.get("sort") || 1);
 
   const [q, setQ] = useState(initialQ);
-  const [loc, setLoc] = useState(0);
-  const [type, setType] = useState(0);
-  const [sort, setSort] = useState(1);
+  const [loc, setLoc] = useState(initialLoc);
+  const [type, setType] = useState(initialType);
+  const [sort, setSort] = useState(initialSort);
   const [page, setPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
   const [employerFilter, setEmployerFilter] = useState(initialEmployer);
   const pageSize = 12;
+
+  // Sync filter state to URL
+  const updateURL = useCallback(() => {
+    const params = new URLSearchParams();
+    if (q) params.set("q", q);
+    if (loc) params.set("loc", String(loc));
+    if (type) params.set("type", String(type));
+    if (sort !== 1) params.set("sort", String(sort));
+    if (employerFilter) params.set("employer", employerFilter);
+    if (initialCisco) params.set("cisco", initialCisco);
+    const str = params.toString();
+    router.replace(str ? `/jobs?${str}` : "/jobs", { scroll: false });
+  }, [q, loc, type, sort, employerFilter, initialCisco, router]);
+
+  useEffect(() => {
+    const timer = setTimeout(updateURL, 300);
+    return () => clearTimeout(timer);
+  }, [updateURL]);
 
   // Skills filter
   const [skillQuery, setSkillQuery] = useState("");

@@ -1,13 +1,15 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
   Search, Users, BookOpen, Clock, MapPin, Shield, Filter,
-  Send, Eye, ChevronRight, ChevronDown, Briefcase, Star, CheckCircle, X,
+  Send, Eye, ChevronRight, ChevronDown, ChevronLeft, Briefcase, Star, CheckCircle, X,
+  Target, TrendingUp, Plus, List, Save,
 } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -29,18 +31,59 @@ const STATUS_COLORS = {
   declined: "bg-red-500/20 text-red-300 border-red-300/30",
 };
 
+function ScoreBadge({ score }) {
+  const pct = Math.round(score);
+  let colorClass = "bg-neutral-500/20 text-neutral-300 border-neutral-300/30";
+  if (pct >= 75) colorClass = "bg-emerald-500/20 text-emerald-300 border-emerald-300/30";
+  else if (pct >= 50) colorClass = "bg-cyan-500/20 text-cyan-300 border-cyan-300/30";
+  else if (pct >= 25) colorClass = "bg-yellow-500/20 text-yellow-300 border-yellow-300/30";
+
+  return (
+    <Badge className={`${colorClass} text-sm font-semibold`}>
+      <Target className="w-3 h-3 mr-1" /> {pct}%
+    </Badge>
+  );
+}
+
+function ScoreBreakdown({ scores }) {
+  const items = [
+    { label: "CISCO", score: scores.cisco, max: 35 },
+    { label: "Skills", score: scores.skill, max: 25 },
+    { label: "Education", score: scores.education, max: 10 },
+    { label: "Experience", score: scores.experience, max: 10 },
+    { label: "Salary", score: scores.salary, max: 10 },
+    { label: "Availability", score: scores.availability, max: 5 },
+    { label: "Caymanian", score: scores.caymanian, max: 5 },
+  ];
+
+  return (
+    <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-400">
+      {items.map((item) => (
+        <span key={item.label}>
+          {item.label}: <span className={item.score > 0 ? "text-neutral-200" : ""}>{item.score}/{item.max}</span>
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, locTypes: ltObj, ciscoUnits }) {
   const eduTypes = useMemo(() => new Map(Object.entries(etObj)), [etObj]);
   const expTypes = useMemo(() => new Map(Object.entries(exObj)), [exObj]);
   const locTypes = useMemo(() => new Map(Object.entries(ltObj)), [ltObj]);
+  const searchParamsHook = useSearchParams();
 
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
   const [results, setResults] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(20);
   const [searching, setSearching] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
   const [introSent, setIntroSent] = useState(new Set());
 
-  // Inline intro form state (keyed by candidate ID)
+  // Inline intro form state
   const [expandedIntro, setExpandedIntro] = useState(null);
   const [introMessage, setIntroMessage] = useState("");
   const [sendingIntro, setSendingIntro] = useState(false);
@@ -49,10 +92,8 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
   const [introductions, setIntroductions] = useState([]);
   const [showIntroductions, setShowIntroductions] = useState(false);
 
-  // Login state
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginSending, setLoginSending] = useState(false);
-  const [loginSent, setLoginSent] = useState(false);
+  // Score breakdown expand
+  const [expandedScore, setExpandedScore] = useState(null);
 
   // Filters
   const [ciscoCode, setCiscoCode] = useState("");
@@ -61,6 +102,25 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
   const [locationCode, setLocationCode] = useState("");
   const [availability, setAvailability] = useState("");
   const [ciscoSearch, setCiscoSearch] = useState("");
+  const [isCaymanian, setIsCaymanian] = useState(false);
+
+  // Skill filter
+  const [skillSearch, setSkillSearch] = useState("");
+  const [skillSuggestions, setSkillSuggestions] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState([]);
+
+  // Shortlist state
+  const [shortlists, setShortlists] = useState([]);
+  const [showShortlistDropdown, setShowShortlistDropdown] = useState(null);
+
+  // Bulk selection
+  const [selectedCandidates, setSelectedCandidates] = useState(new Set());
+  const [showBulkIntro, setShowBulkIntro] = useState(false);
+  const [bulkMessage, setBulkMessage] = useState("");
+  const [sendingBulk, setSendingBulk] = useState(false);
+
+  // Templates
+  const [templates, setTemplates] = useState([]);
 
   useEffect(() => {
     fetch("/api/auth/session").then(r => r.json()).then(d => {
@@ -69,22 +129,56 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
     });
   }, []);
 
-  // Load employer introductions
+  // Load employer data
   useEffect(() => {
     if (!session?.employerAccountId) return;
-    fetch("/api/introductions")
-      .then(r => r.json())
-      .then(d => setIntroductions(d.introductions || []))
-      .catch(() => {});
+    fetch("/api/introductions").then(r => r.json()).then(d => setIntroductions(d.introductions || [])).catch(() => {});
+    fetch("/api/employer/shortlists").then(r => r.json()).then(d => setShortlists(d.shortlists || [])).catch(() => {});
+    fetch("/api/employer/templates").then(r => r.json()).then(d => setTemplates(d.templates || [])).catch(() => {});
   }, [session]);
+
+  // Auto-search if jobId param present
+  useEffect(() => {
+    if (!session?.employerAccountId) return;
+    const jobId = searchParamsHook.get("jobId");
+    if (jobId) {
+      setSearching(true);
+      setHasSearched(true);
+      fetch(`/api/talent/match-to-job?jobId=${jobId}`)
+        .then(r => r.json())
+        .then(d => {
+          setResults(d.candidates || []);
+          setTotal(d.total || 0);
+          setPage(d.page || 1);
+        })
+        .finally(() => setSearching(false));
+    }
+  }, [session, searchParamsHook]);
+
+  // Skill search suggestions
+  useEffect(() => {
+    if (!skillSearch.trim()) { setSkillSuggestions([]); return; }
+    const ctrl = new AbortController();
+    fetch(`/api/skills/search?q=${encodeURIComponent(skillSearch)}`, { signal: ctrl.signal })
+      .then(r => r.json())
+      .then(d => {
+        const existing = new Set(selectedSkills.map(s => s.id));
+        setSkillSuggestions((d.skills || []).filter(s => !existing.has(s.id)));
+      })
+      .catch(() => {});
+    return () => ctrl.abort();
+  }, [skillSearch, selectedSkills]);
 
   const filteredCisco = useMemo(() => {
     if (!ciscoSearch) return ciscoUnits.slice(0, 50);
     return ciscoUnits.filter(c => c.title.toLowerCase().includes(ciscoSearch.toLowerCase())).slice(0, 50);
   }, [ciscoUnits, ciscoSearch]);
 
-  const handleSearch = async () => {
+  const totalPages = Math.ceil(total / pageSize);
+
+  const handleSearch = async (searchPage = 1) => {
     setSearching(true);
+    setHasSearched(true);
     try {
       const params = new URLSearchParams();
       if (ciscoCode) params.set("ciscoCode", ciscoCode);
@@ -92,28 +186,25 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
       if (experienceCode) params.set("experienceCode", experienceCode);
       if (locationCode) params.set("locationCode", locationCode);
       if (availability) params.set("availability", availability);
+      if (isCaymanian) params.set("isCaymanian", "true");
+      if (selectedSkills.length > 0) params.set("skillIds", selectedSkills.map(s => s.id).join(","));
+      params.set("page", String(searchPage));
+      params.set("pageSize", String(pageSize));
 
       const res = await fetch(`/api/talent/search?${params}`);
       const data = await res.json();
       setResults(data.candidates || []);
+      setTotal(data.total || 0);
+      setPage(data.page || searchPage);
+      setSelectedCandidates(new Set());
     } finally {
       setSearching(false);
     }
   };
 
-  const handleLogin = async () => {
-    if (!loginEmail) return;
-    setLoginSending(true);
-    try {
-      await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: loginEmail, type: "employer" }),
-      });
-      setLoginSent(true);
-    } finally {
-      setLoginSending(false);
-    }
+  const handlePageChange = (newPage) => {
+    if (newPage < 1 || newPage > totalPages) return;
+    handleSearch(newPage);
   };
 
   const handleSendIntroduction = async (candidateId) => {
@@ -128,13 +219,59 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
         setIntroSent(new Set([...introSent, candidateId]));
         setExpandedIntro(null);
         setIntroMessage("");
-        // Refresh introductions
         const intRes = await fetch("/api/introductions");
         const intData = await intRes.json();
         setIntroductions(intData.introductions || []);
       }
     } finally {
       setSendingIntro(false);
+    }
+  };
+
+  const handleBulkIntro = async () => {
+    if (selectedCandidates.size === 0) return;
+    setSendingBulk(true);
+    try {
+      const res = await fetch("/api/introductions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ candidateIds: [...selectedCandidates], message: bulkMessage }),
+      });
+      if (res.ok) {
+        setIntroSent(new Set([...introSent, ...selectedCandidates]));
+        setSelectedCandidates(new Set());
+        setShowBulkIntro(false);
+        setBulkMessage("");
+        const intRes = await fetch("/api/introductions");
+        const intData = await intRes.json();
+        setIntroductions(intData.introductions || []);
+      }
+    } finally {
+      setSendingBulk(false);
+    }
+  };
+
+  const handleAddToShortlist = async (shortlistId, candidateId) => {
+    await fetch(`/api/employer/shortlists/${shortlistId}/candidates`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ candidateId }),
+    });
+    setShowShortlistDropdown(null);
+  };
+
+  const toggleCandidate = (id) => {
+    const next = new Set(selectedCandidates);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setSelectedCandidates(next);
+  };
+
+  const selectAll = () => {
+    if (selectedCandidates.size === results.length) {
+      setSelectedCandidates(new Set());
+    } else {
+      setSelectedCandidates(new Set(results.map(c => c.id)));
     }
   };
 
@@ -152,7 +289,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
             Cayman <span className="text-cyan-300">Talent Pool</span>
           </h1>
           <p className="text-neutral-300 text-lg max-w-3xl">
-            Search for local talent by career interests, education, experience, and availability. Double opt-in — candidates choose to share their contact details.
+            Search for local talent by career interests, skills, education, and experience. Candidates are ranked by match quality.
           </p>
         </div>
 
@@ -223,58 +360,242 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                     </div>
                   </div>
                 </div>
-                <Button onClick={handleSearch} disabled={searching} className="gap-2">
+
+                {/* Skills Filter */}
+                <div className="mb-4">
+                  <label className="text-sm font-medium mb-2 block">Skills</label>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                    <Input
+                      value={skillSearch}
+                      onChange={(e) => setSkillSearch(e.target.value)}
+                      placeholder="Search skills to filter by..."
+                      className="pl-10 bg-white/5 border-white/10"
+                    />
+                  </div>
+                  {skillSuggestions.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {skillSuggestions.slice(0, 10).map((s) => (
+                        <button key={s.id} onClick={() => { setSelectedSkills([...selectedSkills, s]); setSkillSearch(""); }}>
+                          <Badge className="bg-white/5 border-white/10 text-neutral-300 hover:border-purple-300/40 cursor-pointer">
+                            <Plus className="w-3 h-3 mr-1" /> {s.name}
+                          </Badge>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {selectedSkills.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {selectedSkills.map((s) => (
+                        <div key={s.id} className="flex items-center gap-1">
+                          <Badge className="bg-purple-500/20 text-purple-300 border-purple-300/30">{s.name}</Badge>
+                          <button onClick={() => setSelectedSkills(selectedSkills.filter(sk => sk.id !== s.id))} className="text-neutral-400 hover:text-red-400">
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-4 mt-2">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={isCaymanian} onChange={(e) => setIsCaymanian(e.target.checked)} className="rounded" />
+                    <span className="text-sm flex items-center gap-1"><Shield className="w-3 h-3 text-cyan-300" /> Caymanian Only</span>
+                  </label>
+                </div>
+                <Button onClick={() => handleSearch(1)} disabled={searching} className="gap-2 mt-2">
                   <Search className="w-4 h-4" /> {searching ? "Searching..." : "Search Talent"}
                 </Button>
               </CardContent>
             </Card>
 
-            {/* Results */}
-            {results.length > 0 && (
+            {/* Loading Skeleton */}
+            {searching && (
               <div className="space-y-4">
-                <div className="text-sm text-neutral-300 mb-2">{results.length} candidate{results.length !== 1 ? "s" : ""} found</div>
+                {[1, 2, 3].map((i) => (
+                  <Card key={i} className="bg-white/5 border-white/10 animate-pulse">
+                    <CardContent className="p-6">
+                      <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-full bg-white/10" />
+                        <div className="flex-1 space-y-3">
+                          <div className="h-4 bg-white/10 rounded w-1/4" />
+                          <div className="h-3 bg-white/10 rounded w-1/2" />
+                          <div className="flex gap-2">
+                            <div className="h-5 bg-white/10 rounded w-16" />
+                            <div className="h-5 bg-white/10 rounded w-20" />
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+
+            {/* Bulk Actions Bar */}
+            {!searching && results.length > 0 && selectedCandidates.size > 0 && (
+              <div className="mb-4 p-3 rounded-xl bg-cyan-500/10 border border-cyan-300/20 flex items-center justify-between">
+                <span className="text-sm text-cyan-300">{selectedCandidates.size} selected</span>
+                <div className="flex gap-2">
+                  <Button size="sm" variant="secondary" onClick={() => setShowBulkIntro(true)} className="gap-1">
+                    <Send className="w-3 h-3" /> Send Intros
+                  </Button>
+                  <Button size="sm" variant="secondary" onClick={() => setSelectedCandidates(new Set())}>
+                    Clear
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Bulk Intro Modal */}
+            {showBulkIntro && (
+              <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowBulkIntro(false)}>
+                <Card className="bg-neutral-900 border-white/10 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+                  <CardContent className="p-6 space-y-4">
+                    <h3 className="text-lg font-semibold">Send Bulk Introductions</h3>
+                    <p className="text-sm text-neutral-400">Sending to {selectedCandidates.size} candidate{selectedCandidates.size !== 1 ? "s" : ""}</p>
+                    {templates.length > 0 && (
+                      <div>
+                        <label className="text-sm font-medium mb-1 block">Use Template</label>
+                        <select
+                          onChange={(e) => { const t = templates.find(t => t.id === Number(e.target.value)); if (t) setBulkMessage(t.message); }}
+                          className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200"
+                        >
+                          <option value="">Select a template...</option>
+                          {templates.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                        </select>
+                      </div>
+                    )}
+                    <textarea
+                      value={bulkMessage}
+                      onChange={(e) => setBulkMessage(e.target.value)}
+                      rows={4}
+                      placeholder="Your message to these candidates..."
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200"
+                    />
+                    <div className="flex gap-2 justify-end">
+                      <Button variant="secondary" onClick={() => setShowBulkIntro(false)}>Cancel</Button>
+                      <Button onClick={handleBulkIntro} disabled={sendingBulk} className="gap-2">
+                        <Send className="w-3 h-3" /> {sendingBulk ? "Sending..." : "Send All"}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* Results */}
+            {!searching && hasSearched && results.length > 0 && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between text-sm text-neutral-300 mb-2">
+                  <div className="flex items-center gap-3">
+                    <span>{total} candidate{total !== 1 ? "s" : ""} found</span>
+                    <button onClick={selectAll} className="text-xs text-cyan-300 hover:underline">
+                      {selectedCandidates.size === results.length ? "Deselect all" : "Select all"}
+                    </button>
+                  </div>
+                  <span className="flex items-center gap-1"><TrendingUp className="w-3 h-3" /> Ranked by match score</span>
+                </div>
                 {results.map((c, i) => (
-                  <Card key={c.id} className="bg-white/5 border-white/10 hover:border-cyan-300/40 transition">
+                  <Card key={c.id} className={`bg-white/5 border-white/10 hover:border-cyan-300/40 transition ${selectedCandidates.has(c.id) ? "ring-1 ring-cyan-300/40" : ""}`}>
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-3">
-                            <div className="w-10 h-10 rounded-full bg-white/10 grid place-items-center"><Users className="w-5 h-5 text-neutral-400" /></div>
-                            <div>
-                              <div className="font-medium">Candidate #{i + 1}</div>
-                              <div className="flex gap-2">
-                                <Badge className={AVAILABILITY_COLORS[c.availability] || ""}>{AVAILABILITY_LABELS[c.availability] || c.availability}</Badge>
-                                {c.is_caymanian && <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30"><Shield className="w-3 h-3 mr-1" /> Caymanian</Badge>}
+                        <div className="flex items-start gap-3 flex-1">
+                          <label className="mt-1 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={selectedCandidates.has(c.id)}
+                              onChange={() => toggleCandidate(c.id)}
+                              className="rounded"
+                            />
+                          </label>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-3">
+                              <div className="w-10 h-10 rounded-full bg-white/10 grid place-items-center"><Users className="w-5 h-5 text-neutral-400" /></div>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-medium">Candidate #{(page - 1) * pageSize + i + 1}</span>
+                                  {c.scores && <ScoreBadge score={c.scores.total} />}
+                                </div>
+                                <div className="flex gap-2">
+                                  <Badge className={AVAILABILITY_COLORS[c.availability] || ""}>{AVAILABILITY_LABELS[c.availability] || c.availability}</Badge>
+                                  {c.is_caymanian && <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30"><Shield className="w-3 h-3 mr-1" /> Caymanian</Badge>}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-3 text-sm">
-                            <div className="flex items-center gap-1"><BookOpen className="w-3 h-3 text-purple-300" /> {eduTypes.get(c.education_code) || "Not specified"}</div>
-                            <div className="flex items-center gap-1"><Clock className="w-3 h-3 text-orange-300" /> {expTypes.get(c.experience_code) || "Not specified"}</div>
-                            <div className="flex items-center gap-1"><MapPin className="w-3 h-3 text-pink-300" /> {locTypes.get(c.location_code) || "Not specified"}</div>
-                          </div>
-                          {c.interests?.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mb-2">
-                              {c.interests.map((int) => (
-                                <Badge key={int.cisco_code} className="bg-white/5 border-white/10 text-neutral-300 text-xs">{int.title || int.cisco_code}</Badge>
-                              ))}
+
+                            {/* Score Breakdown */}
+                            {c.scores && c.scores.total > 0 && (
+                              <div className="mb-3">
+                                <button
+                                  onClick={() => setExpandedScore(expandedScore === c.id ? null : c.id)}
+                                  className="text-xs text-neutral-400 hover:text-neutral-200 flex items-center gap-1"
+                                >
+                                  {expandedScore === c.id ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+                                  Match breakdown
+                                </button>
+                                {expandedScore === c.id && (
+                                  <div className="mt-2 p-2 rounded-lg bg-white/5 border border-white/10">
+                                    <ScoreBreakdown scores={c.scores} />
+                                  </div>
+                                )}
+                              </div>
+                            )}
+
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-3 text-sm">
+                              <div className="flex items-center gap-1"><BookOpen className="w-3 h-3 text-purple-300" /> {eduTypes.get(c.education_code) || "Not specified"}</div>
+                              <div className="flex items-center gap-1"><Clock className="w-3 h-3 text-orange-300" /> {expTypes.get(c.experience_code) || "Not specified"}</div>
+                              <div className="flex items-center gap-1"><MapPin className="w-3 h-3 text-pink-300" /> {locTypes.get(c.location_code) || "Not specified"}</div>
                             </div>
-                          )}
-                          {c.skills?.length > 0 && (
-                            <div className="flex flex-wrap gap-1">
-                              {c.skills.map((s) => (
-                                <Badge key={s.id} className="bg-purple-500/10 text-purple-300 border-purple-300/20 text-xs">{s.name}</Badge>
-                              ))}
-                            </div>
-                          )}
+                            {c.interests?.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mb-2">
+                                {c.interests.map((int) => (
+                                  <Badge key={int.cisco_code} className="bg-white/5 border-white/10 text-neutral-300 text-xs">{int.title || int.cisco_code}</Badge>
+                                ))}
+                              </div>
+                            )}
+                            {c.skills?.length > 0 && (
+                              <div className="flex flex-wrap gap-1">
+                                {c.skills.map((s) => (
+                                  <Badge key={s.id} className="bg-purple-500/10 text-purple-300 border-purple-300/20 text-xs">{s.name}</Badge>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                        <div className="shrink-0">
+                        <div className="shrink-0 flex flex-col gap-2">
                           {introSent.has(c.id) ? (
                             <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-300/30"><CheckCircle className="w-3 h-3 mr-1" /> Sent</Badge>
                           ) : expandedIntro === c.id ? null : (
-                            <Button onClick={() => { setExpandedIntro(c.id); setIntroMessage(""); }} variant="secondary" className="gap-2">
-                              <Send className="w-4 h-4" /> Request Intro
+                            <Button onClick={() => { setExpandedIntro(c.id); setIntroMessage(""); }} variant="secondary" size="sm" className="gap-2">
+                              <Send className="w-3 h-3" /> Intro
                             </Button>
+                          )}
+                          {shortlists.length > 0 && (
+                            <div className="relative">
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                className="gap-1"
+                                onClick={() => setShowShortlistDropdown(showShortlistDropdown === c.id ? null : c.id)}
+                              >
+                                <List className="w-3 h-3" /> Save
+                              </Button>
+                              {showShortlistDropdown === c.id && (
+                                <div className="absolute right-0 top-full mt-1 w-48 bg-neutral-900 border border-white/10 rounded-xl shadow-xl overflow-hidden z-20">
+                                  {shortlists.map(sl => (
+                                    <button
+                                      key={sl.id}
+                                      onClick={() => handleAddToShortlist(sl.id, c.id)}
+                                      className="w-full text-left px-3 py-2 text-sm hover:bg-white/5 transition"
+                                    >
+                                      {sl.name}
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
                           )}
                         </div>
                       </div>
@@ -283,6 +604,15 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                       {expandedIntro === c.id && !introSent.has(c.id) && (
                         <div className="mt-4 pt-4 border-t border-white/10 space-y-3">
                           <div className="text-sm font-medium">Send an introduction request</div>
+                          {templates.length > 0 && (
+                            <select
+                              onChange={(e) => { const t = templates.find(t => t.id === Number(e.target.value)); if (t) setIntroMessage(t.message); }}
+                              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200"
+                            >
+                              <option value="">Use a template...</option>
+                              {templates.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                            </select>
+                          )}
                           <textarea
                             value={introMessage}
                             onChange={(e) => setIntroMessage(e.target.value)}
@@ -302,10 +632,35 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                     </CardContent>
                   </Card>
                 ))}
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-center gap-2 pt-4">
+                    <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => handlePageChange(page - 1)}>
+                      <ChevronLeft className="w-4 h-4" />
+                    </Button>
+                    <span className="text-sm text-neutral-400">
+                      Page {page} of {totalPages}
+                    </span>
+                    <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => handlePageChange(page + 1)}>
+                      <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
 
-            {results.length === 0 && !searching && (
+            {!searching && hasSearched && results.length === 0 && (
+              <Card className="bg-white/5 border-white/10">
+                <CardContent className="p-12 text-center">
+                  <Users className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-400" />
+                  <h3 className="text-lg font-medium mb-2">No candidates found</h3>
+                  <p className="text-neutral-400">Try broadening your search filters.</p>
+                </CardContent>
+              </Card>
+            )}
+
+            {!searching && !hasSearched && (
               <Card className="bg-white/5 border-white/10">
                 <CardContent className="p-12 text-center">
                   <Users className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-400" />

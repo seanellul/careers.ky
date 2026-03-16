@@ -430,21 +430,27 @@ export default function HomeClient({
                   jobs
                     .slice(0, Math.min(8, jobs.length))
                     .map((job, i) => (
-                      <div
+                      <Link
                         key={`${duplicateIndex}-${i}`}
-                        className="group min-w-[220px] sm:min-w-[260px] rounded-2xl p-4 bg-white/10 border border-white/20 backdrop-blur-sm"
+                        href={`/jobs/${job.jobPostId || job.jobPostIdString}`}
+                        className="group min-w-[220px] sm:min-w-[260px] rounded-2xl p-4 bg-white/10 border border-white/20 backdrop-blur-sm hover:border-cyan-300/40 transition"
                       >
                         <div className="text-sm text-neutral-300 mb-2">
                           Live posting
                         </div>
-                        <div className="font-medium mb-1 text-white">
+                        <div className="font-medium mb-1 text-white group-hover:text-cyan-300 transition">
                           {truncateText(job.jobTitle, 25)}
                         </div>
+                        {job.employerName && (
+                          <div className="text-xs text-neutral-400 mb-1">
+                            {truncateText(job.employerName, 25)}
+                          </div>
+                        )}
                         <div className="text-xs text-neutral-300">
                           {fmtSalary(job)} ·{" "}
                           {WORK_TYPE[job.workType] || job.workType}
                         </div>
-                      </div>
+                      </Link>
                     ))
                 )}
               </div>

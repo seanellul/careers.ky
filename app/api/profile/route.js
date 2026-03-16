@@ -19,6 +19,11 @@ export async function PUT(request) {
       availability: data.availability,
       isDiscoverable: data.isDiscoverable,
       bio: data.bio,
+      salaryMin: data.salaryMin || null,
+      salaryMax: data.salaryMax || null,
+      workTypePreferences: data.workTypePreferences || [],
+      linkedinUrl: data.linkedinUrl || null,
+      resumeSummary: data.resumeSummary || null,
     });
 
     if (data.ciscoCodes) {

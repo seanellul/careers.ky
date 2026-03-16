@@ -67,6 +67,8 @@ export default async function HomePage() {
 
   // Transform active postings for the marquee
   const jobs = activePostings.slice(0, 200).map((job) => ({
+    jobPostId: job.cJobId,
+    jobPostIdString: job.cJobId,
     jobTitle: job.cTitle || "Untitled Role",
     employerName: job.Employer || "Employer not listed",
     workType: job.sWork || "Undefined",

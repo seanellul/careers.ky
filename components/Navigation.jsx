@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, Bell, LogOut, User, ChevronDown } from "lucide-react";
+import { Menu, X, Bell, LogOut, User, ChevronDown, Building2, Send } from "lucide-react";
 
 export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -19,11 +19,14 @@ export default function Navigation() {
   const router = useRouter();
   const dropdownRef = useRef(null);
 
+  const [unreadCount, setUnreadCount] = useState(0);
+
   useEffect(() => {
     fetch("/api/auth/session")
       .then((r) => r.json())
       .then((d) => {
         setSession(d.authenticated ? d : null);
+        if (d.authenticated && d.unreadCount) setUnreadCount(d.unreadCount);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -78,7 +81,9 @@ export default function Navigation() {
   navItems.push({ href: "/employers", label: "Employers" });
 
   if (isEmployer) {
+    navItems.push({ href: "/employer/dashboard", label: "Dashboard" });
     navItems.push({ href: "/talent", label: "Talent" });
+    navItems.push({ href: "/employer/shortlists", label: "Shortlists" });
   }
 
   const initial = session?.candidateName?.[0] || session?.employerName?.[0] || session?.candidateEmail?.[0]?.toUpperCase() || "U";
@@ -130,6 +135,11 @@ export default function Navigation() {
             <div className="flex items-center gap-3">
               <Link href="/notifications" className="relative p-2 rounded-lg hover:bg-white/10 transition">
                 <Bell className="w-4 h-4" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-cyan-500 rounded-full text-[10px] grid place-items-center font-semibold">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
               </Link>
 
               <div className="relative" ref={dropdownRef}>
@@ -145,13 +155,32 @@ export default function Navigation() {
 
                 {showDropdown && (
                   <div className="absolute right-0 top-full mt-2 w-48 bg-neutral-900 border border-white/10 rounded-xl shadow-xl overflow-hidden z-50">
-                    <Link
-                      href="/profile"
-                      onClick={() => setShowDropdown(false)}
-                      className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-white/5 transition"
-                    >
-                      <User className="w-4 h-4" /> My Profile
-                    </Link>
+                    {isEmployer ? (
+                      <Link
+                        href="/employer/dashboard"
+                        onClick={() => setShowDropdown(false)}
+                        className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-white/5 transition"
+                      >
+                        <Building2 className="w-4 h-4" /> Dashboard
+                      </Link>
+                    ) : (
+                      <Link
+                        href="/profile"
+                        onClick={() => setShowDropdown(false)}
+                        className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-white/5 transition"
+                      >
+                        <User className="w-4 h-4" /> My Profile
+                      </Link>
+                    )}
+                    {isCandidate && (
+                      <Link
+                        href="/introductions"
+                        onClick={() => setShowDropdown(false)}
+                        className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-white/5 transition"
+                      >
+                        <Send className="w-4 h-4" /> Introductions
+                      </Link>
+                    )}
                     <Link
                       href="/notifications"
                       onClick={() => setShowDropdown(false)}
@@ -251,9 +280,20 @@ export default function Navigation() {
             )}
             {!loading && session && (
               <>
-                <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white">
-                  My Profile
-                </Link>
+                {isEmployer ? (
+                  <Link href="/employer/dashboard" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white">
+                    Dashboard
+                  </Link>
+                ) : (
+                  <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white">
+                    My Profile
+                  </Link>
+                )}
+                {isCandidate && (
+                  <Link href="/introductions" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white">
+                    Introductions
+                  </Link>
+                )}
                 <Link href="/notifications" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white">
                   Notifications
                 </Link>

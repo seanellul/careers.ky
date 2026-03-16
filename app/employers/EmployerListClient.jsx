@@ -13,16 +13,21 @@ import Footer from "@/components/Footer";
 export default function EmployerListClient({ employers }) {
   const [q, setQ] = useState("");
   const [showActive, setShowActive] = useState(false);
+  const [sortBy, setSortBy] = useState("active");
   const [page, setPage] = useState(1);
   const pageSize = 24;
 
   const filtered = useMemo(() => {
-    return employers.filter(e => {
+    let result = employers.filter(e => {
       if (q && !e.name.toLowerCase().includes(q.toLowerCase())) return false;
       if (showActive && Number(e.active_postings) === 0) return false;
       return true;
     });
-  }, [employers, q, showActive]);
+    if (sortBy === "alpha") result = [...result].sort((a, b) => a.name.localeCompare(b.name));
+    else if (sortBy === "salary") result = [...result].sort((a, b) => Number(b.avg_salary || 0) - Number(a.avg_salary || 0));
+    else result = [...result].sort((a, b) => Number(b.active_postings || 0) - Number(a.active_postings || 0));
+    return result;
+  }, [employers, q, showActive, sortBy]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const view = filtered.slice((page - 1) * pageSize, page * pageSize);
@@ -56,6 +61,11 @@ export default function EmployerListClient({ employers }) {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
             <Input value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} placeholder="Search employers..." className="pl-10 bg-white/5 border-white/10 h-12 text-base" />
           </div>
+          <select value={sortBy} onChange={(e) => { setSortBy(e.target.value); setPage(1); }} className="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200 h-12">
+            <option value="active">Most Active</option>
+            <option value="alpha">Alphabetical</option>
+            <option value="salary">Highest Avg Salary</option>
+          </select>
           <Button variant={showActive ? "default" : "secondary"} onClick={() => { setShowActive(!showActive); setPage(1); }} className="gap-2 h-12">
             <TrendingUp className="w-4 h-4" /> {showActive ? "Show All" : "Currently Hiring"}
           </Button>

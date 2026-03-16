@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { fetchWORCJobs } from "@/lib/worc-client";
 import { runMatchAlerts } from "@/lib/match-alerts";
+import { runEmployerAutoMatch } from "@/lib/employer-match-alerts";
 
 export async function GET(request) {
   // Verify cron secret
@@ -12,7 +13,9 @@ export async function GET(request) {
 
   try {
     const sql = getDb();
+    console.log("[WORC Sync] Starting sync...");
     const jobs = await fetchWORCJobs();
+    console.log(`[WORC Sync] Fetched ${jobs.length} jobs from WORC API`);
 
     let count = 0;
     for (const job of jobs) {
@@ -22,14 +25,19 @@ export async function GET(request) {
           work_type, employer, education, experience, location,
           occupation_code, occupation_name, hours_per_week, currency,
           salary_description, min_salary, max_salary, mean_salary,
-          industry, synced_at
+          industry, job_description, salary_long, number_of_positions,
+          medical_check, police_check, driving_license, cover_letter_required,
+          applicant_count, synced_at
         ) VALUES (
           ${job.job_id}, ${job.title}, ${job.status}, ${job.created_date},
           ${job.start_date}, ${job.end_date}, ${job.work_type}, ${job.employer},
           ${job.education}, ${job.experience}, ${job.location},
           ${job.occupation_code}, ${job.occupation_name}, ${job.hours_per_week},
           ${job.currency}, ${job.salary_description}, ${job.min_salary},
-          ${job.max_salary}, ${job.mean_salary}, ${job.industry}, NOW()
+          ${job.max_salary}, ${job.mean_salary}, ${job.industry},
+          ${job.job_description}, ${job.salary_long}, ${job.number_of_positions},
+          ${job.medical_check}, ${job.police_check}, ${job.driving_license},
+          ${job.cover_letter_required}, ${job.applicant_count}, NOW()
         )
         ON CONFLICT (job_id) DO UPDATE SET
           title = EXCLUDED.title,
@@ -50,18 +58,29 @@ export async function GET(request) {
           max_salary = EXCLUDED.max_salary,
           mean_salary = EXCLUDED.mean_salary,
           industry = EXCLUDED.industry,
+          job_description = EXCLUDED.job_description,
+          salary_long = EXCLUDED.salary_long,
+          number_of_positions = EXCLUDED.number_of_positions,
+          medical_check = EXCLUDED.medical_check,
+          police_check = EXCLUDED.police_check,
+          driving_license = EXCLUDED.driving_license,
+          cover_letter_required = EXCLUDED.cover_letter_required,
+          applicant_count = EXCLUDED.applicant_count,
           synced_at = NOW()
       `;
       count++;
     }
+    console.log(`[WORC Sync] Upserted ${count} jobs`);
 
-    // Mark stale jobs
-    await sql`
+    // Mark stale jobs (7-day window to account for WORC weekend/holiday gaps)
+    const staleResult = await sql`
       UPDATE job_postings
       SET status = 'Closed'
-      WHERE synced_at < NOW() - INTERVAL '2 days'
+      WHERE synced_at < NOW() - INTERVAL '7 days'
       AND status = 'Active'
+      RETURNING job_id
     `;
+    console.log(`[WORC Sync] Marked ${staleResult.length} stale jobs as closed`);
 
     // Upsert new employers (safe — table may not exist pre-migration)
     try {
@@ -82,17 +101,32 @@ export async function GET(request) {
     let alertsProcessed = 0;
     try {
       alertsProcessed = await runMatchAlerts();
+      console.log(`[WORC Sync] Processed ${alertsProcessed} match alerts`);
     } catch (alertErr) {
-      console.error("Match alerts error (non-fatal):", alertErr.message);
+      console.error("[WORC Sync] Match alerts error (non-fatal):", alertErr.message);
     }
+
+    // Run employer match alerts
+    let employerAlertsProcessed = 0;
+    try {
+      employerAlertsProcessed = await runEmployerAutoMatch();
+      console.log(`[WORC Sync] Processed ${employerAlertsProcessed} employer match alerts`);
+    } catch (empAlertErr) {
+      console.error("[WORC Sync] Employer match alerts error (non-fatal):", empAlertErr.message);
+    }
+
+    console.log(`[WORC Sync] Complete. Synced: ${count}, Stale: ${staleResult.length}, Alerts: ${alertsProcessed}, EmployerAlerts: ${employerAlertsProcessed}`);
 
     return NextResponse.json({
       success: true,
       synced: count,
+      staleMarked: staleResult.length,
       alertsProcessed,
+      employerAlertsProcessed,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
+    console.error("[WORC Sync] Fatal error:", error.message);
     return NextResponse.json(
       { error: "Sync failed", message: error.message },
       { status: 500 }
