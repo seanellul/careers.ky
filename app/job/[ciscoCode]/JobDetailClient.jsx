@@ -264,7 +264,7 @@ export default function JobDetailClient({
                         {p.isActive ? <Badge className="bg-green-500/20 text-green-300 border-green-300/30">Active</Badge> : <Badge className="bg-neutral-500/20 text-neutral-300 border-neutral-300/30">Closed</Badge>}
                       </div>
                       <div className="flex items-center gap-4 text-sm text-neutral-400 mb-3">
-                        <Link href={`/employer/${encodeURIComponent(p.Employer?.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`} className="flex items-center gap-1 hover:text-cyan-300 transition"><Building2 className="w-4 h-4" /> {p.Employer}</Link>
+                        <Link href={`/employer/${encodeURIComponent(p.Employer?.trim().toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`} className="flex items-center gap-1 hover:text-cyan-300 transition"><Building2 className="w-4 h-4" /> {p.Employer}</Link>
                       </div>
                     </div>
                     <div className="text-right">

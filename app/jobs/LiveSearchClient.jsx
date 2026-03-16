@@ -251,7 +251,7 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                 <div className="text-xs uppercase tracking-wide text-emerald-300 mb-2">{WORK_TYPE[j.workType] || wtObj[j.workType] || "Role"}</div>
                 <Link href={`/jobs/${j.jobPostIdString || j.jobPostId}`} className="font-medium leading-tight group-hover:text-cyan-300 mb-2 line-clamp-2 min-h-[2.5rem] flex items-start transition">{j.jobTitle || "Untitled role"}</Link>
                 <div className="text-sm text-neutral-400 mb-2 line-clamp-1">
-                  <Link href={`/employer/${encodeURIComponent(j.employerName?.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`} className="hover:text-cyan-300 transition">{j.employerName}</Link>
+                  <Link href={`/employer/${encodeURIComponent(j.employerName?.trim().toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`} className="hover:text-cyan-300 transition">{j.employerName}</Link>
                 </div>
                 <div className="text-xs text-neutral-400 mb-3">{LOCATION_KEY[j.jobLocation] || ltObj[j.jobLocation] || "Cayman Islands"} · {j.hoursPerWeek ? `${j.hoursPerWeek} hrs/wk` : ""}</div>
                 <div className="text-sm text-neutral-200 mb-4 line-clamp-2">{fmtSalary(j)}</div>

@@ -184,7 +184,7 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight mb-3">{job.cTitle}</h1>
 
           <Link
-            href={`/employer/${encodeURIComponent(job.Employer?.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`}
+            href={`/employer/${encodeURIComponent(job.Employer?.trim().toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`}
             className="inline-flex items-center gap-2 text-lg text-neutral-300 hover:text-cyan-300 transition mb-4"
           >
             <Building2 className="w-5 h-5" /> {job.Employer}
@@ -369,7 +369,7 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
               <CardContent className="p-4 sm:p-6">
                 <h3 className="text-lg font-semibold mb-3">Employer</h3>
                 <Link
-                  href={`/employer/${encodeURIComponent(job.Employer?.toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`}
+                  href={`/employer/${encodeURIComponent(job.Employer?.trim().toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`}
                   className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-300/40 transition"
                 >
                   <div className="w-10 h-10 rounded-lg bg-white/10 grid place-items-center shrink-0">
