@@ -203,26 +203,16 @@ async function migrate() {
 
   // === Feature #6: Rich Job Posting Data ===
   console.log("6. Adding rich job posting columns...");
-  const richColumns = [
-    ["job_description", "TEXT"],
-    ["salary_long", "VARCHAR(500)"],
-    ["frequency_of_payment", "VARCHAR(50)"],
-    ["kyd_per_annum", "NUMERIC"],
-    ["number_of_positions", "INTEGER"],
-    ["medical_check", "BOOLEAN DEFAULT FALSE"],
-    ["police_check", "BOOLEAN DEFAULT FALSE"],
-    ["driving_license", "BOOLEAN DEFAULT FALSE"],
-    ["cover_letter_required", "BOOLEAN DEFAULT FALSE"],
-    ["applicant_count", "INTEGER DEFAULT 0"],
-  ];
-  for (const [col, type] of richColumns) {
-    await sql`SELECT 1 FROM information_schema.columns WHERE table_name='job_postings' AND column_name=${col}`.then(async (rows) => {
-      if (rows.length === 0) {
-        await sql.unsafe(`ALTER TABLE job_postings ADD COLUMN ${col} ${type}`);
-        console.log(`   Added ${col}`);
-      }
-    });
-  }
+  await sql`ALTER TABLE job_postings ADD COLUMN IF NOT EXISTS job_description TEXT`;
+  await sql`ALTER TABLE job_postings ADD COLUMN IF NOT EXISTS salary_long VARCHAR(500)`;
+  await sql`ALTER TABLE job_postings ADD COLUMN IF NOT EXISTS frequency_of_payment VARCHAR(50)`;
+  await sql`ALTER TABLE job_postings ADD COLUMN IF NOT EXISTS kyd_per_annum NUMERIC`;
+  await sql`ALTER TABLE job_postings ADD COLUMN IF NOT EXISTS number_of_positions INTEGER`;
+  await sql`ALTER TABLE job_postings ADD COLUMN IF NOT EXISTS medical_check BOOLEAN DEFAULT FALSE`;
+  await sql`ALTER TABLE job_postings ADD COLUMN IF NOT EXISTS police_check BOOLEAN DEFAULT FALSE`;
+  await sql`ALTER TABLE job_postings ADD COLUMN IF NOT EXISTS driving_license BOOLEAN DEFAULT FALSE`;
+  await sql`ALTER TABLE job_postings ADD COLUMN IF NOT EXISTS cover_letter_required BOOLEAN DEFAULT FALSE`;
+  await sql`ALTER TABLE job_postings ADD COLUMN IF NOT EXISTS applicant_count INTEGER DEFAULT 0`;
   console.log("   Done.\n");
 
   console.log("All migrations complete!");
