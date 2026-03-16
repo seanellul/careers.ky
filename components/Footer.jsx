@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className="pt-12 pb-16 border-t border-white/5">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-sm text-neutral-400">
-        <div className="flex flex-col md:flex-row items-start justify-between gap-8">
+        <div className="flex flex-col md:flex-row items-start justify-between gap-6 md:gap-8">
           <div className="flex items-center gap-3">
             <div className="h-8 w-8">
               <img
@@ -19,7 +19,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-x-12 gap-y-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4 sm:gap-y-2">
             <div>
               <div className="text-xs uppercase tracking-wide text-neutral-500 mb-2">For Job Seekers</div>
               <div className="flex flex-col gap-2">

@@ -52,7 +52,7 @@ export default function NotificationsClient({ notifications, unreadCount, recipi
           </Link>
         </div>
 
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-8">
           <div>
             <h1 className="text-3xl font-semibold tracking-tight mb-2 flex items-center gap-3">
               <Bell className="w-8 h-8" /> Notifications

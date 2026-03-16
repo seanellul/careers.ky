@@ -144,11 +144,11 @@ export default function CareerTracksClient({
 
   const Bar = ({ label, value, total, color = "bg-cyan-400" }) => (
     <div className="flex items-center gap-2">
-      <div className="w-32 text-xs text-neutral-300 truncate" title={label}>{label}</div>
+      <div className="w-20 sm:w-32 text-xs text-neutral-300 truncate" title={label}>{label}</div>
       <div className="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
         <div className={`h-full ${color}`} style={{ width: `${Math.round((value / Math.max(1, total)) * 100)}%` }} />
       </div>
-      <div className="w-16 text-xs text-neutral-400 text-right">{Math.round((value / Math.max(1, total)) * 100)}%</div>
+      <div className="w-12 sm:w-16 text-xs text-neutral-400 text-right">{Math.round((value / Math.max(1, total)) * 100)}%</div>
     </div>
   );
 

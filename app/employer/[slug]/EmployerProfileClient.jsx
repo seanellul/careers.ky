@@ -49,11 +49,11 @@ export default function EmployerProfileClient({ profile, workTypes: wtObj, eduTy
 
   const Bar = ({ label, value, total, color = "bg-cyan-400" }) => (
     <div className="flex items-center gap-2">
-      <div className="w-32 text-xs text-neutral-300 truncate" title={label}>{label}</div>
+      <div className="w-20 sm:w-32 text-xs text-neutral-300 truncate" title={label}>{label}</div>
       <div className="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
         <div className={`h-full ${color}`} style={{ width: `${Math.round((value / Math.max(1, total)) * 100)}%` }} />
       </div>
-      <div className="w-16 text-xs text-neutral-400 text-right">{value} ({Math.round((value / Math.max(1, total)) * 100)}%)</div>
+      <div className="w-12 sm:w-16 text-xs text-neutral-400 text-right">{value} ({Math.round((value / Math.max(1, total)) * 100)}%)</div>
     </div>
   );
 
@@ -99,7 +99,7 @@ export default function EmployerProfileClient({ profile, workTypes: wtObj, eduTy
           </div>
           {employer.description && <p className="text-neutral-300 mt-4 max-w-3xl">{employer.description}</p>}
 
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mt-6">
             <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><Briefcase className="w-5 h-5 text-cyan-300 mx-auto mb-2" /><div className="text-2xl font-semibold">{stats.totalPostings}</div><div className="text-sm text-neutral-400">Total Posts</div></CardContent></Card>
             <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><TrendingUp className="w-5 h-5 text-emerald-300 mx-auto mb-2" /><div className="text-2xl font-semibold">{stats.activePostings}</div><div className="text-sm text-neutral-400">Active Now</div></CardContent></Card>
             <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><DollarSign className="w-5 h-5 text-purple-300 mx-auto mb-2" /><div className="text-xl font-semibold">CI$ {Math.round(stats.avgSalary).toLocaleString()}</div><div className="text-sm text-neutral-400">Avg Salary</div></CardContent></Card>
@@ -246,7 +246,7 @@ export default function EmployerProfileClient({ profile, workTypes: wtObj, eduTy
             {filteredPostings.slice(0, 50).map((p, i) => (
               <Card key={p.cJobId || i} className="bg-white/5 border-white/10 hover:border-cyan-300/40 transition">
                 <CardContent className="p-4">
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-medium truncate">{p.cTitle}</h3>

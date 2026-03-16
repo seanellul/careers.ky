@@ -128,14 +128,14 @@ export default function Navigation() {
 
           {!loading && session && (
             <div className="flex items-center gap-3">
-              <Link href="/notifications" className="relative p-1.5 rounded-lg hover:bg-white/10 transition">
+              <Link href="/notifications" className="relative p-2 rounded-lg hover:bg-white/10 transition">
                 <Bell className="w-4 h-4" />
               </Link>
 
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
-                  className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-white/10 transition"
+                  className="flex items-center gap-2 p-2 rounded-lg hover:bg-white/10 transition"
                 >
                   <div className="w-7 h-7 rounded-full bg-cyan-500/30 text-cyan-300 grid place-items-center text-xs font-semibold">
                     {initial}
@@ -191,7 +191,7 @@ export default function Navigation() {
         <div className="border-t border-white/5 bg-neutral-950/95 backdrop-blur">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
             {!loginSent ? (
-              <form onSubmit={handleLogin} className="flex items-end gap-3 max-w-lg ml-auto">
+              <form onSubmit={handleLogin} className="flex flex-col sm:flex-row items-stretch sm:items-end gap-2 sm:gap-3 max-w-lg ml-auto">
                 <div className="flex-1">
                   <label className="text-xs text-neutral-400 mb-1 block">Email</label>
                   <input

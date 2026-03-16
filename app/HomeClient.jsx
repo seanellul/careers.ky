@@ -246,7 +246,7 @@ export default function HomeClient({
                   </div>
 
                   {/* Live Stats */}
-                  <div className="grid grid-cols-3 gap-3 mb-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
                     <div className="p-4 rounded-xl bg-white/5 border border-white/10">
                       <div className="text-3xl font-semibold text-cyan-300 mb-1">
                         {jobCount}
@@ -432,7 +432,7 @@ export default function HomeClient({
                     .map((job, i) => (
                       <div
                         key={`${duplicateIndex}-${i}`}
-                        className="group min-w-[260px] rounded-2xl p-4 bg-white/10 border border-white/20 backdrop-blur-sm"
+                        className="group min-w-[220px] sm:min-w-[260px] rounded-2xl p-4 bg-white/10 border border-white/20 backdrop-blur-sm"
                       >
                         <div className="text-sm text-neutral-300 mb-2">
                           Live posting
@@ -567,7 +567,7 @@ export default function HomeClient({
             id="cta-gradient"
           >
             <div className="rounded-[20px] bg-neutral-900/60 border border-white/10 p-8">
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-3">
                   <div className="text-sm text-neutral-400">For Job Seekers</div>
                   <div className="text-xl font-semibold">Looking for work?</div>
@@ -580,7 +580,7 @@ export default function HomeClient({
                     </Button>
                   </Link>
                 </div>
-                <div className="space-y-3 md:border-l md:border-white/10 md:pl-6">
+                <div className="space-y-3 border-t pt-4 md:border-t-0 md:pt-0 md:border-l md:border-white/10 md:pl-6">
                   <div className="text-sm text-neutral-400">For Employers</div>
                   <div className="text-xl font-semibold">Hiring in Cayman?</div>
                   <p className="text-neutral-300 text-sm">

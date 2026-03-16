@@ -188,7 +188,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                   <div>
                     <label className="text-sm font-medium mb-2 block">Career Interest (CISCO)</label>
                     <Input value={ciscoSearch} onChange={(e) => setCiscoSearch(e.target.value)} placeholder="Search occupations..." className="bg-white/5 border-white/10 mb-2" />
-                    <select value={ciscoCode} onChange={(e) => setCiscoCode(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200" size={5}>
+                    <select value={ciscoCode} onChange={(e) => setCiscoCode(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200" size={4}>
                       <option value="">Any occupation</option>
                       {filteredCisco.map(c => <option key={c.code} value={c.code}>{c.title} ({c.code})</option>)}
                     </select>
@@ -252,7 +252,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                               </div>
                             </div>
                           </div>
-                          <div className="grid grid-cols-3 gap-4 mb-3 text-sm">
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-3 text-sm">
                             <div className="flex items-center gap-1"><BookOpen className="w-3 h-3 text-purple-300" /> {eduTypes.get(c.education_code) || "Not specified"}</div>
                             <div className="flex items-center gap-1"><Clock className="w-3 h-3 text-orange-300" /> {expTypes.get(c.experience_code) || "Not specified"}</div>
                             <div className="flex items-center gap-1"><MapPin className="w-3 h-3 text-pink-300" /> {locTypes.get(c.location_code) || "Not specified"}</div>

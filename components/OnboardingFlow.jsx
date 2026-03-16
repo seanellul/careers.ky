@@ -443,7 +443,7 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
                 <h3 className="text-xl font-semibold mb-2">Choose a field</h3>
                 <p className="text-neutral-400 mb-4">Drill into the CISCO taxonomy.</p>
                 <div className="grid md:grid-cols-12 gap-4">
-                  <div className="md:col-span-5 space-y-2 max-h-[360px] overflow-auto pr-2">
+                  <div className="md:col-span-5 space-y-2 max-h-[240px] md:max-h-[360px] overflow-auto pr-2">
                     {majors.map((m) => (
                       <button
                         key={m.id}

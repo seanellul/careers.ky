@@ -222,10 +222,10 @@ export default function ProfileClient({ candidate, interests, skills, notificati
         {/* Header */}
         <div className="flex items-start justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight mb-2">My Profile</h1>
+            <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight mb-2">My Profile</h1>
             <p className="text-neutral-400">{candidate.email}</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {!editing ? (
               <Button variant="secondary" onClick={() => setEditing(true)} className="gap-2"><Edit3 className="w-4 h-4" /> Edit</Button>
             ) : (
@@ -461,7 +461,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
           <div className="space-y-6">
             {/* Availability & Visibility */}
             <Card className="bg-white/5 border-white/10">
-              <CardContent className="p-6 space-y-4">
+              <CardContent className="p-4 sm:p-6 space-y-4">
                 <h3 className="text-lg font-semibold">Status</h3>
                 {editing ? (
                   <div className="space-y-4">

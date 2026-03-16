@@ -93,11 +93,11 @@ export default function JobDetailClient({
 
   const Bar = ({ label, value, total, color = "bg-cyan-400" }) => (
     <div className="flex items-center gap-2">
-      <div className="w-32 text-xs text-neutral-300 truncate" title={label}>{label}</div>
+      <div className="w-20 sm:w-32 text-xs text-neutral-300 truncate" title={label}>{label}</div>
       <div className="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
         <div className={`h-full ${color}`} style={{ width: `${Math.round((value / Math.max(1, total)) * 100)}%` }} />
       </div>
-      <div className="w-16 text-xs text-neutral-400 text-right">{Math.round((value / Math.max(1, total)) * 100)}%</div>
+      <div className="w-12 sm:w-16 text-xs text-neutral-400 text-right">{Math.round((value / Math.max(1, total)) * 100)}%</div>
     </div>
   );
 
@@ -121,7 +121,7 @@ export default function JobDetailClient({
           <h1 className="text-4xl font-semibold tracking-tight">{unit.title} <span className="text-cyan-300">Jobs in Cayman</span></h1>
 
           {stats && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4 mt-6">
               <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><Briefcase className="w-5 h-5 text-cyan-300 mx-auto mb-2" /><div className="text-2xl font-semibold">{stats.count}</div><div className="text-sm text-neutral-400">Job Posts</div></CardContent></Card>
               <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><DollarSign className="w-5 h-5 text-emerald-300 mx-auto mb-2" /><div className="text-2xl font-semibold">CI$ {Math.round(stats.mean).toLocaleString()}</div><div className="text-sm text-neutral-400">Average Salary</div></CardContent></Card>
               <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><TrendingUp className="w-5 h-5 text-purple-300 mx-auto mb-2" /><div className="text-2xl font-semibold">CI$ {Math.round(stats.max).toLocaleString()}</div><div className="text-sm text-neutral-400">Max Salary</div></CardContent></Card>
@@ -272,7 +272,7 @@ export default function JobDetailClient({
                       <div className="text-sm text-neutral-400">{workTypes.get(p.sWork) || p.sWork}</div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                     <div><div className="text-xs text-neutral-400 mb-1">Created</div><div className="text-sm font-medium">{formatDate(p.createdDate)}</div></div>
                     <div><div className="text-xs text-neutral-400 mb-1">Start Date</div><div className="text-sm font-medium">{formatDate(p.startDate)}</div></div>
                     <div><div className="text-xs text-neutral-400 mb-1">End Date</div><div className="text-sm font-medium">{formatDate(p.endDate)}</div></div>
@@ -320,7 +320,7 @@ export default function JobDetailClient({
 
       {/* Career Plan Modal */}
       {showCareerPlan && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/80 backdrop-blur-sm overflow-y-auto py-8 px-4">
+        <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/80 backdrop-blur-sm overflow-y-auto py-4 px-2 sm:py-8 sm:px-4">
           <div className="relative w-full max-w-4xl bg-neutral-900 border border-white/10 rounded-2xl shadow-2xl">
             <div className="sticky top-0 z-20 bg-neutral-900/95 backdrop-blur border-b border-white/10 p-6 rounded-t-2xl">
               <div className="flex items-start justify-between">

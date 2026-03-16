@@ -141,8 +141,8 @@ export default function ProfileSetupClient({ candidate, eduTypes: etObj, expType
         <div className="flex items-center gap-2 mb-8">
           {STEPS.map((s, i) => (
             <div key={s} className="flex items-center gap-2">
-              <div className={`w-8 h-8 rounded-full grid place-items-center text-sm font-medium ${i <= step ? "bg-cyan-500 text-white" : "bg-white/10 text-neutral-400"}`}>{i + 1}</div>
-              {i < STEPS.length - 1 && <div className={`w-8 h-px ${i < step ? "bg-cyan-500" : "bg-white/10"}`} />}
+              <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full grid place-items-center text-xs sm:text-sm font-medium ${i <= step ? "bg-cyan-500 text-white" : "bg-white/10 text-neutral-400"}`}>{i + 1}</div>
+              {i < STEPS.length - 1 && <div className={`w-4 sm:w-8 h-px ${i < step ? "bg-cyan-500" : "bg-white/10"}`} />}
             </div>
           ))}
         </div>
