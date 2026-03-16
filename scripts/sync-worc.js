@@ -18,14 +18,20 @@ async function sync() {
         work_type, employer, education, experience, location,
         occupation_code, occupation_name, hours_per_week, currency,
         salary_description, min_salary, max_salary, mean_salary,
-        industry, synced_at
+        industry, job_description, salary_long, frequency_of_payment,
+        kyd_per_annum, number_of_positions, medical_check, police_check,
+        driving_license, cover_letter_required, applicant_count, synced_at
       ) VALUES (
         ${job.job_id}, ${job.title}, ${job.status}, ${job.created_date},
         ${job.start_date}, ${job.end_date}, ${job.work_type}, ${job.employer},
         ${job.education}, ${job.experience}, ${job.location},
         ${job.occupation_code}, ${job.occupation_name}, ${job.hours_per_week},
         ${job.currency}, ${job.salary_description}, ${job.min_salary},
-        ${job.max_salary}, ${job.mean_salary}, ${job.industry}, NOW()
+        ${job.max_salary}, ${job.mean_salary}, ${job.industry},
+        ${job.job_description}, ${job.salary_long}, ${job.frequency_of_payment},
+        ${job.kyd_per_annum}, ${job.number_of_positions}, ${job.medical_check},
+        ${job.police_check}, ${job.driving_license}, ${job.cover_letter_required},
+        ${job.applicant_count}, NOW()
       )
       ON CONFLICT (job_id) DO UPDATE SET
         title = EXCLUDED.title,
@@ -46,6 +52,16 @@ async function sync() {
         max_salary = EXCLUDED.max_salary,
         mean_salary = EXCLUDED.mean_salary,
         industry = EXCLUDED.industry,
+        job_description = EXCLUDED.job_description,
+        salary_long = EXCLUDED.salary_long,
+        frequency_of_payment = EXCLUDED.frequency_of_payment,
+        kyd_per_annum = EXCLUDED.kyd_per_annum,
+        number_of_positions = EXCLUDED.number_of_positions,
+        medical_check = EXCLUDED.medical_check,
+        police_check = EXCLUDED.police_check,
+        driving_license = EXCLUDED.driving_license,
+        cover_letter_required = EXCLUDED.cover_letter_required,
+        applicant_count = EXCLUDED.applicant_count,
         synced_at = NOW()
     `;
     // neon returns the rows affected context indirectly; count all as upserted
