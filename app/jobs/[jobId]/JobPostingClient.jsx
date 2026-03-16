@@ -137,7 +137,7 @@ function FormatDescription({ text }) {
   );
 }
 
-export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTypes: etObj, expTypes: exObj, locTypes: ltObj }) {
+export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTypes: etObj, expTypes: exObj, locTypes: ltObj, referrer }) {
   const workTypes = useMemo(() => new Map(Object.entries(wtObj)), [wtObj]);
   const eduTypes = useMemo(() => new Map(Object.entries(etObj)), [etObj]);
   const expTypes = useMemo(() => new Map(Object.entries(exObj)), [exObj]);
@@ -162,9 +162,9 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
         {/* Back */}
         <div className="mb-6">
-          <Link href="/jobs">
-            <Button variant="secondary" className="gap-2"><ChevronLeft className="w-4 h-4" /> Back to Jobs</Button>
-          </Link>
+          <Button variant="secondary" className="gap-2" onClick={() => window.history.length > 1 ? window.history.back() : window.location.href = "/jobs"}>
+            <ChevronLeft className="w-4 h-4" /> Back to Jobs
+          </Button>
         </div>
 
         {/* Header */}

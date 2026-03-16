@@ -1,5 +1,11 @@
 import { Suspense } from "react";
-import { getActiveJobPostings } from "@/lib/data";
+import {
+  getActiveJobPostings,
+  loadWorkTypes,
+  loadEducationTypes,
+  loadExperienceTypes,
+  loadLocationTypes,
+} from "@/lib/data";
 import LiveSearchClient from "./LiveSearchClient";
 
 export const dynamic = "force-dynamic";
@@ -11,19 +17,25 @@ export const metadata = {
 };
 
 export default async function JobsPage() {
-  const postings = await getActiveJobPostings();
+  const [postings, workTypes, eduTypes, expTypes, locTypes] = await Promise.all([
+    getActiveJobPostings(),
+    loadWorkTypes(),
+    loadEducationTypes(),
+    loadExperienceTypes(),
+    loadLocationTypes(),
+  ]);
 
   const jobs = postings.map((job) => ({
-    educationLevel: job.sEducation || "Unavailable",
+    educationLevel: job.sEducation || "0",
     employerName: job.Employer || "Employer not listed",
     hoursPerWeek: parseFloat(job["Hours Per Week"]) || 40,
     minimumAmount: job.fMinSalary || 0,
     maximumAmount: job.fMaxSalary || 0,
-    jobLocation: job.sLocation || "Undefined",
+    jobLocation: job.sLocation || "0",
     jobPostId: job.cJobId,
     jobPostIdString: job.cJobId,
-    yearsOfExperience: job.sExperience || "Unavailable",
-    workType: job.sWork || "Undefined",
+    yearsOfExperience: job.sExperience || "0",
+    workType: job.sWork || "0",
     jobTitle: job.cTitle || "Untitled Role",
     currency: job.Currency || "KYD",
     salaryShort: job["Salary Description"] || null,
@@ -36,7 +48,13 @@ export default async function JobsPage() {
 
   return (
     <Suspense fallback={null}>
-      <LiveSearchClient jobs={jobs} />
+      <LiveSearchClient
+        jobs={jobs}
+        workTypes={Object.fromEntries(workTypes)}
+        eduTypes={Object.fromEntries(eduTypes)}
+        expTypes={Object.fromEntries(expTypes)}
+        locTypes={Object.fromEntries(locTypes)}
+      />
     </Suspense>
   );
 }
