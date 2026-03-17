@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>careers.ky — {{COMPANY_NAME}}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--navy:#0a1628;--navy-light:#132042;--accent:#00d4aa;--accent-dark:#00b894;--white:#f0f4f8;--gray:#8899aa;--orange:#ff6b35;--slide-h:100vh}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--navy);color:var(--white);overflow-x:hidden;scroll-behavior:smooth;scroll-snap-type:y mandatory}
+.slide{min-height:var(--slide-h);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2rem;text-align:center;scroll-snap-align:start;position:relative}
+.slide-inner{max-width:800px;width:100%}
+h1{font-size:clamp(1.8rem,5vw,3rem);line-height:1.2;margin-bottom:1rem;font-weight:800}
+h2{font-size:clamp(1.4rem,3.5vw,2.2rem);line-height:1.3;margin-bottom:1rem;font-weight:700}
+h3{font-size:clamp(1.1rem,2.5vw,1.5rem);margin-bottom:.75rem;font-weight:600}
+p,.sub{font-size:clamp(1rem,2vw,1.25rem);color:var(--gray);line-height:1.6;margin-bottom:1rem}
+.accent{color:var(--accent)}
+.orange{color:var(--orange)}
+.highlight{background:linear-gradient(135deg,var(--navy-light),#1a2d50);border:1px solid rgba(0,212,170,.2);border-radius:12px;padding:1.5rem;margin:1rem 0;text-align:left}
+.highlight li{margin:.5rem 0;font-size:clamp(.95rem,1.8vw,1.1rem);list-style:none;padding-left:1.5rem;position:relative}
+.highlight li::before{content:'';position:absolute;left:0;top:.5em;width:8px;height:8px;border-radius:50%}
+.highlight li.yes::before{background:#00d4aa}
+.highlight li.no::before{background:#ff4757}
+.btn{display:inline-block;padding:.9rem 2rem;border-radius:8px;font-size:1.1rem;font-weight:700;text-decoration:none;margin:.5rem;transition:transform .2s,box-shadow .2s;cursor:pointer;border:none}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,212,170,.3)}
+.btn-primary{background:var(--accent);color:var(--navy)}
+.btn-secondary{background:transparent;color:var(--accent);border:2px solid var(--accent)}
+.btn-tertiary{background:transparent;color:var(--gray);border:1px solid var(--gray);font-size:.95rem}
+.stat-row{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0}
+.stat{background:var(--navy-light);border:1px solid rgba(0,212,170,.15);border-radius:12px;padding:1.25rem;min-width:180px;flex:1}
+.stat .num{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:800;color:var(--accent)}
+.stat .label{font-size:.9rem;color:var(--gray);margin-top:.25rem}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:clamp(.85rem,1.6vw,1rem)}
+th,td{padding:.75rem 1rem;text-align:left;border-bottom:1px solid rgba(255,255,255,.08)}
+th{color:var(--accent);font-weight:600;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+td{color:var(--white)}
+.winner{background:rgba(0,212,170,.08);border-radius:6px}
+.steps{display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:center;margin:1.5rem 0}
+.step{background:var(--navy-light);border:1px solid rgba(0,212,170,.15);border-radius:12px;padding:1.5rem;flex:1;min-width:200px;text-align:left}
+.step .num{font-size:2rem;font-weight:800;color:var(--accent);margin-bottom:.5rem}
+.tier-row{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0}
+.tier{background:var(--navy-light);border:1px solid rgba(0,212,170,.15);border-radius:12px;padding:1.5rem;flex:1;min-width:260px;text-align:left}
+.tier.featured{border-color:var(--accent);box-shadow:0 0 30px rgba(0,212,170,.1)}
+.tier .price{font-size:1.8rem;font-weight:800;color:var(--accent);margin:.5rem 0}
+.tier .price span{font-size:.9rem;color:var(--gray);font-weight:400}
+.tier ul{list-style:none;padding:0}
+.tier li{padding:.4rem 0;padding-left:1.2rem;position:relative;font-size:.95rem}
+.tier li::before{content:'✓';position:absolute;left:0;color:var(--accent);font-weight:700}
+.slide-num{position:absolute;bottom:1rem;right:1.5rem;font-size:.75rem;color:rgba(255,255,255,.2)}
+.logo{font-size:1.2rem;font-weight:800;letter-spacing:-.02em;margin-bottom:2rem;color:var(--white)}
+.logo span{color:var(--accent)}
+.nav-dots{position:fixed;right:1rem;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:.5rem;z-index:100}
+.nav-dots a{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.2);display:block;transition:background .2s}
+.nav-dots a:hover,.nav-dots a.active{background:var(--accent)}
+@media(max-width:600px){.slide{padding:1.5rem 1rem}.stat-row,.steps,.tier-row{flex-direction:column}.stat,.step,.tier{min-width:auto}}
+</style>
+</head>
+<body>
+
+<nav class="nav-dots" id="navDots"></nav>
+
+<!-- SLIDE 1: Hook -->
+<section class="slide" id="s1">
+<div class="slide-inner">
+<div class="logo">careers<span>.ky</span></div>
+<h1>You Posted <span class="accent">{{JOB_COUNT}} Jobs</span>.<br>Then WORC Changed the Rules.</h1>
+<p class="sub">The 2025 immigration changes hit every employer in Cayman.<br>We automated the solution.</p>
+<div style="margin-top:2rem">
+<a href="#s2" class="btn btn-primary">See What Changed ↓</a>
+</div>
+</div>
+<div class="slide-num">1 / 9</div>
+</section>
+
+<!-- SLIDE 2: The Problem -->
+<section class="slide" id="s2">
+<div class="slide-inner">
+<h2>November 2025: WORC Changed the Rules</h2>
+<p>Every employer must now comply with new requirements for <em>every</em> work permit:</p>
+<div class="highlight">
+<ul>
+<li class="yes">Advertise jobs for 14+ days — you do this</li>
+<li class="no">Provide structured feedback on every Caymanian applicant — most don't</li>
+<li class="no">Document why Caymanians weren't hired — no system for this</li>
+<li class="no">Submit compliance docs with permit applications — time-consuming, error-prone</li>
+</ul>
+</div>
+<p><span class="orange">The result?</span> Denied work permits. Fines. Frozen hiring. Wasted time.</p>
+</div>
+<div class="slide-num">2 / 9</div>
+</section>
+
+<!-- SLIDE 3: Current State -->
+<section class="slide" id="s3">
+<div class="slide-inner">
+<h2>What {{COMPANY_NAME}} Is Doing Now</h2>
+<p>Be honest — does this look familiar?</p>
+<div class="stat-row">
+<div class="stat"><div class="num">📧→📊→📝</div><div class="label">Email → Spreadsheet → Word Doc → Submit</div></div>
+</div>
+<div class="highlight">
+<ul>
+<li class="no">Missing applicants in the tracking</li>
+<li class="no">Inconsistent feedback from hiring managers</li>
+<li class="no">Hours of admin time per permit application</li>
+<li class="no">One missed Caymanian = permit denied = hiring frozen</li>
+</ul>
+</div>
+<div class="stat-row">
+<div class="stat"><div class="num">4–6 hrs</div><div class="label">Per work permit application</div></div>
+<div class="stat"><div class="num orange">$25K+</div><div class="label">Cost of one denied permit</div></div>
+</div>
+</div>
+<div class="slide-num">3 / 9</div>
+</section>
+
+<!-- SLIDE 4: Solution -->
+<section class="slide" id="s4">
+<div class="slide-inner">
+<h2>What <span class="accent">careers.ky</span> Does</h2>
+<p>Compliance automation built for Cayman employers.</p>
+<div class="steps">
+<div class="step">
+<div class="num">📋</div>
+<h3>Structured Feedback</h3>
+<p style="font-size:.95rem;color:var(--gray)">Automated collection from your hiring managers. No more chasing emails.</p>
+</div>
+<div class="step">
+<div class="num">📄</div>
+<h3>One-Click Reports</h3>
+<p style="font-size:.95rem;color:var(--gray)">Legally formatted Compliance Reports — PDF, ready to submit with permits.</p>
+</div>
+<div class="step">
+<div class="num">📊</div>
+<h3>Full Audit Trail</h3>
+<p style="font-size:.95rem;color:var(--gray)">Applicants, interviews, outcomes — all timestamped. Audit-ready.</p>
+</div>
+</div>
+<p><span class="accent">Result:</span> Permits approved faster. Hiring unblocked. Zero guesswork.</p>
+</div>
+<div class="slide-num">4 / 9</div>
+</section>
+
+<!-- SLIDE 5: ROI -->
+<section class="slide" id="s5">
+<div class="slide-inner">
+<h2>The ROI for <span class="accent">{{COMPANY_NAME}}</span></h2>
+<div class="stat-row">
+<div class="stat"><div class="num">4–6 hrs</div><div class="label">Saved per permit application</div></div>
+<div class="stat"><div class="num">98%</div><div class="label">Cheaper than recruiters</div></div>
+<div class="stat"><div class="num">$25K+</div><div class="label">Saved per avoided denial</div></div>
+</div>
+<div class="highlight">
+<p style="color:var(--white);font-weight:600;margin-bottom:.75rem">Your numbers ({{HIRING_VOLUME}} work permits/year):</p>
+<ul>
+<li class="no">Traditional recruiter: <strong>CI${{RECRUITER_COST_LOW}}–{{RECRUITER_COST_HIGH}}</strong></li>
+<li class="yes">careers.ky: <strong>CI${{CKY_ANNUAL_COST}}/year</strong></li>
+<li class="yes">Your savings: <strong class="accent">CI${{SAVINGS_LOW}}–{{SAVINGS_HIGH}}/year</strong></li>
+</ul>
+</div>
+</div>
+<div class="slide-num">5 / 9</div>
+</section>
+
+<!-- SLIDE 6: How It Works -->
+<section class="slide" id="s6">
+<div class="slide-inner">
+<h2>Three Steps. Same Day.</h2>
+<div class="steps">
+<div class="step">
+<div class="num">1</div>
+<h3>Post a Job</h3>
+<p style="font-size:.95rem;color:var(--gray)">You already do this on WORC. Nothing changes.</p>
+</div>
+<div class="step">
+<div class="num">2</div>
+<h3>Collect Feedback</h3>
+<p style="font-size:.95rem;color:var(--gray)">Your hiring team fills in structured feedback. 2 minutes per candidate.</p>
+</div>
+<div class="step">
+<div class="num">3</div>
+<h3>Generate Report</h3>
+<p style="font-size:.95rem;color:var(--gray)">One click → Compliance Report ready to submit with your permit application.</p>
+</div>
+</div>
+<p style="margin-top:1rem"><span class="accent">Timeline:</span> Same day you need it. No delays. No back-and-forth.</p>
+</div>
+<div class="slide-num">6 / 9</div>
+</section>
+
+<!-- SLIDE 7: Pricing Tiers -->
+<section class="slide" id="s7">
+<div class="slide-inner">
+<h2>Choose Your Plan</h2>
+<div class="tier-row">
+<div class="tier">
+<h3>Pro</h3>
+<div class="price">$299<span>/month</span></div>
+<ul>
+<li>Talent search & intro requests</li>
+<li>Basic compliance automation</li>
+<li>5 compliance reports/month</li>
+<li>Email support</li>
+</ul>
+<a href="#s9" class="btn btn-secondary" style="margin-top:1rem;display:block;text-align:center">Start Free Trial</a>
+</div>
+<div class="tier featured">
+<h3>Enterprise <span style="font-size:.75rem;background:var(--accent);color:var(--navy);padding:2px 8px;border-radius:4px;vertical-align:middle">RECOMMENDED</span></h3>
+<div class="price">$799<span>/month</span></div>
+<ul>
+<li>Everything in Pro</li>
+<li>Unlimited compliance reports</li>
+<li>API access & integrations</li>
+<li>Priority support</li>
+<li>Advanced analytics dashboard</li>
+</ul>
+<a href="#s9" class="btn btn-primary" style="margin-top:1rem;display:block;text-align:center">Start Free Trial</a>
+</div>
+</div>
+<p style="font-size:.95rem;color:var(--gray);margin-top:1rem">💡 One denied permit pays for <strong>12 months</strong> of Enterprise.</p>
+</div>
+<div class="slide-num">7 / 9</div>
+</section>
+
+<!-- SLIDE 8: Pricing Comparison -->
+<section class="slide" id="s8">
+<div class="slide-inner">
+<h2>The Math: Hiring {{HIRING_VOLUME}} People/Year</h2>
+<table>
+<thead><tr><th></th><th>Traditional Recruiter</th><th>Pro</th><th class="accent">Enterprise</th></tr></thead>
+<tbody>
+<tr><td>Annual Cost</td><td>CI${{RECRUITER_COST_LOW}}–{{RECRUITER_COST_HIGH}}</td><td>CI$3,588</td><td class="winner">CI$9,588</td></tr>
+<tr><td>Compliance Reports</td><td>Not included</td><td>5/month</td><td class="winner">Unlimited</td></tr>
+<tr><td>Time per Permit</td><td>4–6 hours</td><td>~30 min</td><td class="winner">~30 min</td></tr>
+<tr><td>Audit Trail</td><td>❌</td><td>✓</td><td class="winner">✓ Advanced</td></tr>
+<tr><td style="font-weight:700">Your Savings</td><td>—</td><td style="color:var(--accent);font-weight:700">CI${{SAVINGS_PRO}}</td><td style="color:var(--accent);font-weight:700" class="winner">CI${{SAVINGS_ENT}}</td></tr>
+</tbody>
+</table>
+</div>
+<div class="slide-num">8 / 9</div>
+</section>
+
+<!-- SLIDE 9: CTA -->
+<section class="slide" id="s9">
+<div class="slide-inner">
+<div class="logo">careers<span>.ky</span></div>
+<h1>Ready to Fix Compliance<br>at <span class="accent">{{COMPANY_NAME}}</span>?</h1>
+<p class="sub">Join {{EMPLOYER_COUNT}} Cayman employers already in the system.<br>Get your first Compliance Report today.</p>
+<div style="margin-top:2rem">
+<a href="https://careers.ky/trial?company={{COMPANY_SLUG}}" class="btn btn-primary">Start Your Free Trial</a>
+<a href="https://careers.ky/demo?company={{COMPANY_SLUG}}" class="btn btn-secondary">Schedule a 15-min Demo</a>
+</div>
+<div style="margin-top:1rem">
+<a href="https://careers.ky/strategy" class="btn btn-tertiary">Learn More →</a>
+</div>
+</div>
+<div class="slide-num">9 / 9</div>
+</section>
+
+<script>
+// Nav dots
+const slides=document.querySelectorAll('.slide');
+const nav=document.getElementById('navDots');
+slides.forEach((_,i)=>{const a=document.createElement('a');a.href='#s'+(i+1);nav.appendChild(a)});
+const dots=[...nav.querySelectorAll('a')];
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){const idx=[...slides].indexOf(e.target);dots.forEach((d,i)=>d.classList.toggle('active',i===idx))}})},{threshold:.5});
+slides.forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
