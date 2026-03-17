@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import { Suspense } from "react";
 import PostHogProvider, { PostHogPageView } from "@/components/PostHogProvider";
+import DevToolbar from "@/components/DevToolbar";
 
 export const metadata = {
   title: {
@@ -39,6 +40,7 @@ export default function RootLayout({ children }) {
             <PostHogPageView />
           </Suspense>
           {children}
+          <DevToolbar />
         </PostHogProvider>
       </body>
     </html>

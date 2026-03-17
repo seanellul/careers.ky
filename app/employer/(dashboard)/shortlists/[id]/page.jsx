@@ -1,15 +1,13 @@
 export const dynamic = "force-dynamic";
 
 import { getSession } from "@/lib/auth";
-import { redirect, notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import { loadEducationTypes, loadExperienceTypes, loadLocationTypes } from "@/lib/data";
 import { getDb } from "@/lib/db";
 import ShortlistDetailClient from "./ShortlistDetailClient";
 
 export default async function ShortlistDetailPage({ params }) {
   const session = await getSession();
-  if (!session?.employerAccountId) redirect("/");
-
   const { id } = await params;
   const sql = getDb();
 

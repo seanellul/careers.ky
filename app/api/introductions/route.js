@@ -21,9 +21,14 @@ export async function POST(request) {
       return NextResponse.json({ error: "No candidates specified" }, { status: 400 });
     }
 
+    const { jobId, matchScore, matchBreakdown } = body;
+
     const results = [];
     for (const candidateId of candidateIds) {
-      const intro = await createIntroduction(session.employerAccountId, candidateId, message);
+      const intro = await createIntroduction(
+        session.employerAccountId, candidateId, message,
+        jobId || null, matchScore != null ? matchScore : null, matchBreakdown || null
+      );
       if (intro) {
         await createNotification(
           "candidate", candidateId,
@@ -34,8 +39,8 @@ export async function POST(request) {
 
         // Log activity
         await sql`
-          INSERT INTO activity_log (employer_account_id, action, details, candidate_id, introduction_id)
-          VALUES (${session.employerAccountId}, 'intro_sent', ${JSON.stringify({ message: !!message })}, ${candidateId}, ${intro.id})
+          INSERT INTO activity_log (employer_account_id, action, details, candidate_id, introduction_id, job_id)
+          VALUES (${session.employerAccountId}, 'intro_sent', ${JSON.stringify({ message: !!message })}, ${candidateId}, ${intro.id}, ${jobId || null})
         `;
 
         results.push(intro);

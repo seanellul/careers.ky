@@ -14,7 +14,7 @@ export default async function NotificationsPage() {
   const session = await getSession();
   if (!session?.candidateId && !session?.employerAccountId) redirect("/");
 
-  const recipientType = session.candidateId ? "candidate" : "employer";
+  const recipientType = session.candidateId ? "candidate" : "employer_account";
   const recipientId = session.candidateId || session.employerAccountId;
 
   const [notifications, unreadCount] = await Promise.all([

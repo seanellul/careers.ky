@@ -12,13 +12,10 @@ export const metadata = {
 };
 
 export default async function EmployerDashboardPage() {
+  // Session guard handled by (dashboard) layout
   const session = await getSession();
-  if (!session?.employerAccountId) redirect("/");
-  if (!session.employerId) redirect("/employer/setup");
-
   const sql = getDb();
 
-  // Get employer record
   const employers = await sql`SELECT * FROM employers WHERE id = ${session.employerId}`;
   const employer = employers[0];
   if (!employer) redirect("/employer/setup");

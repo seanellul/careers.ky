@@ -20,6 +20,7 @@ export default function Navigation() {
   const dropdownRef = useRef(null);
 
   const [unreadCount, setUnreadCount] = useState(0);
+  const [pendingIntroCount, setPendingIntroCount] = useState(0);
 
   useEffect(() => {
     fetch("/api/auth/session")
@@ -27,6 +28,7 @@ export default function Navigation() {
       .then((d) => {
         setSession(d.authenticated ? d : null);
         if (d.authenticated && d.unreadCount) setUnreadCount(d.unreadCount);
+        if (d.authenticated && d.pendingIntroCount) setPendingIntroCount(d.pendingIntroCount);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -80,10 +82,12 @@ export default function Navigation() {
 
   navItems.push({ href: "/employers", label: "Employers" });
 
+  if (isCandidate) {
+    navItems.push({ href: "/introductions", label: "Introductions", badge: pendingIntroCount });
+  }
+
   if (isEmployer) {
     navItems.push({ href: "/employer/dashboard", label: "Dashboard" });
-    navItems.push({ href: "/talent", label: "Talent" });
-    navItems.push({ href: "/employer/shortlists", label: "Shortlists" });
   }
 
   const initial = session?.candidateName?.[0] || session?.employerName?.[0] || session?.candidateEmail?.[0]?.toUpperCase() || "U";
@@ -108,16 +112,26 @@ export default function Navigation() {
         <nav className="hidden md:flex items-center gap-6 text-sm text-neutral-300">
           {navItems.map((item) =>
             pathname === item.href ? (
-              <span key={item.href} className="text-cyan-300 font-medium">
+              <span key={item.href} className="text-cyan-300 font-medium flex items-center gap-1.5">
                 {item.label}
+                {item.badge > 0 && (
+                  <span className="min-w-[18px] h-[18px] px-1 bg-cyan-500 rounded-full text-[10px] grid place-items-center font-semibold text-white">
+                    {item.badge > 9 ? "9+" : item.badge}
+                  </span>
+                )}
               </span>
             ) : (
               <Link
                 key={item.href}
                 href={item.href}
-                className="hover:text-white transition"
+                className="hover:text-white transition flex items-center gap-1.5"
               >
                 {item.label}
+                {item.badge > 0 && (
+                  <span className="min-w-[18px] h-[18px] px-1 bg-cyan-500 rounded-full text-[10px] grid place-items-center font-semibold text-white animate-pulse">
+                    {item.badge > 9 ? "9+" : item.badge}
+                  </span>
+                )}
               </Link>
             )
           )}
@@ -170,15 +184,6 @@ export default function Navigation() {
                         className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-white/5 transition"
                       >
                         <User className="w-4 h-4" /> My Profile
-                      </Link>
-                    )}
-                    {isCandidate && (
-                      <Link
-                        href="/introductions"
-                        onClick={() => setShowDropdown(false)}
-                        className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-white/5 transition"
-                      >
-                        <Send className="w-4 h-4" /> Introductions
                       </Link>
                     )}
                     <Link
@@ -263,18 +268,28 @@ export default function Navigation() {
               pathname === item.href ? (
                 <div
                   key={item.href}
-                  className="px-4 py-3 rounded-lg bg-cyan-500/20 border border-cyan-300/30 text-cyan-300 font-medium"
+                  className="px-4 py-3 rounded-lg bg-cyan-500/20 border border-cyan-300/30 text-cyan-300 font-medium flex items-center justify-between"
                 >
                   {item.label}
+                  {item.badge > 0 && (
+                    <span className="min-w-[20px] h-[20px] px-1.5 bg-cyan-500 rounded-full text-[11px] grid place-items-center font-semibold text-white">
+                      {item.badge > 9 ? "9+" : item.badge}
+                    </span>
+                  )}
                 </div>
               ) : (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white text-left"
+                  className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white text-left flex items-center justify-between"
                 >
                   {item.label}
+                  {item.badge > 0 && (
+                    <span className="min-w-[20px] h-[20px] px-1.5 bg-cyan-500 rounded-full text-[11px] grid place-items-center font-semibold text-white animate-pulse">
+                      {item.badge > 9 ? "9+" : item.badge}
+                    </span>
+                  )}
                 </Link>
               )
             )}
@@ -287,11 +302,6 @@ export default function Navigation() {
                 ) : (
                   <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white">
                     My Profile
-                  </Link>
-                )}
-                {isCandidate && (
-                  <Link href="/introductions" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white">
-                    Introductions
                   </Link>
                 )}
                 <Link href="/notifications" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition text-neutral-300 hover:text-white">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,8 +11,6 @@ import {
   Send, Eye, ChevronRight, ChevronDown, ChevronLeft, Briefcase, Star, CheckCircle, X,
   Target, TrendingUp, Plus, List, Save,
 } from "lucide-react";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 
 const AVAILABILITY_LABELS = {
   actively_looking: "Actively Looking",
@@ -82,6 +80,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
   const [searching, setSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [introSent, setIntroSent] = useState(new Set());
+  const [showFilters, setShowFilters] = useState(false);
 
   // Inline intro form state
   const [expandedIntro, setExpandedIntro] = useState(null);
@@ -122,6 +121,13 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
   // Templates
   const [templates, setTemplates] = useState([]);
 
+  // Job selector
+  const [employerPostings, setEmployerPostings] = useState([]);
+  const [selectedJobId, setSelectedJobId] = useState("");
+  const [jobSearch, setJobSearch] = useState("");
+  const [jobDropdownOpen, setJobDropdownOpen] = useState(false);
+  const jobDropdownRef = useRef(null);
+
   useEffect(() => {
     fetch("/api/auth/session").then(r => r.json()).then(d => {
       setSession(d.authenticated ? d : null);
@@ -135,7 +141,17 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
     fetch("/api/introductions").then(r => r.json()).then(d => setIntroductions(d.introductions || [])).catch(() => {});
     fetch("/api/employer/shortlists").then(r => r.json()).then(d => setShortlists(d.shortlists || [])).catch(() => {});
     fetch("/api/employer/templates").then(r => r.json()).then(d => setTemplates(d.templates || [])).catch(() => {});
+    fetch("/api/employer/postings?status=active").then(r => r.json()).then(d => setEmployerPostings(d.postings || [])).catch(() => {});
   }, [session]);
+
+  // Pre-select job from URL param
+  useEffect(() => {
+    if (!employerPostings.length) return;
+    const jobId = searchParamsHook.get("jobId");
+    if (jobId && employerPostings.some(p => p.cJobId === jobId)) {
+      setSelectedJobId(jobId);
+    }
+  }, [employerPostings, searchParamsHook]);
 
   // Auto-search if jobId param present
   useEffect(() => {
@@ -155,6 +171,19 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
     }
   }, [session, searchParamsHook]);
 
+  // Close job dropdown on outside click
+  useEffect(() => {
+    if (!jobDropdownOpen) return;
+    const handler = (e) => {
+      if (jobDropdownRef.current && !jobDropdownRef.current.contains(e.target)) {
+        setJobDropdownOpen(false);
+        setJobSearch("");
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [jobDropdownOpen]);
+
   // Skill search suggestions
   useEffect(() => {
     if (!skillSearch.trim()) { setSkillSuggestions([]); return; }
@@ -173,6 +202,37 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
     if (!ciscoSearch) return ciscoUnits.slice(0, 50);
     return ciscoUnits.filter(c => c.title.toLowerCase().includes(ciscoSearch.toLowerCase())).slice(0, 50);
   }, [ciscoUnits, ciscoSearch]);
+
+  const filteredPostings = useMemo(() => {
+    if (!jobSearch.trim()) return employerPostings;
+    const q = jobSearch.toLowerCase();
+    return employerPostings.filter(p =>
+      p.cTitle.toLowerCase().includes(q) || p.cJobId.toLowerCase().includes(q)
+    );
+  }, [employerPostings, jobSearch]);
+
+  const handleSelectJob = (jobId) => {
+    setSelectedJobId(jobId);
+    setJobDropdownOpen(false);
+    setJobSearch("");
+    // Auto-search
+    if (jobId) {
+      setSearching(true);
+      setHasSearched(true);
+      fetch(`/api/talent/match-to-job?jobId=${jobId}`)
+        .then(r => r.json())
+        .then(d => {
+          setResults(d.candidates || []);
+          setTotal(d.total || 0);
+          setPage(d.page || 1);
+          setSelectedCandidates(new Set());
+        })
+        .finally(() => setSearching(false));
+    } else {
+      // General search — run immediately with current filters
+      handleSearch(1);
+    }
+  };
 
   const totalPages = Math.ceil(total / pageSize);
 
@@ -207,13 +267,19 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
     handleSearch(newPage);
   };
 
-  const handleSendIntroduction = async (candidateId) => {
+  const handleSendIntroduction = async (candidateId, candidateScores) => {
     setSendingIntro(true);
     try {
+      const payload = { candidateId, message: introMessage };
+      if (selectedJobId) payload.jobId = selectedJobId;
+      if (candidateScores) {
+        payload.matchScore = candidateScores.total;
+        payload.matchBreakdown = candidateScores;
+      }
       const res = await fetch("/api/introductions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ candidateId, message: introMessage }),
+        body: JSON.stringify(payload),
       });
       if (res.ok) {
         setIntroSent(new Set([...introSent, candidateId]));
@@ -232,10 +298,12 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
     if (selectedCandidates.size === 0) return;
     setSendingBulk(true);
     try {
+      const payload = { candidateIds: [...selectedCandidates], message: bulkMessage };
+      if (selectedJobId) payload.jobId = selectedJobId;
       const res = await fetch("/api/introductions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ candidateIds: [...selectedCandidates], message: bulkMessage }),
+        body: JSON.stringify(payload),
       });
       if (res.ok) {
         setIntroSent(new Set([...introSent, ...selectedCandidates]));
@@ -275,15 +343,10 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
     }
   };
 
-  if (loading) return <div className="min-h-screen bg-neutral-950" />;
+  if (loading) return <div className="py-20" />;
 
   return (
-    <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
-      <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={{ backgroundImage: "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)", backgroundPosition: "0% 50%" }} />
-
-      <Navigation />
-
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <>
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-4">
             Cayman <span className="text-cyan-300">Talent Pool</span>
@@ -314,99 +377,187 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
         {/* Search Filters */}
         {session?.employerAccountId && (
           <>
-            <Card className="bg-white/5 border-white/10 mb-8">
-              <CardContent className="p-6">
-                <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"><Filter className="w-5 h-5" /> Search Filters</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Career Interest (CISCO)</label>
-                    <Input value={ciscoSearch} onChange={(e) => setCiscoSearch(e.target.value)} placeholder="Search occupations..." className="bg-white/5 border-white/10 mb-2" />
-                    <select value={ciscoCode} onChange={(e) => setCiscoCode(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200" size={4}>
-                      <option value="">Any occupation</option>
-                      {filteredCisco.map(c => <option key={c.code} value={c.code}>{c.title} ({c.code})</option>)}
-                    </select>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Education</label>
-                      <select value={educationCode} onChange={(e) => setEducationCode(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
-                        <option value="">Any education</option>
-                        {Array.from(eduTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Experience</label>
-                      <select value={experienceCode} onChange={(e) => setExperienceCode(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
-                        <option value="">Any experience</option>
-                        {Array.from(expTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                      </select>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Location</label>
-                      <select value={locationCode} onChange={(e) => setLocationCode(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
-                        <option value="">Any location</option>
-                        {Array.from(locTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium mb-2 block">Availability</label>
-                      <select value={availability} onChange={(e) => setAvailability(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
-                        <option value="">Any availability</option>
-                        <option value="actively_looking">Actively Looking</option>
-                        <option value="open_to_offers">Open to Offers</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Skills Filter */}
-                <div className="mb-4">
-                  <label className="text-sm font-medium mb-2 block">Skills</label>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
-                    <Input
-                      value={skillSearch}
-                      onChange={(e) => setSkillSearch(e.target.value)}
-                      placeholder="Search skills to filter by..."
-                      className="pl-10 bg-white/5 border-white/10"
-                    />
-                  </div>
-                  {skillSuggestions.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {skillSuggestions.slice(0, 10).map((s) => (
-                        <button key={s.id} onClick={() => { setSelectedSkills([...selectedSkills, s]); setSkillSearch(""); }}>
-                          <Badge className="bg-white/5 border-white/10 text-neutral-300 hover:border-purple-300/40 cursor-pointer">
-                            <Plus className="w-3 h-3 mr-1" /> {s.name}
-                          </Badge>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                  {selectedSkills.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {selectedSkills.map((s) => (
-                        <div key={s.id} className="flex items-center gap-1">
-                          <Badge className="bg-purple-500/20 text-purple-300 border-purple-300/30">{s.name}</Badge>
-                          <button onClick={() => setSelectedSkills(selectedSkills.filter(sk => sk.id !== s.id))} className="text-neutral-400 hover:text-red-400">
-                            <X className="w-3 h-3" />
-                          </button>
+            <Card className="bg-white/[0.03] border-white/10 mb-8">
+              <CardContent className="p-5 space-y-0">
+                {/* Job Selector — searchable dropdown */}
+                {employerPostings.length > 0 && (
+                  <div className="relative" ref={jobDropdownRef}>
+                    <label className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-2 block">Recruiting for</label>
+                    <button
+                      onClick={() => setJobDropdownOpen(!jobDropdownOpen)}
+                      className="w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition text-left"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-8 h-8 rounded-lg bg-cyan-400/15 grid place-items-center shrink-0">
+                          {selectedJobId ? <Briefcase className="w-4 h-4 text-cyan-300" /> : <Search className="w-4 h-4 text-cyan-300" />}
                         </div>
-                      ))}
-                    </div>
-                  )}
+                        <div className="min-w-0">
+                          <div className="text-sm font-medium text-neutral-100 truncate">
+                            {selectedJobId
+                              ? employerPostings.find(p => p.cJobId === selectedJobId)?.cTitle || selectedJobId
+                              : "General Search"}
+                          </div>
+                          <div className="text-xs text-neutral-500">
+                            {selectedJobId ? selectedJobId : "No specific job — search all talent"}
+                          </div>
+                        </div>
+                      </div>
+                      <ChevronDown className={`w-4 h-4 text-neutral-400 shrink-0 transition-transform ${jobDropdownOpen ? "rotate-180" : ""}`} />
+                    </button>
+
+                    {jobDropdownOpen && (
+                      <div className="absolute z-30 left-0 right-0 mt-2 rounded-xl bg-neutral-900 border border-white/10 shadow-2xl overflow-hidden">
+                        <div className="p-2 border-b border-white/10">
+                          <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-500" />
+                            <input
+                              type="text"
+                              value={jobSearch}
+                              onChange={(e) => setJobSearch(e.target.value)}
+                              placeholder="Search postings..."
+                              className="w-full bg-white/5 border border-white/10 rounded-lg pl-9 pr-3 py-2 text-sm text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-cyan-300/40"
+                              autoFocus
+                            />
+                          </div>
+                        </div>
+                        <div className="max-h-64 overflow-y-auto py-1">
+                          <button
+                            onClick={() => handleSelectJob("")}
+                            className={`w-full text-left px-3 py-2.5 flex items-center gap-3 text-sm transition ${
+                              selectedJobId === "" ? "bg-cyan-500/10 text-cyan-200" : "hover:bg-white/5 text-neutral-300"
+                            }`}
+                          >
+                            <Search className="w-3.5 h-3.5 shrink-0 text-neutral-500" />
+                            <span>General Search</span>
+                          </button>
+                          {filteredPostings.map(p => (
+                            <button
+                              key={p.cJobId}
+                              onClick={() => handleSelectJob(p.cJobId)}
+                              className={`w-full text-left px-3 py-2.5 flex items-center gap-3 text-sm transition ${
+                                selectedJobId === p.cJobId ? "bg-cyan-500/10 text-cyan-200" : "hover:bg-white/5 text-neutral-300"
+                              }`}
+                            >
+                              <Briefcase className="w-3.5 h-3.5 shrink-0 text-neutral-500" />
+                              <span className="truncate">{p.cTitle}</span>
+                              <span className="text-xs text-neutral-600 font-mono ml-auto shrink-0">{p.cJobId}</span>
+                            </button>
+                          ))}
+                          {filteredPostings.length === 0 && (
+                            <div className="px-3 py-4 text-sm text-neutral-500 text-center">No postings match "{jobSearch}"</div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Divider + Refine toggle */}
+                <div className="pt-4">
+                  <button
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="flex items-center gap-2 text-xs font-medium text-neutral-500 hover:text-neutral-300 transition uppercase tracking-wider"
+                  >
+                    <Filter className="w-3.5 h-3.5" /> Refine Filters
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showFilters ? "rotate-180" : ""}`} />
+                  </button>
                 </div>
 
-                <div className="flex items-center gap-4 mt-2">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" checked={isCaymanian} onChange={(e) => setIsCaymanian(e.target.checked)} className="rounded" />
-                    <span className="text-sm flex items-center gap-1"><Shield className="w-3 h-3 text-cyan-300" /> Caymanian Only</span>
-                  </label>
-                </div>
-                <Button onClick={() => handleSearch(1)} disabled={searching} className="gap-2 mt-2">
-                  <Search className="w-4 h-4" /> {searching ? "Searching..." : "Search Talent"}
-                </Button>
+                {showFilters && (
+                  <div className="pt-4 space-y-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <div>
+                        <label className="text-sm font-medium mb-2 block text-neutral-400">Career Interest (CISCO)</label>
+                        <Input value={ciscoSearch} onChange={(e) => setCiscoSearch(e.target.value)} placeholder="Search occupations..." className="bg-white/5 border-white/10 mb-2" />
+                        <select value={ciscoCode} onChange={(e) => setCiscoCode(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200" size={4}>
+                          <option value="">Any occupation</option>
+                          {filteredCisco.map(c => <option key={c.code} value={c.code}>{c.title} ({c.code})</option>)}
+                        </select>
+                      </div>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="text-sm font-medium mb-2 block text-neutral-400">Education</label>
+                          <select value={educationCode} onChange={(e) => setEducationCode(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                            <option value="">Any education</option>
+                            {Array.from(eduTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium mb-2 block text-neutral-400">Experience</label>
+                          <select value={experienceCode} onChange={(e) => setExperienceCode(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                            <option value="">Any experience</option>
+                            {Array.from(expTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="text-sm font-medium mb-2 block text-neutral-400">Location</label>
+                          <select value={locationCode} onChange={(e) => setLocationCode(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                            <option value="">Any location</option>
+                            {Array.from(locTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium mb-2 block text-neutral-400">Availability</label>
+                          <select value={availability} onChange={(e) => setAvailability(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                            <option value="">Any availability</option>
+                            <option value="actively_looking">Actively Looking</option>
+                            <option value="open_to_offers">Open to Offers</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Skills Filter */}
+                    <div>
+                      <label className="text-sm font-medium mb-2 block text-neutral-400">Skills</label>
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                        <Input
+                          value={skillSearch}
+                          onChange={(e) => setSkillSearch(e.target.value)}
+                          placeholder="Search skills to filter by..."
+                          className="pl-10 bg-white/5 border-white/10"
+                        />
+                      </div>
+                      {skillSuggestions.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {skillSuggestions.slice(0, 10).map((s) => (
+                            <button key={s.id} onClick={() => { setSelectedSkills([...selectedSkills, s]); setSkillSearch(""); }}>
+                              <Badge className="bg-white/5 border-white/10 text-neutral-300 hover:border-purple-300/40 cursor-pointer">
+                                <Plus className="w-3 h-3 mr-1" /> {s.name}
+                              </Badge>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                      {selectedSkills.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {selectedSkills.map((s) => (
+                            <div key={s.id} className="flex items-center gap-1">
+                              <Badge className="bg-purple-500/20 text-purple-300 border-purple-300/30">{s.name}</Badge>
+                              <button onClick={() => setSelectedSkills(selectedSkills.filter(sk => sk.id !== s.id))} className="text-neutral-400 hover:text-red-400">
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" checked={isCaymanian} onChange={(e) => setIsCaymanian(e.target.checked)} className="rounded" />
+                        <span className="text-sm flex items-center gap-1"><Shield className="w-3 h-3 text-cyan-300" /> Caymanian Only</span>
+                      </label>
+                    </div>
+
+                    <Button onClick={() => handleSearch(1)} disabled={searching} className="gap-2 w-full sm:w-auto">
+                      <Search className="w-4 h-4" /> {searching ? "Searching..." : "Search Talent"}
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -623,7 +774,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                           />
                           <div className="flex gap-2 justify-end">
                             <Button variant="secondary" size="sm" onClick={() => setExpandedIntro(null)}>Cancel</Button>
-                            <Button size="sm" onClick={() => handleSendIntroduction(c.id)} disabled={sendingIntro} className="gap-2">
+                            <Button size="sm" onClick={() => handleSendIntroduction(c.id, c.scores)} disabled={sendingIntro} className="gap-2">
                               <Send className="w-3 h-3" /> {sendingIntro ? "Sending..." : "Send"}
                             </Button>
                           </div>
@@ -664,8 +815,14 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
               <Card className="bg-white/5 border-white/10">
                 <CardContent className="p-12 text-center">
                   <Users className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-400" />
-                  <h3 className="text-lg font-medium mb-2">Search for talent</h3>
-                  <p className="text-neutral-400">Use the filters above to find candidates matching your requirements.</p>
+                  <h3 className="text-lg font-medium mb-2">
+                    {selectedJobId ? "Ready to find matches" : "Select a role or search broadly"}
+                  </h3>
+                  <p className="text-neutral-400">
+                    {selectedJobId
+                      ? `Hit "Search Talent" to find candidates matching your selected role.`
+                      : "Pick a job posting above to find matched candidates, or run a general search."}
+                  </p>
                 </CardContent>
               </Card>
             )}
@@ -710,9 +867,6 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
             )}
           </>
         )}
-      </div>
-
-      <Footer />
-    </div>
+    </>
   );
 }

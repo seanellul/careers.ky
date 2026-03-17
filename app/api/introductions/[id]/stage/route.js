@@ -35,10 +35,10 @@ export async function PUT(request, { params }) {
 
   // Log activity
   await sql`
-    INSERT INTO activity_log (employer_account_id, action, details, candidate_id, introduction_id)
+    INSERT INTO activity_log (employer_account_id, action, details, candidate_id, introduction_id, job_id)
     VALUES (${session.employerAccountId}, 'stage_changed',
       ${JSON.stringify({ from: intro[0].stage, to: stage })},
-      ${intro[0].candidate_id}, ${id})
+      ${intro[0].candidate_id}, ${id}, ${intro[0].job_id || null})
   `;
 
   return NextResponse.json({ success: true });
