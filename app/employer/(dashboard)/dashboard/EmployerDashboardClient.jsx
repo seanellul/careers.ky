@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,7 +10,8 @@ import {
   Building2, Users, Send, CheckCircle, Clock, XCircle,
   Globe, FileText, Edit3, ExternalLink, Search, Mail,
   TrendingUp, TrendingDown, List, BookmarkPlus, Activity,
-  Briefcase, BarChart3, ChevronDown, ClipboardList,
+  Briefcase, BarChart3, ChevronDown, ChevronUp, ClipboardList,
+  HeartHandshake, MessageSquare, AlertTriangle,
 } from "lucide-react";
 
 const STATUS_COLORS = {
@@ -25,6 +26,7 @@ const STAGE_LABELS = {
   interviewing: "Interviewing",
   offered: "Offered",
   hired: "Hired",
+  rejected: "Rejected",
   archived: "Archived",
 };
 
@@ -34,17 +36,99 @@ const STAGE_COLORS = {
   interviewing: "bg-purple-500/20 text-purple-300 border-purple-300/30",
   offered: "bg-yellow-500/20 text-yellow-300 border-yellow-300/30",
   hired: "bg-emerald-500/20 text-emerald-300 border-emerald-300/30",
+  rejected: "bg-red-500/20 text-red-300 border-red-300/30",
   archived: "bg-neutral-500/20 text-neutral-400 border-neutral-400/30",
 };
+
+const REJECTION_REASONS = [
+  { value: "position_filled", label: "Position Filled" },
+  { value: "qualifications_mismatch", label: "Qualifications Don't Match" },
+  { value: "salary_mismatch", label: "Salary Expectations Misaligned" },
+  { value: "candidate_unresponsive", label: "Candidate Unresponsive" },
+  { value: "candidate_withdrew", label: "Candidate Withdrew" },
+  { value: "insufficient_experience", label: "Insufficient Experience" },
+  { value: "location_mismatch", label: "Location Mismatch" },
+  { value: "other", label: "Other" },
+];
 
 const ACTIVITY_LABELS = {
   intro_sent: "Sent introduction",
   intro_accepted: "Introduction accepted",
   intro_declined: "Introduction declined",
+  interest_expressed: "Candidate expressed interest",
+  interest_accepted: "Candidate interest accepted",
+  interest_declined: "Candidate interest declined",
   stage_changed: "Pipeline stage changed",
   candidate_shortlisted: "Candidate added to shortlist",
   search_run: "Search performed",
+  message_sent: "Message sent",
 };
+
+function EmployerMessageThread({ introId }) {
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [sending, setSending] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    fetch(`/api/introductions/${introId}/messages`)
+      .then(r => r.json())
+      .then(d => { setMessages(d.messages || []); setLoaded(true); })
+      .catch(() => setLoaded(true));
+  }, [introId]);
+
+  const handleSend = async () => {
+    if (!newMessage.trim() || sending) return;
+    setSending(true);
+    try {
+      const res = await fetch(`/api/introductions/${introId}/messages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ body: newMessage.trim() }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setMessages(prev => [...prev, data.message]);
+        setNewMessage("");
+      }
+    } finally {
+      setSending(false);
+    }
+  };
+
+  if (!loaded) return <div className="text-xs text-neutral-500 py-2">Loading messages...</div>;
+
+  return (
+    <div className="mt-3 space-y-3">
+      {messages.length > 0 && (
+        <div className="space-y-2 max-h-60 overflow-y-auto">
+          {messages.map(m => (
+            <div key={m.id} className={`text-sm p-2 rounded-lg ${m.sender_type === "employer" ? "bg-cyan-500/10 border border-cyan-300/20 ml-4" : "bg-white/5 border border-white/10 mr-4"}`}>
+              <div className="text-xs text-neutral-500 mb-1">
+                {m.sender_type === "employer" ? "You" : "Candidate"} &middot; {new Date(m.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
+              </div>
+              <div className="text-neutral-200">{m.body}</div>
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={newMessage}
+          onChange={e => setNewMessage(e.target.value)}
+          onKeyDown={e => e.key === "Enter" && handleSend()}
+          placeholder="Type a message..."
+          maxLength={2000}
+          className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-cyan-300/40"
+        />
+        <Button size="sm" onClick={handleSend} disabled={sending || !newMessage.trim()}>
+          <Send className="w-3.5 h-3.5" />
+        </Button>
+      </div>
+    </div>
+  );
+}
 
 export default function EmployerDashboardClient({ employer, stats, introductions, employerName, shortlists, savedSearches }) {
   const [editingProfile, setEditingProfile] = useState(false);
@@ -53,6 +137,44 @@ export default function EmployerDashboardClient({ employer, stats, introductions
   const [description, setDescription] = useState(employer.description || "");
   const [activeStage, setActiveStage] = useState("all");
   const [updatingStage, setUpdatingStage] = useState(null);
+  const [selectedJobId, setSelectedJobId] = useState("");
+  const [jobDropdownOpen, setJobDropdownOpen] = useState(false);
+  const [jobSearch, setJobSearch] = useState("");
+  const jobDropdownRef = useRef(null);
+  const [rejectionModal, setRejectionModal] = useState(null); // { introId, pendingStage }
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [rejectionNotes, setRejectionNotes] = useState("");
+  const [expandedMessages, setExpandedMessages] = useState({});
+  const [respondingInterest, setRespondingInterest] = useState(null);
+
+  // Derive unique postings from introductions
+  const jobPostings = useMemo(() => {
+    const map = new Map();
+    for (const intro of introductions) {
+      if (intro.job_id && !map.has(intro.job_id)) {
+        map.set(intro.job_id, { jobId: intro.job_id, title: intro.job_title || intro.job_id });
+      }
+    }
+    return [...map.values()].sort((a, b) => a.title.localeCompare(b.title));
+  }, [introductions]);
+
+  const filteredPostings = useMemo(() => {
+    if (!jobSearch.trim()) return jobPostings;
+    const q = jobSearch.toLowerCase();
+    return jobPostings.filter(p => p.title.toLowerCase().includes(q) || p.jobId.toLowerCase().includes(q));
+  }, [jobPostings, jobSearch]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!jobDropdownOpen) return;
+    const handler = (e) => {
+      if (jobDropdownRef.current && !jobDropdownRef.current.contains(e.target)) {
+        setJobDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [jobDropdownOpen]);
 
   const handleSaveProfile = async () => {
     setSaving(true);
@@ -69,6 +191,14 @@ export default function EmployerDashboardClient({ employer, stats, introductions
   };
 
   const handleStageChange = async (introId, newStage) => {
+    // Show rejection modal for rejected stage
+    if (newStage === "rejected") {
+      setRejectionModal({ introId, pendingStage: newStage });
+      setRejectionReason("");
+      setRejectionNotes("");
+      return;
+    }
+
     setUpdatingStage(introId);
     try {
       await fetch(`/api/introductions/${introId}/stage`, {
@@ -83,9 +213,59 @@ export default function EmployerDashboardClient({ employer, stats, introductions
     }
   };
 
-  const filteredIntros = activeStage === "all"
-    ? introductions
-    : introductions.filter(i => (i.stage || "outreach") === activeStage);
+  const handleRejectionSubmit = async () => {
+    if (!rejectionReason) return;
+    const { introId, pendingStage } = rejectionModal;
+    setUpdatingStage(introId);
+    try {
+      await fetch(`/api/introductions/${introId}/stage`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stage: pendingStage, rejectionReason, rejectionNotes }),
+      });
+      const intro = introductions.find(i => i.id === introId);
+      if (intro) {
+        intro.stage = pendingStage;
+        intro.rejection_reason = rejectionReason;
+        intro.rejection_notes = rejectionNotes;
+      }
+      setRejectionModal(null);
+    } finally {
+      setUpdatingStage(null);
+    }
+  };
+
+  const handleRespondToInterest = async (introId, accept) => {
+    setRespondingInterest(introId);
+    try {
+      await fetch("/api/introductions", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ introductionId: introId, accept }),
+      });
+      const intro = introductions.find(i => i.id === introId);
+      if (intro) {
+        intro.status = accept ? "accepted" : "declined";
+        intro.responded_at = new Date().toISOString();
+        if (accept) intro.stage = "responded";
+      }
+    } finally {
+      setRespondingInterest(null);
+    }
+  };
+
+  const toggleMessages = (id) => setExpandedMessages(prev => ({ ...prev, [id]: !prev[id] }));
+
+  const filteredIntros = useMemo(() => {
+    let filtered = introductions;
+    if (selectedJobId) {
+      filtered = filtered.filter(i => i.job_id === selectedJobId);
+    }
+    if (activeStage !== "all") {
+      filtered = filtered.filter(i => (i.stage || "outreach") === activeStage);
+    }
+    return filtered;
+  }, [introductions, selectedJobId, activeStage]);
 
   const monthTrend = stats.lastMonth > 0
     ? Math.round(((stats.thisMonth - stats.lastMonth) / stats.lastMonth) * 100)
@@ -172,26 +352,110 @@ export default function EmployerDashboardClient({ employer, stats, introductions
             <CardContent className="p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"><Briefcase className="w-5 h-5" /> Hiring Pipeline</h2>
 
+              {/* Job Filter */}
+              {jobPostings.length > 0 && (
+                <div className="relative mb-4" ref={jobDropdownRef}>
+                  <label className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-2 block">Filter by posting</label>
+                  <button
+                    onClick={() => setJobDropdownOpen(!jobDropdownOpen)}
+                    className="w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition text-left"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-8 h-8 rounded-lg bg-cyan-400/15 grid place-items-center shrink-0">
+                        {selectedJobId ? <Briefcase className="w-4 h-4 text-cyan-300" /> : <ClipboardList className="w-4 h-4 text-cyan-300" />}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-sm font-medium text-neutral-100 truncate">
+                          {selectedJobId
+                            ? jobPostings.find(p => p.jobId === selectedJobId)?.title || selectedJobId
+                            : "All Postings"}
+                        </div>
+                        <div className="text-xs text-neutral-500">
+                          {selectedJobId ? selectedJobId : "Showing introductions across all jobs"}
+                        </div>
+                      </div>
+                    </div>
+                    <ChevronDown className={`w-4 h-4 text-neutral-400 shrink-0 transition-transform ${jobDropdownOpen ? "rotate-180" : ""}`} />
+                  </button>
+
+                  {jobDropdownOpen && (
+                    <div className="absolute z-30 left-0 right-0 mt-2 rounded-xl bg-neutral-900 border border-white/10 shadow-2xl overflow-hidden">
+                      {jobPostings.length > 5 && (
+                        <div className="p-2 border-b border-white/10">
+                          <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-500" />
+                            <input
+                              type="text"
+                              value={jobSearch}
+                              onChange={(e) => setJobSearch(e.target.value)}
+                              placeholder="Search postings..."
+                              className="w-full bg-white/5 border border-white/10 rounded-lg pl-9 pr-3 py-2 text-sm text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-cyan-300/40"
+                              autoFocus
+                            />
+                          </div>
+                        </div>
+                      )}
+                      <div className="max-h-64 overflow-y-auto py-1">
+                        <button
+                          onClick={() => { setSelectedJobId(""); setJobDropdownOpen(false); setJobSearch(""); }}
+                          className={`w-full text-left px-3 py-2.5 flex items-center gap-3 text-sm transition ${
+                            selectedJobId === "" ? "bg-cyan-500/10 text-cyan-200" : "hover:bg-white/5 text-neutral-300"
+                          }`}
+                        >
+                          <ClipboardList className="w-3.5 h-3.5 shrink-0 text-neutral-500" />
+                          <span>All Postings</span>
+                        </button>
+                        {filteredPostings.map(p => (
+                          <button
+                            key={p.jobId}
+                            onClick={() => { setSelectedJobId(p.jobId); setJobDropdownOpen(false); setJobSearch(""); }}
+                            className={`w-full text-left px-3 py-2.5 flex items-center gap-3 text-sm transition ${
+                              selectedJobId === p.jobId ? "bg-cyan-500/10 text-cyan-200" : "hover:bg-white/5 text-neutral-300"
+                            }`}
+                          >
+                            <Briefcase className="w-3.5 h-3.5 shrink-0 text-neutral-500" />
+                            <span className="truncate">{p.title}</span>
+                            <span className="text-xs text-neutral-600 font-mono ml-auto shrink-0">{p.jobId}</span>
+                          </button>
+                        ))}
+                        {filteredPostings.length === 0 && (
+                          <div className="px-3 py-4 text-sm text-neutral-500 text-center">No postings match &ldquo;{jobSearch}&rdquo;</div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Stage Tabs */}
               <div className="flex flex-wrap gap-2 mb-4">
-                <button
-                  onClick={() => setActiveStage("all")}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${activeStage === "all" ? "bg-cyan-500/20 text-cyan-300 border border-cyan-300/30" : "bg-white/5 border border-white/10 text-neutral-400 hover:text-neutral-200"}`}
-                >
-                  All ({introductions.length})
-                </button>
-                {Object.entries(STAGE_LABELS).map(([stage, label]) => {
-                  const count = stats.pipeline?.[stage] || 0;
+                {(() => {
+                  const jobFiltered = selectedJobId
+                    ? introductions.filter(i => i.job_id === selectedJobId)
+                    : introductions;
                   return (
-                    <button
-                      key={stage}
-                      onClick={() => setActiveStage(stage)}
-                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${activeStage === stage ? STAGE_COLORS[stage]?.replace("bg-", "bg-") + " border" : "bg-white/5 border border-white/10 text-neutral-400 hover:text-neutral-200"}`}
-                    >
-                      {label} ({count})
-                    </button>
+                    <>
+                      <button
+                        onClick={() => setActiveStage("all")}
+                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${activeStage === "all" ? "bg-cyan-500/20 text-cyan-300 border border-cyan-300/30" : "bg-white/5 border border-white/10 text-neutral-400 hover:text-neutral-200"}`}
+                      >
+                        All ({jobFiltered.length})
+                      </button>
+                      {Object.entries(STAGE_LABELS).map(([stage, label]) => {
+                        const count = jobFiltered.filter(i => (i.stage || "outreach") === stage).length;
+                        return (
+                          <button
+                            key={stage}
+                            onClick={() => setActiveStage(stage)}
+                            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${activeStage === stage ? STAGE_COLORS[stage]?.replace("bg-", "bg-") + " border" : "bg-white/5 border border-white/10 text-neutral-400 hover:text-neutral-200"}`}
+                          >
+                            {label} ({count})
+                          </button>
+                        );
+                      })}
+                    </>
                   );
-                })}
+                })()}
               </div>
 
               {filteredIntros.length > 0 ? (
@@ -205,7 +469,7 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                           <div className="font-medium text-neutral-400">Candidate</div>
                         )}
                         <div className="text-xs text-neutral-500">
-                          Sent {new Date(intro.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                          {intro.initiated_by === "candidate" ? "Expressed interest" : "Sent"} {new Date(intro.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                           {intro.responded_at && ` · Responded ${new Date(intro.responded_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`}
                         </div>
                       </div>
@@ -213,6 +477,11 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                         <Badge className={STATUS_COLORS[intro.status] || STATUS_COLORS.pending}>
                           {intro.status || "pending"}
                         </Badge>
+                        {intro.initiated_by === "candidate" && (
+                          <Badge className="bg-amber-500/20 text-amber-300 border-amber-300/30 text-xs">
+                            <HeartHandshake className="w-3 h-3 mr-1" /> Candidate Interest
+                          </Badge>
+                        )}
                         <select
                           value={intro.stage || "outreach"}
                           onChange={(e) => handleStageChange(intro.id, e.target.value)}
@@ -235,11 +504,31 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                           <Badge className="bg-white/5 text-neutral-500 border-white/10 text-xs">General</Badge>
                         )}
                       </div>
+
+                      {/* Accept/Decline for candidate-initiated pending intros */}
+                      {intro.initiated_by === "candidate" && intro.status === "pending" && (
+                        <div className="flex gap-2 mt-2">
+                          <Button size="sm" className="gap-1.5 flex-1" onClick={() => handleRespondToInterest(intro.id, true)} disabled={respondingInterest === intro.id}>
+                            <CheckCircle className="w-3.5 h-3.5" /> Accept
+                          </Button>
+                          <Button size="sm" variant="secondary" className="gap-1.5 flex-1" onClick={() => handleRespondToInterest(intro.id, false)} disabled={respondingInterest === intro.id}>
+                            <XCircle className="w-3.5 h-3.5" /> Decline
+                          </Button>
+                        </div>
+                      )}
+
                       {intro.message && (
                         <div className="text-sm text-neutral-400 line-clamp-2 mb-2">{intro.message}</div>
                       )}
                       {intro.employer_notes && (
                         <div className="text-xs text-neutral-500 mt-1 italic">Notes: {intro.employer_notes}</div>
+                      )}
+                      {intro.rejection_reason && (
+                        <div className="text-xs text-red-300 mt-1 flex items-center gap-1">
+                          <AlertTriangle className="w-3 h-3" />
+                          Rejection: {REJECTION_REASONS.find(r => r.value === intro.rejection_reason)?.label || intro.rejection_reason}
+                          {intro.rejection_notes && <span className="text-neutral-500 ml-1">— {intro.rejection_notes}</span>}
+                        </div>
                       )}
                       {intro.status === "accepted" && intro.candidate_email && (
                         <div className="flex items-center gap-2 text-sm text-emerald-300 mt-2 p-2 rounded-lg bg-emerald-500/10 border border-emerald-300/20">
@@ -251,6 +540,21 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                               <a href={intro.candidate_linkedin} target="_blank" rel="noreferrer" className="hover:underline">LinkedIn</a>
                             </>
                           )}
+                        </div>
+                      )}
+
+                      {/* Message thread for accepted intros */}
+                      {intro.status === "accepted" && (
+                        <div className="mt-2">
+                          <button
+                            onClick={() => toggleMessages(intro.id)}
+                            className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-neutral-200 transition"
+                          >
+                            <MessageSquare className="w-3.5 h-3.5" />
+                            Messages
+                            {expandedMessages[intro.id] ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                          </button>
+                          {expandedMessages[intro.id] && <EmployerMessageThread introId={intro.id} />}
                         </div>
                       )}
                     </div>
@@ -387,6 +691,49 @@ export default function EmployerDashboardClient({ employer, stats, introductions
           )}
         </div>
       </div>
+
+      {/* Rejection Reason Modal */}
+      {rejectionModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-neutral-900 border border-white/10 rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl">
+            <h3 className="text-lg font-semibold mb-1 flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-red-300" /> Rejection Reason
+            </h3>
+            <p className="text-sm text-neutral-400 mb-4">WORC compliance requires documenting why a candidate was not selected.</p>
+            <div className="space-y-3">
+              <div>
+                <label className="text-sm font-medium mb-1 block">Reason *</label>
+                <select
+                  value={rejectionReason}
+                  onChange={e => setRejectionReason(e.target.value)}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-200"
+                >
+                  <option value="">Select a reason...</option>
+                  {REJECTION_REASONS.map(r => (
+                    <option key={r.value} value={r.value}>{r.label}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-1 block">Notes (optional)</label>
+                <textarea
+                  value={rejectionNotes}
+                  onChange={e => setRejectionNotes(e.target.value)}
+                  rows={3}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200"
+                  placeholder="Additional details..."
+                />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <Button variant="secondary" className="flex-1" onClick={() => setRejectionModal(null)}>Cancel</Button>
+                <Button className="flex-1 gap-1.5" disabled={!rejectionReason || updatingStage} onClick={handleRejectionSubmit}>
+                  {updatingStage ? "Saving..." : "Confirm Rejection"}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

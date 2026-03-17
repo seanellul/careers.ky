@@ -4,35 +4,21 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, Bell, LogOut, User, ChevronDown, Building2, Send } from "lucide-react";
+import { useSession } from "@/components/SessionProvider";
 
 export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [session, setSession] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [showSignIn, setShowSignIn] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginSending, setLoginSending] = useState(false);
-  const [loginSent, setLoginSent] = useState(false);
   const [loginType, setLoginType] = useState("candidate");
   const pathname = usePathname();
   const router = useRouter();
   const dropdownRef = useRef(null);
 
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [pendingIntroCount, setPendingIntroCount] = useState(0);
+  const { session, loading, refresh } = useSession();
 
-  useEffect(() => {
-    fetch("/api/auth/session")
-      .then((r) => r.json())
-      .then((d) => {
-        setSession(d.authenticated ? d : null);
-        if (d.authenticated && d.unreadCount) setUnreadCount(d.unreadCount);
-        if (d.authenticated && d.pendingIntroCount) setPendingIntroCount(d.pendingIntroCount);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
+  const unreadCount = session?.unreadCount || 0;
+  const pendingIntroCount = session?.pendingIntroCount || 0;
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -45,26 +31,10 @@ export default function Navigation() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    if (!loginEmail) return;
-    setLoginSending(true);
-    try {
-      await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: loginEmail, type: loginType }),
-      });
-      setLoginSent(true);
-    } finally {
-      setLoginSending(false);
-    }
-  };
-
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
-    setSession(null);
     setShowDropdown(false);
+    refresh();
     router.push("/");
     router.refresh();
   };
@@ -138,7 +108,7 @@ export default function Navigation() {
 
           {!loading && !session && (
             <button
-              onClick={() => { setShowSignIn(!showSignIn); setLoginSent(false); }}
+              onClick={() => { setShowSignIn(!showSignIn); }}
               className="px-4 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-300/30 hover:bg-cyan-500/30 transition text-sm font-medium"
             >
               Sign In
@@ -225,7 +195,6 @@ export default function Navigation() {
         <div className="border-t border-white/5 bg-neutral-950/95 backdrop-blur">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
             <div className="max-w-lg ml-auto space-y-3">
-              {/* Google Sign In */}
               <div className="flex flex-col sm:flex-row items-stretch gap-2">
                 <div className="flex-1">
                   <label className="text-xs text-neutral-400 mb-1 block">I am a</label>

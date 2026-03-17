@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   ChevronLeft,
   ExternalLink,
+  CheckCircle,
   Building2,
   MapPin,
   Clock,
@@ -21,9 +22,8 @@ import {
   Car,
   Heart,
   Mail,
+  HeartHandshake,
 } from "lucide-react";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 
 function formatDate(d) {
   if (!d) return "N/A";
@@ -144,9 +144,14 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
   const locTypes = useMemo(() => new Map(Object.entries(ltObj)), [ltObj]);
 
   const [session, setSession] = useState(null);
+  const [employerOnPlatform, setEmployerOnPlatform] = useState(false);
+  const [interestState, setInterestState] = useState("idle"); // idle | sending | sent | error
+  const [interestMessage, setInterestMessage] = useState("");
+
   useEffect(() => {
     fetch("/api/auth/session").then(r => r.json()).then(d => setSession(d.authenticated ? d : null)).catch(() => {});
-  }, []);
+    fetch(`/api/jobs/${job.cJobId}/employer-status`).then(r => r.json()).then(d => setEmployerOnPlatform(d.hasEmployerAccount)).catch(() => {});
+  }, [job.cJobId]);
 
   const daysLeft = daysUntil(job.endDate);
   const isExpiring = daysLeft !== null && daysLeft <= 5 && daysLeft > 0;
@@ -161,8 +166,6 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
   return (
     <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
       <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={{ backgroundImage: "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)", backgroundPosition: "0% 50%" }} />
-
-      <Navigation />
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
         {/* Back */}
@@ -209,6 +212,37 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
                     <Users className="w-4 h-4" /> Find Matching Candidates
                   </Button>
                 </Link>
+              )}
+              {session?.candidateId && !session?.employerAccountId && employerOnPlatform && interestState !== "sent" && (
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  className="gap-2"
+                  disabled={interestState === "sending"}
+                  onClick={async () => {
+                    setInterestState("sending");
+                    try {
+                      const res = await fetch("/api/introductions", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ jobId: job.cJobId, message: interestMessage || null }),
+                      });
+                      if (res.ok) setInterestState("sent");
+                      else {
+                        const data = await res.json();
+                        if (res.status === 409) setInterestState("sent");
+                        else { alert(data.error || "Failed"); setInterestState("idle"); }
+                      }
+                    } catch { setInterestState("error"); }
+                  }}
+                >
+                  <HeartHandshake className="w-4 h-4" /> {interestState === "sending" ? "Sending..." : "Express Interest"}
+                </Button>
+              )}
+              {interestState === "sent" && (
+                <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-300/30 text-sm py-2 px-4">
+                  <CheckCircle className="w-4 h-4 mr-1" /> Interest Expressed
+                </Badge>
               )}
             </div>
           )}
@@ -398,7 +432,6 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
         </div>
       </div>
 
-      <Footer />
     </div>
   );
 }

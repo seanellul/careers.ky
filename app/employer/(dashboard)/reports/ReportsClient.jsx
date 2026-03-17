@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  FileText, Download, Eye, Building2, Users, CheckCircle, Briefcase,
+  FileText, Download, Eye, Users, CheckCircle, Briefcase, ArrowLeft,
 } from "lucide-react";
 
 export default function ReportsClient({ postings, employerName }) {
   return (
-    <>
+    <div>
       <div className="flex items-center gap-3 mb-2">
         <div className="w-10 h-10 rounded-xl bg-white/10 grid place-items-center">
           <FileText className="w-5 h-5 text-cyan-300" />
@@ -84,6 +84,6 @@ export default function ReportsClient({ postings, employerName }) {
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 }

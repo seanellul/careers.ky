@@ -23,8 +23,6 @@ import {
   Building2,
   User,
 } from "lucide-react";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 import OnboardingFlow from "@/components/OnboardingFlow";
 import {
   useHeroIntro,
@@ -135,8 +133,6 @@ export default function HomeClient({
           backgroundPosition: "0% 50%",
         }}
       />
-
-      <Navigation />
 
       {/* Hero */}
       <section ref={hero} className="relative overflow-hidden">
@@ -604,7 +600,6 @@ export default function HomeClient({
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 }

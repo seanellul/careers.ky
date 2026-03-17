@@ -12,8 +12,6 @@ import {
   CheckCircle, Edit3, LogOut, Briefcase, Star, ChevronRight,
   X, Plus, Search, Send, Loader2,
 } from "lucide-react";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 
 const AVAILABILITY_OPTIONS = [
   { value: "actively_looking", label: "Actively Looking", color: "bg-emerald-500/20 text-emerald-300 border-emerald-300/30" },
@@ -32,7 +30,7 @@ function calcProfileStrength(candidate, interests, skills) {
   if (interests.length > 0) { score += 13; } else { items.push("Add career interests"); }
   if (skills.length > 0) { score += 13; } else { items.push("Add skills"); }
   if (candidate.is_discoverable) { score += 7; } else { items.push("Make profile discoverable"); }
-  if (candidate.salary_min || candidate.salary_max) { score += 5; } else { items.push("Add salary expectations"); }
+  if (candidate.salary_min) { score += 5; } else { items.push("Add minimum salary expectation"); }
   if (candidate.work_type_preferences?.length > 0) { score += 5; } else { items.push("Set work type preferences"); }
   if (candidate.linkedin_url) { score += 5; } else { items.push("Add LinkedIn URL"); }
   return { score, missing: items };
@@ -56,7 +54,6 @@ export default function ProfileClient({ candidate, interests, skills, notificati
     experienceCode: candidate.experience_code || "",
     locationCode: candidate.location_code || "",
     salaryMin: candidate.salary_min || "",
-    salaryMax: candidate.salary_max || "",
     workTypePreferences: candidate.work_type_preferences || [],
     linkedinUrl: candidate.linkedin_url || "",
     resumeSummary: candidate.resume_summary || "",
@@ -154,7 +151,6 @@ export default function ProfileClient({ candidate, interests, skills, notificati
         body: JSON.stringify({
           ...form,
           salaryMin: form.salaryMin ? Number(form.salaryMin) : null,
-          salaryMax: form.salaryMax ? Number(form.salaryMax) : null,
           ciscoCodes: editInterests.map(i => i.ciscoCode),
           skillIds: editSkills.map(s => s.id),
         }),
@@ -241,8 +237,6 @@ export default function ProfileClient({ candidate, interests, skills, notificati
   return (
     <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
       <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={{ backgroundImage: "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)", backgroundPosition: "0% 50%" }} />
-
-      <Navigation />
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -607,23 +601,14 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                 {editing ? (
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium mb-1 block">Salary Range (KYD/year)</label>
-                      <div className="flex gap-2">
-                        <Input
-                          type="number"
-                          value={form.salaryMin}
-                          onChange={(e) => setForm({ ...form, salaryMin: e.target.value })}
-                          placeholder="Min"
-                          className="bg-white/5 border-white/10"
-                        />
-                        <Input
-                          type="number"
-                          value={form.salaryMax}
-                          onChange={(e) => setForm({ ...form, salaryMax: e.target.value })}
-                          placeholder="Max"
-                          className="bg-white/5 border-white/10"
-                        />
-                      </div>
+                      <label className="text-sm font-medium mb-1 block">Minimum Salary (KYD/year)</label>
+                      <Input
+                        type="number"
+                        value={form.salaryMin}
+                        onChange={(e) => setForm({ ...form, salaryMin: e.target.value })}
+                        placeholder="e.g. 60000"
+                        className="bg-white/5 border-white/10"
+                      />
                     </div>
                     <div>
                       <label className="text-sm font-medium mb-2 block">Work Type</label>
@@ -669,10 +654,10 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                   </div>
                 ) : (
                   <div className="space-y-3 text-sm">
-                    {(candidate.salary_min || candidate.salary_max) ? (
-                      <div><span className="text-neutral-400">Salary:</span> KYD {candidate.salary_min?.toLocaleString() || "?"} - {candidate.salary_max?.toLocaleString() || "?"}</div>
+                    {candidate.salary_min ? (
+                      <div><span className="text-neutral-400">Minimum Salary:</span> KYD {candidate.salary_min.toLocaleString()}/yr</div>
                     ) : (
-                      <div className="text-neutral-500">No salary expectations set</div>
+                      <div className="text-neutral-500">No minimum salary set</div>
                     )}
                     {candidate.work_type_preferences?.length > 0 ? (
                       <div className="flex flex-wrap gap-1">
@@ -772,7 +757,6 @@ export default function ProfileClient({ candidate, interests, skills, notificati
         </div>
       </div>
 
-      <Footer />
     </div>
   );
 }

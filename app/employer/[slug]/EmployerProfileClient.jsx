@@ -11,8 +11,6 @@ import {
   ChevronLeft, ExternalLink, Calendar, Users, Search, Filter,
   ArrowUpDown, BookOpen, Clock, BarChart3,
 } from "lucide-react";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 import { generateWORCSearchURL } from "@/lib/data";
 
 export default function EmployerProfileClient({ profile, workTypes: wtObj, eduTypes: etObj, expTypes: exObj, locTypes: ltObj }) {
@@ -60,8 +58,6 @@ export default function EmployerProfileClient({ profile, workTypes: wtObj, eduTy
   return (
     <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
       <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={{ backgroundImage: "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)", backgroundPosition: "0% 50%" }} />
-
-      <Navigation />
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
@@ -295,7 +291,6 @@ export default function EmployerProfileClient({ profile, workTypes: wtObj, eduTy
         </div>
       </div>
 
-      <Footer />
     </div>
   );
 }

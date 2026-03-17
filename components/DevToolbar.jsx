@@ -1,25 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "@/components/SessionProvider";
 
 export default function DevToolbar() {
-  const [show, setShow] = useState(false);
-  const [session, setSession] = useState(null);
   const [switching, setSwitching] = useState(false);
   const [minimized, setMinimized] = useState(false);
   const router = useRouter();
+  const { session, loading, refresh } = useSession();
 
-  useEffect(() => {
-    // Only show in development
-    if (process.env.NODE_ENV === "production") return;
-    setShow(true);
-    fetch("/api/auth/session").then(r => r.json()).then(d => {
-      setSession(d.authenticated ? d : null);
-    }).catch(() => {});
-  }, []);
-
-  if (!show) return null;
+  // Only show in development
+  if (typeof window !== "undefined" && window.location.hostname !== "localhost") return null;
 
   const switchTo = async (role) => {
     setSwitching(true);
@@ -30,8 +22,8 @@ export default function DevToolbar() {
         body: JSON.stringify({ role }),
       });
       if (res.ok) {
+        refresh();
         router.refresh();
-        window.location.reload();
       }
     } finally {
       setSwitching(false);

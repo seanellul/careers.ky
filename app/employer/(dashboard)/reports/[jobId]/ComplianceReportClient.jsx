@@ -1,13 +1,12 @@
 "use client";
 
-import { useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   FileText, Download, Printer, ArrowLeft, Users, CheckCircle,
-  Shield, Clock, Briefcase, Activity,
+  Shield, Briefcase, Activity,
 } from "lucide-react";
 
 const STAGE_LABELS = {
@@ -16,15 +15,31 @@ const STAGE_LABELS = {
   interviewing: "Interviewing",
   offered: "Offered",
   hired: "Hired",
+  rejected: "Rejected",
   archived: "Archived",
+};
+
+const REJECTION_REASON_LABELS = {
+  position_filled: "Position Filled",
+  qualifications_mismatch: "Qualifications Don't Match",
+  salary_mismatch: "Salary Expectations Misaligned",
+  candidate_unresponsive: "Candidate Unresponsive",
+  candidate_withdrew: "Candidate Withdrew",
+  insufficient_experience: "Insufficient Experience",
+  location_mismatch: "Location Mismatch",
+  other: "Other",
 };
 
 const ACTIVITY_LABELS = {
   intro_sent: "Introduction sent",
   intro_accepted: "Introduction accepted",
   intro_declined: "Introduction declined",
+  interest_expressed: "Candidate expressed interest",
+  interest_accepted: "Candidate interest accepted",
+  interest_declined: "Candidate interest declined",
   stage_changed: "Pipeline stage changed",
   search_run: "Talent search performed",
+  message_sent: "Message sent",
 };
 
 function formatDate(d) {
@@ -37,7 +52,7 @@ function formatDateTime(d) {
   return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
 }
 
-function buildPrintDocument(report, employerName, jobId) {
+function buildPrintDocument(report, employerName) {
   const { job, intros, activity, summary } = report;
 
   const candidateRows = intros.map((intro, i) => `
@@ -50,6 +65,8 @@ function buildPrintDocument(report, employerName, jobId) {
       <td>${intro.match_score != null ? Math.round(Number(intro.match_score)) + "%" : "--"}</td>
       <td>${intro.status || "pending"}</td>
       <td>${STAGE_LABELS[intro.stage] || intro.stage || "Outreach"}</td>
+      <td>${intro.initiated_by || "employer"}</td>
+      <td>${intro.rejection_reason ? (REJECTION_REASON_LABELS[intro.rejection_reason] || intro.rejection_reason) : "--"}</td>
       <td>${formatDate(intro.created_at)}</td>
       <td>${formatDate(intro.responded_at)}</td>
     </tr>
@@ -65,6 +82,10 @@ function buildPrintDocument(report, employerName, jobId) {
 
   const pipelineRows = Object.entries(summary.stageBreakdown || {}).map(([stage, count]) =>
     `<span class="pill">${STAGE_LABELS[stage] || stage}: <strong>${count}</strong></span>`
+  ).join(" ");
+
+  const rejectionRows = Object.entries(summary.rejectionBreakdown || {}).map(([reason, count]) =>
+    `<span class="pill">${REJECTION_REASON_LABELS[reason] || reason}: <strong>${count}</strong></span>`
   ).join(" ");
 
   return `<!DOCTYPE html>
@@ -93,13 +114,7 @@ function buildPrintDocument(report, employerName, jobId) {
     td { padding: 7px 6px; border-bottom: 1px solid #eee; font-size: 12px; }
     tr:nth-child(even) td { background: #fafafa; }
     .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #ddd; font-size: 11px; color: #999; text-align: center; }
-    .caymanian-yes { color: #0369a1; font-weight: 600; }
-    @media print {
-      body { padding: 20px; }
-      h2 { break-after: avoid; }
-      table { break-inside: auto; }
-      tr { break-inside: avoid; }
-    }
+    @media print { body { padding: 20px; } h2 { break-after: avoid; } table { break-inside: auto; } tr { break-inside: avoid; } }
   </style>
 </head>
 <body>
@@ -115,7 +130,6 @@ function buildPrintDocument(report, employerName, jobId) {
       <dt>Report Generated</dt><dd>${new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</dd>
     </dl>
   </div>
-
   <h2>Recruitment Summary</h2>
   <div class="stats">
     <div class="stat"><div class="value">${summary.totalContacted}</div><div class="label">Total Contacted</div></div>
@@ -123,41 +137,24 @@ function buildPrintDocument(report, employerName, jobId) {
     <div class="stat"><div class="value">${summary.caymanianCount}</div><div class="label">Caymanians Contacted</div></div>
     <div class="stat"><div class="value">${summary.stageBreakdown?.hired || 0}</div><div class="label">Hired</div></div>
   </div>
-
   ${pipelineRows ? `<div class="pills">${pipelineRows}</div>` : ""}
-
+  ${rejectionRows ? `<h2>Rejection Reasons</h2><div class="pills">${rejectionRows}</div>` : ""}
   <h2>Candidates Contacted</h2>
   ${intros.length === 0 ? "<p>No candidates were contacted for this position.</p>" : `
-  <table>
-    <thead>
-      <tr>
-        <th>Candidate</th><th>Caymanian</th><th>Education</th><th>Experience</th><th>Location</th>
-        <th>Match</th><th>Status</th><th>Stage</th><th>Contacted</th><th>Responded</th>
-      </tr>
-    </thead>
-    <tbody>${candidateRows}</tbody>
-  </table>`}
-
-  ${activity.length > 0 ? `
-  <h2>Activity Timeline</h2>
-  <table>
-    <thead><tr><th>Date & Time</th><th>Action</th><th>Details</th></tr></thead>
-    <tbody>${activityRows}</tbody>
-  </table>` : ""}
-
+  <table><thead><tr><th>Candidate</th><th>Caymanian</th><th>Education</th><th>Experience</th><th>Location</th><th>Match</th><th>Status</th><th>Stage</th><th>Initiated By</th><th>Rejection Reason</th><th>Contacted</th><th>Responded</th></tr></thead><tbody>${candidateRows}</tbody></table>`}
+  ${activity.length > 0 ? `<h2>Activity Timeline</h2><table><thead><tr><th>Date & Time</th><th>Action</th><th>Details</th></tr></thead><tbody>${activityRows}</tbody></table>` : ""}
   <div class="footer">
     This report was generated by careers.ky on ${new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} at ${new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}.<br>
     Data reflects recruitment activity recorded through the careers.ky employer platform.
   </div>
-</body>
-</html>`;
+</body></html>`;
 }
 
 export default function ComplianceReportClient({ report, employerName, jobId }) {
   const { job, intros, activity, summary } = report;
 
   const handlePrint = () => {
-    const html = buildPrintDocument(report, employerName, jobId);
+    const html = buildPrintDocument(report, employerName);
     const printWindow = window.open("", "_blank");
     printWindow.document.write(html);
     printWindow.document.close();
@@ -165,7 +162,7 @@ export default function ComplianceReportClient({ report, employerName, jobId }) 
   };
 
   return (
-    <>
+    <div>
       {/* Actions */}
       <div className="flex items-center justify-between mb-6">
         <Link href="/employer/reports" className="flex items-center gap-2 text-neutral-400 hover:text-white transition text-sm">
@@ -206,34 +203,10 @@ export default function ComplianceReportClient({ report, employerName, jobId }) 
 
       {/* Summary Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <Card className="bg-white/5 border-white/10">
-          <CardContent className="p-4 text-center">
-            <Users className="w-5 h-5 mx-auto mb-1 text-cyan-300" />
-            <div className="text-2xl font-semibold">{summary.totalContacted}</div>
-            <div className="text-xs text-neutral-400">Total Contacted</div>
-          </CardContent>
-        </Card>
-        <Card className="bg-white/5 border-white/10">
-          <CardContent className="p-4 text-center">
-            <CheckCircle className="w-5 h-5 mx-auto mb-1 text-emerald-300" />
-            <div className="text-2xl font-semibold">{summary.responseRate}%</div>
-            <div className="text-xs text-neutral-400">Response Rate</div>
-          </CardContent>
-        </Card>
-        <Card className="bg-white/5 border-white/10">
-          <CardContent className="p-4 text-center">
-            <Shield className="w-5 h-5 mx-auto mb-1 text-cyan-300" />
-            <div className="text-2xl font-semibold">{summary.caymanianCount}</div>
-            <div className="text-xs text-neutral-400">Caymanians Contacted</div>
-          </CardContent>
-        </Card>
-        <Card className="bg-white/5 border-white/10">
-          <CardContent className="p-4 text-center">
-            <Briefcase className="w-5 h-5 mx-auto mb-1 text-purple-300" />
-            <div className="text-2xl font-semibold">{summary.stageBreakdown?.hired || 0}</div>
-            <div className="text-xs text-neutral-400">Hired</div>
-          </CardContent>
-        </Card>
+        <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><Users className="w-5 h-5 mx-auto mb-1 text-cyan-300" /><div className="text-2xl font-semibold">{summary.totalContacted}</div><div className="text-xs text-neutral-400">Total Contacted</div></CardContent></Card>
+        <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><CheckCircle className="w-5 h-5 mx-auto mb-1 text-emerald-300" /><div className="text-2xl font-semibold">{summary.responseRate}%</div><div className="text-xs text-neutral-400">Response Rate</div></CardContent></Card>
+        <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><Shield className="w-5 h-5 mx-auto mb-1 text-cyan-300" /><div className="text-2xl font-semibold">{summary.caymanianCount}</div><div className="text-xs text-neutral-400">Caymanians Contacted</div></CardContent></Card>
+        <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><Briefcase className="w-5 h-5 mx-auto mb-1 text-purple-300" /><div className="text-2xl font-semibold">{summary.stageBreakdown?.hired || 0}</div><div className="text-xs text-neutral-400">Hired</div></CardContent></Card>
       </div>
 
       {/* Pipeline Breakdown */}
@@ -246,6 +219,23 @@ export default function ComplianceReportClient({ report, employerName, jobId }) 
                 <div key={stage} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm">
                   <span className="text-neutral-400">{STAGE_LABELS[stage] || stage}:</span>
                   <span className="font-semibold">{count}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Rejection Reason Breakdown */}
+      {Object.keys(summary.rejectionBreakdown || {}).length > 0 && (
+        <Card className="bg-white/5 border-white/10 mb-6">
+          <CardContent className="p-6">
+            <h2 className="text-lg font-semibold mb-3">Rejection Reasons</h2>
+            <div className="flex flex-wrap gap-3">
+              {Object.entries(summary.rejectionBreakdown).map(([reason, count]) => (
+                <div key={reason} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-300/20 text-sm">
+                  <span className="text-red-300">{REJECTION_REASON_LABELS[reason] || reason}:</span>
+                  <span className="font-semibold text-red-200">{count}</span>
                 </div>
               ))}
             </div>
@@ -272,6 +262,8 @@ export default function ComplianceReportClient({ report, employerName, jobId }) 
                     <th className="pb-2 pr-3 text-neutral-400 font-medium">Match</th>
                     <th className="pb-2 pr-3 text-neutral-400 font-medium">Status</th>
                     <th className="pb-2 pr-3 text-neutral-400 font-medium">Stage</th>
+                    <th className="pb-2 pr-3 text-neutral-400 font-medium">Initiated By</th>
+                    <th className="pb-2 pr-3 text-neutral-400 font-medium">Rejection Reason</th>
                     <th className="pb-2 pr-3 text-neutral-400 font-medium">Contacted</th>
                     <th className="pb-2 text-neutral-400 font-medium">Responded</th>
                   </tr>
@@ -290,21 +282,17 @@ export default function ComplianceReportClient({ report, employerName, jobId }) 
                       <td className="py-2.5 pr-3 text-neutral-300">{intro.education_code || "--"}</td>
                       <td className="py-2.5 pr-3 text-neutral-300">{intro.experience_code || "--"}</td>
                       <td className="py-2.5 pr-3 text-neutral-300">{intro.location_code || "--"}</td>
-                      <td className="py-2.5 pr-3">
-                        {intro.match_score != null ? `${Math.round(Number(intro.match_score))}%` : "--"}
-                      </td>
+                      <td className="py-2.5 pr-3">{intro.match_score != null ? `${Math.round(Number(intro.match_score))}%` : "--"}</td>
                       <td className="py-2.5 pr-3">
                         <Badge className={
                           intro.status === "accepted" ? "bg-emerald-500/20 text-emerald-300 border-emerald-300/30" :
                           intro.status === "declined" ? "bg-red-500/20 text-red-300 border-red-300/30" :
                           "bg-yellow-500/20 text-yellow-300 border-yellow-300/30"
-                        }>
-                          {intro.status || "pending"}
-                        </Badge>
+                        }>{intro.status || "pending"}</Badge>
                       </td>
-                      <td className="py-2.5 pr-3 text-neutral-300">
-                        {STAGE_LABELS[intro.stage] || intro.stage || "Outreach"}
-                      </td>
+                      <td className="py-2.5 pr-3 text-neutral-300">{STAGE_LABELS[intro.stage] || intro.stage || "Outreach"}</td>
+                      <td className="py-2.5 pr-3 text-neutral-300 capitalize">{intro.initiated_by || "employer"}</td>
+                      <td className="py-2.5 pr-3 text-neutral-300">{intro.rejection_reason ? (REJECTION_REASON_LABELS[intro.rejection_reason] || intro.rejection_reason) : "--"}</td>
                       <td className="py-2.5 pr-3 text-neutral-400">{formatDate(intro.created_at)}</td>
                       <td className="py-2.5 text-neutral-400">{formatDate(intro.responded_at)}</td>
                     </tr>
@@ -328,17 +316,11 @@ export default function ComplianceReportClient({ report, employerName, jobId }) 
                 <div key={a.id} className="flex items-start gap-3 text-sm">
                   <div className="w-2 h-2 rounded-full bg-cyan-400 mt-1.5 shrink-0" />
                   <div className="flex-1">
-                    <div className="text-neutral-200">
-                      {ACTIVITY_LABELS[a.action] || a.action}
-                    </div>
+                    <div className="text-neutral-200">{ACTIVITY_LABELS[a.action] || a.action}</div>
                     {a.details && a.details.from && a.details.to && (
-                      <div className="text-xs text-neutral-500">
-                        {STAGE_LABELS[a.details.from] || a.details.from} &rarr; {STAGE_LABELS[a.details.to] || a.details.to}
-                      </div>
+                      <div className="text-xs text-neutral-500">{STAGE_LABELS[a.details.from] || a.details.from} &rarr; {STAGE_LABELS[a.details.to] || a.details.to}</div>
                     )}
-                    <div className="text-xs text-neutral-500">
-                      {formatDateTime(a.created_at)}
-                    </div>
+                    <div className="text-xs text-neutral-500">{formatDateTime(a.created_at)}</div>
                   </div>
                 </div>
               ))}
@@ -346,6 +328,6 @@ export default function ComplianceReportClient({ report, employerName, jobId }) 
           </CardContent>
         </Card>
       )}
-    </>
+    </div>
   );
 }

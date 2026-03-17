@@ -35,7 +35,8 @@ export async function GET(request, { params }) {
     // Build CSV
     const headers = [
       "Candidate #", "Caymanian", "Education", "Experience", "Location",
-      "Match Score", "Status", "Stage", "Date Contacted", "Date Responded",
+      "Match Score", "Status", "Stage", "Initiated By", "Rejection Reason",
+      "Rejection Notes", "Date Contacted", "Date Responded",
     ];
 
     const rows = report.intros.map((intro, i) => [
@@ -47,6 +48,9 @@ export async function GET(request, { params }) {
       intro.match_score != null ? Math.round(Number(intro.match_score)) : "",
       intro.status || "pending",
       intro.stage || "outreach",
+      intro.initiated_by || "employer",
+      intro.rejection_reason || "",
+      intro.rejection_notes || "",
       intro.created_at ? new Date(intro.created_at).toISOString().split("T")[0] : "",
       intro.responded_at ? new Date(intro.responded_at).toISOString().split("T")[0] : "",
     ]);

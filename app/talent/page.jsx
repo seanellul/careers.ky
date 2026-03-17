@@ -1,8 +1,6 @@
 export const dynamic = "force-dynamic";
 
 import { loadEducationTypes, loadExperienceTypes, loadLocationTypes, loadCISCO } from "@/lib/data";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 import TalentSearchClient from "./TalentSearchClient";
 
 export const metadata = {
@@ -35,7 +33,6 @@ export default async function TalentPage() {
           backgroundPosition: "0% 50%",
         }}
       />
-      <Navigation />
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 md:py-12">
         <TalentSearchClient
           eduTypes={Object.fromEntries(eduTypes)}
@@ -44,7 +41,6 @@ export default async function TalentPage() {
           ciscoUnits={ciscoUnits}
         />
       </div>
-      <Footer />
     </div>
   );
 }

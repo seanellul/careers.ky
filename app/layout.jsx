@@ -1,6 +1,9 @@
 import "@/styles/globals.css";
 import { Suspense } from "react";
 import PostHogProvider, { PostHogPageView } from "@/components/PostHogProvider";
+import { SessionProvider } from "@/components/SessionProvider";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 import DevToolbar from "@/components/DevToolbar";
 
 export const metadata = {
@@ -36,11 +39,15 @@ export default function RootLayout({ children }) {
     <html lang="en" className="dark">
       <body className="min-h-screen bg-neutral-950 text-neutral-100 antialiased">
         <PostHogProvider>
-          <Suspense fallback={null}>
-            <PostHogPageView />
-          </Suspense>
-          {children}
-          <DevToolbar />
+          <SessionProvider>
+            <Suspense fallback={null}>
+              <PostHogPageView />
+            </Suspense>
+            <Navigation />
+            {children}
+            <Footer />
+            <DevToolbar />
+          </SessionProvider>
         </PostHogProvider>
       </body>
     </html>

@@ -3,9 +3,8 @@ export const dynamic = "force-dynamic";
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { getDb } from "@/lib/db";
-import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 import DashboardSidebar from "@/components/DashboardSidebar";
+import DashboardTransition from "@/components/DashboardTransition";
 
 export default async function DashboardLayout({ children }) {
   const session = await getSession();
@@ -29,18 +28,16 @@ export default async function DashboardLayout({ children }) {
         }}
       />
 
-      <Navigation />
-
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex">
           <DashboardSidebar employerSlug={employerSlug} />
           <main className="flex-1 min-w-0 py-8 md:py-12">
-            {children}
+            <DashboardTransition>
+              {children}
+            </DashboardTransition>
           </main>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }
