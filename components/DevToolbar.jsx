@@ -11,6 +11,7 @@ export default function DevToolbar() {
   const { session, loading, refresh } = useSession();
 
   // Only show in development
+  if (process.env.NODE_ENV === "production") return null;
   if (typeof window !== "undefined" && window.location.hostname !== "localhost") return null;
 
   const switchTo = async (role) => {
