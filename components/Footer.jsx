@@ -19,12 +19,12 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4 sm:gap-y-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 sm:gap-x-12 gap-y-4 sm:gap-y-2">
             <div>
               <div className="text-xs uppercase tracking-wide text-neutral-500 mb-2">For Job Seekers</div>
               <div className="flex flex-col gap-2">
-                <Link href="/career-tracks" className="hover:text-neutral-200">Career Tracks</Link>
-                <Link href="/jobs" className="hover:text-neutral-200">Live Search</Link>
+                <Link href="/careers?tab=career-tracks" className="hover:text-neutral-200">Career Tracks</Link>
+                <Link href="/careers?tab=jobs" className="hover:text-neutral-200">Live Search</Link>
                 <Link href="/profile/setup" className="hover:text-neutral-200">Create Profile</Link>
               </div>
             </div>

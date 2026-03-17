@@ -75,7 +75,7 @@ export default function CandidateDashboardSidebar() {
       {mobileOpen && (
         <div className="md:hidden fixed inset-0 z-40">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
-          <div className="absolute left-0 top-0 bottom-0 w-64 bg-neutral-950 border-r border-white/10 p-4 overflow-y-auto">
+          <div className="absolute left-0 top-0 bottom-0 w-56 sm:w-64 bg-neutral-950 border-r border-white/10 p-4 overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <span className="text-sm font-medium text-neutral-300">Navigation</span>
               <button onClick={() => setMobileOpen(false)} className="p-1 rounded-lg hover:bg-white/10">

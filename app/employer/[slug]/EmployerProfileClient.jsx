@@ -55,7 +55,7 @@ export default function EmployerProfileClient({ profile, perks: perkGroups, work
 
   const Bar = ({ label, value, total, color = "bg-cyan-400" }) => (
     <div className="flex items-center gap-2">
-      <div className="w-20 sm:w-32 text-xs text-neutral-300 truncate" title={label}>{label}</div>
+      <div className="w-16 sm:w-24 md:w-32 text-xs text-neutral-300 truncate" title={label}>{label}</div>
       <div className="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
         <div className={`h-full ${color}`} style={{ width: `${Math.round((value / Math.max(1, total)) * 100)}%` }} />
       </div>
@@ -70,23 +70,23 @@ export default function EmployerProfileClient({ profile, perks: perkGroups, work
       {/* Hero */}
       <div className="relative">
         {employer.cover_url ? (
-          <div className="h-48 sm:h-64 w-full overflow-hidden">
+          <div className="h-40 sm:h-48 md:h-64 w-full overflow-hidden">
             <img src={employer.cover_url} alt="" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/40 to-transparent" />
           </div>
         ) : (
-          <div className="h-48 sm:h-64 w-full bg-gradient-to-br from-cyan-900/40 via-neutral-900 to-purple-900/30">
+          <div className="h-40 sm:h-48 md:h-64 w-full bg-gradient-to-br from-cyan-900/40 via-neutral-900 to-purple-900/30">
             <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-transparent to-transparent" />
           </div>
         )}
 
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="relative -mt-16 sm:-mt-20 flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
+          <div className="relative -mt-12 sm:-mt-16 md:-mt-20 flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
             {/* Logo */}
             {employer.logo_url ? (
-              <img src={employer.logo_url} alt={employer.name} className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-contain bg-neutral-900 border-4 border-neutral-950 shadow-xl" />
+              <img src={employer.logo_url} alt={employer.name} className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl object-contain bg-neutral-900 border-4 border-neutral-950 shadow-xl" />
             ) : (
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-neutral-800 border-4 border-neutral-950 grid place-items-center shadow-xl">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl bg-neutral-800 border-4 border-neutral-950 grid place-items-center shadow-xl">
                 <Building2 className="w-10 h-10 text-neutral-500" />
               </div>
             )}

@@ -183,9 +183,9 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <Card className="bg-white/5 border-white/10"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-cyan-400/15 grid place-items-center"><TrendingUp className="w-5 h-5 text-cyan-300" /></div><div><div className="text-2xl md:text-3xl font-semibold">{stats.total}</div><div className="text-xs md:text-sm text-neutral-400">Active Jobs</div></div></div></CardContent></Card>
-          <Card className="bg-white/5 border-white/10"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-emerald-400/15 grid place-items-center"><Building2 className="w-5 h-5 text-emerald-300" /></div><div><div className="text-2xl md:text-3xl font-semibold">{stats.industries}+</div><div className="text-xs md:text-sm text-neutral-400">Industries</div></div></div></CardContent></Card>
-          <Card className="bg-white/5 border-white/10"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-purple-400/15 grid place-items-center"><MapPin className="w-5 h-5 text-purple-300" /></div><div><div className="text-2xl md:text-3xl font-semibold">{stats.locations}</div><div className="text-xs md:text-sm text-neutral-400">Locations</div></div></div></CardContent></Card>
+          <Card className="bg-white/5 border-white/10"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-cyan-400/15 grid place-items-center"><TrendingUp className="w-5 h-5 text-cyan-300" /></div><div><div className="text-xl sm:text-2xl md:text-3xl font-semibold">{stats.total}</div><div className="text-xs md:text-sm text-neutral-400">Active Jobs</div></div></div></CardContent></Card>
+          <Card className="bg-white/5 border-white/10"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-emerald-400/15 grid place-items-center"><Building2 className="w-5 h-5 text-emerald-300" /></div><div><div className="text-xl sm:text-2xl md:text-3xl font-semibold">{stats.industries}+</div><div className="text-xs md:text-sm text-neutral-400">Industries</div></div></div></CardContent></Card>
+          <Card className="bg-white/5 border-white/10"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-purple-400/15 grid place-items-center"><MapPin className="w-5 h-5 text-purple-300" /></div><div><div className="text-xl sm:text-2xl md:text-3xl font-semibold">{stats.locations}</div><div className="text-xs md:text-sm text-neutral-400">Locations</div></div></div></CardContent></Card>
           <Card className="bg-white/5 border-white/10"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-orange-400/15 grid place-items-center"><Calendar className="w-5 h-5 text-orange-300" /></div><div><div className="text-xl md:text-2xl font-semibold truncate">CI$ {Math.round(stats.avgSalary / 1000)}k</div><div className="text-xs md:text-sm text-neutral-400">Avg Salary</div></div></div></CardContent></Card>
         </div>
 
@@ -209,13 +209,13 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                     <div>
                       <label className="text-sm font-medium mb-2 block">Location</label>
-                      <select value={loc} onChange={(e) => { setLoc(Number(e.target.value)); setPage(1); }} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                      <select value={loc} onChange={(e) => { setLoc(Number(e.target.value)); setPage(1); }} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200">
                         {Object.entries(LOCATION_KEY).map(([k, v]) => (<option key={k} value={k}>{v}</option>))}
                       </select>
                     </div>
                     <div>
                       <label className="text-sm font-medium mb-2 block">Work Type</label>
-                      <select value={type} onChange={(e) => { setType(Number(e.target.value)); setPage(1); }} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                      <select value={type} onChange={(e) => { setType(Number(e.target.value)); setPage(1); }} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200">
                         {Object.entries(WORK_TYPE).map(([k, v]) => (<option key={k} value={k}>{v}</option>))}
                       </select>
                     </div>
@@ -225,7 +225,7 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                     </div>
                     <div>
                       <label className="text-sm font-medium mb-2 block">Sort By</label>
-                      <select value={sort} onChange={(e) => setSort(Number(e.target.value))} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                      <select value={sort} onChange={(e) => setSort(Number(e.target.value))} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200">
                         {Object.entries(SORT_KEY).map(([k, v]) => (<option key={k} value={k}>{v}</option>))}
                       </select>
                     </div>

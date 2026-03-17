@@ -51,18 +51,18 @@ export default function CareersClient({
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 md:pt-12">
         {/* Tab bar */}
-        <div className="flex gap-1 p-1 rounded-xl bg-white/5 border border-white/10 mb-8 w-fit">
+        <div className="flex gap-1 p-1 rounded-xl bg-white/5 border border-white/10 mb-8 max-w-full overflow-x-auto">
           {TABS.map(({ key, label, icon: Icon }) => (
             <button
               key={key}
               onClick={() => setTab(key)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition ${
+              className={`flex items-center gap-2 px-2.5 sm:px-4 py-2.5 rounded-lg text-sm font-medium transition whitespace-nowrap ${
                 activeTab === key
                   ? "bg-cyan-500/20 text-cyan-300 border border-cyan-300/30"
                   : "text-neutral-400 hover:text-neutral-200 hover:bg-white/5"
               }`}
             >
-              <Icon className="w-4 h-4" />
+              <Icon className="w-4 h-4 hidden sm:inline" />
               {label}
             </button>
           ))}

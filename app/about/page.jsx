@@ -8,7 +8,7 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-100">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-        <h1 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight mb-4">
           About <span className="text-cyan-300">careers.ky</span>
         </h1>
         <p className="text-lg text-neutral-300 mb-16">

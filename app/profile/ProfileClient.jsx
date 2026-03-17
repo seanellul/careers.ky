@@ -436,7 +436,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
               <CardContent className="p-6">
                 <h2 className="text-lg font-semibold mb-3">About</h2>
                 {editing ? (
-                  <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} rows={4} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200" placeholder="Brief intro about yourself..." />
+                  <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} rows={4} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200" placeholder="Brief intro about yourself..." />
                 ) : (
                   candidate.bio ? (
                     <p className="text-neutral-300 text-sm leading-relaxed">{candidate.bio}</p>
@@ -456,21 +456,21 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div>
                         <label className="text-xs font-medium text-neutral-400 mb-1 block">Education</label>
-                        <select value={form.educationCode} onChange={(e) => setForm({ ...form, educationCode: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                        <select value={form.educationCode} onChange={(e) => setForm({ ...form, educationCode: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200">
                           <option value="">Select...</option>
                           {Array.from(eduTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                         </select>
                       </div>
                       <div>
                         <label className="text-xs font-medium text-neutral-400 mb-1 block">Experience Level</label>
-                        <select value={form.experienceCode} onChange={(e) => setForm({ ...form, experienceCode: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                        <select value={form.experienceCode} onChange={(e) => setForm({ ...form, experienceCode: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200">
                           <option value="">Select...</option>
                           {Array.from(expTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                         </select>
                       </div>
                       <div>
                         <label className="text-xs font-medium text-neutral-400 mb-1 block">Location</label>
-                        <select value={form.locationCode} onChange={(e) => setForm({ ...form, locationCode: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                        <select value={form.locationCode} onChange={(e) => setForm({ ...form, locationCode: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200">
                           <option value="">Select...</option>
                           {Array.from(locTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                         </select>
@@ -688,7 +688,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                   <div className="space-y-4">
                     <div>
                       <label className="text-xs font-medium text-neutral-400 mb-2 block">Availability</label>
-                      <select value={form.availability} onChange={(e) => setForm({ ...form, availability: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                      <select value={form.availability} onChange={(e) => setForm({ ...form, availability: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200">
                         {AVAILABILITY_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                       </select>
                     </div>
@@ -780,7 +780,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                         onChange={(e) => setForm({ ...form, resumeSummary: e.target.value })}
                         rows={3}
                         placeholder="Anything the structured fields don't capture..."
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200"
                       />
                     </div>
                   </div>

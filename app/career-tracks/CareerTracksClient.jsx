@@ -143,7 +143,7 @@ export default function CareerTracksClient({
 
   const Bar = ({ label, value, total, color = "bg-cyan-400" }) => (
     <div className="flex items-center gap-2">
-      <div className="w-20 sm:w-32 text-xs text-neutral-300 truncate" title={label}>{label}</div>
+      <div className="w-16 sm:w-32 text-xs text-neutral-300 truncate" title={label}>{label}</div>
       <div className="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
         <div className={`h-full ${color}`} style={{ width: `${Math.round((value / Math.max(1, total)) * 100)}%` }} />
       </div>
@@ -244,15 +244,15 @@ export default function CareerTracksClient({
                       {selectedCiscoCodes.size} job{selectedCiscoCodes.size !== 1 ? "s" : ""} selected
                     </Badge>
                   )}
-                  <select value={filters.education} onChange={(e) => setFilters((p) => ({ ...p, education: e.target.value }))} className="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-sm">
+                  <select value={filters.education} onChange={(e) => setFilters((p) => ({ ...p, education: e.target.value }))} className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 h-10 text-sm">
                     <option value="">All Education Levels</option>
                     {Array.from(eduTypes.entries()).map(([k, v]) => (<option key={k} value={k}>{v}</option>))}
                   </select>
-                  <select value={filters.experience} onChange={(e) => setFilters((p) => ({ ...p, experience: e.target.value }))} className="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-sm">
+                  <select value={filters.experience} onChange={(e) => setFilters((p) => ({ ...p, experience: e.target.value }))} className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 h-10 text-sm">
                     <option value="">All Experience Levels</option>
                     {Array.from(expTypes.entries()).map(([k, v]) => (<option key={k} value={k}>{v}</option>))}
                   </select>
-                  <select value={filters.workType} onChange={(e) => setFilters((p) => ({ ...p, workType: e.target.value }))} className="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-sm">
+                  <select value={filters.workType} onChange={(e) => setFilters((p) => ({ ...p, workType: e.target.value }))} className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 h-10 text-sm">
                     <option value="">All Work Types</option>
                     {Array.from(workTypes.entries()).map(([k, v]) => (<option key={k} value={k}>{v}</option>))}
                   </select>
@@ -261,7 +261,7 @@ export default function CareerTracksClient({
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">Sort by:</span>
-                    <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-sm">
+                    <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 h-10 text-sm">
                       <option value="count">Job Posts</option>
                       <option value="min">Min Salary</option>
                       <option value="max">Max Salary</option>
@@ -329,7 +329,7 @@ export default function CareerTracksClient({
             {selectedMinor && (
               <div className="lg:col-span-1">
                 <h3 className="font-semibold mb-4">Specific Roles</h3>
-                <div className="space-y-2 max-h-[600px] overflow-y-auto">
+                <div className="space-y-2 max-h-[350px] sm:max-h-[600px] overflow-y-auto">
                   {selectedMinor.children?.map((unit) => {
                     const stats = aggregates.get(unit.id);
                     return (

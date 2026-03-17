@@ -54,7 +54,7 @@ export default function EmployerListClient({ employers, embedded = false }) {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
             <Input value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} placeholder="Search employers..." className="pl-10 bg-white/5 border-white/10 h-12 text-base" />
           </div>
-          <select value={sortBy} onChange={(e) => { setSortBy(e.target.value); setPage(1); }} className="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200 h-12">
+          <select value={sortBy} onChange={(e) => { setSortBy(e.target.value); setPage(1); }} className="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200 h-12 min-h-[44px]">
             <option value="active">Most Active</option>
             <option value="alpha">Alphabetical</option>
             <option value="salary">Highest Avg Salary</option>

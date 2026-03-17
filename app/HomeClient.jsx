@@ -256,19 +256,19 @@ export default function HomeClient({
                   {/* Live Stats */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
                     <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                      <div className="text-3xl font-semibold text-cyan-300 mb-1">
+                      <div className="text-2xl sm:text-3xl font-semibold text-cyan-300 mb-1">
                         {jobCount}
                       </div>
                       <div className="text-xs text-neutral-400">Active Jobs</div>
                     </div>
                     <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                      <div className="text-3xl font-semibold text-emerald-300 mb-1">
+                      <div className="text-2xl sm:text-3xl font-semibold text-emerald-300 mb-1">
                         {industryCount}+
                       </div>
                       <div className="text-xs text-neutral-400">Industries</div>
                     </div>
                     <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                      <div className="text-3xl font-semibold text-orange-300 mb-1">
+                      <div className="text-2xl sm:text-3xl font-semibold text-orange-300 mb-1">
                         {employerCount > 0 ? employerCount.toLocaleString() : "—"}
                       </div>
                       <div className="text-xs text-neutral-400">Employers</div>

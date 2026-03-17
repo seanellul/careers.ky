@@ -59,9 +59,9 @@ function MessageThread({ introId }) {
   return (
     <div className="mt-3 space-y-3">
       {messages.length > 0 && (
-        <div className="space-y-2 max-h-60 overflow-y-auto">
+        <div className="space-y-2 max-h-40 sm:max-h-60 overflow-y-auto">
           {messages.map(m => (
-            <div key={m.id} className={`text-sm p-2 rounded-lg ${m.sender_type === "candidate" ? "bg-cyan-500/10 border border-cyan-300/20 ml-4" : "bg-white/5 border border-white/10 mr-4"}`}>
+            <div key={m.id} className={`text-sm p-2 rounded-lg ${m.sender_type === "candidate" ? "bg-cyan-500/10 border border-cyan-300/20 ml-2 sm:ml-4" : "bg-white/5 border border-white/10 mr-2 sm:mr-4"}`}>
               <div className="text-xs text-neutral-500 mb-1">
                 {m.sender_type === "candidate" ? "You" : "Employer"} &middot; {new Date(m.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
               </div>
@@ -95,7 +95,7 @@ function JobContext({ intro }) {
     : intro.job_salary_description || null;
 
   return (
-    <Link href={`/jobs/${intro.job_id}`} className="flex items-center gap-2 text-sm p-2 rounded-lg bg-purple-500/10 border border-purple-300/20 hover:border-purple-300/40 transition mb-3">
+    <Link href={`/jobs/${intro.job_id}`} className="flex items-center gap-2 text-sm p-3 rounded-lg bg-purple-500/10 border border-purple-300/20 hover:border-purple-300/40 transition mb-3">
       <Briefcase className="w-4 h-4 text-purple-300 shrink-0" />
       <span className="text-purple-200 font-medium truncate">{intro.job_title || intro.job_id}</span>
       {salary && (

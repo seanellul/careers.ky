@@ -105,12 +105,16 @@ export default function CandidateDashboardClient({
             />
           </div>
         </div>
+        {/* Mobile profile strength badge */}
+        <Badge className={`sm:hidden ${score >= 80 ? "bg-emerald-500/20 text-emerald-300 border-emerald-300/30" : score >= 50 ? "bg-yellow-500/20 text-yellow-300 border-yellow-300/30" : "bg-red-500/20 text-red-300 border-red-300/30"}`}>
+          {score}%
+        </Badge>
       </div>
 
       {/* Stats row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <Card className="bg-white/5 border-white/10">
-          <CardContent className="p-4">
+          <CardContent className="p-3 sm:p-4">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-yellow-400/15 grid place-items-center">
                 <Clock className="w-5 h-5 text-yellow-300" />
@@ -123,7 +127,7 @@ export default function CandidateDashboardClient({
           </CardContent>
         </Card>
         <Card className="bg-white/5 border-white/10">
-          <CardContent className="p-4">
+          <CardContent className="p-3 sm:p-4">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-emerald-400/15 grid place-items-center">
                 <CheckCircle className="w-5 h-5 text-emerald-300" />
@@ -136,7 +140,7 @@ export default function CandidateDashboardClient({
           </CardContent>
         </Card>
         <Card className="bg-white/5 border-white/10">
-          <CardContent className="p-4">
+          <CardContent className="p-3 sm:p-4">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-purple-400/15 grid place-items-center">
                 <HeartHandshake className="w-5 h-5 text-purple-300" />
@@ -149,7 +153,7 @@ export default function CandidateDashboardClient({
           </CardContent>
         </Card>
         <Card className="bg-white/5 border-white/10">
-          <CardContent className="p-4">
+          <CardContent className="p-3 sm:p-4">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-cyan-400/15 grid place-items-center">
                 <User className="w-5 h-5 text-cyan-300" />
