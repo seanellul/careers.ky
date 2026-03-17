@@ -81,12 +81,14 @@ export async function GET(request) {
   // Candidate flow
   let candidate = await getCandidateByEmail(email);
   const isNew = !candidate;
+  const pictureUrl = user.picture || null;
 
   if (!candidate) {
-    candidate = await upsertCandidate(email, { name });
+    candidate = await upsertCandidate(email, { name, profilePictureUrl: pictureUrl });
   } else if (!candidate.name && name) {
-    // Fill in name from Google if not set
-    candidate = await upsertCandidate(email, { name });
+    candidate = await upsertCandidate(email, { name, profilePictureUrl: pictureUrl });
+  } else if (pictureUrl && !candidate.profile_picture_url) {
+    candidate = await upsertCandidate(email, { profilePictureUrl: pictureUrl });
   }
 
   await createSession(candidate.id);

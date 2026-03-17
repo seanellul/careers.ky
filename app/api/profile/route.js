@@ -23,6 +23,12 @@ export async function PUT(request) {
       workTypePreferences: data.workTypePreferences || [],
       linkedinUrl: data.linkedinUrl || null,
       resumeSummary: data.resumeSummary || null,
+      headline: data.headline || null,
+      phone: data.phone || null,
+      portfolioUrl: data.portfolioUrl || null,
+      yearsOfExperience: data.yearsOfExperience || null,
+      preferredIndustries: data.preferredIndustries || [],
+      willingToRelocate: data.willingToRelocate || false,
     });
 
     if (data.ciscoCodes) {

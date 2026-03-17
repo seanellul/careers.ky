@@ -131,10 +131,6 @@ function EmployerMessageThread({ introId }) {
 }
 
 export default function EmployerDashboardClient({ employer, stats, introductions, employerName, shortlists, savedSearches }) {
-  const [editingProfile, setEditingProfile] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [website, setWebsite] = useState(employer.website || "");
-  const [description, setDescription] = useState(employer.description || "");
   const [activeStage, setActiveStage] = useState("all");
   const [updatingStage, setUpdatingStage] = useState(null);
   const [selectedJobId, setSelectedJobId] = useState("");
@@ -175,20 +171,6 @@ export default function EmployerDashboardClient({ employer, stats, introductions
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [jobDropdownOpen]);
-
-  const handleSaveProfile = async () => {
-    setSaving(true);
-    try {
-      const res = await fetch("/api/employer/profile", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ website, description }),
-      });
-      if (res.ok) setEditingProfile(false);
-    } finally {
-      setSaving(false);
-    }
-  };
 
   const handleStageChange = async (introId, newStage) => {
     // Show rejection modal for rejected stage
@@ -605,52 +587,27 @@ export default function EmployerDashboardClient({ employer, stats, introductions
           {/* Company Profile */}
           <Card className="bg-white/5 border-white/10">
             <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold">Company Profile</h3>
-                {!editingProfile && (
-                  <Button variant="secondary" size="sm" onClick={() => setEditingProfile(true)} className="gap-1">
-                    <Edit3 className="w-3 h-3" /> Edit
-                  </Button>
+              <h3 className="text-lg font-semibold mb-3">Company Profile</h3>
+              <div className="space-y-3">
+                <div className="text-sm">
+                  <span className="text-neutral-400">Name:</span>
+                  <div className="font-medium">{employer.name}</div>
+                </div>
+                {employer.website && (
+                  <div className="text-sm">
+                    <span className="text-neutral-400">Website:</span>
+                    <div><a href={employer.website} target="_blank" rel="noreferrer" className="text-cyan-300 hover:underline flex items-center gap-1"><Globe className="w-3 h-3" /> {employer.website}</a></div>
+                  </div>
+                )}
+                {employer.description && (
+                  <p className="text-sm text-neutral-300 line-clamp-3">{employer.description}</p>
                 )}
               </div>
-              {editingProfile ? (
-                <div className="space-y-3">
-                  <div>
-                    <label className="text-sm font-medium mb-1 block">Website</label>
-                    <Input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://..." className="bg-white/5 border-white/10" />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium mb-1 block">Description</label>
-                    <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200" placeholder="About your company..." />
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="secondary" size="sm" onClick={() => setEditingProfile(false)}>Cancel</Button>
-                    <Button size="sm" onClick={handleSaveProfile} disabled={saving}>{saving ? "Saving..." : "Save"}</Button>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <div className="text-sm">
-                    <span className="text-neutral-400">Name:</span>
-                    <div className="font-medium">{employer.name}</div>
-                  </div>
-                  {employer.website && (
-                    <div className="text-sm">
-                      <span className="text-neutral-400">Website:</span>
-                      <div><a href={employer.website} target="_blank" rel="noreferrer" className="text-cyan-300 hover:underline flex items-center gap-1"><Globe className="w-3 h-3" /> {employer.website}</a></div>
-                    </div>
-                  )}
-                  {employer.description && (
-                    <div className="text-sm">
-                      <span className="text-neutral-400">Description:</span>
-                      <p className="text-neutral-300 mt-1">{employer.description}</p>
-                    </div>
-                  )}
-                  {!employer.website && !employer.description && (
-                    <p className="text-sm text-neutral-500">No details added yet. Click Edit to add your company website and description.</p>
-                  )}
-                </div>
-              )}
+              <Link href="/employer/profile">
+                <Button variant="secondary" size="sm" className="w-full mt-4 gap-1">
+                  <Edit3 className="w-3 h-3" /> Edit Profile
+                </Button>
+              </Link>
             </CardContent>
           </Card>
 

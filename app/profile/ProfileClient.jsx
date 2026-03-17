@@ -10,7 +10,8 @@ import { Input } from "@/components/ui/input";
 import {
   User, BookOpen, Clock, MapPin, Eye, EyeOff, Bell, Shield,
   CheckCircle, Edit3, LogOut, Briefcase, Star, ChevronRight,
-  X, Plus, Search, Send, Loader2,
+  X, Plus, Search, Send, Loader2, Globe, Phone, Linkedin,
+  ArrowUpRight, Hash, Building2,
 } from "lucide-react";
 
 const AVAILABILITY_OPTIONS = [
@@ -19,21 +20,34 @@ const AVAILABILITY_OPTIONS = [
   { value: "not_looking", label: "Not Looking", color: "bg-neutral-500/20 text-neutral-300 border-neutral-300/30" },
 ];
 
-function calcProfileStrength(candidate, interests, skills) {
-  let score = 0;
-  const items = [];
-  if (candidate.name) { score += 12; } else { items.push("Add your name"); }
-  if (candidate.bio) { score += 12; } else { items.push("Write a bio"); }
-  if (candidate.education_code) { score += 10; } else { items.push("Set education level"); }
-  if (candidate.experience_code) { score += 10; } else { items.push("Set experience level"); }
-  if (candidate.location_code) { score += 8; } else { items.push("Set your location"); }
-  if (interests.length > 0) { score += 13; } else { items.push("Add career interests"); }
-  if (skills.length > 0) { score += 13; } else { items.push("Add skills"); }
-  if (candidate.is_discoverable) { score += 7; } else { items.push("Make profile discoverable"); }
-  if (candidate.salary_min) { score += 5; } else { items.push("Add minimum salary expectation"); }
-  if (candidate.work_type_preferences?.length > 0) { score += 5; } else { items.push("Set work type preferences"); }
-  if (candidate.linkedin_url) { score += 5; } else { items.push("Add LinkedIn URL"); }
-  return { score, missing: items };
+const INDUSTRY_OPTIONS = [
+  "Accounting & Finance", "Banking", "Construction", "Education", "Government",
+  "Healthcare", "Hospitality & Tourism", "Insurance", "IT & Technology", "Legal",
+  "Maritime", "Real Estate", "Retail", "Telecommunications", "Other",
+];
+
+import { calcProfileStrength } from "@/lib/profileStrength";
+
+function ProfilePicture({ url, name, size = "lg", className = "" }) {
+  const [imgError, setImgError] = useState(false);
+  const initial = name?.[0]?.toUpperCase() || "?";
+  const sizeClasses = size === "lg" ? "w-24 h-24 text-3xl" : size === "md" ? "w-12 h-12 text-lg" : "w-10 h-10 text-sm";
+
+  if (url && !imgError) {
+    return (
+      <img
+        src={url}
+        alt={name || "Profile"}
+        onError={() => setImgError(true)}
+        className={`${sizeClasses} rounded-full object-cover border-2 border-white/10 ${className}`}
+      />
+    );
+  }
+  return (
+    <div className={`${sizeClasses} rounded-full bg-gradient-to-br from-cyan-500/30 to-purple-500/30 grid place-items-center font-semibold text-cyan-300 border-2 border-white/10 ${className}`}>
+      {initial}
+    </div>
+  );
 }
 
 export default function ProfileClient({ candidate, interests, skills, notifications, unreadCount, pendingIntroCount = 0, eduTypes: etObj, expTypes: exObj, locTypes: ltObj }) {
@@ -57,6 +71,12 @@ export default function ProfileClient({ candidate, interests, skills, notificati
     workTypePreferences: candidate.work_type_preferences || [],
     linkedinUrl: candidate.linkedin_url || "",
     resumeSummary: candidate.resume_summary || "",
+    headline: candidate.headline || "",
+    phone: candidate.phone || "",
+    portfolioUrl: candidate.portfolio_url || "",
+    yearsOfExperience: candidate.years_of_experience || "",
+    preferredIndustries: candidate.preferred_industries || [],
+    willingToRelocate: candidate.willing_to_relocate || false,
   });
 
   // Editable interests
@@ -151,6 +171,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
         body: JSON.stringify({
           ...form,
           salaryMin: form.salaryMin ? Number(form.salaryMin) : null,
+          yearsOfExperience: form.yearsOfExperience ? Number(form.yearsOfExperience) : null,
           ciscoCodes: editInterests.map(i => i.ciscoCode),
           skillIds: editSkills.map(s => s.id),
         }),
@@ -221,7 +242,6 @@ export default function ProfileClient({ candidate, interests, skills, notificati
 
   const handleToggleFrequency = async (alert) => {
     const newFreq = alert.frequency === "daily" ? "weekly" : "daily";
-    // Delete and recreate with new frequency
     await handleDeleteAlert(alert.id);
     const res = await fetch("/api/alerts", {
       method: "POST",
@@ -234,33 +254,94 @@ export default function ProfileClient({ candidate, interests, skills, notificati
     }
   };
 
+  const toggleIndustry = (industry) => {
+    const current = form.preferredIndustries || [];
+    if (current.includes(industry)) {
+      setForm({ ...form, preferredIndustries: current.filter(i => i !== industry) });
+    } else {
+      setForm({ ...form, preferredIndustries: [...current, industry] });
+    }
+  };
+
   return (
     <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
       <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={{ backgroundImage: "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)", backgroundPosition: "0% 50%" }} />
 
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="flex items-start justify-between mb-8">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight mb-2">My Profile</h1>
-            <p className="text-neutral-400">{candidate.email}</p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {!editing ? (
-              <Button variant="secondary" onClick={() => setEditing(true)} className="gap-2"><Edit3 className="w-4 h-4" /> Edit</Button>
-            ) : (
-              <>
-                <Button variant="secondary" onClick={() => setEditing(false)}>Cancel</Button>
-                <Button onClick={handleSave} disabled={saving} className="gap-2">{saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />} {saving ? "Saving..." : "Save"}</Button>
-              </>
-            )}
-            <Link href="/notifications">
-              <Button variant="secondary" className="gap-2 relative">
-                <Bell className="w-4 h-4" />
-                {unreadCount > 0 && <span className="absolute -top-1 -right-1 w-5 h-5 bg-cyan-500 rounded-full text-xs grid place-items-center">{unreadCount}</span>}
-              </Button>
-            </Link>
-            <Button variant="secondary" onClick={handleLogout} className="gap-2"><LogOut className="w-4 h-4" /></Button>
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8">
+
+        {/* Hero Section */}
+        <div className="relative mb-8">
+          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur overflow-hidden">
+            {/* Top bar with actions */}
+            <div className="flex items-center justify-end gap-2 px-6 pt-4">
+              {!editing ? (
+                <Button variant="secondary" size="sm" onClick={() => setEditing(true)} className="gap-2"><Edit3 className="w-3.5 h-3.5" /> Edit Profile</Button>
+              ) : (
+                <>
+                  <Button variant="secondary" size="sm" onClick={() => setEditing(false)}>Cancel</Button>
+                  <Button size="sm" onClick={handleSave} disabled={saving} className="gap-2">{saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle className="w-3.5 h-3.5" />} {saving ? "Saving..." : "Save"}</Button>
+                </>
+              )}
+              <Link href="/notifications">
+                <Button variant="secondary" size="sm" className="relative">
+                  <Bell className="w-3.5 h-3.5" />
+                  {unreadCount > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 bg-cyan-500 rounded-full text-[10px] grid place-items-center">{unreadCount}</span>}
+                </Button>
+              </Link>
+              <Button variant="secondary" size="sm" onClick={handleLogout}><LogOut className="w-3.5 h-3.5" /></Button>
+            </div>
+
+            {/* Profile info */}
+            <div className="px-6 pb-6 pt-2">
+              {editing ? (
+                <div className="space-y-4">
+                  <div className="flex items-start gap-4">
+                    <ProfilePicture url={candidate.profile_picture_url} name={form.name} size="lg" />
+                    <div className="flex-1 space-y-3">
+                      <div>
+                        <label className="text-xs font-medium text-neutral-400 mb-1 block">Full Name</label>
+                        <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="bg-white/5 border-white/10" />
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium text-neutral-400 mb-1 block">Headline</label>
+                        <Input value={form.headline} onChange={(e) => setForm({ ...form, headline: e.target.value.slice(0, 200) })} placeholder="e.g. Experienced accountant seeking opportunities in Cayman" className="bg-white/5 border-white/10" maxLength={200} />
+                        <div className="text-xs text-neutral-500 mt-1">{form.headline.length}/200</div>
+                      </div>
+                    </div>
+                  </div>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={form.isCaymanian} onChange={(e) => setForm({ ...form, isCaymanian: e.target.checked })} className="rounded" />
+                    <span className="text-sm">I am Caymanian</span>
+                  </label>
+                </div>
+              ) : (
+                <div className="flex flex-col sm:flex-row items-start gap-5">
+                  <ProfilePicture url={candidate.profile_picture_url} name={candidate.name} size="lg" />
+                  <div className="flex-1 min-w-0">
+                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">{candidate.name || "Name not set"}</h1>
+                    {candidate.headline && <p className="text-neutral-300 mt-1">{candidate.headline}</p>}
+                    <div className="flex flex-wrap items-center gap-2 mt-3">
+                      <Badge className={availOption?.color}>{availOption?.label || "Not set"}</Badge>
+                      {candidate.is_caymanian && <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30"><Shield className="w-3 h-3 mr-1" /> Caymanian</Badge>}
+                    </div>
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-sm text-neutral-400">
+                      {candidate.location_code && (
+                        <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-pink-300" /> {locTypes.get(candidate.location_code)}</span>
+                      )}
+                      {candidate.education_code && (
+                        <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5 text-purple-300" /> {eduTypes.get(candidate.education_code)}</span>
+                      )}
+                      {candidate.experience_code && (
+                        <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5 text-orange-300" /> {expTypes.get(candidate.experience_code)}</span>
+                      )}
+                      {candidate.years_of_experience && (
+                        <span className="flex items-center gap-1"><Hash className="w-3.5 h-3.5 text-emerald-300" /> {candidate.years_of_experience} years</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -306,11 +387,12 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                 <p className="text-xs text-neutral-500 mb-4">This is what employers see in talent search (your name and email are hidden).</p>
 
                 <div className="p-4 rounded-xl border border-white/10 bg-white/5 space-y-3">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-white/10 grid place-items-center"><User className="w-5 h-5 text-neutral-400" /></div>
                     <div>
                       <div className="font-medium">Anonymous Candidate</div>
-                      <div className="flex gap-2">
+                      {candidate.headline && <div className="text-xs text-neutral-400">{candidate.headline}</div>}
+                      <div className="flex gap-2 mt-1">
                         <Badge className={availOption?.color}>{availOption?.label || "Not set"}</Badge>
                         {candidate.is_caymanian && <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30"><Shield className="w-3 h-3 mr-1" /> Caymanian</Badge>}
                       </div>
@@ -348,38 +430,19 @@ export default function ProfileClient({ candidate, interests, skills, notificati
 
         <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
-            {/* Basic Info */}
+
+            {/* About */}
             <Card className="bg-white/5 border-white/10">
-              <CardContent className="p-6 space-y-4">
-                <h2 className="text-xl font-semibold flex items-center gap-2"><User className="w-5 h-5" /> Basic Information</h2>
+              <CardContent className="p-6">
+                <h2 className="text-lg font-semibold mb-3">About</h2>
                 {editing ? (
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium mb-1 block">Full Name</label>
-                      <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="bg-white/5 border-white/10" />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium mb-1 block">Bio</label>
-                      <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} rows={3} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200" placeholder="Brief intro about yourself..." />
-                    </div>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" checked={form.isCaymanian} onChange={(e) => setForm({ ...form, isCaymanian: e.target.checked })} className="rounded" />
-                      <span className="text-sm">I am Caymanian</span>
-                    </label>
-                  </div>
+                  <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} rows={4} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200" placeholder="Brief intro about yourself..." />
                 ) : (
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-full bg-white/10 grid place-items-center"><User className="w-6 h-6 text-neutral-400" /></div>
-                      <div>
-                        <div className="font-medium text-lg">{candidate.name || "Name not set"}</div>
-                        <div className="flex gap-2">
-                          {candidate.is_caymanian && <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30"><Shield className="w-3 h-3 mr-1" /> Caymanian</Badge>}
-                        </div>
-                      </div>
-                    </div>
-                    {candidate.bio && <p className="text-neutral-300 text-sm">{candidate.bio}</p>}
-                  </div>
+                  candidate.bio ? (
+                    <p className="text-neutral-300 text-sm leading-relaxed">{candidate.bio}</p>
+                  ) : (
+                    <p className="text-neutral-500 text-sm">No bio yet. Tell employers about yourself.</p>
+                  )
                 )}
               </CardContent>
             </Card>
@@ -387,36 +450,92 @@ export default function ProfileClient({ candidate, interests, skills, notificati
             {/* Professional Details */}
             <Card className="bg-white/5 border-white/10">
               <CardContent className="p-6 space-y-4">
-                <h2 className="text-xl font-semibold flex items-center gap-2"><Briefcase className="w-5 h-5" /> Professional Details</h2>
+                <h2 className="text-lg font-semibold flex items-center gap-2"><Briefcase className="w-5 h-5" /> Professional Details</h2>
                 {editing ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="text-sm font-medium mb-1 block">Education</label>
-                      <select value={form.educationCode} onChange={(e) => setForm({ ...form, educationCode: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
-                        <option value="">Select...</option>
-                        {Array.from(eduTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                      </select>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div>
+                        <label className="text-xs font-medium text-neutral-400 mb-1 block">Education</label>
+                        <select value={form.educationCode} onChange={(e) => setForm({ ...form, educationCode: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                          <option value="">Select...</option>
+                          {Array.from(eduTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium text-neutral-400 mb-1 block">Experience Level</label>
+                        <select value={form.experienceCode} onChange={(e) => setForm({ ...form, experienceCode: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                          <option value="">Select...</option>
+                          {Array.from(expTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium text-neutral-400 mb-1 block">Location</label>
+                        <select value={form.locationCode} onChange={(e) => setForm({ ...form, locationCode: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                          <option value="">Select...</option>
+                          {Array.from(locTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                        </select>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-xs font-medium text-neutral-400 mb-1 block">Years of Experience</label>
+                        <Input type="number" min="0" max="50" value={form.yearsOfExperience} onChange={(e) => setForm({ ...form, yearsOfExperience: e.target.value })} placeholder="e.g. 5" className="bg-white/5 border-white/10" />
+                      </div>
+                      <div>
+                        <label className="text-xs font-medium text-neutral-400 mb-1 block">Portfolio URL</label>
+                        <Input value={form.portfolioUrl} onChange={(e) => setForm({ ...form, portfolioUrl: e.target.value })} placeholder="https://..." className="bg-white/5 border-white/10" />
+                      </div>
                     </div>
                     <div>
-                      <label className="text-sm font-medium mb-1 block">Experience</label>
-                      <select value={form.experienceCode} onChange={(e) => setForm({ ...form, experienceCode: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
-                        <option value="">Select...</option>
-                        {Array.from(expTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium mb-1 block">Location</label>
-                      <select value={form.locationCode} onChange={(e) => setForm({ ...form, locationCode: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
-                        <option value="">Select...</option>
-                        {Array.from(locTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                      </select>
+                      <label className="text-xs font-medium text-neutral-400 mb-2 block">Preferred Industries</label>
+                      <div className="flex flex-wrap gap-2">
+                        {INDUSTRY_OPTIONS.map(ind => (
+                          <button
+                            key={ind}
+                            type="button"
+                            onClick={() => toggleIndustry(ind)}
+                            className={`text-xs px-3 py-1.5 rounded-lg border transition ${
+                              (form.preferredIndustries || []).includes(ind)
+                                ? "bg-cyan-500/20 text-cyan-300 border-cyan-300/30"
+                                : "bg-white/5 text-neutral-400 border-white/10 hover:border-white/20"
+                            }`}
+                          >
+                            {ind}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="flex items-center gap-2"><BookOpen className="w-4 h-4 text-purple-300" /><span className="text-sm">{eduTypes.get(candidate.education_code) || "Not set"}</span></div>
-                    <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-orange-300" /><span className="text-sm">{expTypes.get(candidate.experience_code) || "Not set"}</span></div>
-                    <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-pink-300" /><span className="text-sm">{locTypes.get(candidate.location_code) || "Not set"}</span></div>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div className="flex items-center gap-2"><BookOpen className="w-4 h-4 text-purple-300" /><span className="text-sm">{eduTypes.get(candidate.education_code) || "Not set"}</span></div>
+                      <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-orange-300" /><span className="text-sm">{expTypes.get(candidate.experience_code) || "Not set"}</span></div>
+                      <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-pink-300" /><span className="text-sm">{locTypes.get(candidate.location_code) || "Not set"}</span></div>
+                    </div>
+                    {(candidate.years_of_experience || candidate.portfolio_url || candidate.linkedin_url) && (
+                      <div className="flex flex-wrap items-center gap-4 text-sm">
+                        {candidate.years_of_experience && (
+                          <span className="flex items-center gap-1.5 text-neutral-300"><Hash className="w-3.5 h-3.5 text-emerald-300" /> {candidate.years_of_experience} years experience</span>
+                        )}
+                        {candidate.portfolio_url && (
+                          <a href={candidate.portfolio_url} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-cyan-300 hover:underline"><Globe className="w-3.5 h-3.5" /> Portfolio <ArrowUpRight className="w-3 h-3" /></a>
+                        )}
+                        {candidate.linkedin_url && (
+                          <a href={candidate.linkedin_url} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-cyan-300 hover:underline"><Linkedin className="w-3.5 h-3.5" /> LinkedIn <ArrowUpRight className="w-3 h-3" /></a>
+                        )}
+                      </div>
+                    )}
+                    {candidate.preferred_industries?.length > 0 && (
+                      <div>
+                        <div className="text-xs text-neutral-500 mb-1.5">Preferred Industries</div>
+                        <div className="flex flex-wrap gap-1.5">
+                          {candidate.preferred_industries.map(ind => (
+                            <Badge key={ind} className="bg-white/5 border-white/10 text-neutral-300 text-xs">{ind}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </CardContent>
@@ -426,7 +545,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
             <Card className="bg-white/5 border-white/10">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold flex items-center gap-2"><Star className="w-5 h-5" /> Career Interests</h2>
+                  <h2 className="text-lg font-semibold flex items-center gap-2"><Star className="w-5 h-5" /> Career Interests</h2>
                   {editing && (
                     <Button variant="secondary" size="sm" onClick={() => setShowInterestSearch(!showInterestSearch)} className="gap-1">
                       <Plus className="w-3 h-3" /> Add Interest
@@ -490,7 +609,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
             <Card className="bg-white/5 border-white/10">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold flex items-center gap-2"><Briefcase className="w-5 h-5" /> Skills</h2>
+                  <h2 className="text-lg font-semibold flex items-center gap-2"><Briefcase className="w-5 h-5" /> Skills</h2>
                   {editing && (
                     <Button variant="secondary" size="sm" onClick={() => setShowSkillSearch(!showSkillSearch)} className="gap-1">
                       <Plus className="w-3 h-3" /> Add Skill
@@ -561,14 +680,14 @@ export default function ProfileClient({ candidate, interests, skills, notificati
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Availability & Visibility */}
+            {/* Status */}
             <Card className="bg-white/5 border-white/10">
               <CardContent className="p-4 sm:p-6 space-y-4">
                 <h3 className="text-lg font-semibold">Status</h3>
                 {editing ? (
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Availability</label>
+                      <label className="text-xs font-medium text-neutral-400 mb-2 block">Availability</label>
                       <select value={form.availability} onChange={(e) => setForm({ ...form, availability: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
                         {AVAILABILITY_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                       </select>
@@ -601,7 +720,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                 {editing ? (
                   <div className="space-y-4">
                     <div>
-                      <label className="text-sm font-medium mb-1 block">Minimum Salary (KYD/year)</label>
+                      <label className="text-xs font-medium text-neutral-400 mb-1 block">Minimum Salary (KYD/year)</label>
                       <Input
                         type="number"
                         value={form.salaryMin}
@@ -611,7 +730,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium mb-2 block">Work Type</label>
+                      <label className="text-xs font-medium text-neutral-400 mb-2 block">Work Type</label>
                       <div className="space-y-2">
                         {[["1", "Full-time"], ["2", "Part-time"], ["3", "Contract"]].map(([code, label]) => (
                           <label key={code} className="flex items-center gap-2 cursor-pointer">
@@ -631,8 +750,21 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                         ))}
                       </div>
                     </div>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" checked={form.willingToRelocate} onChange={(e) => setForm({ ...form, willingToRelocate: e.target.checked })} className="rounded" />
+                      <span className="text-sm">Willing to relocate</span>
+                    </label>
                     <div>
-                      <label className="text-sm font-medium mb-1 block">LinkedIn URL</label>
+                      <label className="text-xs font-medium text-neutral-400 mb-1 block">Phone</label>
+                      <Input
+                        value={form.phone}
+                        onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                        placeholder="+1 345 ..."
+                        className="bg-white/5 border-white/10"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-neutral-400 mb-1 block">LinkedIn URL</label>
                       <Input
                         value={form.linkedinUrl}
                         onChange={(e) => setForm({ ...form, linkedinUrl: e.target.value })}
@@ -642,7 +774,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                       <p className="text-xs text-neutral-500 mt-1">Shared with employers only after you accept an introduction.</p>
                     </div>
                     <div>
-                      <label className="text-sm font-medium mb-1 block">Resume Summary</label>
+                      <label className="text-xs font-medium text-neutral-400 mb-1 block">Resume Summary</label>
                       <textarea
                         value={form.resumeSummary}
                         onChange={(e) => setForm({ ...form, resumeSummary: e.target.value })}
@@ -669,6 +801,12 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                       </div>
                     ) : (
                       <div className="text-neutral-500">No work type preferences set</div>
+                    )}
+                    {candidate.willing_to_relocate && (
+                      <div className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-emerald-300" /> <span className="text-emerald-300">Willing to relocate</span></div>
+                    )}
+                    {candidate.phone && (
+                      <div className="flex items-center gap-1.5"><Phone className="w-3.5 h-3.5 text-neutral-400" /> {candidate.phone}</div>
                     )}
                     {candidate.linkedin_url && (
                       <div><span className="text-neutral-400">LinkedIn:</span> <a href={candidate.linkedin_url} target="_blank" rel="noreferrer" className="text-cyan-300 hover:underline">Profile</a></div>

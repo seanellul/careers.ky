@@ -22,6 +22,7 @@ import {
   Users,
   Building2,
   User,
+  CheckCircle2,
 } from "lucide-react";
 import OnboardingFlow from "@/components/OnboardingFlow";
 import {
@@ -99,14 +100,16 @@ export default function HomeClient({
     setOnboardingOpen(false);
     if (res?.targetPage === "live-search") {
       const params = new URLSearchParams();
+      params.set("tab", "jobs");
       if (res.searchQuery) params.set("q", res.searchQuery);
       if (res.ciscoCode) params.set("cisco", res.ciscoCode);
-      router.push(`/jobs?${params.toString()}`);
+      router.push(`/careers?${params.toString()}`);
     } else if (res?.targetPage === "career-tracks") {
       const params = new URLSearchParams();
+      params.set("tab", "career-tracks");
       if (res.searchQuery) params.set("q", res.searchQuery);
       if (res.ciscoCode) params.set("cisco", res.ciscoCode);
-      router.push(`/career-tracks?${params.toString()}`);
+      router.push(`/careers?${params.toString()}`);
     }
   };
 
@@ -140,36 +143,44 @@ export default function HomeClient({
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-10 items-center">
             <div className="lg:col-span-7 space-y-6 md:space-y-8">
               <Badge className="w-fit bg-cyan-500/10 text-cyan-300 border-cyan-300/30">
-                Live Job Market Data
+                A Caymanian-First Careers Platform
               </Badge>
               <h1 className="text-4xl/tight sm:text-5xl/tight md:text-6xl/tight font-semibold tracking-tight">
-                <span className="text-cyan-300">Real-time insights</span> into
-                Cayman's <span className="text-white">job market</span>.
+                <span className="text-cyan-300">A Caymanian-First</span>{" "}
+                Careers <span className="text-white">Platform.</span>
               </h1>
-              <p className="text-neutral-300 text-base md:text-lg max-w-2xl">
-                Access live job postings, salary data, industry trends, and
-                career planning tools. Built with real WORC data to help
-                Caymanians make informed career decisions.
+              <p className="text-neutral-200 text-lg md:text-xl max-w-2xl font-medium">
+                Making hiring talent visible, accessible and fair.
               </p>
+              <div className="space-y-2 text-neutral-300 text-base md:text-lg max-w-2xl">
+                <p>
+                  <span className="text-cyan-300 font-medium">For candidates:</span>{" "}
+                  Every Caymanian deserves a fair shot at every role. Create your profile free. Get matched. Get hired.
+                </p>
+                <p>
+                  <span className="text-emerald-300 font-medium">For employers:</span>{" "}
+                  Find Caymanian talent directly. Skip the recruiter. Save money. One platform. One monthly fee.
+                </p>
+              </div>
 
               {/* Key Features */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-                <button
-                  onClick={() => setOnboardingOpen(true)}
+                <Link
+                  href="/profile/setup"
                   className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-300/40 hover:bg-white/10 transition cursor-pointer text-left"
                 >
                   <div className="h-8 w-8 rounded-lg bg-cyan-400/15 grid place-items-center flex-shrink-0">
-                    <Sparkles className="w-4 h-4 text-cyan-300" />
+                    <User className="w-4 h-4 text-cyan-300" />
                   </div>
                   <div>
-                    <div className="font-medium text-sm mb-1">Career Mapper</div>
+                    <div className="font-medium text-sm mb-1">Create Profile</div>
                     <div className="text-xs text-neutral-400">
-                      Match your lifestyle to careers
+                      Get seen by every employer
                     </div>
                   </div>
-                </button>
+                </Link>
                 <Link
-                  href="/career-tracks"
+                  href="/careers?tab=career-tracks"
                   className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-300/40 hover:bg-white/10 transition cursor-pointer text-left"
                 >
                   <div className="h-8 w-8 rounded-lg bg-emerald-400/15 grid place-items-center flex-shrink-0">
@@ -183,7 +194,7 @@ export default function HomeClient({
                   </div>
                 </Link>
                 <Link
-                  href="/jobs"
+                  href="/careers"
                   className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-purple-300/40 hover:bg-white/10 transition cursor-pointer text-left"
                 >
                   <div className="h-8 w-8 rounded-lg bg-purple-400/15 grid place-items-center flex-shrink-0">
@@ -214,15 +225,16 @@ export default function HomeClient({
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button
-                  size="lg"
-                  className="gap-2 h-12 text-base"
-                  onClick={() => setOnboardingOpen(true)}
-                >
-                  <Sparkles className="w-4 h-4" />
-                  Start Career Mapper
-                </Button>
-                <Link href="/jobs">
+                <Link href="/profile/setup">
+                  <Button
+                    size="lg"
+                    className="gap-2 h-12 text-base"
+                  >
+                    <User className="w-4 h-4" />
+                    Create Your Free Profile
+                  </Button>
+                </Link>
+                <Link href="/careers">
                   <Button
                     size="lg"
                     variant="secondary"
@@ -267,32 +279,32 @@ export default function HomeClient({
 
                   {/* Quick Links to Tools */}
                   <div className="space-y-2">
-                    <button
-                      onClick={() => setOnboardingOpen(true)}
-                      className="w-full text-left p-3 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-300/40 transition group"
+                    <Link
+                      href="/profile/setup"
+                      className="block w-full text-left p-3 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-300/40 transition group"
                     >
                       <div className="flex items-center gap-2 text-cyan-300 mb-1">
-                        <Sparkles className="w-4 h-4" />
+                        <User className="w-4 h-4" />
                         <span className="text-xs uppercase tracking-wide">
-                          Tool
+                          Candidates
                         </span>
                       </div>
                       <div className="font-medium group-hover:text-white transition">
-                        Career Mapper
+                        Create Your Profile
                       </div>
                       <p className="text-xs text-neutral-400">
-                        Lifestyle-first career matching
+                        Get seen by every employer on the island
                       </p>
-                    </button>
+                    </Link>
 
                     <Link
-                      href="/career-tracks"
+                      href="/careers?tab=career-tracks"
                       className="block w-full text-left p-3 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-300/40 transition group"
                     >
                       <div className="flex items-center gap-2 text-emerald-300 mb-1">
                         <Compass className="w-4 h-4" />
                         <span className="text-xs uppercase tracking-wide">
-                          Data
+                          Explore
                         </span>
                       </div>
                       <div className="font-medium group-hover:text-white transition">
@@ -304,7 +316,7 @@ export default function HomeClient({
                     </Link>
 
                     <Link
-                      href="/jobs"
+                      href="/careers"
                       className="block w-full text-left p-3 rounded-xl bg-white/5 border border-white/10 hover:border-purple-300/40 transition group"
                     >
                       <div className="flex items-center gap-2 text-purple-300 mb-1">
@@ -335,7 +347,7 @@ export default function HomeClient({
                         Search Local Talent
                       </div>
                       <p className="text-xs text-neutral-400">
-                        Find candidates in Cayman
+                        Find Caymanian candidates directly
                       </p>
                     </Link>
                   </div>
@@ -360,7 +372,7 @@ export default function HomeClient({
                 Browse by industry category with live market data
               </p>
             </div>
-            <Link href="/career-tracks">
+            <Link href="/careers?tab=career-tracks">
               <Button variant="secondary" className="gap-2">
                 View all <ChevronRight className="w-4 h-4" />
               </Button>
@@ -368,7 +380,7 @@ export default function HomeClient({
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {careerTracks.map((track) => (
-              <Link key={track.id} href="/career-tracks">
+              <Link key={track.id} href="/careers?tab=career-tracks">
                 <Card
                   ref={addRevealEl}
                   className="group bg-white/5 border-white/10 hover:border-cyan-300/40 hover:shadow-2xl hover:shadow-cyan-300/10 transition cursor-pointer"
@@ -456,6 +468,82 @@ export default function HomeClient({
         </div>
       </section>
 
+      {/* For Candidates + For Employers */}
+      <section className="py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* For Candidates */}
+            <div ref={addRevealEl} className="rounded-2xl bg-white/5 border border-white/10 p-8">
+              <div className="flex items-center gap-2 text-cyan-300 mb-4">
+                <User className="w-5 h-5" />
+                <span className="text-sm uppercase tracking-wide font-medium">For Candidates</span>
+              </div>
+              <h3 className="text-2xl font-semibold mb-3">
+                Get seen. Get matched. Get hired.
+              </h3>
+              <p className="text-neutral-300 mb-6">
+                You shouldn&apos;t need connections to get a fair shot. Create a profile free.
+                Get seen by {employerCount > 0 ? employerCount.toLocaleString() + "+" : ""} employers on the island.
+                Get introduced directly — no recruiter middleman.
+              </p>
+              <div className="space-y-3 mb-6">
+                <div className="flex items-start gap-2 text-sm text-neutral-300">
+                  <CheckCircle2 className="w-4 h-4 text-cyan-300 mt-0.5 flex-shrink-0" />
+                  <span><span className="text-white font-medium">Free forever.</span> Create your profile, get matched, get introduced. No cost to you.</span>
+                </div>
+                <div className="flex items-start gap-2 text-sm text-neutral-300">
+                  <CheckCircle2 className="w-4 h-4 text-cyan-300 mt-0.5 flex-shrink-0" />
+                  <span><span className="text-white font-medium">Get seen by every employer.</span> Not just the ones using one recruiter. Everyone.</span>
+                </div>
+                <div className="flex items-start gap-2 text-sm text-neutral-300">
+                  <CheckCircle2 className="w-4 h-4 text-cyan-300 mt-0.5 flex-shrink-0" />
+                  <span><span className="text-white font-medium">Direct introductions.</span> Employers contact you directly. Build real relationships.</span>
+                </div>
+              </div>
+              <Link href="/profile/setup">
+                <Button className="gap-2">
+                  <User className="w-4 h-4" /> Create Your Free Profile <ChevronRight className="w-4 h-4" />
+                </Button>
+              </Link>
+            </div>
+
+            {/* For Employers */}
+            <div ref={addRevealEl} className="rounded-2xl bg-white/5 border border-white/10 p-8">
+              <div className="flex items-center gap-2 text-emerald-300 mb-4">
+                <Building2 className="w-5 h-5" />
+                <span className="text-sm uppercase tracking-wide font-medium">For Employers</span>
+              </div>
+              <h3 className="text-2xl font-semibold mb-3">
+                Hire Caymanian talent. Skip the recruiter.
+              </h3>
+              <p className="text-neutral-300 mb-6">
+                Stop paying 15-25% per hire. Search Caymanian talent directly.
+                Send introductions. Build relationships. Hire faster. Stay compliant. One monthly fee.
+              </p>
+              <div className="space-y-3 mb-6">
+                <div className="flex items-start gap-2 text-sm text-neutral-300">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-300 mt-0.5 flex-shrink-0" />
+                  <span><span className="text-white font-medium">Save money.</span> $299/month replaces 15-25% per-hire fees. Hiring 10 people/year? Save CI$90-150K.</span>
+                </div>
+                <div className="flex items-start gap-2 text-sm text-neutral-300">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-300 mt-0.5 flex-shrink-0" />
+                  <span><span className="text-white font-medium">Save time.</span> Search talent by skill, education, experience, location. Direct introductions. No recruiter delays.</span>
+                </div>
+                <div className="flex items-start gap-2 text-sm text-neutral-300">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-300 mt-0.5 flex-shrink-0" />
+                  <span><span className="text-white font-medium">Stay compliant.</span> Timestamped records. Structured feedback. One-click reports. Proof you tried.</span>
+                </div>
+              </div>
+              <Link href="/talent">
+                <Button variant="secondary" className="gap-2">
+                  <Users className="w-4 h-4" /> Search Talent <ChevronRight className="w-4 h-4" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Jobs CTA Section */}
       <section id="jobs" className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -466,25 +554,26 @@ export default function HomeClient({
                 <span className="text-cyan-300">{jobCount}+ active jobs</span>?
               </h3>
               <p className="text-neutral-300 text-lg mb-8 max-w-2xl mx-auto">
-                Browse real-time job postings from WORC, filter by location,
+                Browse real-time job postings, filter by location,
                 salary, and industry. Find your next opportunity in Cayman.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/jobs">
+                <Link href="/careers">
                   <Button size="lg" className="gap-2">
                     <Search className="w-4 h-4" />
                     Browse All Jobs
                   </Button>
                 </Link>
-                <Button
-                  size="lg"
-                  variant="secondary"
-                  className="gap-2"
-                  onClick={() => setOnboardingOpen(true)}
-                >
-                  <Sparkles className="w-4 h-4" />
-                  Get Personalized Matches
-                </Button>
+                <Link href="/profile/setup">
+                  <Button
+                    size="lg"
+                    variant="secondary"
+                    className="gap-2"
+                  >
+                    <User className="w-4 h-4" />
+                    Create Your Free Profile
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>
@@ -506,55 +595,55 @@ export default function HomeClient({
             <AccordionItem value="item-1">
               <AccordionTrigger className="px-6">What is careers.ky?</AccordionTrigger>
               <AccordionContent className="px-6 text-neutral-300">
-                careers.ky is a comprehensive job market platform for the Cayman Islands, providing real-time insights into active job postings, salary data, and industry trends. We pull live data from WORC (Workforce Opportunities & Residency Cayman) to help you make informed career decisions with three powerful tools: Career Mapper for lifestyle-first job matching, Career Tracks for exploring industries and salary ranges, and Live Search for browsing all active postings.
+                careers.ky is a Caymanian-First Careers Platform that makes hiring talent visible, accessible and fair. For candidates, it&apos;s a free way to create a profile, get matched to roles, and get introduced directly to employers. For employers, it replaces recruiters — search Caymanian talent directly, send introductions, and stay compliant. One monthly fee instead of 15-25% per hire.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
-              <AccordionTrigger className="px-6">Where does your job data come from?</AccordionTrigger>
+              <AccordionTrigger className="px-6">Is it free for candidates?</AccordionTrigger>
               <AccordionContent className="px-6 text-neutral-300">
-                All job postings, salary information, and market data are sourced directly from WORC (my.egov.ky), the official government portal for job opportunities in the Cayman Islands. Our data is updated daily to ensure you have access to the most current job market information available.
+                Yes, completely free. Create your profile, get matched to roles, get introduced to employers — all at no cost. We make money from employer subscriptions, not from candidates. You&apos;ll never pay a fee.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
-              <AccordionTrigger className="px-6">How does the Career Mapper work?</AccordionTrigger>
+              <AccordionTrigger className="px-6">How do talent profiles work?</AccordionTrigger>
               <AccordionContent className="px-6 text-neutral-300">
-                Career Mapper is our lifestyle-first job matching tool. It asks you about your priorities—like work-life balance, commute preferences, salary expectations, and personal interests—then matches you with career paths and job opportunities that align with your lifestyle goals, not just your skills.
+                Create a profile with your education, experience, skills, and career interests. When you opt in to be discoverable, employers can find you through talent search and request an introduction — but your name and contact details stay hidden until you choose to accept. It&apos;s a double opt-in system designed to protect your privacy while connecting you with relevant opportunities.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-4">
-              <AccordionTrigger className="px-6">What's the difference between Career Tracks and Live Search?</AccordionTrigger>
+              <AccordionTrigger className="px-6">How do introductions work?</AccordionTrigger>
               <AccordionContent className="px-6 text-neutral-300">
-                Career Tracks lets you explore the job market by industry category, showing you aggregated data like average salaries, number of active jobs, and career pathways within each sector. Live Search is a real-time job board where you can browse, filter, and search through all active job postings with detailed information about each role.
+                When an employer finds a candidate who matches their needs, they send an introduction request. The candidate sees the employer and role details, then chooses to accept or decline. If accepted, both parties can communicate directly. No recruiter middleman. No commission. Just a direct connection.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-5">
-              <AccordionTrigger className="px-6">Can I apply to jobs directly through careers.ky?</AccordionTrigger>
+              <AccordionTrigger className="px-6">How much does it cost for employers?</AccordionTrigger>
               <AccordionContent className="px-6 text-neutral-300">
-                careers.ky is a job discovery and research platform. When you find a position you're interested in, we'll direct you to the official WORC portal or the employer's application page where you can submit your application.
+                careers.ky Pro is $299/month — that replaces recruiter fees of 15-25% per hire (CI$10-16K per person). A firm hiring 10 people a year saves CI$90-150K. Enterprise is $799/month with unlimited reports, API access, and advanced analytics.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-6">
-              <AccordionTrigger className="px-6">Who can use this platform?</AccordionTrigger>
+              <AccordionTrigger className="px-6">Where does the job data come from?</AccordionTrigger>
               <AccordionContent className="px-6 text-neutral-300">
-                careers.ky is designed for anyone interested in working in the Cayman Islands—Caymanians, residents, and international talent exploring opportunities.
+                Job postings are synced daily from WORC (my.egov.ky), the official government portal for job opportunities in the Cayman Islands. You&apos;re seeing current, active postings from official government sources.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-7">
-              <AccordionTrigger className="px-6">How often is the job data updated?</AccordionTrigger>
+              <AccordionTrigger className="px-6">How does careers.ky help with compliance?</AccordionTrigger>
               <AccordionContent className="px-6 text-neutral-300">
-                Our job listings are synced daily with the WORC database to ensure you're seeing current, active postings. The job counts, salary statistics, and industry trends you see on the platform reflect the latest available data from official government sources.
+                Every interaction on the platform creates a timestamped record. When employers search talent, send introductions, and provide feedback, it&apos;s all documented automatically. One-click compliance reports give employers proof they genuinely considered Caymanian candidates — and candidates know they were fairly evaluated.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-8">
-              <AccordionTrigger className="px-6">What types of jobs are listed?</AccordionTrigger>
+              <AccordionTrigger className="px-6">Who can use this platform?</AccordionTrigger>
               <AccordionContent className="px-6 text-neutral-300">
-                We list all types of employment opportunities available through WORC, including full-time, part-time, temporary positions, internships, and apprenticeships across all major industries in the Cayman Islands.
+                careers.ky is built for Caymanians first — young professionals, career changers, people re-entering the workforce. Employers of all sizes use it to find local talent. We serve law firms, hospitality, financial services, government, construction, retail — anyone hiring in Cayman.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-9">
-              <AccordionTrigger className="px-6">What are talent profiles and how does talent search work?</AccordionTrigger>
+              <AccordionTrigger className="px-6">What makes this different from a recruiter?</AccordionTrigger>
               <AccordionContent className="px-6 text-neutral-300">
-                Job seekers can create a talent profile with their career interests, skills, education, and experience. When you opt in to be discoverable, employers can find you through talent search and request an introduction — but your name and contact details stay hidden until you choose to accept. It's a double opt-in system designed to protect your privacy while connecting you with relevant opportunities.
+                Recruiters charge 15-25% of first-year salary per hire and control the relationship between employer and candidate. careers.ky gives employers direct access to Caymanian talent for a flat monthly fee. You search, you introduce, you hire — directly. No per-hire fees. No middleman. Plus you get compliance automation built in.
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -571,10 +660,10 @@ export default function HomeClient({
             <div className="rounded-[20px] bg-neutral-900/60 border border-white/10 p-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-3">
-                  <div className="text-sm text-neutral-400">For Job Seekers</div>
-                  <div className="text-xl font-semibold">Looking for work?</div>
+                  <div className="text-sm text-neutral-400">For Candidates</div>
+                  <div className="text-xl font-semibold">Your talent. Your opportunity. Fair shot.</div>
                   <p className="text-neutral-300 text-sm">
-                    Create your talent profile and let Cayman employers find you.
+                    Create your profile free and let every employer on the island find you. No recruiter. No commission. Just opportunity.
                   </p>
                   <Link href="/profile/setup">
                     <Button className="gap-2 mt-2">
@@ -584,9 +673,9 @@ export default function HomeClient({
                 </div>
                 <div className="space-y-3 border-t pt-4 md:border-t-0 md:pt-0 md:border-l md:border-white/10 md:pl-6">
                   <div className="text-sm text-neutral-400">For Employers</div>
-                  <div className="text-xl font-semibold">Hiring in Cayman?</div>
+                  <div className="text-xl font-semibold">Find Caymanian talent. Skip the recruiter.</div>
                   <p className="text-neutral-300 text-sm">
-                    Search our local talent pool and request introductions.
+                    Search local talent directly. Send introductions. One monthly fee replaces 15-25% per-hire recruiter costs.
                   </p>
                   <Link href="/talent">
                     <Button variant="secondary" className="gap-2 mt-2">

@@ -5,6 +5,7 @@ import {
   createIntroduction, createNotification, respondToIntroduction,
   getIntroductionsForCandidate, getIntroductionsForEmployer, getIntroductionById,
   checkEmployerForJob, createCandidateInterest, respondToIntroductionAsEmployer,
+  createJobInterest, getJobPostingById,
 } from "@/lib/data";
 
 export async function POST(request) {
@@ -17,30 +18,42 @@ export async function POST(request) {
     // --- Candidate Express Interest ---
     if (session?.candidateId && body.jobId && !body.candidateId && !body.candidateIds) {
       const employer = await checkEmployerForJob(body.jobId);
-      if (!employer) {
-        return NextResponse.json({ error: "Employer not found for this job" }, { status: 404 });
+
+      if (employer) {
+        // Employer is on platform — create a real introduction
+        const intro = await createCandidateInterest(
+          session.candidateId, employer.employerAccountId, body.jobId, body.message
+        );
+        if (!intro) {
+          return NextResponse.json({ error: "You have already expressed interest in this job" }, { status: 409 });
+        }
+
+        await createNotification(
+          "employer_account", employer.employerAccountId,
+          "Candidate Interest",
+          `A candidate has expressed interest in your posting.`,
+          "/employer/dashboard"
+        );
+
+        await sql`
+          INSERT INTO activity_log (employer_account_id, action, details, candidate_id, introduction_id, job_id)
+          VALUES (${employer.employerAccountId}, 'interest_expressed', ${JSON.stringify({ message: !!body.message })}, ${session.candidateId}, ${intro.id}, ${body.jobId})
+        `;
+
+        return NextResponse.json({ success: true, introduction: intro });
+      } else {
+        // Employer NOT on platform — store as lead gen interest
+        const jobData = await getJobPostingById(body.jobId);
+        const interest = await createJobInterest(
+          session.candidateId, body.jobId,
+          jobData?.Employer || null, jobData?.cTitle || null, body.message
+        );
+        if (!interest) {
+          return NextResponse.json({ error: "You have already expressed interest in this job" }, { status: 409 });
+        }
+
+        return NextResponse.json({ success: true, interest });
       }
-
-      const intro = await createCandidateInterest(
-        session.candidateId, employer.employerAccountId, body.jobId, body.message
-      );
-      if (!intro) {
-        return NextResponse.json({ error: "You have already expressed interest in this job" }, { status: 409 });
-      }
-
-      await createNotification(
-        "employer_account", employer.employerAccountId,
-        "Candidate Interest",
-        `A candidate has expressed interest in your posting.`,
-        "/employer/dashboard"
-      );
-
-      await sql`
-        INSERT INTO activity_log (employer_account_id, action, details, candidate_id, introduction_id, job_id)
-        VALUES (${employer.employerAccountId}, 'interest_expressed', ${JSON.stringify({ message: !!body.message })}, ${session.candidateId}, ${intro.id}, ${body.jobId})
-      `;
-
-      return NextResponse.json({ success: true, introduction: intro });
     }
 
     // --- Employer-initiated introduction ---

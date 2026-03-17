@@ -26,6 +26,7 @@ export default function CareerTracksClient({
   workTypes: wtObj,
   eduTypes: etObj,
   expTypes: exObj,
+  embedded = false,
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -150,20 +151,8 @@ export default function CareerTracksClient({
     </div>
   );
 
-  return (
-    <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
-      <div
-        id="bg-gradient"
-        aria-hidden
-        className="fixed inset-0 -z-10 bg-[length:200%_200%]"
-        style={{
-          backgroundImage:
-            "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)",
-          backgroundPosition: "0% 50%",
-        }}
-      />
-
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+  const content = (
+    <div className={embedded ? "" : "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8"}>
         <div className="mb-8">
           <h1 className="text-4xl font-semibold tracking-tight mb-4">
             Explore <span className="text-cyan-300">Career Opportunities</span> in Cayman
@@ -418,8 +407,24 @@ export default function CareerTracksClient({
             })}
           </div>
         )}
-      </div>
+    </div>
+  );
 
+  if (embedded) return content;
+
+  return (
+    <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
+      <div
+        id="bg-gradient"
+        aria-hidden
+        className="fixed inset-0 -z-10 bg-[length:200%_200%]"
+        style={{
+          backgroundImage:
+            "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)",
+          backgroundPosition: "0% 50%",
+        }}
+      />
+      {content}
     </div>
   );
 }

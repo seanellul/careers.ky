@@ -116,7 +116,7 @@ function DirectionBadge({ initiatedBy }) {
   return <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30 text-xs"><Building2 className="w-3 h-3 mr-1" /> Employer reached out</Badge>;
 }
 
-export default function IntroductionsClient({ introductions: initialIntros }) {
+export default function IntroductionsClient({ introductions: initialIntros, embedded = false }) {
   const [introductions, setIntroductions] = useState(initialIntros);
   const [responding, setResponding] = useState(null);
   const [expandedMessages, setExpandedMessages] = useState({});
@@ -148,11 +148,8 @@ export default function IntroductionsClient({ introductions: initialIntros }) {
   const pending = introductions.filter(i => i.status === "pending");
   const responded = introductions.filter(i => i.status !== "pending");
 
-  return (
-    <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
-      <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={{ backgroundImage: "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)", backgroundPosition: "0% 50%" }} />
-
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+  const content = (
+    <div className={embedded ? "" : "mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8 md:py-12"}>
         <div className="mb-8">
           <h1 className="text-3xl font-semibold tracking-tight mb-2">
             <span className="text-cyan-300">Introductions</span>
@@ -325,8 +322,15 @@ export default function IntroductionsClient({ introductions: initialIntros }) {
             </div>
           </div>
         )}
-      </div>
+    </div>
+  );
 
+  if (embedded) return content;
+
+  return (
+    <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
+      <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={{ backgroundImage: "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)", backgroundPosition: "0% 50%" }} />
+      {content}
     </div>
   );
 }

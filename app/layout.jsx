@@ -8,15 +8,15 @@ import DevToolbar from "@/components/DevToolbar";
 
 export const metadata = {
   title: {
-    default: "careers.ky — Live Job Market Data for Cayman",
+    default: "careers.ky — A Caymanian-First Careers Platform",
     template: "%s | careers.ky",
   },
   description:
-    "Access live job postings, salary data, industry trends, and career planning tools. Built with real WORC data to help Caymanians make informed career decisions.",
+    "Making hiring talent visible, accessible and fair. Find Caymanian talent directly, get matched to roles, and skip the recruiter.",
   openGraph: {
-    title: "careers.ky — Live Job Market Data for Cayman",
+    title: "careers.ky — A Caymanian-First Careers Platform",
     description:
-      "Access live job postings, salary data, industry trends, and career planning tools for the Cayman Islands.",
+      "Making hiring talent visible, accessible and fair. Find Caymanian talent directly, get matched to roles, and skip the recruiter.",
     url: "https://careers.ky",
     siteName: "careers.ky",
     locale: "en_KY",
@@ -24,9 +24,9 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "careers.ky — Live Job Market Data for Cayman",
+    title: "careers.ky — A Caymanian-First Careers Platform",
     description:
-      "Access live job postings, salary data, industry trends, and career planning tools for the Cayman Islands.",
+      "Making hiring talent visible, accessible and fair. Find Caymanian talent directly, get matched to roles, and skip the recruiter.",
   },
   robots: {
     index: true,

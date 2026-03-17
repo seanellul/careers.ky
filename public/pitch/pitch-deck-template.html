@@ -63,10 +63,10 @@ td{color:var(--white)}
 <section class="slide" id="s1">
 <div class="slide-inner">
 <div class="logo">careers<span>.ky</span></div>
-<h1>You Posted <span class="accent">{{JOB_COUNT}} Jobs</span>.<br>Then WORC Changed the Rules.</h1>
-<p class="sub">The 2025 immigration changes hit every employer in Cayman.<br>We automated the solution.</p>
+<h1><span class="accent">{{SEGMENT_HEADLINE}}</span></h1>
+<p class="sub">{{SEGMENT_HOOK}}<br>One platform. One monthly fee. No recruiter.</p>
 <div style="margin-top:2rem">
-<a href="#s2" class="btn btn-primary">See What Changed ↓</a>
+<a href="#s2" class="btn btn-primary">See How It Works ↓</a>
 </div>
 </div>
 <div class="slide-num">1 / 9</div>
@@ -75,17 +75,17 @@ td{color:var(--white)}
 <!-- SLIDE 2: The Problem -->
 <section class="slide" id="s2">
 <div class="slide-inner">
-<h2>November 2025: WORC Changed the Rules</h2>
-<p>Every employer must now comply with new requirements for <em>every</em> work permit:</p>
+<h2>The Hidden Cost of Hiring in Cayman</h2>
+<p>Every hire goes through the same broken process:</p>
 <div class="highlight">
 <ul>
-<li class="yes">Advertise jobs for 14+ days — you do this</li>
-<li class="no">Provide structured feedback on every Caymanian applicant — most don't</li>
-<li class="no">Document why Caymanians weren't hired — no system for this</li>
-<li class="no">Submit compliance docs with permit applications — time-consuming, error-prone</li>
+<li class="no">Recruiters charge 15-25% of first-year salary — CI$10-16K per person</li>
+<li class="no">Caymanian talent is invisible — no central place to search</li>
+<li class="no">Employers can't find local candidates without a recruiter</li>
+<li class="no">The process is slow, expensive, and opaque</li>
 </ul>
 </div>
-<p><span class="orange">The result?</span> Denied work permits. Fines. Frozen hiring. Wasted time.</p>
+<p><span class="orange">The result?</span> Money wasted on recruiters. Caymanian talent overlooked. Hiring takes too long.</p>
 </div>
 <div class="slide-num">2 / 9</div>
 </section>
@@ -93,22 +93,23 @@ td{color:var(--white)}
 <!-- SLIDE 3: Current State -->
 <section class="slide" id="s3">
 <div class="slide-inner">
-<h2>What {{COMPANY_NAME}} Is Doing Now</h2>
-<p>Be honest — does this look familiar?</p>
+<h2>What {{COMPANY_NAME}} Is Spending</h2>
+<p>Here's the real cost of using recruiters:</p>
 <div class="stat-row">
-<div class="stat"><div class="num">📧→📊→📝</div><div class="label">Email → Spreadsheet → Word Doc → Submit</div></div>
+<div class="stat"><div class="num">{{HIRING_VOLUME}}</div><div class="label">Hires per year</div></div>
+<div class="stat"><div class="num">15-25%</div><div class="label">Recruiter fee per hire</div></div>
 </div>
 <div class="highlight">
 <ul>
-<li class="no">Missing applicants in the tracking</li>
-<li class="no">Inconsistent feedback from hiring managers</li>
-<li class="no">Hours of admin time per permit application</li>
-<li class="no">One missed Caymanian = permit denied = hiring frozen</li>
+<li class="no">Annual recruiter cost: <strong>CI${{RECRUITER_COST_LOW}}–{{RECRUITER_COST_HIGH}}</strong></li>
+<li class="no">Hours spent coordinating with recruiters</li>
+<li class="no">Caymanian candidates you're not seeing</li>
+<li class="no">Talent that goes to competitors who find them first</li>
 </ul>
 </div>
 <div class="stat-row">
-<div class="stat"><div class="num">4–6 hrs</div><div class="label">Per work permit application</div></div>
-<div class="stat"><div class="num orange">$25K+</div><div class="label">Cost of one denied permit</div></div>
+<div class="stat"><div class="num orange">CI${{RECRUITER_COST_LOW}}+</div><div class="label">Spent on recruiters per year</div></div>
+<div class="stat"><div class="num">0</div><div class="label">Direct access to local talent</div></div>
 </div>
 </div>
 <div class="slide-num">3 / 9</div>
@@ -118,25 +119,25 @@ td{color:var(--white)}
 <section class="slide" id="s4">
 <div class="slide-inner">
 <h2>What <span class="accent">careers.ky</span> Does</h2>
-<p>Compliance automation built for Cayman employers.</p>
+<p>Replace your recruiter. Find Caymanian talent directly.</p>
 <div class="steps">
 <div class="step">
+<div class="num">🔍</div>
+<h3>Search Talent</h3>
+<p style="font-size:.95rem;color:var(--gray)">Search Caymanian candidates by skill, education, experience, and location. See who's available now.</p>
+</div>
+<div class="step">
+<div class="num">📨</div>
+<h3>Send Introductions</h3>
+<p style="font-size:.95rem;color:var(--gray)">Contact candidates directly. No recruiter middleman. No per-hire fee. Build real relationships.</p>
+</div>
+<div class="step">
 <div class="num">📋</div>
-<h3>Structured Feedback</h3>
-<p style="font-size:.95rem;color:var(--gray)">Automated collection from your hiring managers. No more chasing emails.</p>
-</div>
-<div class="step">
-<div class="num">📄</div>
-<h3>One-Click Reports</h3>
-<p style="font-size:.95rem;color:var(--gray)">Legally formatted Compliance Reports — PDF, ready to submit with permits.</p>
-</div>
-<div class="step">
-<div class="num">📊</div>
-<h3>Full Audit Trail</h3>
-<p style="font-size:.95rem;color:var(--gray)">Applicants, interviews, outcomes — all timestamped. Audit-ready.</p>
+<h3>Stay Compliant</h3>
+<p style="font-size:.95rem;color:var(--gray)">Timestamped records, structured feedback, one-click compliance reports. Proof you tried — automatically.</p>
 </div>
 </div>
-<p><span class="accent">Result:</span> Permits approved faster. Hiring unblocked. Zero guesswork.</p>
+<p><span class="accent">Result:</span> Better hires. Lower cost. Full compliance. No recruiter.</p>
 </div>
 <div class="slide-num">4 / 9</div>
 </section>
@@ -146,14 +147,14 @@ td{color:var(--white)}
 <div class="slide-inner">
 <h2>The ROI for <span class="accent">{{COMPANY_NAME}}</span></h2>
 <div class="stat-row">
-<div class="stat"><div class="num">4–6 hrs</div><div class="label">Saved per permit application</div></div>
-<div class="stat"><div class="num">98%</div><div class="label">Cheaper than recruiters</div></div>
-<div class="stat"><div class="num">$25K+</div><div class="label">Saved per avoided denial</div></div>
+<div class="stat"><div class="num">90%+</div><div class="label">Cheaper than recruiters</div></div>
+<div class="stat"><div class="num">Direct</div><div class="label">Access to local talent</div></div>
+<div class="stat"><div class="num">Built-in</div><div class="label">Compliance automation</div></div>
 </div>
 <div class="highlight">
-<p style="color:var(--white);font-weight:600;margin-bottom:.75rem">Your numbers ({{HIRING_VOLUME}} work permits/year):</p>
+<p style="color:var(--white);font-weight:600;margin-bottom:.75rem">Your numbers ({{HIRING_VOLUME}} hires/year):</p>
 <ul>
-<li class="no">Traditional recruiter: <strong>CI${{RECRUITER_COST_LOW}}–{{RECRUITER_COST_HIGH}}</strong></li>
+<li class="no">Traditional recruiter: <strong>CI${{RECRUITER_COST_LOW}}–{{RECRUITER_COST_HIGH}}/year</strong></li>
 <li class="yes">careers.ky: <strong>CI${{CKY_ANNUAL_COST}}/year</strong></li>
 <li class="yes">Your savings: <strong class="accent">CI${{SAVINGS_LOW}}–{{SAVINGS_HIGH}}/year</strong></li>
 </ul>
@@ -165,25 +166,25 @@ td{color:var(--white)}
 <!-- SLIDE 6: How It Works -->
 <section class="slide" id="s6">
 <div class="slide-inner">
-<h2>Three Steps. Same Day.</h2>
+<h2>Three Steps. Start Today.</h2>
 <div class="steps">
 <div class="step">
 <div class="num">1</div>
-<h3>Post a Job</h3>
-<p style="font-size:.95rem;color:var(--gray)">You already do this on WORC. Nothing changes.</p>
+<h3>Search Talent</h3>
+<p style="font-size:.95rem;color:var(--gray)">Browse Caymanian candidates by skill, education, experience. Find your match in minutes.</p>
 </div>
 <div class="step">
 <div class="num">2</div>
-<h3>Collect Feedback</h3>
-<p style="font-size:.95rem;color:var(--gray)">Your hiring team fills in structured feedback. 2 minutes per candidate.</p>
+<h3>Send Introductions</h3>
+<p style="font-size:.95rem;color:var(--gray)">Contact candidates directly. They accept or decline. No recruiter delays.</p>
 </div>
 <div class="step">
 <div class="num">3</div>
-<h3>Generate Report</h3>
-<p style="font-size:.95rem;color:var(--gray)">One click → Compliance Report ready to submit with your permit application.</p>
+<h3>Hire Directly</h3>
+<p style="font-size:.95rem;color:var(--gray)">Build the relationship. Make the hire. Compliance records generated automatically.</p>
 </div>
 </div>
-<p style="margin-top:1rem"><span class="accent">Timeline:</span> Same day you need it. No delays. No back-and-forth.</p>
+<p style="margin-top:1rem"><span class="accent">Timeline:</span> Start searching talent today. No setup delays.</p>
 </div>
 <div class="slide-num">6 / 9</div>
 </section>
@@ -197,8 +198,8 @@ td{color:var(--white)}
 <h3>Pro</h3>
 <div class="price">$299<span>/month</span></div>
 <ul>
-<li>Talent search & intro requests</li>
-<li>Basic compliance automation</li>
+<li>Talent search & direct introductions</li>
+<li>Match alerts for new candidates</li>
 <li>5 compliance reports/month</li>
 <li>Email support</li>
 </ul>
@@ -209,7 +210,7 @@ td{color:var(--white)}
 <div class="price">$799<span>/month</span></div>
 <ul>
 <li>Everything in Pro</li>
-<li>Unlimited compliance reports</li>
+<li>Unlimited introductions & reports</li>
 <li>API access & integrations</li>
 <li>Priority support</li>
 <li>Advanced analytics dashboard</li>
@@ -217,7 +218,7 @@ td{color:var(--white)}
 <a href="#s9" class="btn btn-primary" style="margin-top:1rem;display:block;text-align:center">Start Free Trial</a>
 </div>
 </div>
-<p style="font-size:.95rem;color:var(--gray);margin-top:1rem">💡 One denied permit pays for <strong>12 months</strong> of Enterprise.</p>
+<p style="font-size:.95rem;color:var(--gray);margin-top:1rem">💡 One recruiter hire costs more than <strong>12 months</strong> of Pro.</p>
 </div>
 <div class="slide-num">7 / 9</div>
 </section>
@@ -230,8 +231,9 @@ td{color:var(--white)}
 <thead><tr><th></th><th>Traditional Recruiter</th><th>Pro</th><th class="accent">Enterprise</th></tr></thead>
 <tbody>
 <tr><td>Annual Cost</td><td>CI${{RECRUITER_COST_LOW}}–{{RECRUITER_COST_HIGH}}</td><td>CI$3,588</td><td class="winner">CI$9,588</td></tr>
+<tr><td>Talent Pool Access</td><td>Their network only</td><td>All registered Caymanians</td><td class="winner">All registered Caymanians</td></tr>
+<tr><td>Direct Introductions</td><td>Recruiter controls</td><td>You send directly</td><td class="winner">Unlimited</td></tr>
 <tr><td>Compliance Reports</td><td>Not included</td><td>5/month</td><td class="winner">Unlimited</td></tr>
-<tr><td>Time per Permit</td><td>4–6 hours</td><td>~30 min</td><td class="winner">~30 min</td></tr>
 <tr><td>Audit Trail</td><td>❌</td><td>✓</td><td class="winner">✓ Advanced</td></tr>
 <tr><td style="font-weight:700">Your Savings</td><td>—</td><td style="color:var(--accent);font-weight:700">CI${{SAVINGS_PRO}}</td><td style="color:var(--accent);font-weight:700" class="winner">CI${{SAVINGS_ENT}}</td></tr>
 </tbody>
@@ -244,14 +246,14 @@ td{color:var(--white)}
 <section class="slide" id="s9">
 <div class="slide-inner">
 <div class="logo">careers<span>.ky</span></div>
-<h1>Ready to Fix Compliance<br>at <span class="accent">{{COMPANY_NAME}}</span>?</h1>
-<p class="sub">Join {{EMPLOYER_COUNT}} Cayman employers already in the system.<br>Get your first Compliance Report today.</p>
+<h1>Ready to hire smarter<br>at <span class="accent">{{COMPANY_NAME}}</span>?</h1>
+<p class="sub">Join {{EMPLOYER_COUNT}} Cayman employers already in the system.<br>Find Caymanian talent. Skip the recruiter.</p>
 <div style="margin-top:2rem">
-<a href="https://careers.ky/trial?company={{COMPANY_SLUG}}" class="btn btn-primary">Start Your Free Trial</a>
+<a href="https://careers.ky/employer/setup?ref=pitch&company={{COMPANY_SLUG}}" class="btn btn-primary">Start Your Free Trial</a>
 <a href="https://careers.ky/demo?company={{COMPANY_SLUG}}" class="btn btn-secondary">Schedule a 15-min Demo</a>
 </div>
 <div style="margin-top:1rem">
-<a href="https://careers.ky/strategy" class="btn btn-tertiary">Learn More →</a>
+<a href="https://careers.ky/about" class="btn btn-tertiary">Learn More →</a>
 </div>
 </div>
 <div class="slide-num">9 / 9</div>

@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Search, Building2, TrendingUp, DollarSign } from "lucide-react";
 
-export default function EmployerListClient({ employers }) {
+export default function EmployerListClient({ employers, embedded = false }) {
   const [q, setQ] = useState("");
   const [showActive, setShowActive] = useState(false);
   const [sortBy, setSortBy] = useState("active");
@@ -32,11 +32,8 @@ export default function EmployerListClient({ employers }) {
 
   const totalActive = employers.filter(e => Number(e.active_postings) > 0).length;
 
-  return (
-    <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
-      <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={{ backgroundImage: "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)", backgroundPosition: "0% 50%" }} />
-
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+  const content = (
+    <div className={embedded ? "" : "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 md:py-12"}>
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-4">
             Cayman <span className="text-cyan-300">Employers</span>
@@ -103,8 +100,15 @@ export default function EmployerListClient({ employers }) {
             <Button variant="secondary" disabled={page === totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))}>Next</Button>
           </div>
         </div>
-      </div>
+    </div>
+  );
 
+  if (embedded) return content;
+
+  return (
+    <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
+      <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={{ backgroundImage: "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)", backgroundPosition: "0% 50%" }} />
+      {content}
     </div>
   );
 }

@@ -22,6 +22,7 @@ export default function ProfileSetupClient({ candidate, eduTypes: etObj, expType
     name: candidate.name || "",
     isCaymanian: candidate.is_caymanian || false,
     bio: candidate.bio || "",
+    headline: candidate.headline || "",
     educationCode: candidate.education_code || "",
     experienceCode: candidate.experience_code || "",
     locationCode: candidate.location_code || "",
@@ -163,6 +164,11 @@ export default function ProfileSetupClient({ candidate, eduTypes: etObj, expType
               <div>
                 <label className="text-sm font-medium mb-2 block">Full Name</label>
                 <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Your full name" className="bg-white/5 border-white/10" />
+              </div>
+              <div>
+                <label className="text-sm font-medium mb-2 block">Headline (optional)</label>
+                <Input value={form.headline} onChange={(e) => setForm({ ...form, headline: e.target.value.slice(0, 200) })} placeholder="e.g. Experienced accountant seeking opportunities in Cayman" className="bg-white/5 border-white/10" maxLength={200} />
+                <div className="text-xs text-neutral-500 mt-1">A short tagline that appears on your profile</div>
               </div>
               <div>
                 <label className="text-sm font-medium mb-2 block">Brief Bio (optional)</label>

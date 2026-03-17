@@ -15,7 +15,7 @@ export default function Footer() {
             </div>
             <div>
               <div className="font-medium text-neutral-200">careers.ky</div>
-              <div className="text-xs">Live Job Market Data for Caymanians</div>
+              <div className="text-xs">A Caymanian-First Careers Platform</div>
             </div>
           </div>
 
@@ -25,7 +25,7 @@ export default function Footer() {
               <div className="flex flex-col gap-2">
                 <Link href="/career-tracks" className="hover:text-neutral-200">Career Tracks</Link>
                 <Link href="/jobs" className="hover:text-neutral-200">Live Search</Link>
-                <Link href="/" className="hover:text-neutral-200">Career Mapper</Link>
+                <Link href="/profile/setup" className="hover:text-neutral-200">Create Profile</Link>
               </div>
             </div>
             <div>
@@ -33,19 +33,18 @@ export default function Footer() {
               <div className="flex flex-col gap-2">
                 <Link href="/employers" className="hover:text-neutral-200">Employer Directory</Link>
                 <Link href="/talent" className="hover:text-neutral-200">Search Talent</Link>
-                <a href="https://my.egov.ky/web/myworc/find-a-job#/" target="_blank" rel="noreferrer" className="hover:text-neutral-200">WORC Portal ↗</a>
               </div>
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
+            <Link href="/about" className="hover:text-neutral-200">About</Link>
             <a href="#faq" className="hover:text-neutral-200">FAQ</a>
           </div>
         </div>
         <div className="mt-6 pt-6 border-t border-white/5 text-xs text-center md:text-left">
           <p>
-            Built with real WORC data. Job postings updated daily from official
-            government sources.
+            Making hiring talent visible, accessible and fair. Job postings synced daily from WORC.
           </p>
         </div>
       </div>

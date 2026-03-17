@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, Users, List, FileText, MessageSquare,
+  LayoutDashboard, Building2, Users, List, FileText, MessageSquare,
   BarChart3, ExternalLink, Menu, X,
 } from "lucide-react";
 
@@ -14,6 +14,7 @@ export default function DashboardSidebar({ employerSlug }) {
 
   const items = [
     { href: "/employer/dashboard", label: "Overview", icon: LayoutDashboard },
+    { href: "/employer/profile", label: "Profile", icon: Building2 },
     { href: "/employer/talent", label: "Talent Search", icon: Users },
     { href: "/employer/shortlists", label: "Shortlists", icon: List },
     { href: "/employer/reports", label: "Reports", icon: FileText, prominent: true },
