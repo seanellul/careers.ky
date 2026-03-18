@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "seed": "node scripts/seed-db.js",
+    "seed-pipeline": "node scripts/seed-pipeline.js",
     "sync-worc": "node scripts/sync-worc.js",
     "migrate": "node scripts/migrate.js",
     "seed-skills": "node scripts/seed-skills.js"

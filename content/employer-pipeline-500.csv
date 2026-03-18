@@ -1,0 +1,501 @@
+rank,name,total_jobs,active_jobs,total_positions,avg_salary,industry
+1,The Ritz Carlton Hotel,163,92,22,52972,Accommodation and Food Service Activities
+2,Khrg Cayman Employer Ltd,136,57,0,0,Accommodation and Food Service Activities
+3,Real Deal Ltd,116,57,0,0,Administrative and Support Service Activities
+4,Foster's Food Fair Ltd.,104,65,10,55292,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+5,Agl Group Ltd T/a Docuplus Agency,102,43,0,0,Professional, Scientfic and Technical Activities
+6,Maplesfs Service Company Limited,89,40,0,0,Financial and Insurance Activities
+7,Handful of Purpose Gardening & Maintenance Ltd T/A A&T Construction and Maintenance Services,88,32,2,42120,Construction
+8,Colin Williams T/a Css Employment Agency,87,49,0,0,Administrative and Support Service Activities
+9,Pyramid Cayman Hotel Services,80,17,0,0,Accommodation and Food Service Activities
+10,Arboretum Services Limited,80,44,7,106429,Professional, Scientfic and Technical Activities
+11,Kirk Market,76,33,35,29813,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+12,Grand Cayman Marriott Beach Resort,76,27,3,60975,Accommodation and Food Service Activities
+13,Hospitality Services Ltd. T/a Hospitality Services Ltd,73,27,0,0,Administrative and Support Service Activities
+14,Maples Group,71,43,7,100400,Professional, Scientfic and Technical Activities
+15,KEMPA HOME INTERNATIONAL LTD T/A KEMPA HOME,69,64,0,0,Arts, Entertainment and Recreation
+16,Cayman Islands Monetary Authority,69,32,3,101294,Financial and Insurance Activities
+17,Steppingstones Recruitment Ltd,68,38,0,0,Administrative and Support Service Activities
+18,Cayman Prep And High School,67,25,0,0,Education
+19,Invenio Global Search,65,38,0,0,Administrative and Support Service Activities
+20,Health City Cayman Islands,64,27,1,30000,Human Health and Social Work Activities
+21,Caribbean Utilities Company Ltd,64,40,3,71278,Electricity, Gas, Steam, and Air Conditioning Supply
+22,Market Street Ltd.,63,13,0,0,Administrative and Support Service Activities
+23,Pb Employee Co Ltd,61,26,0,0,Administrative and Support Service Activities
+24,Walkers,59,32,10,131667,Professional, Scientfic and Technical Activities
+25,ISLAND TASTE GROUP LTD,58,3,0,0,Financial and Insurance Activities
+26,Baraud International Recruitment Consultants Ltd.,58,30,0,0,Administrative and Support Service Activities
+27,Ey Cayman Ltd.t/a Ey,55,47,0,0,Professional, Scientfic and Technical Activities
+28,The Agency Group Ltd,55,17,3,21667,Administrative and Support Service Activities
+29,Expertise Limited,54,26,0,0,Professional, Scientfic and Technical Activities
+30,Maverick Group Ltd. T/a Au Pair,54,16,0,0,Administrative and Support Service Activities
+31,Roper Enterprises Ltd,50,22,1,23400,Administrative and Support Service Activities
+32,Cayman Brac Beach Resort,47,24,0,0,Accommodation and Food Service Activities
+33,Tranel Group Ltd,46,15,1,65000,Construction
+34,Progressive Distributors Ltd.,43,21,7,45135,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+35,Sea Grape Secretarial Service,43,22,4,27118,Professional, Scientfic and Technical Activities
+36,The University College Of The Cayman Islands,42,30,0,0,Education
+37,Hurley's (grand Harbour) Ltd. T/a Hurley's Market Place,42,19,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+38,Iss (cayman) Ltd.,41,18,0,0,Education
+39,Gyro Hut Ltd T/a Al La Kebab,39,23,0,0,Accommodation and Food Service Activities
+40,A. L. Thompson Building Supplies Ltd. T/a A. L. Thompson's,39,24,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+41,Red Sail Sports Cayman Ltd,39,20,13,33800,Transportation and Storage
+42,Pricewaterhousecoopers,38,17,0,0,Professional, Scientfic and Technical Activities
+43,Tortuga Rum Company Limited,38,26,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+44,Ogier,38,27,2,185000,Professional, Scientfic and Technical Activities
+45,Went Global Ltd T/a Fastsigns 1900,38,15,0,0,Arts, Entertainment and Recreation
+46,Geoffrey Dixon T/a Zippy Farm,37,15,0,0,Agriculture, Forestry and Fishing
+47,Blue Cilantro Limited,37,11,5143,20768,Accommodation and Food Service Activities
+48,Teann Lara Bodden T/a Caribcay Construction,37,11,0,0,Construction
+49,Mise En Place Ltd. T/a Mise En Place,35,15,0,0,Accommodation and Food Service Activities
+50,Jefferson Pizza Services Ltd,34,12,13,31243,Accommodation and Food Service Activities
+51,Dart People Ltd. T/a Dart,34,14,0,0,Professional, Scientfic and Technical Activities
+52,Marco T. Duarte-ezekiel T/a Efficient Administrative Assistants,33,12,0,0,Administrative and Support Service Activities
+53,Cellular World Ltd T/a Cellular World Repairs,32,12,0,0,Other Service Activities
+54,Prime Consulting Ltd,32,24,3,26720,Professional, Scientfic and Technical Activities
+55,Associated Industries Ltd. T/a Parker's/scott Fences/ai Wholesale,31,14,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+56,Chester Frederick T/a Cayman Paradise Tours,30,3,0,0,Administrative and Support Service Activities
+57,Ocean Frontiers Ltd.,29,17,1,33003,Administrative and Support Service Activities
+58,Cayman Premix Limited T/a Supermix,29,15,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+59,Faithia Pars T/a D & F Unique Construction,28,10,0,0,Construction
+60,Prosecco Limited,28,20,0,0,Financial and Insurance Activities
+61,Cayman Distributors Limited,28,10,1,28080,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+62,Flowers Restaurateurs (1998) Ltd T/a The Brasserie,27,17,0,0,Accommodation and Food Service Activities
+63,Thompson Resorts,27,15,0,0,Accommodation and Food Service Activities
+64,Kpmg,27,13,0,0,Professional, Scientfic and Technical Activities
+65,The Security Centre Ltd,27,10,1,110000,Administrative and Support Service Activities
+66,Dac Ltd T/a Dac Plumbing & A/c Mechanical,27,8,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+67,Richard Parchment,27,25,0,0,Administrative and Support Service Activities
+68,Advance Fire & Plumbing Ltd.,26,17,0,0,Construction
+69,Orchid Development Ltd,26,12,0,0,Real Estate Activities
+70,Butterfield Bank (cayman) Limited,26,14,0,0,Financial and Insurance Activities
+71,Affinity Recruitment Ltd.,25,14,0,0,Administrative and Support Service Activities
+72,Eurocar (cayman) Ltd.,25,6,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+73,Conyers Dill & Pearman,25,8,3,108000,Professional, Scientfic and Technical Activities
+74,Scott Development Co. Ltd,25,16,0,0,Transportation and Storage
+75,Caybec Resto 1 Ltd.,25,13,0,0,Accommodation and Food Service Activities
+76,Cayman Spirits Company,24,17,0,0,Manufacturing
+77,Deloitte & Touche T/a Deloitte,24,9,0,0,Professional, Scientfic and Technical Activities
+78,Dreamland Investors Limited T/a Property Doctors,24,4,0,0,Administrative and Support Service Activities
+79,Island Naturals Ltd (coffee Shop/restaurant),24,8,0,0,Accommodation and Food Service Activities
+80,Kcb Construction Ltd,24,13,0,0,Construction
+81,Harneys (harney Westwood & Riegels / Harneys Fiduciary (cayman) Limited),24,13,0,0,Professional, Scientfic and Technical Activities
+82,Ricco Construction Ltd T/a Ricco Construction,23,9,0,0,Construction
+83,Campbells,23,9,2,285000,Professional, Scientfic and Technical Activities
+84,The Captain's Bakery (cayman) Limited,23,18,0,0,Manufacturing
+85,Peppers Smokehouse Ltd.,23,10,0,0,Accommodation and Food Service Activities
+86,Pro Stars Ltd T/a Prostars Construction,23,8,0,0,Construction
+87,Carey Olsen Cayman Ltd,23,15,1,225000,Professional, Scientfic and Technical Activities
+88,Warren Greene Ltd.,23,5,0,0,Construction
+89,Dew Point Air Conditioning & Refrigeration Ltd.,23,10,0,0,Construction
+90,Little Cayman Beach Resort,22,11,2,15350,Accommodation and Food Service Activities
+91,Intertrust Holding (cayman) Limited,22,9,0,0,Financial and Insurance Activities
+92,Morritts Properties Cayman Limited T/a Morritts Tortuga,22,15,0,0,Accommodation and Food Service Activities
+93,Icoa Ltd,22,11,0,0,Accommodation and Food Service Activities
+94,Itc International Ltd,22,7,0,0,Construction
+95,The Wellness Centre Ltd,21,9,1,36000,Human Health and Social Work Activities
+96,Eccleston Electric,21,11,0,0,Construction
+97,Build Cayman Ltd,21,6,0,0,Construction
+98,Harmonic Fund Services,21,15,0,0,Financial and Insurance Activities
+99,Angella Thompson,21,12,0,0,Construction
+100,Kjr Group Ltd. T/a Islandwide Distributors,21,6,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+101,Travers Thorp Alberga,20,13,0,0,Professional, Scientfic and Technical Activities
+102,Ak Services Limited,20,5,0,0,Administrative and Support Service Activities
+103,Reliable Industries Ltd,20,10,0,0,Administrative and Support Service Activities
+104,Palm Sunset Ltd,20,11,12,25009,Accommodation and Food Service Activities
+105,Dara Keogh & Greg O'driscoll T/a Grant Thornton,20,4,0,0,Professional, Scientfic and Technical Activities
+106,Delrosa M. Myles T/a Dynasty Construction & Maintenance Services,19,12,0,0,Construction
+107,Mn Ventures Ltd T/a Karoo,19,6,0,0,Accommodation and Food Service Activities
+108,Cayman Aba Ltd.,19,7,0,0,Human Health and Social Work Activities
+109,Seaitch Ltd,19,16,9,22470,Professional, Scientfic and Technical Activities
+110,Nm Ventures Ltd T/a Abacus,19,6,0,0,Accommodation and Food Service Activities
+111,Cayman Airways Ltd.,19,12,9,68974,Transportation and Storage
+112,$mart Group Cayman Ltd T/a Buy $mart,19,13,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+113,Island Bites Ltd.,19,5,2,26910,Accommodation and Food Service Activities
+114,Jacques Scott Group Ltd.,18,10,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+115,Kirkconnell Enterprises Ltd. T/a Kirk Home Centre,18,5,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+116,The Roman Catholic Archbishop Of The Cayman Islands,18,6,0,0,Other Service Activities
+117,R&m Enterprise Holdings Ltd. T/a Indecor Finishing,18,10,0,0,Construction
+118,Cl Flowers & Sons Ltd.,18,12,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+119,Our House Cayman Ltd.,18,9,0,0,Financial and Insurance Activities
+120,Ccmn Ltd. T/a Loco,18,6,0,0,Accommodation and Food Service Activities
+121,Massive Equipment Rentals & Sales Ltd.,18,6,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+122,Owc Hr & Immigration Services Ltd.,18,9,0,0,Professional, Scientfic and Technical Activities
+123,Ana Elizabeth Salgado Madrid T/a Angel Construction Company,18,6,0,0,Construction
+124,Water Authority-cayman,18,11,0,0,Water Supply; Sewerage, Waste Management and Remediation Activities
+125,Richard's Parchment,17,5,1,21598,Administrative and Support Service Activities
+126,Renee Myles T/a Helping Hand Solutions,17,4,0,0,Professional, Scientfic and Technical Activities
+127,Reflections Discount Club Ltd,17,10,5,23400,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+128,The East End Group Ltd. T/a East End Labor Supply,17,8,0,0,Administrative and Support Service Activities
+129,Island Electronics (security & Monitoring) Ltd.,17,13,0,0,Administrative and Support Service Activities
+130,Good Old Days Restaurant Ltd.,17,7,0,0,Accommodation and Food Service Activities
+131,National Cement Ltd.,17,10,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+132,Sandra Jackson T/a Avil Construction,17,13,0,0,Construction
+133,Island Recycling Ltd.,17,8,0,0,Water Supply; Sewerage, Waste Management and Remediation Activities
+134,Wirl Trading Co Ltd T/a Brandsource Home Gallery,17,10,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+135,Rawlinson & Hunter Limited,17,13,1,100000,Financial and Insurance Activities
+136,Cayman Islands Urgent Care; Ltd. T/a Doctors Express,17,5,0,0,Human Health and Social Work Activities
+137,Triple C School,16,6,0,0,Education
+138,Walkers Professional Services,16,7,2,132500,Financial and Insurance Activities
+139,Island Paving (1985) Ltd.,16,4,0,0,Construction
+140,Rodney's Ltd,16,8,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+141,West Bay Hospitality Ltd,16,5,0,0,Accommodation and Food Service Activities
+142,One Gt Services Limited,16,10,0,0,Real Estate Activities
+143,Bacaro Ltd,16,13,0,0,Accommodation and Food Service Activities
+144,Otis Air-conditioning Ltd. T/a Otis Air-conditioning Ltd,16,2,0,0,Construction
+145,Cayman Cost U Less Ltd,16,10,3,31083,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+146,Brown's Holdings Ltd,16,7,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+147,TELL-ALL LTD. T/A GRAND OLD HOUSE,16,12,0,0,Accommodation and Food Service Activities
+148,Pool Patrol Limited,16,7,0,0,Administrative and Support Service Activities
+149,Island Waste Carriers T/a Iwc,15,9,0,0,Water Supply; Sewerage, Waste Management and Remediation Activities
+150,Cayman Diving,15,4,0,0,Transportation and Storage
+151,Arch And Godfrey (cayman) Ltd.,15,8,0,0,Construction
+152,Artex Risk Solutions (cayman) Limited,15,8,0,0,Financial and Insurance Activities
+153,Talas Mechanical Industries Ltd. T/a Cayman Mechanical Company,15,7,0,0,Construction
+154,Celebrations Group Ltd. T/a Celebrations,15,8,0,0,Administrative and Support Service Activities
+155,Watler & Hislop Services Limited T/a Watler & Hislop Services,15,4,0,0,Transportation and Storage
+156,Ttrg Ltd,15,13,0,0,Accommodation and Food Service Activities
+157,Corporate Electrical Services Ltd T/a Corporate Electric,15,6,0,0,Construction
+158,Gustavo Enrique Soto Quezada T/a Soto Development,15,9,0,0,Construction
+159,Ctmh Doctors Hospital,15,3,0,0,Human Health and Social Work Activities
+160,H&a Group,15,8,0,0,Construction
+161,Imagine Cayman Ltd. T/a Sandbar,15,6,0,0,Arts, Entertainment and Recreation
+162,Island Air Conditioning & Mechanical Ltd.,15,4,0,0,Construction
+163,Encompass Ltd,15,13,2,87500,Construction
+164,Digicel Cayman Ltd.,14,7,0,0,Information and Communication
+165,Ngu Group Ltd.,14,6,0,0,Professional, Scientfic and Technical Activities
+166,Pyramid Sunshine Hotel Services Ltd.,14,14,2,21750,Accommodation and Food Service Activities
+167,Tuna Frenzy Ltd.,14,3,0,0,Real Estate Activities
+168,Paragon Ltd T/a Paragon Builders,14,4,0,0,Construction
+169,Morritts Properties Cayman Limited  T/A Morritts Tortuga ,14,14,14,27338,Unknown
+170,Rashane R. Mcfarlane T/a Caypro Remodelers,14,4,0,0,Construction
+171,Bento Ltd,14,4,2,47993,Transportation and Storage
+172,Phoenix Limited T/a Phoenix Construction,14,12,0,0,Construction
+173,Surebuilt Construction Ltd.,14,4,1,135000,Construction
+174,Shamrock Heights Development Co.; Ltd. T/a Signature Landscaping,14,9,0,0,Administrative and Support Service Activities
+175,Sunset House Limited,14,10,0,0,Accommodation and Food Service Activities
+176,Rbc Royal Bank (cayman) Limited,14,6,0,0,Financial and Insurance Activities
+177,Personnel 2000 Limited,14,5,0,0,Administrative and Support Service Activities
+178,The Education Connection Ltd. T/a Hope Academy,14,13,0,0,Education
+179,Kp's Home And Development Ltd.,14,6,0,0,Construction
+180,Garrison Industries,14,6,0,0,Construction
+181,The Cayman Islands Humane Society,14,9,2,58435,Agriculture, Forestry and Fishing
+182,The Watermark Strata 1082,14,7,1,72000,Activities of Households as Employers; Undifferentiated Goods- And Services-Producing Activities of Households for Own Use
+183,Robson Construction (cayman) Ltd. T/a Robson Construction Cayman Ltd.,14,6,0,0,Construction
+184,Tryden Roofing Ltd. T/a Tryden Roofing,14,7,0,0,Construction
+185,Cayman National Corporation,14,6,0,0,Financial and Insurance Activities
+186,A1 Plumbing Services Ltd.,14,4,0,0,Construction
+187,Oasis.ky Ltd,13,10,0,0,Administrative and Support Service Activities
+188,Dmny Cayman Ltd,13,5,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+189,Hermes Corporate Services Ltd.,13,4,0,0,Professional, Scientfic and Technical Activities
+190,Appleby (cayman) Ltd.,13,5,0,0,Professional, Scientfic and Technical Activities
+191,R&r Auto Ltd,13,9,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+192,Azzip Ltd. T/a Pizza Hut,13,6,0,0,Accommodation and Food Service Activities
+193,HOSPITALITY SERVICES LTD. T/A HOSPITALITY SERVICES LTD,13,13,13,29848,Unknown
+194,Rehoboth Physio & Paincare Holdings Ltd; T/a Rehoboth Group Of Companies,13,11,0,0,Human Health and Social Work Activities
+195,Cayman Cabana Ltd,13,11,0,0,Accommodation and Food Service Activities
+196,Shepperd Construction Ltd,13,4,0,0,Construction
+197,The Wharf Restaurant Ltd,13,8,0,0,Accommodation and Food Service Activities
+198,Mykonos Ltd,13,3,0,0,Accommodation and Food Service Activities
+199,Tukka Restaurant T/a Tukka,13,2,0,0,Accommodation and Food Service Activities
+200,Car Boutique T/a: Tony's Toys,13,3,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+201,George A. Powell T/a Union Heavy Equipment & Transportation,13,5,0,0,Transportation and Storage
+202,Cayman First Insurance Company Limited,13,3,0,0,Financial and Insurance Activities
+203,Scotts Equipment Ltd,13,6,1,28080,Mining and Quarrying
+204,G.T. AUTOMOTIVE LTD,13,8,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+205,Home And Outdoor Ltd.,13,6,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+206,Cayman Islands Conference Of Seventh-day Adventists,13,7,0,0,Other Service Activities
+207,Polar Bear Air Conditioning,12,3,0,0,Construction
+208,Entech-environmental Technologies Ltd T/a Entech,12,8,0,0,Water Supply; Sewerage, Waste Management and Remediation Activities
+209,Penha Image Duty Free Ltd,12,4,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+210,Professioinal Yacht Management Ltd.,12,5,0,0,Manufacturing
+211,ISS (CAYMAN) LTD.,12,12,17,73917,Unknown
+212,Maverick Group Ltd T/a Turnkey,12,7,0,0,Real Estate Activities
+213,Technowall Ltd.,12,3,0,0,Construction
+214,Island Companies Ltd.,12,5,1,60000,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+215,Westtel Ltd T/a Logic,12,4,0,0,Information and Communication
+216,Cml Offshore Recruitment,12,5,0,0,Administrative and Support Service Activities
+217,Nova Cayman Holding Ltd,12,4,0,0,Accommodation and Food Service Activities
+218,Granite Express Cayman T/a Granite Express,12,3,0,0,Construction
+219,Maedac Supply Co. Ltd.,12,8,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+220,We Ltd T/a Rum Point Club,12,5,0,0,Accommodation and Food Service Activities
+221,Hyacinth Mcdonald T/a Mhm,12,3,0,0,Construction
+222,Cracked Conch Ltd T/a Cracked Conch Restaurant,12,7,0,0,Accommodation and Food Service Activities
+223,Ruth Ann Fionie Mcfarlane,12,2,0,0,Construction
+224,Fast Foods Company Ltd. T/a Kentucky Fried Chicken,12,1,0,0,Accommodation and Food Service Activities
+225,Popo Jebs Enterprises Ltd T/a Popo Jeb's Restaurant & Bar,12,4,0,0,Accommodation and Food Service Activities
+226,Calvary Baptist Christian Academy Ltd.,12,2,0,0,Education
+227,Edwin Martinez T/a J& E Construction,12,8,0,0,Construction
+228,Eats Ltd. T/a Eats Crocodile Rock Cafe,12,1,0,0,Accommodation and Food Service Activities
+229,PYRAMID CAYMAN HOTEL SERVICES ,12,12,12,24333,Unknown
+230,Professional Waste Management Limited,12,5,0,0,Water Supply; Sewerage, Waste Management and Remediation Activities
+231,Clever Fish Limited T/a Clever Fish,12,3,0,0,Education
+232,Grand Cayman Primary School Ltd. T/A Shining Stars Childhood Care & Education Center,12,2,0,0,Education
+233,Reliable Electrical Contractor Company Ltd,12,8,0,0,Construction
+234,Mourant Cayman Limited,12,5,1,95000,Professional, Scientfic and Technical Activities
+235,Total Health Ltd.,11,7,0,0,Human Health and Social Work Activities
+236,H & B Ii Ltd.,11,3,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+237,Violet D. Dellt/a Caystaff-admin-job Placement,11,4,0,0,Administrative and Support Service Activities
+238,Legal Services Supervisory Authority,11,10,2,43000,Professional, Scientfic and Technical Activities
+239,Smiles Dental Clinic Ltd.,11,5,0,0,Human Health and Social Work Activities
+240,Citco Fund Services (cayman Islands) Limited,11,4,0,0,Financial and Insurance Activities
+241,Cayman Prep and High School,11,11,11,72477,Unknown
+242,Dolphin Discovery (cayman) Ltd.,11,9,0,0,Arts, Entertainment and Recreation
+243,Car City Ltd. T/a Car City,11,6,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+244,Ambience General Contractors (2015)ltd.,11,4,0,0,Construction
+245,Superior Drywall Ltd T/a Superior Drywall,11,8,0,0,Construction
+246,Automotive Art (cayman) Ltd.,11,10,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+247,Evron Ltd T/a Valumed Pharmacy 1 And 2,11,3,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+248,Androgroup Ltd,11,2,0,0,Construction
+249,Mcalpine Limited,11,7,0,0,Construction
+250,The First Baptist Church Of Grand Cayman,11,3,0,0,Other Service Activities
+251,Meraki Wellness Ltd.,11,7,0,0,Other Service Activities
+252,Cayman Dental Services,11,6,1,144000,Human Health and Social Work Activities
+253,Hyacinth Mcdonald T/a Krshm Remodleing & Construction,11,0,0,0,Construction
+254,Pro Plus Construction Limited,11,1,0,0,Construction
+255,Kwwoodwork Ltd.,11,5,0,0,Manufacturing
+256,Vistra (cayman) Limited,11,8,0,0,Financial and Insurance Activities
+257,PB EMPLOYEE CO LTD,11,11,19,51475,Unknown
+258,Ductfab Cayman Ltd. T/a Hvac Duct Supply And Fabrication,11,5,0,0,Construction
+259,China Village Restaurant Ltd.,11,5,0,0,Accommodation and Food Service Activities
+260,Ip Driver Projects Ltd,11,4,0,0,Construction
+261,KHRG Cayman Employer Ltd,11,11,13,55651,Unknown
+262,Integra Healthcare Ltd,11,7,1,276000,Human Health and Social Work Activities
+263,Kirk Office Equipment Ltd.,11,2,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+264,Vantage Group Limited,11,8,4,20768,Professional, Scientfic and Technical Activities
+265,Alvarez & Marsal Cayman Islands Limited,11,5,0,0,Financial and Insurance Activities
+266,C.p.m.k. Holdings Ltd,11,5,0,0,Transportation and Storage
+267,Golf Management Services (cayman) Ltd.,11,3,0,0,Arts, Entertainment and Recreation
+268,Greenlight Reinsurance; Ltd.,11,5,2,137500,Financial and Insurance Activities
+269,Marvin Travis Benitez T/a Power House Construction,10,4,0,0,Construction
+270,Ncb Construction Ltd,10,5,0,0,Construction
+271,Mufg Alternative Fund Services (cayman) Limited,10,9,0,0,Financial and Insurance Activities
+272,Gladis Y. Espinal & Roger Espinal T/a Latin Taste Restaurant,10,5,0,0,Accommodation and Food Service Activities
+273,Sdm Ltd,10,4,0,0,Administrative and Support Service Activities
+274,Island Innovations Ltd,10,5,0,0,Accommodation and Food Service Activities
+275,Samuel Farrington-martinez T/a Marz Construction,10,7,0,0,Construction
+276,The Animals Ltd T/a The Bird,10,2,0,0,Accommodation and Food Service Activities
+277,Denia Walker T/a P& D Construction,10,9,0,0,Construction
+278,Katerine Montero Paniagua,10,3,0,0,Arts, Entertainment and Recreation
+279,Precious Gems Pre-school And After Care Centre,10,4,0,0,Education
+280,Food Fanatics Ltd T/a Union Bar & Grill,10,4,0,0,Accommodation and Food Service Activities
+281,The Cayman Islands Brewery Ltd.,10,3,0,0,Manufacturing
+282,Elite Security Ltd,10,5,0,0,Administrative and Support Service Activities
+283,La Havana Limited. T/a Fidel Murphys,10,7,0,0,Accommodation and Food Service Activities
+284,Cable & Wireless (Cayman Islands) Limited,10,5,0,0,Information and Communication
+285,Jermaine Glenbert Thompson,10,3,0,0,Construction
+286,Ncvo,10,3,0,0,Other Service Activities
+287,Seven Mile Beach Dental Clinic,10,5,2,52000,Human Health and Social Work Activities
+288,Calypso Grill Restaurant & Bar,10,1,0,0,Accommodation and Food Service Activities
+289,Cayman Fashion Group Ltd. T/a Soles & Polo,10,5,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+290,Heritage Hr Ltd.,10,6,0,0,Administrative and Support Service Activities
+291,Burger Holdings Ltd,10,2,0,0,Accommodation and Food Service Activities
+292,Capt. Marvin's Watersports Ltd T/a Anna's Watersports,10,4,0,0,Transportation and Storage
+293,Berman Fisher Limited T/a Hlb Berman Fisher,10,6,0,0,Professional, Scientfic and Technical Activities
+294,V2 Value And Variety Ltd.,10,1,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+295,Nail Room,10,6,0,0,Other Service Activities
+296,Davenport Development Property Management & Services Ltd. (holding Company),10,1,0,0,Financial and Insurance Activities
+297,Virtue Holdings Ltd. T/a Virtue Construction,10,5,0,0,Construction
+298,Bra Ltd,10,2,0,0,Accommodation and Food Service Activities
+299,Kroll (cayman) Limited,10,4,0,0,Professional, Scientfic and Technical Activities
+300,The Pines Retirement Home,10,8,0,0,Human Health and Social Work Activities
+301,Ddl Studio Ltd,10,7,0,0,Professional, Scientfic and Technical Activities
+302,Reed Consulting Engineers,10,6,2,110906,Professional, Scientfic and Technical Activities
+303,Kai One Ltd,10,3,0,0,Accommodation and Food Service Activities
+304,Food For Thought Ltd T/a Food For Thought,10,4,0,0,Accommodation and Food Service Activities
+305,T's Spot Property Management & Maintenance,10,1,0,0,Real Estate Activities
+306,Little Trotters,10,5,0,0,Education
+307,Rsm Professional Services Ii (cayman) Ltd.,10,6,0,0,Administrative and Support Service Activities
+308,Lynford A. Pandophie T/a Cowboy Town Stables,10,3,0,0,Agriculture, Forestry and Fishing
+309,Webster's Tours Ltd.,9,4,0,0,Transportation and Storage
+310,Infinity Broadband Ltd,9,2,0,0,Information and Communication
+311,Topimex Distributors Ltd.,9,5,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+312,The Well Ltd.,9,5,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+313,Gaylia Elaine Edwards T/a Edwards Construction & Maintenance,9,3,0,0,Construction
+314,Rsm Professional Services Ltd. T/a Rsm Ps,9,5,0,0,Professional, Scientfic and Technical Activities
+315,Casanova's By The Sea,9,6,0,0,Accommodation and Food Service Activities
+316,Montessori By The Sea Ltd,9,2,0,0,Education
+317,Cayman Turtle Conservation And Education Centre Ltd.,9,3,0,0,Administrative and Support Service Activities
+318,Kemito Jerome Petrie T/a K-urban Builders Ltd,9,7,0,0,Construction
+319,Omar Rayon Aiken T/a 56 West Construction & Janitorial,9,5,0,0,Construction
+320,The Pool Store Limited,9,3,0,0,Administrative and Support Service Activities
+321,Clean Cayman Ltd,9,5,0,0,Accommodation and Food Service Activities
+322,Cooling Pros Ltd. T/a Cooling Pros,9,3,0,0,Construction
+323,The Neptune Company Ltd,9,1,0,0,Transportation and Storage
+324,Rock Holding Limited T/a Progression Workforce,9,2,0,0,Administrative and Support Service Activities
+325,Daisy M. Griffiths T/a D&m Construction And Repairs,9,3,0,0,Construction
+326,Patria Finance Limited,9,1,0,0,Financial and Insurance Activities
+327,Power Flower Ltd.,9,2,0,0,Administrative and Support Service Activities
+328,Miracle Brokers International,9,4,0,0,Financial and Insurance Activities
+329,Ruel Brown T/a Precise Construction,9,4,0,0,Construction
+330,Kdp Construction & Colours Ltd. T/a Kdp Construction & Colours,9,6,0,0,Construction
+331,Onyx Limited,9,3,0,0,Professional, Scientfic and Technical Activities
+332,Global Services Int'l (cayman) Ltd T/aessential Construction & Repairs,9,4,0,0,Construction
+333,Eden Rock Diving Center Ltd,9,6,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+334,Cayman Linen Services Ltd.,9,4,0,0,Other Service Activities
+335,C.i. Precast Ltd,9,2,0,0,Manufacturing
+336,Island Energy Ltd. T/a Cayman Brac Power & Light,9,1,0,0,Electricity, Gas, Steam, and Air Conditioning Supply
+337,United Contracting Ltd T/a Ucl,9,3,0,0,Construction
+338,Island Opportunities (cayman) Ltd,9,8,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+339,Ocorian Trust (cayman) Limited,9,9,0,0,Financial and Insurance Activities
+340,Fourque Ltd T/a Lloyd's Smokehouse And Grill,9,5,0,0,Accommodation and Food Service Activities
+341,Angelique Nicole Mcloughlin T/a Pm Consultancy,9,4,0,0,Administrative and Support Service Activities
+342,Heritage Holdings Ltd.,9,4,0,0,Real Estate Activities
+343,Lavonida Edwards T/a S&l Advanced Plumbing & Construction,9,4,0,0,Construction
+344,Kozaily Designs Ltd.,9,2,0,0,Construction
+345,Old Dutch T/a The Alexander Hotel,9,3,0,0,Accommodation and Food Service Activities
+346,Natasha'emporium Ltd T/a Caymart Hair And Beauty Supply,9,4,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+347,Club Alfredo Ltd.,9,6,0,0,Accommodation and Food Service Activities
+348,I & M Turkish Construction Ltd.,9,9,0,0,Construction
+349,Anna Hislop Home Ltd.,9,7,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+350,Tgcs Ltd,9,6,0,0,Construction
+351,Ara Construction Ltd,9,5,0,0,Construction
+352,OASIS.KY LTD,9,9,13,49769,Unknown
+353,Mario's Hospitality Services Ltd.,9,6,0,0,Accommodation and Food Service Activities
+354,G & H Holdings T/a Tiny Tots Academy & Development Center,9,3,0,0,Education
+355,Cayman Platinnum Janitorial Ltd,9,3,0,0,Administrative and Support Service Activities
+356,Thai Group Ltd. T/a Thai Orchid,9,3,0,0,Accommodation and Food Service Activities
+357,Singh's Roti Shop,9,6,0,0,Accommodation and Food Service Activities
+358,Kaleidoscope Holdings Ltd/international Design Group,9,5,0,0,Arts, Entertainment and Recreation
+359,Kdp Construction & Colours Ltd. T/a Colours,9,4,0,0,Construction
+360,Cay 9 Resort Ltd. T/a Cay 9 Resort And Spa,9,4,0,0,Other Service Activities
+361,Aon Insurance Managers (cayman) Ltd,9,1,0,0,Financial and Insurance Activities
+362,Under The Almond Tree Ltd T/a Thistle General Contractor/maintenance,9,6,0,0,Construction
+363,Pareg Bella Ventures Co. Ltd.; T/a Man Cave Grooming Lounge,9,2,0,0,Other Service Activities
+364,Patriann Smith T/a Kingsley Mcfarlane Construction,9,2,0,0,Construction
+365,S.e.s. Investments Ltd.,9,4,0,0,Accommodation and Food Service Activities
+366,Marine Power Ltd,9,7,0,0,Manufacturing
+367,D&g Air Condition Services Ltd,8,4,0,0,Construction
+368,Marlowe Banks T/a Another Chance,8,1,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+369,Love Your Dog,8,5,3,28742,Agriculture, Forestry and Fishing
+370,Lux Spa & Salon Ltd,8,4,0,0,Other Service Activities
+371,Nadine Mcbean T/a All About Admin Ltd,8,3,0,0,Administrative and Support Service Activities
+372,Lg-americaribe Cayman Joint Venture Ltd,8,5,0,0,Construction
+373,Compass Media Limited,8,3,0,0,Information and Communication
+374,Campbell's Welding & Construction Services Ltd.,8,4,0,0,Construction
+375,Pestkil Ltd.,8,3,0,0,Manufacturing
+376,Joel G Hydes T/a Sydia's Construction And Maintenance,8,7,0,0,Construction
+377,Bdo Cayman Ltd,8,1,0,0,Professional, Scientfic and Technical Activities
+378,National Concrete Ltd.,8,4,0,0,Construction
+379,Mante Taffe And Balvin Wallace T/a Multiproject Construction,8,3,0,0,Construction
+380,Saxon Administration Ltd. T/a Saxon Pension Services,8,6,0,0,Financial and Insurance Activities
+381,Rajmar Holdings Ltd T/a Spacation,8,5,0,0,Other Service Activities
+382,Lg Contracting Ltd,8,2,0,0,Construction
+383,Cellular World Ltd T/a Cellular World Retailer,8,3,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+384,Clive N. Matthews T/a Toppic Construction,8,4,0,0,Construction
+385,Stuarts Walker Hersant Humphries,8,6,1,0,Professional, Scientfic and Technical Activities
+386,Cayman Handi Services Ltd.,8,4,0,0,Administrative and Support Service Activities
+387,Pivac Agency Ltd T/a Dolls Lash & Beauty Lounge,8,6,0,0,Other Service Activities
+388,Bogart Limited T/a Ristorante Pappagallo,8,3,0,0,Accommodation and Food Service Activities
+389,Davenport Development Ltd. T/a Davenport Construction - General Contractor,8,5,0,0,Construction
+390,Gustavo Enrique Soto Quezada T/a Proroofing,8,5,0,0,Construction
+391,Cayman Rehab Services,8,3,0,0,Human Health and Social Work Activities
+392,C & M Group Of Companies T/a Open C Construction,8,6,0,0,Construction
+393,Dwainey Wilson T/a Dwainey Construction,8,7,0,0,Construction
+394,Bluewater Medical Supplies Ltd. T/a Bluewater Medical Supplies Ltd,8,3,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+395,Keilen Mcfield-jackson T/a A+ Home Care Services,8,7,0,0,Activities of Households as Employers; Undifferentiated Goods- And Services-Producing Activities of Households for Own Use
+396,Gloria Range T/a G.r. Construction And Steel Work,8,4,0,0,Construction
+397,Jason Reid T/a General Automotive Services,8,4,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+398,Modern Electrical Ltd T/a Modern Electrical,8,1,0,0,Construction
+399,Campbell's Auto Repairs & Sales (c.a.r.s) Limited,8,5,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+400,Aluglass Ltd.,8,2,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+401,Devaka Enterprise Ltd T/a Agile Construction Services,8,2,0,0,Construction
+402,Amb Construction Ltd. T/a Amb Construction,8,2,0,0,Construction
+403,Advance Automotive Ltd.,8,6,1,58800,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+404,Crave Fashion Group,8,5,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+405,Trudy Dixon T/a Ld's Employment Agency,8,8,0,0,Administrative and Support Service Activities
+406,Vistra (Cayman) Limited,8,8,9,114231,Unknown
+407,Pooley Cabinets Industries Ltd.,8,3,0,0,Manufacturing
+408,Scotiabank & Trust (cayman) Ltd,8,4,0,0,Financial and Insurance Activities
+409,Grand Harbour Medical Centre,8,4,1,36000,Human Health and Social Work Activities
+410,M.a.b. Ltd T/a Mike's Esso Seven Mile Beach (delworth's),8,3,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+411,Anchor Tours (cayman) Ltd. T/a Anchor Tours,8,7,0,0,Transportation and Storage
+412,Workplace Environments Ltd. T/a Workplace Environments And E-office Supplies,8,7,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+413,Minerva Private Ltd,8,5,2,48000,Education
+414,Good Guys Ltd T/a Good Guys Car Wash,8,5,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+415,Spettacolo T/a Gelato & Co,8,6,0,0,Accommodation and Food Service Activities
+416,Clm Network Limited T/a Clm Publishing & Christian Lifestyle,8,3,0,0,Information and Communication
+417,Smb Realty Ltd,8,3,0,0,Real Estate Activities
+418,Vigoro Nursery Ltd.,8,4,0,0,Administrative and Support Service Activities
+419,Desyouth Omar Chambers T/a Island Hospitality,8,4,0,0,Professional, Scientfic and Technical Activities
+420,It Outsource Ltd,8,6,0,0,Information and Communication
+421,Cayman Ams Immigration Consulting Ltd./Banco Bradesco S.A. Grand Cayman Branch,8,3,0,0,Financial and Insurance Activities
+422,First Alliance Group T/a Netclues,8,3,0,0,Professional, Scientfic and Technical Activities
+423,Vampt Motors Ltd,8,2,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+424,Industrial Services & Equipment Ltd.,8,7,0,0,Water Supply; Sewerage, Waste Management and Remediation Activities
+425,Car Clinic Ltd,8,6,1,40248,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+426,Marfire Consulting Limited,8,3,0,0,Financial and Insurance Activities
+427,ROSE GADSBY T/A CSS JANITORIAL SERVICES,8,6,0,0,Administrative and Support Service Activities
+428,Derma Ltd.,8,6,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+429,WE Ltd T/A Rum Point Club,8,8,9,35408,Unknown
+430,Kidsability Ltd.,8,2,0,0,Human Health and Social Work Activities
+431,Cayman Precast Systems,8,7,0,0,Construction
+432,B&e Construction Co. Ltd,8,3,0,0,Construction
+433,Kenhugh Herman Thomas T/a True Green Construction And Maintenance,8,3,0,0,Construction
+434,Jhaklin Patricia Cano-rivera T/a Alpha Plus Construction,8,3,0,0,Construction
+435,Mellanda & Peter Habib,8,4,0,0,Activities of Households as Employers; Undifferentiated Goods- And Services-Producing Activities of Households for Own Use
+436,The Citco Group Limited,8,2,0,0,Financial and Insurance Activities
+437,Rodney's Ltd T/a Rodney's Barber,8,1,0,0,Other Service Activities
+438,Quallent Pharmaceuticals Health; Llc T/a Quallent Pharmaceuticals,8,3,0,0,Human Health and Social Work Activities
+439,Strategic Risk Solutions (cayman) Limited,7,2,0,0,Professional, Scientfic and Technical Activities
+440,Barbara & Grayson Liberty T/a Libertys Restaurant,7,4,0,0,Accommodation and Food Service Activities
+441,Richard W. Ebanks T/a Rich Gardeners,7,5,0,0,Administrative and Support Service Activities
+442,On Edge Limited,7,2,0,0,Other Service Activities
+443,Pane & Pasta Ltd. T/a Pane & Pasta,7,7,0,0,Accommodation and Food Service Activities
+444,Ccmi,7,5,0,0,Education
+445,Hill Construction Company Ltd,7,4,0,0,Construction
+446,Mgj Motorsport Company Ltd,7,6,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+447,Marc I. Wood & Judy Wood-seymour T/a William & Marc Quarry Services,7,1,0,0,Mining and Quarrying
+448,Bedell Cristin Formerly Solomon Harris,7,2,0,0,Professional, Scientfic and Technical Activities
+449,Advanced Medical Group Ltd T/a Aventis Dental And Facial Aesthetics,7,3,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+450,Nadia M. Powery,7,3,0,0,Administrative and Support Service Activities
+451,Cayman Dispatch Services Ltd,7,1,0,0,Transportation and Storage
+452,Burton Group Ltd. T/a Bliss Bar & Lounge & Nightclub,7,6,0,0,Arts, Entertainment and Recreation
+453,Eagle Properties T/a Ashley Furniture Homestore,7,6,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+454,Spa To Go Ltd.t/a Spa To Go-avec Moi,7,7,0,0,Other Service Activities
+455,Advanced Land Holdings Ltd T/A Refuel,7,2,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+456,Ironshore Security; Ltd.,7,5,5,20475,Administrative and Support Service Activities
+457,K9 Security Services Ltd,7,1,0,0,Administrative and Support Service Activities
+458,Elite Marble & Granite Ltd,7,3,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+459,Rigid General Construction Ltd.,7,1,0,0,Construction
+460,Ffp (cayman) Ltd.,7,4,0,0,Financial and Insurance Activities
+461,Rd Consultant Agency Services Ltd T/a Rdm Recruitment,7,4,0,0,Administrative and Support Service Activities
+462,Lo Parsons & Co Ltd T/a Parsons Air Conditioning-refrigeration & Applainces,7,3,0,0,Construction
+463,Cayman Hospicecare,7,1,0,0,Human Health and Social Work Activities
+464,Harbour View Wine Bar Ltd T/a South West Collective,7,5,0,0,Accommodation and Food Service Activities
+465,Cooling Cayman Ltd,7,7,8,21450,Other Service Activities
+466,Pivac Agency Ltd,7,5,0,0,Professional, Scientfic and Technical Activities
+467,Nozak Ltd T/a Nozak Construction And Maintenance,7,3,0,0,Construction
+468,Grant Thornton Specialist Services (cayman) Limited,7,4,0,0,Professional, Scientfic and Technical Activities
+469,Ar's Forward Ltd T/a Mobile Food Truck Lunch At Abby's,7,5,0,0,Accommodation and Food Service Activities
+470,Cayman Medical Ltd,7,6,0,0,Human Health and Social Work Activities
+471,Barcam (cayman) Ltd. T/a Barcam Esso,7,3,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+472,Uniting Capital,7,4,0,0,Financial and Insurance Activities
+473,One Stop Grill Ltd. T/a One Stop Grill,7,3,0,0,Accommodation and Food Service Activities
+474,The Falls Steakhouse T/a The Falls Steakhouse,7,0,0,0,Accommodation and Food Service Activities
+475,Allstar Construction Co. Ltd. T/a Allstar Construction,7,4,0,0,Construction
+476,Dynamic Construction Ltd. T/a Dynamic Construction Ltd.,7,2,0,0,Construction
+477,The Group Ltd,7,3,0,0,Administrative and Support Service Activities
+478,Mango Group Limited,7,2,1,25740,Construction
+479,Mahogany Works Limited,7,3,3,81900,Construction
+480,Bcqs,7,3,0,0,Professional, Scientfic and Technical Activities
+481,La Casita Ltd. T/a La Casita,7,3,0,0,Accommodation and Food Service Activities
+482,Arch Worldwide Ltd T/a Arch Automotive,7,4,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+483,Sanpik Contracting Cayman Ltd.,7,4,1,25000,Water Supply; Sewerage, Waste Management and Remediation Activities
+484,Roger Espinal T/a Spanglish Bar & Grill,7,6,0,0,Accommodation and Food Service Activities
+485,Kirk Freeport Plaza Ltd,7,4,1,50000,Financial and Insurance Activities
+486,Cayman Car Rental Ltd. T/a Pretty Woman Lash Bar,7,4,0,0,Other Service Activities
+487,Cayman Theraplay Ltd,7,1,1,20475,Human Health and Social Work Activities
+488,George Town Yacht Club,7,2,0,0,Accommodation and Food Service Activities
+489,Mccormick Global Ingredients Limited (agent),7,1,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+490,Eaairs Services And Repairs Limited,7,0,0,0,Construction
+491,Cayman AMS Immigration Consulting Ltd.,7,7,15,41786,Unknown
+492,MAPLESFS SERVICE COMPANY LIMITED,7,7,7,242143,Unknown
+493,Treats Ltd,7,5,0,0,Accommodation and Food Service Activities
+494,Msv Limited T/a Cayman Classic Mobile Detailing,7,1,0,0,Wholesale and Retail Trade; Repair of Motor Vehicles and Motorcycles
+495,S&m Constrution Ltd. T/a S&m Construction Ltd.,7,3,0,0,Construction
+496,Invenio Global Ltd,7,2,0,0,Administrative and Support Service Activities
+497,Suntera (cayman) Limited,7,5,0,0,Financial and Insurance Activities
+498,Sean Dobson,7,4,0,0,Other Service Activities
+499,Footsteps School,7,1,0,0,Education
+500,Wendel Construction Ltd.,7,2,0,0,Construction
