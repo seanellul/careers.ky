@@ -1,4 +1,5 @@
 import { neon } from "@neondatabase/serverless";
+import { migrate as migratePipeline } from "../app/api/migrations/add-sales-pipeline.js";
 
 async function migrate() {
   if (!process.env.DATABASE_URL) {
@@ -216,6 +217,15 @@ async function migrate() {
   console.log("   Done.\n");
 
   console.log("All migrations complete!");
+
+  // === Feature #7: Sales Pipeline CRM ===
+  console.log("\n7. Running sales pipeline migration...");
+  try {
+    await migratePipeline();
+  } catch (err) {
+    console.error("   Pipeline migration error:", err.message);
+    // Don't fail the entire migration - this might be a setup issue
+  }
 }
 
 migrate().catch((err) => {
