@@ -7,12 +7,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Filter, TrendingUp, MapPin, Building2, Calendar, X, Plus, HeartHandshake, CheckCircle } from "lucide-react";
+import { Search, Filter, TrendingUp, MapPin, Building2, Calendar, X, Plus, HeartHandshake, CheckCircle, DollarSign, GraduationCap, Clock } from "lucide-react";
 import gsap from "gsap";
 
 const LOCATION_KEY = { 0: "Undefined", 1: "West Bay", 2: "Seven Mile Beach", 3: "Camana Bay", 4: "George Town", 5: "South Sound", 6: "Red Bay / Prospect", 7: "Spotts / Newlands", 8: "Savannah / Lower Valley", 9: "Bodden Town", 10: "North Side", 11: "East End", 12: "Rum Point / Cayman Kai", 13: "Cayman Brac", 14: "Little Cayman" };
 const WORK_TYPE = { 0: "Undefined", 1: "Full-time", 2: "Part-time", 3: "Shifts", 4: "Weekends", 5: "Temporary", 6: "Internships", 7: "Apprenticeships" };
 const SORT_KEY = { 0: "Undefined", 1: "Newest", 2: "EndsSoon", 3: "SalaryHighLow", 4: "SalaryLowHigh" };
+
+function titleCase(str) {
+  if (!str) return str;
+  if (str.replace(/[^A-Z]/g, "").length / str.replace(/\s/g, "").length > 0.6) {
+    return str.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+  }
+  return str;
+}
 
 function fmtSalary(job) {
   const cur = job?.currency || "KYD";
@@ -20,6 +28,42 @@ function fmtSalary(job) {
   if (job?.salaryShort) return job.salaryShort;
   if (job?.minimumAmount && job?.maximumAmount) return `${fmt(job.minimumAmount)} - ${fmt(job.maximumAmount)}`;
   return "Salary not listed";
+}
+
+function fmtSalaryDisplay(job) {
+  if (!job) return { main: "Salary not listed", suffix: "" };
+  const min = job.minimumAmount;
+  const max = job.maximumAmount;
+  if (!min && !max && !job.salaryShort) return { main: "Salary not listed", suffix: "" };
+
+  const prefix = (job.currency === "KYD" || !job.currency) ? "CI$" : job.currency + " ";
+
+  const fmtNum = (n) => {
+    if (n >= 1000) return Math.round(n / 1000) + "K";
+    return String(Math.round(n));
+  };
+
+  // Extract period from salaryShort if available
+  let suffix = "";
+  const short = job.salaryShort || "";
+  if (/per\s*hour/i.test(short)) suffix = "/hr";
+  else if (/per\s*annum|annual/i.test(short)) suffix = "/yr";
+  else if (/per\s*month/i.test(short)) suffix = "/mo";
+  else if (min && min >= 100) suffix = "/yr"; // assume annual for large amounts
+
+  if (min && max && min !== max) {
+    return { main: `${prefix} ${fmtNum(min)} – ${fmtNum(max)}`, suffix };
+  }
+  if (max) return { main: `${prefix} ${fmtNum(max)}`, suffix };
+  if (min) return { main: `${prefix} ${fmtNum(min)}`, suffix };
+  // Fallback: clean up salaryShort
+  const cleaned = short
+    .replace(/KYD\$?/g, prefix)
+    .replace(/Per\s*Annum/i, "")
+    .replace(/Per\s*Hour/i, "")
+    .replace(/\.0+\b/g, "")
+    .trim();
+  return { main: cleaned || "Salary not listed", suffix };
 }
 
 function truncateText(text, maxLength = 20) {
@@ -303,19 +347,38 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
         </div>
 
         <div ref={containerRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
-          {view.map((j, idx) => (
-            <Card key={`${j.jobPostId || idx}`} className="job-card group bg-white/5 border-white/10 hover:border-white/20 transition h-full">
+          {view.map((j, idx) => {
+            const salary = fmtSalaryDisplay(j);
+            return (
+            <Card key={`${j.jobPostId || idx}`} className="job-card group bg-white/5 border-white/10 hover:border-white/20 hover:shadow-lg hover:shadow-cyan-500/5 hover:-translate-y-0.5 transition-all duration-200 h-full">
               <CardContent className="p-5 h-full flex flex-col">
-                <div className="text-xs uppercase tracking-wide text-emerald-300 mb-2">{WORK_TYPE[j.workType] || wtObj[j.workType] || "Role"}</div>
-                <Link href={`/jobs/${j.jobPostIdString || j.jobPostId}`} className="font-medium leading-tight group-hover:text-cyan-300 mb-2 line-clamp-2 min-h-[2.5rem] flex items-start transition">{j.jobTitle || "Untitled role"}</Link>
-                <div className="text-sm text-neutral-400 mb-2 line-clamp-1">
-                  <Link href={`/employer/${encodeURIComponent(j.employerName?.trim().toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`} className="hover:text-cyan-300 transition">{j.employerName}</Link>
+                <div className="mb-2">
+                  <span className="inline-block text-xs font-medium uppercase tracking-wide text-emerald-300 bg-emerald-500/10 border border-emerald-300/20 rounded-full px-2.5 py-0.5">{WORK_TYPE[j.workType] || wtObj[j.workType] || "Role"}</span>
                 </div>
-                <div className="text-xs text-neutral-400 mb-3">{LOCATION_KEY[j.jobLocation] || ltObj[j.jobLocation] || "Cayman Islands"} · {j.hoursPerWeek ? `${j.hoursPerWeek} hrs/wk` : ""}</div>
-                <div className="text-sm text-neutral-200 mb-4 line-clamp-2">{fmtSalary(j)}</div>
-                <div className="flex flex-wrap gap-1 mb-4">
-                  {etObj[j.educationLevel] && <Badge className="bg-neutral-800 border-white/10 text-neutral-300 text-xs px-2 py-1">{truncateText(etObj[j.educationLevel], 22)}</Badge>}
-                  {exObj[j.yearsOfExperience] && <Badge className="bg-neutral-800 border-white/10 text-neutral-300 text-xs px-2 py-1">{truncateText(exObj[j.yearsOfExperience], 22)}</Badge>}
+                <Link href={`/jobs/${j.jobPostIdString || j.jobPostId}`} className="font-medium leading-tight group-hover:text-cyan-300 mb-1.5 line-clamp-2 min-h-[2.5rem] flex items-start transition">{j.jobTitle || "Untitled role"}</Link>
+                <div className="text-sm text-neutral-400 mb-1.5 line-clamp-1">
+                  <Link href={`/employer/${encodeURIComponent(j.employerName?.trim().toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`} className="hover:text-cyan-300 transition">{titleCase(j.employerName)}</Link>
+                </div>
+                <div className="flex items-center gap-1 text-xs text-neutral-400 mb-3">
+                  <MapPin className="w-3 h-3 shrink-0" />
+                  <span>{LOCATION_KEY[j.jobLocation] || ltObj[j.jobLocation] || "Cayman Islands"}{j.hoursPerWeek ? ` · ${j.hoursPerWeek} hrs/wk` : ""}</span>
+                </div>
+                <div className="flex items-center gap-1.5 mb-3">
+                  <DollarSign className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span className="text-sm font-semibold text-neutral-100">{salary.main}</span>
+                  {salary.suffix && <span className="text-xs text-neutral-500">{salary.suffix}</span>}
+                </div>
+                <div className="flex flex-wrap gap-1.5 mb-4">
+                  {etObj[j.educationLevel] && (
+                    <Badge className="bg-purple-500/10 text-purple-300 border-purple-300/20 text-xs px-2 py-0.5 gap-1">
+                      <GraduationCap className="w-3 h-3" />{truncateText(etObj[j.educationLevel], 22)}
+                    </Badge>
+                  )}
+                  {exObj[j.yearsOfExperience] && (
+                    <Badge className="bg-cyan-500/10 text-cyan-300 border-cyan-300/20 text-xs px-2 py-0.5 gap-1">
+                      <Clock className="w-3 h-3" />{truncateText(exObj[j.yearsOfExperience], 22)}
+                    </Badge>
+                  )}
                 </div>
                 <div className="mt-auto space-y-2">
                   {(() => {
@@ -324,7 +387,6 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                     const alreadySent = interestSent[jobId];
                     return (
                       <>
-                        {/* Express Interest — primary action for candidates */}
                         {isCandidate && !alreadySent && (
                           <button
                             onClick={(e) => { e.preventDefault(); handleExpressInterest(jobId); }}
@@ -339,13 +401,11 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                             <CheckCircle className="w-4 h-4" /> Interest Expressed
                           </div>
                         )}
-                        {/* Not signed in — prompt */}
                         {!session && (
                           <Link href="/profile/setup" className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-300/30 hover:bg-cyan-500/30 w-full gap-2 h-10 px-4 py-2 transition">
                             <HeartHandshake className="w-4 h-4" /> Sign in to Express Interest
                           </Link>
                         )}
-                        {/* View Details */}
                         <Link href={`/jobs/${jobId}`} className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-white/5 text-neutral-300 border border-white/10 hover:bg-white/10 w-full gap-2 h-10 px-4 py-2 transition">
                           View Details
                         </Link>
@@ -355,7 +415,8 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                 </div>
               </CardContent>
             </Card>
-          ))}
+            );
+          })}
         </div>
 
         {/* Pagination */}

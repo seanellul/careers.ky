@@ -151,6 +151,9 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
     fetch("/api/auth/session").then(r => r.json()).then(d => setSession(d.authenticated ? d : null)).catch(() => {});
   }, []);
 
+  const isOwner = session?.employerName && job.Employer &&
+    session.employerName.trim().toLowerCase() === job.Employer.trim().toLowerCase();
+
   const daysLeft = daysUntil(job.endDate);
   const isExpiring = daysLeft !== null && daysLeft <= 5 && daysLeft > 0;
 
@@ -238,7 +241,7 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
                   </Button>
                 </Link>
               )}
-              {session?.employerAccountId && (
+              {isOwner && (
                 <Link href={`/talent?jobId=${job.cJobId}`}>
                   <Button size="lg" className="gap-2">
                     <Users className="w-4 h-4" /> Find Matching Candidates
