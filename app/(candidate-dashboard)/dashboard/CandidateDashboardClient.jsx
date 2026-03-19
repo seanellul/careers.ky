@@ -10,6 +10,7 @@ import {
   Search, User, Bell, ChevronRight, XCircle, ExternalLink, ArrowUpRight,
 } from "lucide-react";
 import { calcProfileStrength } from "@/lib/profileStrength";
+import ProfileCompletenessCard from "@/components/ProfileCompletenessCard";
 
 const STATUS_COLORS = {
   pending: "bg-yellow-500/20 text-yellow-300 border-yellow-300/30",
@@ -110,6 +111,13 @@ export default function CandidateDashboardClient({
           {score}%
         </Badge>
       </div>
+
+      {/* Profile completeness card */}
+      {score < 100 && (
+        <div className="mb-6">
+          <ProfileCompletenessCard score={score} missing={missing} />
+        </div>
+      )}
 
       {/* Stats row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">

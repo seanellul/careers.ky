@@ -25,6 +25,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import OnboardingFlow from "@/components/OnboardingFlow";
+import AuthModal from "@/components/AuthModal";
 import {
   useHeroIntro,
   useFadeInOnScroll,
@@ -74,6 +75,7 @@ export default function HomeClient({
   jobCount,
   industryCount,
   employerCount,
+  authRequired,
 }) {
   const router = useRouter();
   const root = useRef(null);
@@ -82,6 +84,14 @@ export default function HomeClient({
   revealEls.current = [];
   const faqRef = useRef(null);
   const [onboardingOpen, setOnboardingOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+
+  // Auto-open auth modal when redirected here from a gated route
+  useEffect(() => {
+    if (authRequired) {
+      setAuthModalOpen(true);
+    }
+  }, [authRequired]);
 
   const addRevealEl = (el) => {
     if (el && !revealEls.current.includes(el)) revealEls.current.push(el);
@@ -124,6 +134,13 @@ export default function HomeClient({
   }
 
   return (
+    <>
+    <AuthModal
+      open={authModalOpen}
+      onClose={() => setAuthModalOpen(false)}
+      type="candidate"
+      redirectTo="/profile/setup"
+    />
     <div ref={root} className="min-h-screen w-full bg-neutral-950 text-neutral-100">
       {/* Dynamic background */}
       <div
@@ -165,9 +182,9 @@ export default function HomeClient({
 
               {/* Key Features */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-                <Link
-                  href="/profile/setup"
-                  className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-300/40 hover:bg-white/10 transition cursor-pointer text-left"
+                <button
+                  onClick={() => setAuthModalOpen(true)}
+                  className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-300/40 hover:bg-white/10 transition cursor-pointer text-left w-full"
                 >
                   <div className="h-8 w-8 rounded-lg bg-cyan-400/15 grid place-items-center flex-shrink-0">
                     <User className="w-4 h-4 text-cyan-300" />
@@ -178,7 +195,7 @@ export default function HomeClient({
                       Get seen by every employer
                     </div>
                   </div>
-                </Link>
+                </button>
                 <Link
                   href="/careers?tab=career-tracks"
                   className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-300/40 hover:bg-white/10 transition cursor-pointer text-left"
@@ -225,15 +242,14 @@ export default function HomeClient({
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-3">
-                <Link href="/profile/setup">
-                  <Button
-                    size="lg"
-                    className="gap-2 h-12 text-base"
-                  >
-                    <User className="w-4 h-4" />
-                    Create Your Free Profile
-                  </Button>
-                </Link>
+                <Button
+                  size="lg"
+                  className="gap-2 h-12 text-base"
+                  onClick={() => setAuthModalOpen(true)}
+                >
+                  <User className="w-4 h-4" />
+                  Create Your Free Profile
+                </Button>
                 <Link href="/careers">
                   <Button
                     size="lg"
@@ -279,8 +295,8 @@ export default function HomeClient({
 
                   {/* Quick Links to Tools */}
                   <div className="space-y-2">
-                    <Link
-                      href="/profile/setup"
+                    <button
+                      onClick={() => setAuthModalOpen(true)}
                       className="block w-full text-left p-3 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-300/40 transition group"
                     >
                       <div className="flex items-center gap-2 text-cyan-300 mb-1">
@@ -295,7 +311,7 @@ export default function HomeClient({
                       <p className="text-xs text-neutral-400">
                         Get seen by every employer on the island
                       </p>
-                    </Link>
+                    </button>
 
                     <Link
                       href="/careers?tab=career-tracks"
@@ -500,11 +516,9 @@ export default function HomeClient({
                   <span><span className="text-white font-medium">Direct introductions.</span> Employers contact you directly. Build real relationships.</span>
                 </div>
               </div>
-              <Link href="/profile/setup">
-                <Button className="gap-2">
-                  <User className="w-4 h-4" /> Create Your Free Profile <ChevronRight className="w-4 h-4" />
-                </Button>
-              </Link>
+              <Button className="gap-2" onClick={() => setAuthModalOpen(true)}>
+                <User className="w-4 h-4" /> Create Your Free Profile <ChevronRight className="w-4 h-4" />
+              </Button>
             </div>
 
             {/* For Employers */}
@@ -564,16 +578,15 @@ export default function HomeClient({
                     Browse All Jobs
                   </Button>
                 </Link>
-                <Link href="/profile/setup">
-                  <Button
-                    size="lg"
-                    variant="secondary"
-                    className="gap-2"
-                  >
-                    <User className="w-4 h-4" />
-                    Create Your Free Profile
-                  </Button>
-                </Link>
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  className="gap-2"
+                  onClick={() => setAuthModalOpen(true)}
+                >
+                  <User className="w-4 h-4" />
+                  Create Your Free Profile
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -665,11 +678,9 @@ export default function HomeClient({
                   <p className="text-neutral-300 text-sm">
                     Create your profile free and let every employer on the island find you. No recruiter. No commission. Just opportunity.
                   </p>
-                  <Link href="/profile/setup">
-                    <Button className="gap-2 mt-2">
-                      <User className="w-4 h-4" /> Create Profile <ChevronRight className="w-4 h-4" />
-                    </Button>
-                  </Link>
+                  <Button className="gap-2 mt-2" onClick={() => setAuthModalOpen(true)}>
+                    <User className="w-4 h-4" /> Create Profile <ChevronRight className="w-4 h-4" />
+                  </Button>
                 </div>
                 <div className="space-y-3 border-t pt-4 md:border-t-0 md:pt-0 md:border-l md:border-white/10 md:pl-6">
                   <div className="text-sm text-neutral-400">For Employers</div>
@@ -690,5 +701,6 @@ export default function HomeClient({
       </section>
 
     </div>
+    </>
   );
 }

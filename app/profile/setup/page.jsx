@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { getSession } from "@/lib/auth";
-import { getCandidateById, loadEducationTypes, loadExperienceTypes, loadLocationTypes } from "@/lib/data";
+import { getCandidateById } from "@/lib/data";
 import { redirect } from "next/navigation";
 import ProfileSetupClient from "./ProfileSetupClient";
 
@@ -12,23 +12,10 @@ export const metadata = {
 
 export default async function ProfileSetupPage() {
   const session = await getSession();
-  if (!session?.candidateId) redirect("/");
+  if (!session?.candidateId) redirect("/?authRequired=profile-setup");
 
-  const [candidate, eduTypes, expTypes, locTypes] = await Promise.all([
-    getCandidateById(session.candidateId),
-    loadEducationTypes(),
-    loadExperienceTypes(),
-    loadLocationTypes(),
-  ]);
-
+  const candidate = await getCandidateById(session.candidateId);
   if (!candidate) redirect("/");
 
-  return (
-    <ProfileSetupClient
-      candidate={candidate}
-      eduTypes={Object.fromEntries(eduTypes)}
-      expTypes={Object.fromEntries(expTypes)}
-      locTypes={Object.fromEntries(locTypes)}
-    />
-  );
+  return <ProfileSetupClient candidate={candidate} />;
 }

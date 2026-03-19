@@ -11,7 +11,7 @@ import HomeClient from "./HomeClient";
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
+export default async function HomePage({ searchParams }) {
   // Role-specific redirects for logged-in users
   const session = await getSession();
   if (session?.employerAccountId) redirect("/employer/dashboard");
@@ -93,6 +93,7 @@ export default async function HomePage() {
       jobCount={activePostings.length}
       industryCount={majors.reduce((n, m) => n + (m.children?.length || 0), 0)}
       employerCount={employerCount}
+      authRequired={searchParams?.authRequired || null}
     />
   );
 }
