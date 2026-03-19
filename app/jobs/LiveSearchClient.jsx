@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -71,7 +71,7 @@ function truncateText(text, maxLength = 20) {
   return text.substring(0, maxLength - 3) + "...";
 }
 
-export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {}, eduTypes: etObj = {}, expTypes: exObj = {}, locTypes: ltObj = {}, embedded = false, basePath }) {
+export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {}, eduTypes: etObj = {}, expTypes: exObj = {}, locTypes: ltObj = {}, ciscoSubMajors = {}, embedded = false, basePath }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialQ = searchParams.get("q") || "";
@@ -88,15 +88,18 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
   const [page, setPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
   const [employerFilter, setEmployerFilter] = useState(initialEmployer);
+  const [showMyJobs, setShowMyJobs] = useState(false);
+  const [occGroup, setOccGroup] = useState("");
   const pageSize = 12;
 
   // Session for Express Interest
   const [session, setSession] = useState(null);
+  const [sessionLoaded, setSessionLoaded] = useState(false);
   const [interestSent, setInterestSent] = useState({}); // jobId -> true
   const [sendingInterest, setSendingInterest] = useState(null);
 
   useEffect(() => {
-    fetch("/api/auth/session").then(r => r.json()).then(d => setSession(d.authenticated ? d : null)).catch(() => {});
+    fetch("/api/auth/session").then(r => r.json()).then(d => { setSession(d.authenticated ? d : null); setSessionLoaded(true); }).catch(() => setSessionLoaded(true));
   }, []);
 
   const handleExpressInterest = async (jobId) => {
@@ -134,6 +137,18 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
     const timer = setTimeout(updateURL, 300);
     return () => clearTimeout(timer);
   }, [updateURL]);
+
+  // Occupation group options (sub-major groups from CISCO codes)
+  const occGroupOptions = useMemo(() => {
+    const counts = {};
+    for (const j of allJobs) {
+      const code = j.sOccupation?.substring(0, 2);
+      if (code) counts[code] = (counts[code] || 0) + 1;
+    }
+    return Object.entries(counts)
+      .map(([code, count]) => ({ code, label: ciscoSubMajors[code] || `Group ${code}`, count }))
+      .sort((a, b) => b.count - a.count);
+  }, [allJobs, ciscoSubMajors]);
 
   // Skills filter
   const [skillQuery, setSkillQuery] = useState("");
@@ -187,6 +202,7 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
     .filter((j) => (q ? (j.jobTitle?.toLowerCase().includes(q.toLowerCase()) || j.employerName?.toLowerCase().includes(q.toLowerCase())) : true))
     .filter((j) => (employerFilter ? j.employerName?.toLowerCase().includes(employerFilter.toLowerCase()) : true))
     .filter((j) => (initialCisco ? j.sOccupation === initialCisco : true))
+    .filter((j) => (occGroup ? j.sOccupation?.startsWith(occGroup) : true))
     .filter((j) => {
       if (skillCiscoCodes.size === 0 && skillTitleGroups.length === 0) return true;
       // Match by occupation code OR by title keywords (catches misclassified jobs)
@@ -262,14 +278,30 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
             </Button>
           </div>
           <div className="space-y-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
-              <Input value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} placeholder="Search by job title or employer..." className="pl-10 bg-white/5 border-white/10 h-12 text-base" />
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                <Input value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} placeholder="Search by job title or employer..." className="pl-10 bg-white/5 border-white/10 h-12 text-base" />
+              </div>
+              {sessionLoaded && session?.employerCompanyName && (
+                <Button
+                  variant={showMyJobs ? "default" : "secondary"}
+                  className={`gap-2 h-12 shrink-0 ${showMyJobs ? "bg-cyan-500/20 text-cyan-300 border border-cyan-300/30" : ""}`}
+                  onClick={() => {
+                    const next = !showMyJobs;
+                    setShowMyJobs(next);
+                    setEmployerFilter(next ? session.employerCompanyName : "");
+                    setPage(1);
+                  }}
+                >
+                  <Building2 className="w-4 h-4" /> My Jobs
+                </Button>
+              )}
             </div>
             {showFilters && (
               <Card className="bg-white/5 border-white/10">
                 <CardContent className="p-4 md:p-6 space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
                     <div>
                       <label className="text-sm font-medium mb-2 block">Location</label>
                       <select value={loc} onChange={(e) => { setLoc(Number(e.target.value)); setPage(1); }} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200">
@@ -284,7 +316,14 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                     </div>
                     <div>
                       <label className="text-sm font-medium mb-2 block">Employer</label>
-                      <Input value={employerFilter} onChange={(e) => { setEmployerFilter(e.target.value); setPage(1); }} placeholder="Filter by employer..." className="bg-white/5 border-white/10" />
+                      <Input value={employerFilter} onChange={(e) => { setEmployerFilter(e.target.value); setShowMyJobs(false); setPage(1); }} placeholder="Filter by employer..." className="bg-white/5 border-white/10" />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Occupation</label>
+                      <select value={occGroup} onChange={(e) => { setOccGroup(e.target.value); setPage(1); }} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200">
+                        <option value="">All Occupations</option>
+                        {occGroupOptions.map(o => (<option key={o.code} value={o.code}>{o.label} ({o.count})</option>))}
+                      </select>
                     </div>
                     <div>
                       <label className="text-sm font-medium mb-2 block">Sort By</label>
@@ -293,7 +332,7 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                       </select>
                     </div>
                     <div className="flex items-end">
-                      <Button variant="secondary" onClick={() => { setQ(""); setLoc(0); setType(0); setEmployerFilter(""); setSort(1); setSelectedSkills([]); setPage(1); }} className="gap-2 w-full">
+                      <Button variant="secondary" onClick={() => { setQ(""); setLoc(0); setType(0); setEmployerFilter(""); setOccGroup(""); setShowMyJobs(false); setSort(1); setSelectedSkills([]); setPage(1); }} className="gap-2 w-full">
                         <Filter className="w-4 h-4" /> Clear All
                       </Button>
                     </div>
@@ -387,24 +426,28 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                     const alreadySent = interestSent[jobId];
                     return (
                       <>
-                        {isCandidate && !alreadySent && (
-                          <button
-                            onClick={(e) => { e.preventDefault(); handleExpressInterest(jobId); }}
-                            disabled={sendingInterest === jobId}
-                            className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-300/30 hover:bg-cyan-500/30 w-full gap-2 h-10 px-4 py-2 transition disabled:opacity-50"
-                          >
-                            <HeartHandshake className="w-4 h-4" /> {sendingInterest === jobId ? "Sending..." : "Express Interest"}
-                          </button>
-                        )}
-                        {isCandidate && alreadySent && (
-                          <div className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-300/30 w-full gap-2 h-10 px-4 py-2">
-                            <CheckCircle className="w-4 h-4" /> Interest Expressed
-                          </div>
-                        )}
-                        {!session && (
-                          <Link href="/profile/setup" className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-300/30 hover:bg-cyan-500/30 w-full gap-2 h-10 px-4 py-2 transition">
-                            <HeartHandshake className="w-4 h-4" /> Sign in to Express Interest
-                          </Link>
+                        {sessionLoaded && (
+                          <>
+                            {isCandidate && !alreadySent && (
+                              <button
+                                onClick={(e) => { e.preventDefault(); handleExpressInterest(jobId); }}
+                                disabled={sendingInterest === jobId}
+                                className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-300/30 hover:bg-cyan-500/30 w-full gap-2 h-10 px-4 py-2 transition disabled:opacity-50"
+                              >
+                                <HeartHandshake className="w-4 h-4" /> {sendingInterest === jobId ? "Sending..." : "Express Interest"}
+                              </button>
+                            )}
+                            {isCandidate && alreadySent && (
+                              <div className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-300/30 w-full gap-2 h-10 px-4 py-2">
+                                <CheckCircle className="w-4 h-4" /> Interest Expressed
+                              </div>
+                            )}
+                            {!session && (
+                              <Link href="/profile/setup" className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-300/30 hover:bg-cyan-500/30 w-full gap-2 h-10 px-4 py-2 transition">
+                                <HeartHandshake className="w-4 h-4" /> Sign in to Express Interest
+                              </Link>
+                            )}
+                          </>
                         )}
                         <Link href={`/jobs/${jobId}`} className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-white/5 text-neutral-300 border border-white/10 hover:bg-white/10 w-full gap-2 h-10 px-4 py-2 transition">
                           View Details
@@ -434,7 +477,7 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
               <Search className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-400" />
               <h3 className="text-lg font-medium mb-2">No jobs found</h3>
               <p className="text-neutral-400 mb-4">Try adjusting your search or filters</p>
-              <Button onClick={() => { setQ(""); setLoc(0); setType(0); setSelectedSkills([]); setPage(1); }}>Clear Filters</Button>
+              <Button onClick={() => { setQ(""); setLoc(0); setType(0); setEmployerFilter(""); setOccGroup(""); setShowMyJobs(false); setSelectedSkills([]); setPage(1); }}>Clear Filters</Button>
             </CardContent>
           </Card>
         )}

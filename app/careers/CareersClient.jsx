@@ -48,6 +48,7 @@ export default function CareersClient({
   eduTypes,
   expTypes,
   locTypes,
+  ciscoSubMajors = {},
 }) {
   const searchParams = useSearchParams();
   const initialTab = searchParams.get("tab") || "jobs";
@@ -224,6 +225,7 @@ export default function CareersClient({
               eduTypes={eduTypes}
               expTypes={expTypes}
               locTypes={locTypes}
+              ciscoSubMajors={ciscoSubMajors}
               embedded
             />
           </div>
