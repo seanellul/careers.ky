@@ -96,6 +96,7 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
   const [skillSuggestions, setSkillSuggestions] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [skillCiscoCodes, setSkillCiscoCodes] = useState(new Set());
+  const [skillTitleGroups, setSkillTitleGroups] = useState([]);
 
   // Search skills
   useEffect(() => {
@@ -111,14 +112,17 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
     return () => ctrl.abort();
   }, [skillQuery]);
 
-  // Fetch CISCO codes when skills change
+  // Fetch CISCO codes + title keywords when skills change
   useEffect(() => {
-    if (selectedSkills.length === 0) { setSkillCiscoCodes(new Set()); return; }
+    if (selectedSkills.length === 0) { setSkillCiscoCodes(new Set()); setSkillTitleGroups([]); return; }
     const ids = selectedSkills.map(s => s.id).join(",");
     fetch(`/api/skills/cisco-codes?skillIds=${ids}`)
       .then(r => r.json())
-      .then(d => setSkillCiscoCodes(new Set(d.ciscoCodes || [])))
-      .catch(() => setSkillCiscoCodes(new Set()));
+      .then(d => {
+        setSkillCiscoCodes(new Set(d.ciscoCodes || []));
+        setSkillTitleGroups(d.titleGroups || []);
+      })
+      .catch(() => { setSkillCiscoCodes(new Set()); setSkillTitleGroups([]); });
   }, [selectedSkills]);
 
   const addSkill = (skill) => {
@@ -134,12 +138,22 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
   };
 
   const filtered = allJobs
-    .filter((j) => (loc ? j.jobLocation === LOCATION_KEY[loc] : true))
-    .filter((j) => (type ? j.workType === WORK_TYPE[type] : true))
+    .filter((j) => (loc ? j.jobLocation === String(loc) : true))
+    .filter((j) => (type ? j.workType === String(type) : true))
     .filter((j) => (q ? (j.jobTitle?.toLowerCase().includes(q.toLowerCase()) || j.employerName?.toLowerCase().includes(q.toLowerCase())) : true))
     .filter((j) => (employerFilter ? j.employerName?.toLowerCase().includes(employerFilter.toLowerCase()) : true))
     .filter((j) => (initialCisco ? j.sOccupation === initialCisco : true))
-    .filter((j) => (skillCiscoCodes.size > 0 ? skillCiscoCodes.has(j.sOccupation) : true));
+    .filter((j) => {
+      if (skillCiscoCodes.size === 0 && skillTitleGroups.length === 0) return true;
+      // Match by occupation code OR by title keywords (catches misclassified jobs)
+      if (skillCiscoCodes.has(j.sOccupation)) return true;
+      if (skillTitleGroups.length > 0) {
+        const title = (j.jobTitle || "").toLowerCase();
+        // A job matches if ALL words in any keyword group appear in the title
+        return skillTitleGroups.some(group => group.every(word => title.includes(word)));
+      }
+      return false;
+    });
 
   const sorted = [...filtered].sort((a, b) => {
     if (sort === 3) return (b.maximumAmount || 0) - (a.maximumAmount || 0);

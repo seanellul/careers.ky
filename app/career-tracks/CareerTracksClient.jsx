@@ -382,7 +382,7 @@ export default function CareerTracksClient({
                           <div>
                             <div className="text-xs text-neutral-400 mb-1">Work Types</div>
                             <div className="space-y-1">
-                              {Object.entries(stats.dist.work).slice(0, 3).map(([k, v]) => (
+                              {Object.entries(stats.dist.work).filter(([, v]) => v > 0).sort(([, a], [, b]) => b - a).slice(0, 3).map(([k, v]) => (
                                 <Bar key={k} label={workTypes.get(k) || k} value={v} total={stats.count} color="bg-emerald-400" />
                               ))}
                             </div>
@@ -390,7 +390,7 @@ export default function CareerTracksClient({
                           <div>
                             <div className="text-xs text-neutral-400 mb-1">Education Levels</div>
                             <div className="space-y-1">
-                              {Object.entries(stats.dist.edu).slice(0, 3).map(([k, v]) => (
+                              {Object.entries(stats.dist.edu).filter(([, v]) => v > 0).sort(([, a], [, b]) => b - a).slice(0, 3).map(([k, v]) => (
                                 <Bar key={k} label={eduTypes.get(k) || k} value={v} total={stats.count} color="bg-purple-400" />
                               ))}
                             </div>
