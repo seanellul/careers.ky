@@ -360,20 +360,20 @@ export default function CareerTracksClient({
               return (
                 <Card key={unit.id} className="bg-white/5 border-white/10 hover:border-cyan-300/40 transition group">
                   <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-lg mb-2 group-hover:text-cyan-300 transition">{unit.title}</h3>
-                        <p className="text-sm text-neutral-400 line-clamp-2">{unit.description}</p>
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-base mb-1 group-hover:text-cyan-300 transition line-clamp-2">{unit.title.replace(/\s+not elsewhere classified$/i, "")}</h3>
+                        <p className="text-xs text-neutral-400 line-clamp-2">{unit.description}</p>
                       </div>
-                      <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30">{unit.id}</Badge>
+                      <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30 ml-2 shrink-0">{unit.id}</Badge>
                     </div>
-                    <div className="mb-4 p-3 bg-white/5 rounded-lg">
-                      <div className="text-sm font-medium mb-2 flex items-center gap-2"><DollarSign className="w-4 h-4" /> Salary Range</div>
-                      <div className="grid grid-cols-3 gap-2 text-xs">
-                        <div><div className="text-neutral-400">Min</div><div className="font-medium">CI$ {Math.round(stats.min).toLocaleString()}</div></div>
-                        <div><div className="text-neutral-400">Avg</div><div className="font-medium">CI$ {Math.round(stats.mean).toLocaleString()}</div></div>
-                        <div><div className="text-neutral-400">Max</div><div className="font-medium">CI$ {Math.round(stats.max).toLocaleString()}</div></div>
-                      </div>
+                    <div className="flex items-center gap-3 text-xs mb-4 px-3 py-2 bg-white/5 rounded-lg">
+                      <DollarSign className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
+                      <span className="text-neutral-400">CI$ {Math.round(stats.min).toLocaleString()}</span>
+                      <span className="text-neutral-600">—</span>
+                      <span className="text-neutral-200 font-medium">CI$ {Math.round(stats.mean).toLocaleString()}</span>
+                      <span className="text-neutral-600">—</span>
+                      <span className="text-neutral-400">CI$ {Math.round(stats.max).toLocaleString()}</span>
                     </div>
                     <div className="mb-4">
                       <div className="text-sm font-medium mb-2 flex items-center gap-2"><Users className="w-4 h-4" /> Market Overview ({stats.count} posts)</div>
