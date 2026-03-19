@@ -166,8 +166,11 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
   const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
   const view = sorted.slice((page - 1) * pageSize, page * pageSize);
 
+  const containerRef = useRef(null);
+
   useEffect(() => {
-    const cards = document.querySelectorAll(".job-card");
+    if (!containerRef.current || containerRef.current.offsetParent === null) return;
+    const cards = containerRef.current.querySelectorAll(".job-card");
     if (!cards.length) return;
     gsap.fromTo(cards, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: "power3.out" });
   }, [page, sort, q, loc, type]);
@@ -299,7 +302,7 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
           Showing {Math.min((page - 1) * pageSize + 1, sorted.length)}–{Math.min(page * pageSize, sorted.length)} of {sorted.length} jobs
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+        <div ref={containerRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
           {view.map((j, idx) => (
             <Card key={`${j.jobPostId || idx}`} className="job-card group bg-white/5 border-white/10 hover:border-white/20 transition h-full">
               <CardContent className="p-5 h-full flex flex-col">
@@ -311,8 +314,8 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                 <div className="text-xs text-neutral-400 mb-3">{LOCATION_KEY[j.jobLocation] || ltObj[j.jobLocation] || "Cayman Islands"} · {j.hoursPerWeek ? `${j.hoursPerWeek} hrs/wk` : ""}</div>
                 <div className="text-sm text-neutral-200 mb-4 line-clamp-2">{fmtSalary(j)}</div>
                 <div className="flex flex-wrap gap-1 mb-4">
-                  <Badge className="bg-neutral-800 border-white/10 text-neutral-300 text-xs px-2 py-1">{truncateText(etObj[j.educationLevel] || j.educationLevel, 22)}</Badge>
-                  <Badge className="bg-neutral-800 border-white/10 text-neutral-300 text-xs px-2 py-1">{truncateText(exObj[j.yearsOfExperience] || j.yearsOfExperience, 22)}</Badge>
+                  {etObj[j.educationLevel] && <Badge className="bg-neutral-800 border-white/10 text-neutral-300 text-xs px-2 py-1">{truncateText(etObj[j.educationLevel], 22)}</Badge>}
+                  {exObj[j.yearsOfExperience] && <Badge className="bg-neutral-800 border-white/10 text-neutral-300 text-xs px-2 py-1">{truncateText(exObj[j.yearsOfExperience], 22)}</Badge>}
                 </div>
                 <div className="mt-auto space-y-2">
                   {(() => {

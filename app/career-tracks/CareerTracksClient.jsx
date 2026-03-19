@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -122,6 +122,15 @@ export default function CareerTracksClient({
 
     return filtered;
   }, [allUnits, aggregates, filters, sortBy, sortOrder, selectedCiscoCodes]);
+
+  const PAGE_SIZE = 30;
+  const [page, setPage] = useState(1);
+  const visibleUnits = filteredUnits.slice(0, page * PAGE_SIZE);
+  const hasMore = visibleUnits.length < filteredUnits.length;
+
+  // Reset page when filters/sort change
+  const resetPage = useCallback(() => setPage(1), []);
+  useEffect(() => { resetPage(); }, [filters, sortBy, sortOrder, selectedCiscoCodes, resetPage]);
 
   const clearFilters = () => {
     setFilters({ education: "", experience: "", workType: "" });
@@ -353,58 +362,67 @@ export default function CareerTracksClient({
             )}
           </div>
         ) : (
-          <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            {filteredUnits.map((unit) => {
-              const stats = aggregates.get(unit.id);
-              if (!stats) return null;
-              return (
-                <Card key={unit.id} className="bg-white/5 border-white/10 hover:border-cyan-300/40 transition group">
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-base mb-1 group-hover:text-cyan-300 transition line-clamp-2">{unit.title.replace(/\s+not elsewhere classified$/i, "")}</h3>
-                        <p className="text-xs text-neutral-400 line-clamp-2">{unit.description}</p>
-                      </div>
-                      <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30 ml-2 shrink-0">{unit.id}</Badge>
-                    </div>
-                    <div className="flex items-center gap-3 text-xs mb-4 px-3 py-2 bg-white/5 rounded-lg">
-                      <DollarSign className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
-                      <span className="text-neutral-400">CI$ {Math.round(stats.min).toLocaleString()}</span>
-                      <span className="text-neutral-600">—</span>
-                      <span className="text-neutral-200 font-medium">CI$ {Math.round(stats.mean).toLocaleString()}</span>
-                      <span className="text-neutral-600">—</span>
-                      <span className="text-neutral-400">CI$ {Math.round(stats.max).toLocaleString()}</span>
-                    </div>
-                    <div className="mb-4">
-                      <div className="text-sm font-medium mb-2 flex items-center gap-2"><Users className="w-4 h-4" /> Market Overview ({stats.count} posts)</div>
-                      {stats.dist && (
-                        <div className="space-y-3">
-                          <div>
-                            <div className="text-xs text-neutral-400 mb-1">Work Types</div>
-                            <div className="space-y-1">
-                              {Object.entries(stats.dist.work).filter(([, v]) => v > 0).sort(([, a], [, b]) => b - a).slice(0, 3).map(([k, v]) => (
-                                <Bar key={k} label={workTypes.get(k) || k} value={v} total={stats.count} color="bg-emerald-400" />
-                              ))}
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-xs text-neutral-400 mb-1">Education Levels</div>
-                            <div className="space-y-1">
-                              {Object.entries(stats.dist.edu).filter(([, v]) => v > 0).sort(([, a], [, b]) => b - a).slice(0, 3).map(([k, v]) => (
-                                <Bar key={k} label={eduTypes.get(k) || k} value={v} total={stats.count} color="bg-purple-400" />
-                              ))}
-                            </div>
-                          </div>
+          <div>
+            <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              {visibleUnits.map((unit) => {
+                const stats = aggregates.get(unit.id);
+                if (!stats) return null;
+                return (
+                  <Card key={unit.id} className="bg-white/5 border-white/10 hover:border-cyan-300/40 transition group">
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-base mb-1 group-hover:text-cyan-300 transition line-clamp-2">{unit.title.replace(/\s+not elsewhere classified$/i, "")}</h3>
+                          <p className="text-xs text-neutral-400 line-clamp-2">{unit.description}</p>
                         </div>
-                      )}
-                    </div>
-                    <Link href={`/job/${unit.id}`}>
-                      <Button className="w-full gap-2"><Eye className="w-4 h-4" /> View Details</Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              );
-            })}
+                        <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30 ml-2 shrink-0">{unit.id}</Badge>
+                      </div>
+                      <div className="flex items-center gap-3 text-xs mb-4 px-3 py-2 bg-white/5 rounded-lg">
+                        <DollarSign className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
+                        <span className="text-neutral-400">CI$ {Math.round(stats.min).toLocaleString()}</span>
+                        <span className="text-neutral-600">—</span>
+                        <span className="text-neutral-200 font-medium">CI$ {Math.round(stats.mean).toLocaleString()}</span>
+                        <span className="text-neutral-600">—</span>
+                        <span className="text-neutral-400">CI$ {Math.round(stats.max).toLocaleString()}</span>
+                      </div>
+                      <div className="mb-4">
+                        <div className="text-sm font-medium mb-2 flex items-center gap-2"><Users className="w-4 h-4" /> Market Overview ({stats.count} posts)</div>
+                        {stats.dist && (
+                          <div className="space-y-3">
+                            <div>
+                              <div className="text-xs text-neutral-400 mb-1">Work Types</div>
+                              <div className="space-y-1">
+                                {Object.entries(stats.dist.work).filter(([, v]) => v > 0).sort(([, a], [, b]) => b - a).slice(0, 3).map(([k, v]) => (
+                                  <Bar key={k} label={workTypes.get(k) || k} value={v} total={stats.count} color="bg-emerald-400" />
+                                ))}
+                              </div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-neutral-400 mb-1">Education Levels</div>
+                              <div className="space-y-1">
+                                {Object.entries(stats.dist.edu).filter(([, v]) => v > 0).sort(([, a], [, b]) => b - a).slice(0, 3).map(([k, v]) => (
+                                  <Bar key={k} label={eduTypes.get(k) || k} value={v} total={stats.count} color="bg-purple-400" />
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <Link href={`/job/${unit.id}`}>
+                        <Button className="w-full gap-2"><Eye className="w-4 h-4" /> View Details</Button>
+                      </Link>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+            {hasMore && (
+              <div className="flex justify-center mt-8">
+                <Button variant="secondary" onClick={() => setPage((p) => p + 1)} className="gap-2 px-8">
+                  Show More ({filteredUnits.length - visibleUnits.length} remaining)
+                </Button>
+              </div>
+            )}
           </div>
         )}
     </div>

@@ -1,8 +1,8 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import {
-  useState, useRef, useCallback, useLayoutEffect, useEffect, useMemo,
+  useState, useRef, useCallback, useLayoutEffect, useEffect, useMemo, startTransition,
 } from "react";
 import gsap from "gsap";
 import LiveSearchClient from "@/app/jobs/LiveSearchClient";
@@ -50,15 +50,17 @@ export default function CareersClient({
   locTypes,
 }) {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const activeTab = searchParams.get("tab") || "jobs";
+  const initialTab = searchParams.get("tab") || "jobs";
+
+  // Local state drives rendering instantly — no server round-trip
+  const [activeTab, setActiveTab] = useState(initialTab);
+  // Track which tabs have been visited so we mount once, keep alive
+  const [mountedTabs, setMountedTabs] = useState(() => new Set([initialTab]));
 
   // --- Tab indicator refs ---
   const tabBarRef = useRef(null);
   const tabRefs = useRef({});
   const indicatorRef = useRef(null);
-  const contentRef = useRef(null);
-  const prevTabRef = useRef(activeTab);
   const isFirstRender = useRef(true);
 
   const setTabRef = useCallback((key) => (el) => { tabRefs.current[key] = el; }, []);
@@ -88,48 +90,27 @@ export default function CareersClient({
     }
   }, [activeTab]);
 
-  // --- Content crossfade ---
+  // Sync URL passively (no server re-fetch)
   useEffect(() => {
-    const el = contentRef.current;
-    if (!el) return;
-
-    if (prevTabRef.current !== activeTab) {
-      // Animate in
-      gsap.fromTo(el,
-        { opacity: 0, y: 12 },
-        { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }
-      );
-      prevTabRef.current = activeTab;
-    }
+    const params = new URLSearchParams();
+    params.set("tab", activeTab);
+    const url = `/careers?${params.toString()}`;
+    window.history.replaceState(null, "", url);
   }, [activeTab]);
 
   const setTab = (tab) => {
     if (tab === activeTab) return;
-    // Quick fade-out before URL change
-    const el = contentRef.current;
-    if (el) {
-      gsap.to(el, {
-        opacity: 0,
-        y: -8,
-        duration: 0.15,
-        ease: "power2.in",
-        onComplete: () => {
-          const params = new URLSearchParams(searchParams.toString());
-          params.set("tab", tab);
-          for (const key of [...params.keys()]) {
-            if (key !== "tab") params.delete(key);
-          }
-          router.replace(`/careers?${params.toString()}`, { scroll: false });
-        },
+    // Pill slides immediately — activeTab drives the indicator via useLayoutEffect
+    setActiveTab(tab);
+    // Heavy first-mount is deferred so it doesn't block the pill animation
+    startTransition(() => {
+      setMountedTabs((prev) => {
+        if (prev.has(tab)) return prev;
+        const next = new Set(prev);
+        next.add(tab);
+        return next;
       });
-    } else {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("tab", tab);
-      for (const key of [...params.keys()]) {
-        if (key !== "tab") params.delete(key);
-      }
-      router.replace(`/careers?${params.toString()}`, { scroll: false });
-    }
+    });
   };
 
   // --- Aggregate stats ---
@@ -233,30 +214,36 @@ export default function CareersClient({
         </div>
       </div>
 
-      {/* Tab content with crossfade */}
-      <div ref={contentRef} className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-12">
-        {activeTab === "jobs" && (
-          <LiveSearchClient
-            jobs={jobs}
-            workTypes={workTypes}
-            eduTypes={eduTypes}
-            expTypes={expTypes}
-            locTypes={locTypes}
-            embedded
-          />
+      {/* Tab content — lazy-mount on first visit, keep alive after */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-12">
+        {mountedTabs.has("jobs") && (
+          <div className={activeTab === "jobs" ? "animate-tab-in" : "hidden"}>
+            <LiveSearchClient
+              jobs={jobs}
+              workTypes={workTypes}
+              eduTypes={eduTypes}
+              expTypes={expTypes}
+              locTypes={locTypes}
+              embedded
+            />
+          </div>
         )}
-        {activeTab === "employers" && (
-          <EmployerListClient employers={employers} embedded />
+        {mountedTabs.has("employers") && (
+          <div className={activeTab === "employers" ? "animate-tab-in" : "hidden"}>
+            <EmployerListClient employers={employers} embedded />
+          </div>
         )}
-        {activeTab === "career-tracks" && (
-          <CareerTracksClient
-            tree={tree}
-            aggregates={aggregates}
-            workTypes={workTypes}
-            eduTypes={eduTypes}
-            expTypes={expTypes}
-            embedded
-          />
+        {mountedTabs.has("career-tracks") && (
+          <div className={activeTab === "career-tracks" ? "animate-tab-in" : "hidden"}>
+            <CareerTracksClient
+              tree={tree}
+              aggregates={aggregates}
+              workTypes={workTypes}
+              eduTypes={eduTypes}
+              expTypes={expTypes}
+              embedded
+            />
+          </div>
         )}
       </div>
     </div>
