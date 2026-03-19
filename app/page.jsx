@@ -5,17 +5,11 @@ import {
   getActiveJobPostings,
 } from "@/lib/data";
 import { getDb } from "@/lib/db";
-import { getSession } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import HomeClient from "./HomeClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  // Role-specific redirects for logged-in users
-  const session = await getSession();
-  if (session?.employerAccountId) redirect("/employer/dashboard");
-  if (session?.candidateId) redirect("/dashboard");
 
   const [ciscoRows, aggregates, activePostings, employerCount] = await Promise.all([
     loadCISCO(),

@@ -27,7 +27,7 @@ function truncateText(text, maxLength = 20) {
   return text.substring(0, maxLength - 3) + "...";
 }
 
-export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {}, eduTypes: etObj = {}, expTypes: exObj = {}, locTypes: ltObj = {}, embedded = false }) {
+export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {}, eduTypes: etObj = {}, expTypes: exObj = {}, locTypes: ltObj = {}, embedded = false, basePath }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialQ = searchParams.get("q") || "";
@@ -81,7 +81,9 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
     if (employerFilter) params.set("employer", employerFilter);
     if (initialCisco) params.set("cisco", initialCisco);
     const str = params.toString();
-    router.replace(str ? `/jobs?${str}` : "/jobs", { scroll: false });
+    if (!embedded) {
+      router.replace(str ? `/jobs?${str}` : "/jobs", { scroll: false });
+    }
   }, [q, loc, type, sort, employerFilter, initialCisco, router]);
 
   useEffect(() => {
