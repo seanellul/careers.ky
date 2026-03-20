@@ -11,7 +11,9 @@ import HomeClient from "./HomeClient";
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage({ searchParams }) {
+export default async function HomePage({ searchParams: searchParamsPromise }) {
+  const searchParams = await searchParamsPromise;
+
   // Role-specific redirects for logged-in users
   const session = await getSession();
   if (session?.employerAccountId) redirect("/employer/dashboard");

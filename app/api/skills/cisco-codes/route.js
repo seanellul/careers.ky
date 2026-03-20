@@ -21,13 +21,14 @@ export async function GET(request) {
     }
 
     const rows = await sql`
-      SELECT DISTINCT cisco_code
-      FROM cisco_skills
-      WHERE skill_id = ANY(${ids})
-      ORDER BY cisco_code
+      SELECT DISTINCT oc.occupation_code
+      FROM cisco_skills cs
+      JOIN occupation_cisco oc ON oc.cisco_code = cs.cisco_code
+      WHERE cs.skill_id = ANY(${ids})
+      ORDER BY oc.occupation_code
     `;
 
-    return NextResponse.json({ ciscoCodes: rows.map((r) => r.cisco_code) });
+    return NextResponse.json({ ciscoCodes: rows.map((r) => r.occupation_code) });
   } catch (error) {
     console.error("Skill cisco-codes error:", error);
     return NextResponse.json({ error: "Failed" }, { status: 500 });

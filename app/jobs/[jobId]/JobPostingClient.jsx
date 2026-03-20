@@ -242,7 +242,8 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
                   </Button>
                 </Link>
               )}
-              {session?.employerAccountId && (
+              {session?.employerCompanyName && job.Employer &&
+                session.employerCompanyName.trim().toLowerCase() === job.Employer.trim().toLowerCase() && (
                 <Link href={`/talent?jobId=${job.cJobId}`}>
                   <Button size="lg" className="gap-2">
                     <Users className="w-4 h-4" /> Find Matching Candidates
