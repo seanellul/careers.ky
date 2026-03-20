@@ -1,18 +1,26 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Filter, TrendingUp, MapPin, Building2, Calendar, X, Plus, HeartHandshake, CheckCircle } from "lucide-react";
+import { Search, Filter, TrendingUp, MapPin, Building2, Calendar, X, Plus, HeartHandshake, CheckCircle, DollarSign, GraduationCap, Clock } from "lucide-react";
 import gsap from "gsap";
 
 const LOCATION_KEY = { 0: "Undefined", 1: "West Bay", 2: "Seven Mile Beach", 3: "Camana Bay", 4: "George Town", 5: "South Sound", 6: "Red Bay / Prospect", 7: "Spotts / Newlands", 8: "Savannah / Lower Valley", 9: "Bodden Town", 10: "North Side", 11: "East End", 12: "Rum Point / Cayman Kai", 13: "Cayman Brac", 14: "Little Cayman" };
 const WORK_TYPE = { 0: "Undefined", 1: "Full-time", 2: "Part-time", 3: "Shifts", 4: "Weekends", 5: "Temporary", 6: "Internships", 7: "Apprenticeships" };
 const SORT_KEY = { 0: "Undefined", 1: "Newest", 2: "EndsSoon", 3: "SalaryHighLow", 4: "SalaryLowHigh" };
+
+function titleCase(str) {
+  if (!str) return str;
+  if (str.replace(/[^A-Z]/g, "").length / str.replace(/\s/g, "").length > 0.6) {
+    return str.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+  }
+  return str;
+}
 
 function fmtSalary(job) {
   const cur = job?.currency || "KYD";
@@ -22,12 +30,48 @@ function fmtSalary(job) {
   return "Salary not listed";
 }
 
+function fmtSalaryDisplay(job) {
+  if (!job) return { main: "Salary not listed", suffix: "" };
+  const min = job.minimumAmount;
+  const max = job.maximumAmount;
+  if (!min && !max && !job.salaryShort) return { main: "Salary not listed", suffix: "" };
+
+  const prefix = (job.currency === "KYD" || !job.currency) ? "CI$" : job.currency + " ";
+
+  const fmtNum = (n) => {
+    if (n >= 1000) return Math.round(n / 1000) + "K";
+    return String(Math.round(n));
+  };
+
+  // Extract period from salaryShort if available
+  let suffix = "";
+  const short = job.salaryShort || "";
+  if (/per\s*hour/i.test(short)) suffix = "/hr";
+  else if (/per\s*annum|annual/i.test(short)) suffix = "/yr";
+  else if (/per\s*month/i.test(short)) suffix = "/mo";
+  else if (min && min >= 100) suffix = "/yr"; // assume annual for large amounts
+
+  if (min && max && min !== max) {
+    return { main: `${prefix} ${fmtNum(min)} – ${fmtNum(max)}`, suffix };
+  }
+  if (max) return { main: `${prefix} ${fmtNum(max)}`, suffix };
+  if (min) return { main: `${prefix} ${fmtNum(min)}`, suffix };
+  // Fallback: clean up salaryShort
+  const cleaned = short
+    .replace(/KYD\$?/g, prefix)
+    .replace(/Per\s*Annum/i, "")
+    .replace(/Per\s*Hour/i, "")
+    .replace(/\.0+\b/g, "")
+    .trim();
+  return { main: cleaned || "Salary not listed", suffix };
+}
+
 function truncateText(text, maxLength = 20) {
   if (!text || text.length <= maxLength) return text;
   return text.substring(0, maxLength - 3) + "...";
 }
 
-export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {}, eduTypes: etObj = {}, expTypes: exObj = {}, locTypes: ltObj = {}, embedded = false }) {
+export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {}, eduTypes: etObj = {}, expTypes: exObj = {}, locTypes: ltObj = {}, ciscoSubMajors = {}, embedded = false, basePath }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const initialQ = searchParams.get("q") || "";
@@ -44,15 +88,18 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
   const [page, setPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
   const [employerFilter, setEmployerFilter] = useState(initialEmployer);
+  const [showMyJobs, setShowMyJobs] = useState(false);
+  const [occGroup, setOccGroup] = useState("");
   const pageSize = 12;
 
   // Session for Express Interest
   const [session, setSession] = useState(null);
+  const [sessionLoaded, setSessionLoaded] = useState(false);
   const [interestSent, setInterestSent] = useState({}); // jobId -> true
   const [sendingInterest, setSendingInterest] = useState(null);
 
   useEffect(() => {
-    fetch("/api/auth/session").then(r => r.json()).then(d => setSession(d.authenticated ? d : null)).catch(() => {});
+    fetch("/api/auth/session").then(r => r.json()).then(d => { setSession(d.authenticated ? d : null); setSessionLoaded(true); }).catch(() => setSessionLoaded(true));
   }, []);
 
   const handleExpressInterest = async (jobId) => {
@@ -81,7 +128,9 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
     if (employerFilter) params.set("employer", employerFilter);
     if (initialCisco) params.set("cisco", initialCisco);
     const str = params.toString();
-    router.replace(str ? `/jobs?${str}` : "/jobs", { scroll: false });
+    if (!embedded) {
+      router.replace(str ? `/jobs?${str}` : "/jobs", { scroll: false });
+    }
   }, [q, loc, type, sort, employerFilter, initialCisco, router]);
 
   useEffect(() => {
@@ -89,11 +138,24 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
     return () => clearTimeout(timer);
   }, [updateURL]);
 
+  // Occupation group options (sub-major groups from CISCO codes)
+  const occGroupOptions = useMemo(() => {
+    const counts = {};
+    for (const j of allJobs) {
+      const code = j.sOccupation?.substring(0, 2);
+      if (code) counts[code] = (counts[code] || 0) + 1;
+    }
+    return Object.entries(counts)
+      .map(([code, count]) => ({ code, label: ciscoSubMajors[code] || `Group ${code}`, count }))
+      .sort((a, b) => b.count - a.count);
+  }, [allJobs, ciscoSubMajors]);
+
   // Skills filter
   const [skillQuery, setSkillQuery] = useState("");
   const [skillSuggestions, setSkillSuggestions] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [skillCiscoCodes, setSkillCiscoCodes] = useState(new Set());
+  const [skillTitleGroups, setSkillTitleGroups] = useState([]);
 
   // Search skills
   useEffect(() => {
@@ -109,14 +171,17 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
     return () => ctrl.abort();
   }, [skillQuery]);
 
-  // Fetch CISCO codes when skills change
+  // Fetch CISCO codes + title keywords when skills change
   useEffect(() => {
-    if (selectedSkills.length === 0) { setSkillCiscoCodes(new Set()); return; }
+    if (selectedSkills.length === 0) { setSkillCiscoCodes(new Set()); setSkillTitleGroups([]); return; }
     const ids = selectedSkills.map(s => s.id).join(",");
     fetch(`/api/skills/cisco-codes?skillIds=${ids}`)
       .then(r => r.json())
-      .then(d => setSkillCiscoCodes(new Set(d.ciscoCodes || [])))
-      .catch(() => setSkillCiscoCodes(new Set()));
+      .then(d => {
+        setSkillCiscoCodes(new Set(d.ciscoCodes || []));
+        setSkillTitleGroups(d.titleGroups || []);
+      })
+      .catch(() => { setSkillCiscoCodes(new Set()); setSkillTitleGroups([]); });
   }, [selectedSkills]);
 
   const addSkill = (skill) => {
@@ -132,12 +197,23 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
   };
 
   const filtered = allJobs
-    .filter((j) => (loc ? j.jobLocation === LOCATION_KEY[loc] : true))
-    .filter((j) => (type ? j.workType === WORK_TYPE[type] : true))
+    .filter((j) => (loc ? j.jobLocation === String(loc) : true))
+    .filter((j) => (type ? j.workType === String(type) : true))
     .filter((j) => (q ? (j.jobTitle?.toLowerCase().includes(q.toLowerCase()) || j.employerName?.toLowerCase().includes(q.toLowerCase())) : true))
     .filter((j) => (employerFilter ? j.employerName?.toLowerCase().includes(employerFilter.toLowerCase()) : true))
     .filter((j) => (initialCisco ? j.sOccupation === initialCisco : true))
-    .filter((j) => (skillCiscoCodes.size > 0 ? skillCiscoCodes.has(j.sOccupation) : true));
+    .filter((j) => (occGroup ? j.sOccupation?.startsWith(occGroup) : true))
+    .filter((j) => {
+      if (skillCiscoCodes.size === 0 && skillTitleGroups.length === 0) return true;
+      // Match by occupation code OR by title keywords (catches misclassified jobs)
+      if (skillCiscoCodes.has(j.sOccupation)) return true;
+      if (skillTitleGroups.length > 0) {
+        const title = (j.jobTitle || "").toLowerCase();
+        // A job matches if ALL words in any keyword group appear in the title
+        return skillTitleGroups.some(group => group.every(word => title.includes(word)));
+      }
+      return false;
+    });
 
   const sorted = [...filtered].sort((a, b) => {
     if (sort === 3) return (b.maximumAmount || 0) - (a.maximumAmount || 0);
@@ -150,8 +226,11 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
   const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
   const view = sorted.slice((page - 1) * pageSize, page * pageSize);
 
+  const containerRef = useRef(null);
+
   useEffect(() => {
-    const cards = document.querySelectorAll(".job-card");
+    if (!containerRef.current || containerRef.current.offsetParent === null) return;
+    const cards = containerRef.current.querySelectorAll(".job-card");
     if (!cards.length) return;
     gsap.fromTo(cards, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: "power3.out" });
   }, [page, sort, q, loc, type]);
@@ -199,14 +278,30 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
             </Button>
           </div>
           <div className="space-y-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
-              <Input value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} placeholder="Search by job title or employer..." className="pl-10 bg-white/5 border-white/10 h-12 text-base" />
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                <Input value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} placeholder="Search by job title or employer..." className="pl-10 bg-white/5 border-white/10 h-12 text-base" />
+              </div>
+              {sessionLoaded && session?.employerCompanyName && (
+                <Button
+                  variant={showMyJobs ? "default" : "secondary"}
+                  className={`gap-2 h-12 shrink-0 ${showMyJobs ? "bg-cyan-500/20 text-cyan-300 border border-cyan-300/30" : ""}`}
+                  onClick={() => {
+                    const next = !showMyJobs;
+                    setShowMyJobs(next);
+                    setEmployerFilter(next ? session.employerCompanyName : "");
+                    setPage(1);
+                  }}
+                >
+                  <Building2 className="w-4 h-4" /> My Jobs
+                </Button>
+              )}
             </div>
             {showFilters && (
               <Card className="bg-white/5 border-white/10">
                 <CardContent className="p-4 md:p-6 space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
                     <div>
                       <label className="text-sm font-medium mb-2 block">Location</label>
                       <select value={loc} onChange={(e) => { setLoc(Number(e.target.value)); setPage(1); }} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200">
@@ -221,7 +316,14 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                     </div>
                     <div>
                       <label className="text-sm font-medium mb-2 block">Employer</label>
-                      <Input value={employerFilter} onChange={(e) => { setEmployerFilter(e.target.value); setPage(1); }} placeholder="Filter by employer..." className="bg-white/5 border-white/10" />
+                      <Input value={employerFilter} onChange={(e) => { setEmployerFilter(e.target.value); setShowMyJobs(false); setPage(1); }} placeholder="Filter by employer..." className="bg-white/5 border-white/10" />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium mb-2 block">Occupation</label>
+                      <select value={occGroup} onChange={(e) => { setOccGroup(e.target.value); setPage(1); }} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200">
+                        <option value="">All Occupations</option>
+                        {occGroupOptions.map(o => (<option key={o.code} value={o.code}>{o.label} ({o.count})</option>))}
+                      </select>
                     </div>
                     <div>
                       <label className="text-sm font-medium mb-2 block">Sort By</label>
@@ -230,7 +332,7 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                       </select>
                     </div>
                     <div className="flex items-end">
-                      <Button variant="secondary" onClick={() => { setQ(""); setLoc(0); setType(0); setEmployerFilter(""); setSort(1); setSelectedSkills([]); setPage(1); }} className="gap-2 w-full">
+                      <Button variant="secondary" onClick={() => { setQ(""); setLoc(0); setType(0); setEmployerFilter(""); setOccGroup(""); setShowMyJobs(false); setSort(1); setSelectedSkills([]); setPage(1); }} className="gap-2 w-full">
                         <Filter className="w-4 h-4" /> Clear All
                       </Button>
                     </div>
@@ -283,20 +385,39 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
           Showing {Math.min((page - 1) * pageSize + 1, sorted.length)}–{Math.min(page * pageSize, sorted.length)} of {sorted.length} jobs
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
-          {view.map((j, idx) => (
-            <Card key={`${j.jobPostId || idx}`} className="job-card group bg-white/5 border-white/10 hover:border-white/20 transition h-full">
+        <div ref={containerRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+          {view.map((j, idx) => {
+            const salary = fmtSalaryDisplay(j);
+            return (
+            <Card key={`${j.jobPostId || idx}`} className="job-card group bg-white/5 border-white/10 hover:border-white/20 hover:shadow-lg hover:shadow-cyan-500/5 hover:-translate-y-0.5 transition-all duration-200 h-full">
               <CardContent className="p-5 h-full flex flex-col">
-                <div className="text-xs uppercase tracking-wide text-emerald-300 mb-2">{WORK_TYPE[j.workType] || wtObj[j.workType] || "Role"}</div>
-                <Link href={`/jobs/${j.jobPostIdString || j.jobPostId}`} className="font-medium leading-tight group-hover:text-cyan-300 mb-2 line-clamp-2 min-h-[2.5rem] flex items-start transition">{j.jobTitle || "Untitled role"}</Link>
-                <div className="text-sm text-neutral-400 mb-2 line-clamp-1">
-                  <Link href={`/employer/${encodeURIComponent(j.employerName?.trim().toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`} className="hover:text-cyan-300 transition">{j.employerName}</Link>
+                <div className="mb-2">
+                  <span className="inline-block text-xs font-medium uppercase tracking-wide text-emerald-300 bg-emerald-500/10 border border-emerald-300/20 rounded-full px-2.5 py-0.5">{WORK_TYPE[j.workType] || wtObj[j.workType] || "Role"}</span>
                 </div>
-                <div className="text-xs text-neutral-400 mb-3">{LOCATION_KEY[j.jobLocation] || ltObj[j.jobLocation] || "Cayman Islands"} · {j.hoursPerWeek ? `${j.hoursPerWeek} hrs/wk` : ""}</div>
-                <div className="text-sm text-neutral-200 mb-4 line-clamp-2">{fmtSalary(j)}</div>
-                <div className="flex flex-wrap gap-1 mb-4">
-                  <Badge className="bg-neutral-800 border-white/10 text-neutral-300 text-xs px-2 py-1">{truncateText(etObj[j.educationLevel] || j.educationLevel, 22)}</Badge>
-                  <Badge className="bg-neutral-800 border-white/10 text-neutral-300 text-xs px-2 py-1">{truncateText(exObj[j.yearsOfExperience] || j.yearsOfExperience, 22)}</Badge>
+                <Link href={`/jobs/${j.jobPostIdString || j.jobPostId}`} className="font-medium leading-tight group-hover:text-cyan-300 mb-1.5 line-clamp-2 min-h-[2.5rem] flex items-start transition">{j.jobTitle || "Untitled role"}</Link>
+                <div className="text-sm text-neutral-400 mb-1.5 line-clamp-1">
+                  <Link href={`/employer/${encodeURIComponent(j.employerName?.trim().toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`} className="hover:text-cyan-300 transition">{titleCase(j.employerName)}</Link>
+                </div>
+                <div className="flex items-center gap-1 text-xs text-neutral-400 mb-3">
+                  <MapPin className="w-3 h-3 shrink-0" />
+                  <span>{LOCATION_KEY[j.jobLocation] || ltObj[j.jobLocation] || "Cayman Islands"}{j.hoursPerWeek ? ` · ${j.hoursPerWeek} hrs/wk` : ""}</span>
+                </div>
+                <div className="flex items-center gap-1.5 mb-3">
+                  <DollarSign className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span className="text-sm font-semibold text-neutral-100">{salary.main}</span>
+                  {salary.suffix && <span className="text-xs text-neutral-500">{salary.suffix}</span>}
+                </div>
+                <div className="flex flex-wrap gap-1.5 mb-4">
+                  {etObj[j.educationLevel] && (
+                    <Badge className="bg-purple-500/10 text-purple-300 border-purple-300/20 text-xs px-2 py-0.5 gap-1">
+                      <GraduationCap className="w-3 h-3" />{truncateText(etObj[j.educationLevel], 22)}
+                    </Badge>
+                  )}
+                  {exObj[j.yearsOfExperience] && (
+                    <Badge className="bg-cyan-500/10 text-cyan-300 border-cyan-300/20 text-xs px-2 py-0.5 gap-1">
+                      <Clock className="w-3 h-3" />{truncateText(exObj[j.yearsOfExperience], 22)}
+                    </Badge>
+                  )}
                 </div>
                 <div className="mt-auto space-y-2">
                   {(() => {
@@ -305,28 +426,29 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                     const alreadySent = interestSent[jobId];
                     return (
                       <>
-                        {/* Express Interest — primary action for candidates */}
-                        {isCandidate && !alreadySent && (
-                          <button
-                            onClick={(e) => { e.preventDefault(); handleExpressInterest(jobId); }}
-                            disabled={sendingInterest === jobId}
-                            className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-300/30 hover:bg-cyan-500/30 w-full gap-2 h-10 px-4 py-2 transition disabled:opacity-50"
-                          >
-                            <HeartHandshake className="w-4 h-4" /> {sendingInterest === jobId ? "Sending..." : "Express Interest"}
-                          </button>
+                        {sessionLoaded && (
+                          <>
+                            {isCandidate && !alreadySent && (
+                              <button
+                                onClick={(e) => { e.preventDefault(); handleExpressInterest(jobId); }}
+                                disabled={sendingInterest === jobId}
+                                className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-300/30 hover:bg-cyan-500/30 w-full gap-2 h-10 px-4 py-2 transition disabled:opacity-50"
+                              >
+                                <HeartHandshake className="w-4 h-4" /> {sendingInterest === jobId ? "Sending..." : "Express Interest"}
+                              </button>
+                            )}
+                            {isCandidate && alreadySent && (
+                              <div className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-300/30 w-full gap-2 h-10 px-4 py-2">
+                                <CheckCircle className="w-4 h-4" /> Interest Expressed
+                              </div>
+                            )}
+                            {!session && (
+                              <Link href="/profile/setup" className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-300/30 hover:bg-cyan-500/30 w-full gap-2 h-10 px-4 py-2 transition">
+                                <HeartHandshake className="w-4 h-4" /> Sign in to Express Interest
+                              </Link>
+                            )}
+                          </>
                         )}
-                        {isCandidate && alreadySent && (
-                          <div className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-300/30 w-full gap-2 h-10 px-4 py-2">
-                            <CheckCircle className="w-4 h-4" /> Interest Expressed
-                          </div>
-                        )}
-                        {/* Not signed in — prompt */}
-                        {!session && (
-                          <Link href="/profile/setup" className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-300/30 hover:bg-cyan-500/30 w-full gap-2 h-10 px-4 py-2 transition">
-                            <HeartHandshake className="w-4 h-4" /> Sign in to Express Interest
-                          </Link>
-                        )}
-                        {/* View Details */}
                         <Link href={`/jobs/${jobId}`} className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-white/5 text-neutral-300 border border-white/10 hover:bg-white/10 w-full gap-2 h-10 px-4 py-2 transition">
                           View Details
                         </Link>
@@ -336,7 +458,8 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                 </div>
               </CardContent>
             </Card>
-          ))}
+            );
+          })}
         </div>
 
         {/* Pagination */}
@@ -354,7 +477,7 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
               <Search className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-400" />
               <h3 className="text-lg font-medium mb-2">No jobs found</h3>
               <p className="text-neutral-400 mb-4">Try adjusting your search or filters</p>
-              <Button onClick={() => { setQ(""); setLoc(0); setType(0); setSelectedSkills([]); setPage(1); }}>Clear Filters</Button>
+              <Button onClick={() => { setQ(""); setLoc(0); setType(0); setEmployerFilter(""); setOccGroup(""); setShowMyJobs(false); setSelectedSkills([]); setPage(1); }}>Clear Filters</Button>
             </CardContent>
           </Card>
         )}

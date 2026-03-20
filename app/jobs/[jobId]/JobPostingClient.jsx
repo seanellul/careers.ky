@@ -147,13 +147,17 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
   const locTypes = useMemo(() => new Map(Object.entries(ltObj)), [ltObj]);
 
   const [session, setSession] = useState(null);
+  const [sessionLoaded, setSessionLoaded] = useState(false);
   const [interestState, setInterestState] = useState("idle"); // idle | sending | sent | error
   const [interestMessage, setInterestMessage] = useState("");
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    fetch("/api/auth/session").then(r => r.json()).then(d => setSession(d.authenticated ? d : null)).catch(() => {});
+    fetch("/api/auth/session").then(r => r.json()).then(d => { setSession(d.authenticated ? d : null); setSessionLoaded(true); }).catch(() => setSessionLoaded(true));
   }, []);
+
+  const isOwner = session?.employerCompanyName && job.Employer &&
+    session.employerCompanyName.trim().toLowerCase() === job.Employer.trim().toLowerCase();
 
   const daysLeft = daysUntil(job.endDate);
   const isExpiring = daysLeft !== null && daysLeft <= 5 && daysLeft > 0;
@@ -203,52 +207,55 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
           {/* CTA */}
           {job.isActive && (
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              {/* Express Interest — primary CTA for candidates */}
-              {session?.candidateId && !session?.employerAccountId && interestState !== "sent" && (
-                <Button
-                  size="lg"
-                  className="gap-2"
-                  disabled={interestState === "sending"}
-                  onClick={async () => {
-                    setInterestState("sending");
-                    try {
-                      const res = await fetch("/api/introductions", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ jobId: job.cJobId, message: interestMessage || null }),
-                      });
-                      if (res.ok) setInterestState("sent");
-                      else {
-                        const data = await res.json();
-                        if (res.status === 409) setInterestState("sent");
-                        else { alert(data.error || "Failed"); setInterestState("idle"); }
-                      }
-                    } catch { setInterestState("error"); }
-                  }}
-                >
-                  <HeartHandshake className="w-4 h-4" /> {interestState === "sending" ? "Sending..." : "Express Interest"}
-                </Button>
-              )}
-              {interestState === "sent" && (
-                <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-300/30 text-sm py-2 px-4">
-                  <CheckCircle className="w-4 h-4 mr-1" /> Interest Expressed
-                </Badge>
-              )}
-              {/* Not signed in — prompt to sign in to express interest */}
-              {!session && (
-                <Link href="/profile/setup">
-                  <Button size="lg" className="gap-2">
-                    <HeartHandshake className="w-4 h-4" /> Sign in to Express Interest
-                  </Button>
-                </Link>
-              )}
-              {session?.employerCompanyName && job.Employer &&
-                session.employerCompanyName.trim().toLowerCase() === job.Employer.trim().toLowerCase() && (
-                <Link href={`/talent?jobId=${job.cJobId}`}>
-                  <Button size="lg" className="gap-2">
-                    <Users className="w-4 h-4" /> Find Matching Candidates
-                  </Button>
-                </Link>
+              {sessionLoaded && (
+                <>
+                  {/* Express Interest — primary CTA for candidates */}
+                  {session?.candidateId && !session?.employerAccountId && interestState !== "sent" && (
+                    <Button
+                      size="lg"
+                      className="gap-2"
+                      disabled={interestState === "sending"}
+                      onClick={async () => {
+                        setInterestState("sending");
+                        try {
+                          const res = await fetch("/api/introductions", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ jobId: job.cJobId, message: interestMessage || null }),
+                          });
+                          if (res.ok) setInterestState("sent");
+                          else {
+                            const data = await res.json();
+                            if (res.status === 409) setInterestState("sent");
+                            else { alert(data.error || "Failed"); setInterestState("idle"); }
+                          }
+                        } catch { setInterestState("error"); }
+                      }}
+                    >
+                      <HeartHandshake className="w-4 h-4" /> {interestState === "sending" ? "Sending..." : "Express Interest"}
+                    </Button>
+                  )}
+                  {interestState === "sent" && (
+                    <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-300/30 text-sm py-2 px-4">
+                      <CheckCircle className="w-4 h-4 mr-1" /> Interest Expressed
+                    </Badge>
+                  )}
+                  {/* Not signed in — prompt to sign in to express interest */}
+                  {!session && (
+                    <Link href="/profile/setup">
+                      <Button size="lg" className="gap-2">
+                        <HeartHandshake className="w-4 h-4" /> Sign in to Express Interest
+                      </Button>
+                    </Link>
+                  )}
+                  {isOwner && (
+                    <Link href={`/talent?jobId=${job.cJobId}`}>
+                      <Button size="lg" className="gap-2">
+                        <Users className="w-4 h-4" /> Find Matching Candidates
+                      </Button>
+                    </Link>
+                  )}
+                </>
               )}
               {/* WORC link — secondary */}
               <a href={worcUrl} target="_blank" rel="noreferrer">
@@ -377,65 +384,69 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
                 <h3 className="text-lg font-semibold">Interested in this role?</h3>
                 {job.isActive ? (
                   <>
-                    {/* Express Interest — primary sidebar CTA */}
-                    {session?.candidateId && !session?.employerAccountId && interestState !== "sent" && (
-                      <Button
-                        className="w-full gap-2"
-                        disabled={interestState === "sending"}
-                        onClick={async () => {
-                          setInterestState("sending");
-                          try {
-                            const res = await fetch("/api/introductions", {
-                              method: "POST",
-                              headers: { "Content-Type": "application/json" },
-                              body: JSON.stringify({ jobId: job.cJobId, message: interestMessage || null }),
-                            });
-                            if (res.ok) setInterestState("sent");
-                            else {
-                              const data = await res.json();
-                              if (res.status === 409) setInterestState("sent");
-                              else { alert(data.error || "Failed"); setInterestState("idle"); }
-                            }
-                          } catch { setInterestState("error"); }
-                        }}
-                      >
-                        <HeartHandshake className="w-4 h-4" /> {interestState === "sending" ? "Sending..." : "Express Interest"}
-                      </Button>
-                    )}
-                    {interestState === "sent" && (
-                      <div className="text-center">
-                        <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-300/30 text-sm py-2 px-4">
-                          <CheckCircle className="w-4 h-4 mr-1" /> Interest Expressed
-                        </Badge>
-                      </div>
-                    )}
-                    {!session && (
-                      <Link href="/profile/setup" className="block">
-                        <Button className="w-full gap-2">
-                          <HeartHandshake className="w-4 h-4" /> Sign in to Express Interest
-                        </Button>
-                      </Link>
-                    )}
-                    {/* Employer viewing — no Express Interest, show WORC fallback */}
-                    {session?.employerAccountId && (
-                      <a href={worcUrl} target="_blank" rel="noreferrer" className="block">
-                        <Button variant="secondary" className="w-full gap-2 text-neutral-400">
-                          <ExternalLink className="w-4 h-4" /> View on WORC
-                        </Button>
-                      </a>
+                    {sessionLoaded && (
+                      <>
+                        {/* Express Interest — primary sidebar CTA */}
+                        {session?.candidateId && !session?.employerAccountId && interestState !== "sent" && (
+                          <Button
+                            className="w-full gap-2"
+                            disabled={interestState === "sending"}
+                            onClick={async () => {
+                              setInterestState("sending");
+                              try {
+                                const res = await fetch("/api/introductions", {
+                                  method: "POST",
+                                  headers: { "Content-Type": "application/json" },
+                                  body: JSON.stringify({ jobId: job.cJobId, message: interestMessage || null }),
+                                });
+                                if (res.ok) setInterestState("sent");
+                                else {
+                                  const data = await res.json();
+                                  if (res.status === 409) setInterestState("sent");
+                                  else { alert(data.error || "Failed"); setInterestState("idle"); }
+                                }
+                              } catch { setInterestState("error"); }
+                            }}
+                          >
+                            <HeartHandshake className="w-4 h-4" /> {interestState === "sending" ? "Sending..." : "Express Interest"}
+                          </Button>
+                        )}
+                        {interestState === "sent" && (
+                          <div className="text-center">
+                            <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-300/30 text-sm py-2 px-4">
+                              <CheckCircle className="w-4 h-4 mr-1" /> Interest Expressed
+                            </Badge>
+                          </div>
+                        )}
+                        {!session && (
+                          <Link href="/profile/setup" className="block">
+                            <Button className="w-full gap-2">
+                              <HeartHandshake className="w-4 h-4" /> Sign in to Express Interest
+                            </Button>
+                          </Link>
+                        )}
+                        {/* Employer viewing — no Express Interest, show WORC fallback */}
+                        {session?.employerAccountId && (
+                          <a href={worcUrl} target="_blank" rel="noreferrer" className="block">
+                            <Button variant="secondary" className="w-full gap-2 text-neutral-400">
+                              <ExternalLink className="w-4 h-4" /> View on WORC
+                            </Button>
+                          </a>
+                        )}
+                        {/* WORC as subtle secondary link */}
+                        {!session?.employerAccountId && (
+                          <a href={worcUrl} target="_blank" rel="noreferrer" className="block text-center">
+                            <span className="text-xs text-neutral-500 hover:text-neutral-300 transition inline-flex items-center gap-1">
+                              <ExternalLink className="w-3 h-3" /> Or apply directly on WORC
+                            </span>
+                          </a>
+                        )}
+                      </>
                     )}
                     {daysLeft !== null && daysLeft > 0 && (
                       <p className="text-xs text-neutral-400 text-center">
                         {daysLeft} day{daysLeft !== 1 ? "s" : ""} remaining
                       </p>
-                    )}
-                    {/* WORC as subtle secondary link */}
-                    {!session?.employerAccountId && (
-                      <a href={worcUrl} target="_blank" rel="noreferrer" className="block text-center">
-                        <span className="text-xs text-neutral-500 hover:text-neutral-300 transition inline-flex items-center gap-1">
-                          <ExternalLink className="w-3 h-3" /> Or apply directly on WORC
-                        </span>
-                      </a>
                     )}
                   </>
                 ) : (

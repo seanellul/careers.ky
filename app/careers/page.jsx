@@ -35,6 +35,12 @@ export default async function CareersPage() {
 
   const tree = buildCiscoTree(ciscoRows);
 
+  const ciscoSubMajors = Object.fromEntries(
+    ciscoRows
+      .filter(r => String(r.sCISCO).length === 4 && r.sCISCO.endsWith("00") && !r.sCISCO.endsWith("000"))
+      .map(r => [String(r.sCISCO).substring(0, 2), r.cTitle])
+  );
+
   const jobs = postings.map((job) => ({
     educationLevel: job.sEducation || "0",
     employerName: job.Employer || "Employer not listed",
@@ -67,6 +73,7 @@ export default async function CareersPage() {
         eduTypes={Object.fromEntries(eduTypes)}
         expTypes={Object.fromEntries(expTypes)}
         locTypes={Object.fromEntries(locTypes)}
+        ciscoSubMajors={ciscoSubMajors}
       />
     </Suspense>
   );

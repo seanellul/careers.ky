@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+import { getSession } from "@/lib/auth";
 import {
   loadAggregates,
   loadCISCO,
@@ -5,8 +7,6 @@ import {
   getActiveJobPostings,
 } from "@/lib/data";
 import { getDb } from "@/lib/db";
-import { getSession } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import HomeClient from "./HomeClient";
 
 export const dynamic = "force-dynamic";

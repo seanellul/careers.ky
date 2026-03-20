@@ -123,7 +123,7 @@ export default function AdminCandidatesClient({ candidates, stats }) {
                     <td className="px-4 py-3 text-neutral-300">{Number(c.interest_count)}</td>
                     <td className="px-4 py-3 text-neutral-300">{Number(c.intro_count)}</td>
                     <td className="px-4 py-3 text-neutral-500 text-xs">
-                      {new Date(c.created_at).toLocaleDateString()}
+                      {new Date(c.created_at).toISOString().slice(0, 10)}
                     </td>
                   </tr>
                 );
