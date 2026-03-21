@@ -12,7 +12,10 @@ export default function DevToolbar() {
 
   // Only show in development
   if (process.env.NODE_ENV === "production") return null;
-  if (typeof window !== "undefined" && window.location.hostname !== "localhost") return null;
+  if (typeof window !== "undefined") {
+    const h = window.location.hostname;
+    if (h !== "localhost" && h !== "127.0.0.1") return null;
+  }
 
   const switchTo = async (role) => {
     setSwitching(true);
@@ -25,6 +28,28 @@ export default function DevToolbar() {
       if (res.ok) {
         refresh();
         router.refresh();
+      }
+    } finally {
+      setSwitching(false);
+    }
+  };
+
+  /** No OAuth — creates a synthetic DB user (dev only). */
+  const loginDevCandidate = async (fresh) => {
+    setSwitching(true);
+    try {
+      const res = await fetch("/api/dev/login-candidate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fresh }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        refresh();
+        router.push(data.defaultNext || "/dashboard");
+        router.refresh();
+      } else {
+        console.error("dev/login-candidate:", data?.error || res.status);
       }
     } finally {
       setSwitching(false);
@@ -46,7 +71,7 @@ export default function DevToolbar() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-[9999] bg-neutral-900 border border-orange-500/50 rounded-xl shadow-2xl p-3 text-xs text-neutral-200 space-y-2 w-56">
+    <div className="fixed bottom-4 right-4 z-[9999] bg-neutral-900 border border-orange-500/50 rounded-xl shadow-2xl p-3 text-xs text-neutral-200 space-y-2 w-64 max-w-[calc(100vw-2rem)]">
       <div className="flex items-center justify-between">
         <span className="font-bold text-orange-400">DEV TOOLBAR</span>
         <button onClick={() => setMinimized(true)} className="text-neutral-500 hover:text-white text-sm leading-none">&minus;</button>
@@ -60,10 +85,33 @@ export default function DevToolbar() {
 
       {session && (
         <div className="text-neutral-500 truncate">
-          {session.employerName || session.candidateName || session.candidateEmail || "—"}
+          {session.employerName || session.candidateName || "—"}
         </div>
       )}
 
+      <div className="text-neutral-500 border-t border-white/10 pt-2 mt-1">
+        Test without OAuth:
+      </div>
+      <button
+        type="button"
+        onClick={() => loginDevCandidate(true)}
+        disabled={switching}
+        className="w-full px-2 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/20 border border-emerald-400/40 text-emerald-200 hover:bg-emerald-500/30 transition text-left"
+      >
+        New candidate → profile setup
+      </button>
+      <button
+        type="button"
+        onClick={() => loginDevCandidate(false)}
+        disabled={switching}
+        className="w-full px-2 py-1.5 rounded-lg text-xs font-medium bg-white/5 border border-white/10 text-neutral-400 hover:text-white hover:border-white/20 transition text-left"
+      >
+        Stable dev candidate → dashboard
+      </button>
+
+      <div className="text-neutral-500 border-t border-white/10 pt-2 mt-1">
+        Switch existing DB user:
+      </div>
       <div className="flex gap-1.5">
         <button
           onClick={() => switchTo("employer")}

@@ -56,9 +56,13 @@ export async function POST(request) {
       }
     }
 
+    if (!session) {
+      return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    }
+
     // --- Employer-initiated introduction ---
-    if (!session?.employerAccountId) {
-      return NextResponse.json({ error: "Employer access required" }, { status: 401 });
+    if (!session.employerAccountId) {
+      return NextResponse.json({ error: "Employer access required" }, { status: 403 });
     }
 
     // Support bulk introductions

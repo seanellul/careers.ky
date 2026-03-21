@@ -25,5 +25,16 @@ export async function GET() {
     }
   } catch {}
 
-  return NextResponse.json({ authenticated: true, ...session, unreadCount, pendingIntroCount });
+  // Omit emails from the browser-visible payload (PII minimization).
+  return NextResponse.json({
+    authenticated: true,
+    candidateId: session.candidateId,
+    employerAccountId: session.employerAccountId,
+    employerId: session.employerId,
+    candidateName: session.candidateName,
+    employerName: session.employerName,
+    employerCompanyName: session.employerCompanyName,
+    unreadCount,
+    pendingIntroCount,
+  });
 }

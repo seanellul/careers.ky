@@ -8,6 +8,10 @@ export const metadata = {
 };
 
 export default async function AdminLayout({ children }) {
+  if (process.env.NODE_ENV === "production" && !process.env.ADMIN_EMAIL?.trim()) {
+    redirect("/");
+  }
+
   const session = await getSession();
   if (!isAdmin(session)) {
     redirect("/");

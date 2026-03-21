@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Search, Building2, CheckCircle, ChevronRight, Globe, FileText } from "lucide-react";
+import { Search, Building2, CheckCircle, ChevronRight, Globe, FileText, Clock } from "lucide-react";
 
 export default function EmployerSetupClient() {
   const router = useRouter();
@@ -15,6 +15,7 @@ export default function EmployerSetupClient() {
   const [searching, setSearching] = useState(false);
   const [selectedEmployer, setSelectedEmployer] = useState(null);
   const [claiming, setClaiming] = useState(false);
+  const [verificationStatus, setVerificationStatus] = useState(null);
 
   // Optional profile fields
   const [website, setWebsite] = useState("");
@@ -45,7 +46,13 @@ export default function EmployerSetupClient() {
         body: JSON.stringify({ employerId: selectedEmployer.id }),
       });
       if (res.ok) {
-        setStep(2);
+        const data = await res.json();
+        setVerificationStatus(data.verificationStatus);
+        if (data.verificationStatus === "verified") {
+          setStep(2);
+        } else {
+          setStep(3); // Pending verification
+        }
       }
     } finally {
       setClaiming(false);
@@ -63,6 +70,8 @@ export default function EmployerSetupClient() {
     router.push("/employer/dashboard");
   };
 
+  const stepLabels = ["Select Company", "Verification", "Company Details"];
+
   return (
     <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
       <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={{ backgroundImage: "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)", backgroundPosition: "0% 50%" }} />
@@ -77,16 +86,22 @@ export default function EmployerSetupClient() {
         </div>
 
         {/* Step indicator */}
-        <div className="flex items-center justify-center gap-4 mb-8">
-          <div className={`flex items-center gap-2 ${step >= 1 ? "text-cyan-300" : "text-neutral-500"}`}>
-            <div className={`w-8 h-8 rounded-full grid place-items-center text-sm font-semibold ${step >= 1 ? "bg-cyan-500/20 border border-cyan-300/30" : "bg-white/5 border border-white/10"}`}>1</div>
-            <span className="text-sm font-medium">Select Company</span>
-          </div>
-          <ChevronRight className="w-4 h-4 text-neutral-500" />
-          <div className={`flex items-center gap-2 ${step >= 2 ? "text-cyan-300" : "text-neutral-500"}`}>
-            <div className={`w-8 h-8 rounded-full grid place-items-center text-sm font-semibold ${step >= 2 ? "bg-cyan-500/20 border border-cyan-300/30" : "bg-white/5 border border-white/10"}`}>2</div>
-            <span className="text-sm font-medium">Company Details</span>
-          </div>
+        <div className="flex items-center justify-center gap-2 sm:gap-4 mb-8">
+          {stepLabels.map((label, i) => {
+            const num = i + 1;
+            const isActive = step >= num || (num === 2 && step === 3);
+            const isSkipped = num === 2 && verificationStatus === "verified" && step === 2;
+            if (isSkipped) return null;
+            return (
+              <div key={label} className="flex items-center gap-2">
+                {i > 0 && <ChevronRight className="w-4 h-4 text-neutral-500" />}
+                <div className={`flex items-center gap-2 ${isActive ? "text-cyan-300" : "text-neutral-500"}`}>
+                  <div className={`w-8 h-8 rounded-full grid place-items-center text-sm font-semibold ${isActive ? "bg-cyan-500/20 border border-cyan-300/30" : "bg-white/5 border border-white/10"}`}>{num}</div>
+                  <span className="text-sm font-medium hidden sm:inline">{label}</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         {step === 1 && (
@@ -172,6 +187,36 @@ export default function EmployerSetupClient() {
                   Save & Continue <ChevronRight className="w-4 h-4" />
                 </Button>
               </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {step === 3 && (
+          <Card className="bg-white/5 border-white/10">
+            <CardContent className="p-6 space-y-5">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-12 h-12 rounded-full bg-amber-500/20 grid place-items-center">
+                  <Clock className="w-6 h-6 text-amber-300" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold">Verification Pending</h2>
+                  <p className="text-neutral-400 text-sm">We&apos;re verifying your connection to {selectedEmployer?.name}</p>
+                </div>
+              </div>
+
+              <p className="text-neutral-300 text-sm leading-relaxed">
+                Our team reviews new employer accounts and will be in touch shortly — usually within 24 hours.
+              </p>
+
+              <div className="bg-cyan-500/10 border border-cyan-300/20 rounded-xl p-4">
+                <p className="text-cyan-200 text-sm">
+                  <strong>Tip:</strong> Sign in with your <span className="font-mono">@{selectedEmployer?.name?.toLowerCase().replace(/\s+/g, "")}.com</span> email for instant verification.
+                </p>
+              </div>
+
+              <Button onClick={() => router.push("/employer/dashboard")} className="w-full gap-2">
+                Continue to Dashboard <ChevronRight className="w-4 h-4" />
+              </Button>
             </CardContent>
           </Card>
         )}

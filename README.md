@@ -27,6 +27,8 @@ npm run dev
 
 This will start the development server at `http://localhost:3000` with hot reloading enabled.
 
+On **localhost** in development, the orange **DEV** toolbar (bottom-right) includes **New candidate → profile setup**: it signs you in as a fresh synthetic user with no Google/LinkedIn account, so you can exercise the job seeker onboarding flow repeatedly.
+
 ### Build
 
 ```bash
@@ -41,7 +43,11 @@ npm run preview
 
 ## Environment Variables
 
-Create a `.env` file based on `.env.example`:
+Create a `.env.local` file based on `.env.example`. See `.env.example` for the full list (database, OAuth, cron, etc.).
+
+**Admin:** `ADMIN_EMAIL` must match the signed-in candidate or employer account email to access `/admin`. In production, if `ADMIN_EMAIL` is unset or empty, the admin area is disabled.
+
+Legacy docs below (some keys may differ in the Next.js app — prefer `.env.example`):
 
 - `VITE_WORC_P_AUTH` - Authentication token for WORC API
 - `VITE_WORC_PROXY` - Optional CORS proxy URL

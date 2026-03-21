@@ -12,7 +12,9 @@ export const metadata = {
 
 export default async function ProfileSetupPage() {
   const session = await getSession();
-  if (!session?.candidateId) redirect("/?authRequired=profile-setup");
+  if (!session?.candidateId) {
+    redirect(`/sign-in?type=candidate&next=${encodeURIComponent("/profile/setup")}`);
+  }
 
   const candidate = await getCandidateById(session.candidateId);
   if (!candidate) redirect("/");

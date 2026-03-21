@@ -1,5 +1,3 @@
-import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
 import {
   loadAggregates,
   loadCISCO,
@@ -13,11 +11,10 @@ export const dynamic = "force-dynamic";
 
 export default async function HomePage({ searchParams: searchParamsPromise }) {
   const searchParams = await searchParamsPromise;
-
-  // Role-specific redirects for logged-in users
-  const session = await getSession();
-  if (session?.employerAccountId) redirect("/employer/dashboard");
-  if (session?.candidateId) redirect("/dashboard");
+  const openPlanner =
+    searchParams?.planner === "1" ||
+    searchParams?.onboarding === "1" ||
+    searchParams?.planner === "true";
 
   const [ciscoRows, aggregates, activePostings, employerCount] = await Promise.all([
     loadCISCO(),
@@ -95,7 +92,7 @@ export default async function HomePage({ searchParams: searchParamsPromise }) {
       jobCount={activePostings.length}
       industryCount={majors.reduce((n, m) => n + (m.children?.length || 0), 0)}
       employerCount={employerCount}
-      authRequired={searchParams?.authRequired || null}
+      initialOpenPlanner={openPlanner}
     />
   );
 }

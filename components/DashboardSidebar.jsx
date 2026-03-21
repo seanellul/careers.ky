@@ -5,10 +5,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Building2, Users, List, FileText, MessageSquare,
-  BarChart3, ExternalLink, Menu, X,
+  BarChart3, ExternalLink, Menu, X, Users2,
 } from "lucide-react";
 
-export default function DashboardSidebar({ employerSlug }) {
+export default function DashboardSidebar({ employerSlug, accountRole }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -18,6 +18,9 @@ export default function DashboardSidebar({ employerSlug }) {
     { href: "/employer/talent", label: "Talent Search", icon: Users },
     { href: "/employer/shortlists", label: "Shortlists", icon: List },
     { href: "/employer/reports", label: "Reports", icon: FileText, prominent: true },
+    ...((accountRole === "owner" || accountRole === "admin")
+      ? [{ href: "/employer/team", label: "Team", icon: Users2 }]
+      : []),
     { href: null, label: "Messaging", icon: MessageSquare, comingSoon: true },
     { href: null, label: "Analytics", icon: BarChart3, comingSoon: true },
   ];
