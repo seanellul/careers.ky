@@ -38,7 +38,7 @@ export default function AdminInterestsClient({ interests }) {
           placeholder="Search by candidate, employer, or job..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-cyan-500/50"
+          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-primary-500/50"
         />
       </div>
 
@@ -75,7 +75,7 @@ export default function AdminInterestsClient({ interests }) {
               </thead>
               <tbody>
                 {group.items.map((item) => (
-                  <tr key={item.id} className="border-b border-white/[0.03] hover:bg-neutral-50 dark:hover:bg-neutral-800">
+                  <tr key={item.id} className="border-b border-neutral-100 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800">
                     <td className="px-4 py-2 text-white">{item.candidate_name || "—"}</td>
                     <td className="px-4 py-2 text-neutral-500">{item.candidate_email}</td>
                     <td className="px-4 py-2">

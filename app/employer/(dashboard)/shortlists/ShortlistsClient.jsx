@@ -49,7 +49,7 @@ export default function ShortlistsClient({ shortlists: initialShortlists }) {
       <div className="max-w-4xl">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight flex items-center gap-3">
-            <List className="w-7 h-7 text-cyan-300" /> Shortlists
+            <List className="w-7 h-7 text-primary-500" /> Shortlists
           </h1>
           <Button onClick={() => setShowCreate(true)} className="gap-2">
             <Plus className="w-4 h-4" /> New Shortlist
@@ -57,13 +57,13 @@ export default function ShortlistsClient({ shortlists: initialShortlists }) {
         </div>
 
         {showCreate && (
-          <Card className="bg-white/5 border-white/10 mb-6">
+          <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-6">
             <CardContent className="p-4 flex gap-3">
               <Input
                 value={newName}
                 onChange={(e) => setNewName(e.target.value)}
                 placeholder="Shortlist name..."
-                className="bg-white/5 border-white/10 flex-1"
+                className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 flex-1"
                 autoFocus
                 onKeyDown={(e) => e.key === "Enter" && handleCreate()}
               />
@@ -76,24 +76,24 @@ export default function ShortlistsClient({ shortlists: initialShortlists }) {
         {shortlists.length > 0 ? (
           <div className="space-y-3">
             {shortlists.map(sl => (
-              <Card key={sl.id} className="bg-white/5 border-white/10 hover:border-cyan-300/40 transition">
+              <Card key={sl.id} className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 hover:border-primary-200 dark:hover:border-primary-500/30 transition">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <Link href={`/employer/shortlists/${sl.id}`} className="flex items-center gap-3 flex-1">
-                      <div className="w-10 h-10 rounded-xl bg-white/10 grid place-items-center">
-                        <Users className="w-5 h-5 text-cyan-300" />
+                      <div className="w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 grid place-items-center">
+                        <Users className="w-5 h-5 text-primary-500" />
                       </div>
                       <div>
                         <div className="font-medium">{sl.name}</div>
-                        <div className="text-sm text-neutral-400">{sl.candidate_count || 0} candidate{sl.candidate_count !== 1 ? "s" : ""}</div>
+                        <div className="text-sm text-neutral-500">{sl.candidate_count || 0} candidate{sl.candidate_count !== 1 ? "s" : ""}</div>
                       </div>
                     </Link>
                     <div className="flex items-center gap-2">
-                      <button onClick={() => handleDelete(sl.id)} className="p-2 rounded-lg hover:bg-red-500/10 text-neutral-400 hover:text-red-400 transition">
+                      <button onClick={() => handleDelete(sl.id)} className="p-2 rounded-lg hover:bg-red-500/10 text-neutral-500 hover:text-red-400 transition">
                         <Trash2 className="w-4 h-4" />
                       </button>
                       <Link href={`/employer/shortlists/${sl.id}`}>
-                        <ChevronRight className="w-5 h-5 text-neutral-400" />
+                        <ChevronRight className="w-5 h-5 text-neutral-500" />
                       </Link>
                     </div>
                   </div>
@@ -102,11 +102,11 @@ export default function ShortlistsClient({ shortlists: initialShortlists }) {
             ))}
           </div>
         ) : (
-          <Card className="bg-white/5 border-white/10">
+          <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
             <CardContent className="p-12 text-center">
-              <List className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-400" />
+              <List className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-500" />
               <h3 className="text-lg font-medium mb-2">No shortlists yet</h3>
-              <p className="text-neutral-400 mb-4">Create a shortlist to save and organize candidates.</p>
+              <p className="text-neutral-500 mb-4">Create a shortlist to save and organize candidates.</p>
               <Button onClick={() => setShowCreate(true)} className="gap-2"><Plus className="w-4 h-4" /> Create Shortlist</Button>
             </CardContent>
           </Card>

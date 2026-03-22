@@ -304,7 +304,7 @@ export default function PipelineDetailPage({ params }) {
                   value={contactPerson}
                   onChange={(e) => setContactPerson(e.target.value)}
                   placeholder="Name of contact"
-                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-primary-500"
                 />
               </div>
 
@@ -318,7 +318,7 @@ export default function PipelineDetailPage({ params }) {
                   value={contactEmail}
                   onChange={(e) => setContactEmail(e.target.value)}
                   placeholder="email@company.com"
-                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-primary-500"
                 />
               </div>
 
@@ -332,7 +332,7 @@ export default function PipelineDetailPage({ params }) {
                   value={contactPhone}
                   onChange={(e) => setContactPhone(e.target.value)}
                   placeholder="+1 (123) 456-7890"
-                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-primary-500"
                 />
               </div>
 
@@ -345,7 +345,7 @@ export default function PipelineDetailPage({ params }) {
                   type="date"
                   value={nextFollowup}
                   onChange={(e) => setNextFollowup(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-cyan-500"
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-primary-500"
                 />
               </div>
 
@@ -359,7 +359,7 @@ export default function PipelineDetailPage({ params }) {
                   onChange={(e) => setResponseReceived(e.target.value)}
                   placeholder="What did they respond with?"
                   rows="3"
-                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-primary-500"
                 />
               </div>
             </div>
@@ -373,7 +373,7 @@ export default function PipelineDetailPage({ params }) {
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add notes about this employer..."
               rows="5"
-              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-primary-500"
             />
           </div>
 
@@ -381,7 +381,7 @@ export default function PipelineDetailPage({ params }) {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-cyan-600 hover:bg-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed rounded font-semibold text-white transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-primary-500 hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed rounded font-semibold text-white transition-colors"
           >
             {saving ? (
               <>
@@ -434,7 +434,7 @@ export default function PipelineDetailPage({ params }) {
               <select
                 value={activityType}
                 onChange={(e) => setActivityType(e.target.value)}
-                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-cyan-500"
+                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-primary-500"
               >
                 <option value="">Select activity...</option>
                 <option value="email_sent">Email Sent</option>
@@ -451,7 +451,7 @@ export default function PipelineDetailPage({ params }) {
                 onChange={(e) => setActivityNotes(e.target.value)}
                 placeholder="Notes about this interaction..."
                 rows="3"
-                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 text-sm"
+                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-primary-500 text-sm"
               />
 
               <button

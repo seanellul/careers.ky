@@ -62,7 +62,7 @@ export default function AdminPitchesClient({ initialEmployers, initialTotal }) {
           placeholder="Search employers..."
           value={search}
           onChange={(e) => handleSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-cyan-500/50"
+          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-primary-500/50"
         />
       </div>
 

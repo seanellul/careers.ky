@@ -71,14 +71,14 @@ export default function DevToolbar() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-[9999] bg-white border border-orange-500/50 rounded-xl shadow-2xl p-3 text-xs text-neutral-700 space-y-2 w-64 max-w-[calc(100vw-2rem)]">
+    <div className="fixed bottom-4 right-4 z-[9999] bg-white dark:bg-neutral-900 border border-orange-500/50 rounded-xl shadow-2xl p-3 text-xs text-neutral-700 dark:text-neutral-300 space-y-2 w-64 max-w-[calc(100vw-2rem)]">
       <div className="flex items-center justify-between">
         <span className="font-bold text-orange-500">DEV TOOLBAR</span>
-        <button onClick={() => setMinimized(true)} className="text-neutral-400 hover:text-neutral-900 text-sm leading-none">&minus;</button>
+        <button onClick={() => setMinimized(true)} className="text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 text-sm leading-none">&minus;</button>
       </div>
 
       <div className="text-neutral-500">
-        Current: <span className={`font-semibold ${currentRole === "employer" ? "text-primary-500" : currentRole === "candidate" ? "text-emerald-600" : "text-red-500"}`}>
+        Current: <span className={`font-semibold ${currentRole === "employer" ? "text-primary-500" : currentRole === "candidate" ? "text-emerald-600 dark:text-emerald-400" : "text-red-500"}`}>
           {currentRole === "employer" ? "Employer" : currentRole === "candidate" ? "Candidate" : "Not signed in"}
         </span>
       </div>
@@ -89,14 +89,14 @@ export default function DevToolbar() {
         </div>
       )}
 
-      <div className="text-neutral-500 border-t border-neutral-200 pt-2 mt-1">
+      <div className="text-neutral-500 border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-1">
         Test without OAuth:
       </div>
       <button
         type="button"
         onClick={() => loginDevCandidate(true)}
         disabled={switching}
-        className="w-full px-2 py-1.5 rounded-lg text-xs font-medium bg-emerald-50 border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition text-left"
+        className="w-full px-2 py-1.5 rounded-lg text-xs font-medium bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-300 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-500/25 transition text-left"
       >
         New candidate → profile setup
       </button>
@@ -104,12 +104,12 @@ export default function DevToolbar() {
         type="button"
         onClick={() => loginDevCandidate(false)}
         disabled={switching}
-        className="w-full px-2 py-1.5 rounded-lg text-xs font-medium bg-neutral-50 border border-neutral-200 text-neutral-500 hover:text-neutral-900 hover:border-neutral-300 transition text-left"
+        className="w-full px-2 py-1.5 rounded-lg text-xs font-medium bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:border-neutral-300 dark:hover:border-neutral-600 transition text-left"
       >
         Stable dev candidate → dashboard
       </button>
 
-      <div className="text-neutral-500 border-t border-neutral-200 pt-2 mt-1">
+      <div className="text-neutral-500 border-t border-neutral-200 dark:border-neutral-700 pt-2 mt-1">
         Switch existing DB user:
       </div>
       <div className="flex gap-1.5">
@@ -118,8 +118,8 @@ export default function DevToolbar() {
           disabled={switching}
           className={`flex-1 px-2 py-1.5 rounded-lg text-xs font-medium transition ${
             currentRole === "employer"
-              ? "bg-primary-50 text-primary-500 border border-primary-200"
-              : "bg-neutral-50 border border-neutral-200 text-neutral-500 hover:text-neutral-900 hover:border-primary-200"
+              ? "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border border-primary-200 dark:border-primary-500/30"
+              : "bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:border-primary-200 dark:hover:border-primary-500/30"
           }`}
         >
           Employer
@@ -129,8 +129,8 @@ export default function DevToolbar() {
           disabled={switching}
           className={`flex-1 px-2 py-1.5 rounded-lg text-xs font-medium transition ${
             currentRole === "candidate"
-              ? "bg-emerald-50 text-emerald-600 border border-emerald-300"
-              : "bg-neutral-50 border border-neutral-200 text-neutral-500 hover:text-neutral-900 hover:border-emerald-300"
+              ? "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30"
+              : "bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:border-emerald-300 dark:hover:border-emerald-500/30"
           }`}
         >
           Candidate

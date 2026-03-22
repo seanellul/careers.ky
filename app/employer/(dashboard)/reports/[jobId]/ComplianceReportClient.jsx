@@ -216,7 +216,7 @@ export default function ComplianceReportClient({ report, employerName, jobId }) 
             <h2 className="text-lg font-semibold mb-3">Pipeline Breakdown</h2>
             <div className="flex flex-wrap gap-3">
               {Object.entries(summary.stageBreakdown).map(([stage, count]) => (
-                <div key={stage} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm">
+                <div key={stage} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 text-sm">
                   <span className="text-neutral-500">{STAGE_LABELS[stage] || stage}:</span>
                   <span className="font-semibold">{count}</span>
                 </div>

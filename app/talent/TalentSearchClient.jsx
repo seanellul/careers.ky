@@ -18,23 +18,23 @@ const AVAILABILITY_LABELS = {
   not_looking: "Not Looking",
 };
 const AVAILABILITY_COLORS = {
-  actively_looking: "bg-emerald-500/20 text-emerald-300 border-emerald-300/30",
-  open_to_offers: "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30",
-  not_looking: "bg-neutral-500/20 text-neutral-300 border-neutral-300/30",
+  actively_looking: "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/30",
+  open_to_offers: "bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30",
+  not_looking: "bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-600",
 };
 
 const STATUS_COLORS = {
-  pending: "bg-yellow-500/20 text-yellow-300 border-yellow-300/30",
-  accepted: "bg-emerald-500/20 text-emerald-300 border-emerald-300/30",
-  declined: "bg-red-500/20 text-red-300 border-red-300/30",
+  pending: "bg-yellow-50 dark:bg-yellow-500/15 text-yellow-700 dark:text-yellow-300 border-yellow-300 dark:border-yellow-500/30",
+  accepted: "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/30",
+  declined: "bg-red-50 dark:bg-red-500/15 text-red-600 dark:text-red-300 border-red-300 dark:border-red-500/30",
 };
 
 function ScoreBadge({ score }) {
   const pct = Math.round(score);
-  let colorClass = "bg-neutral-500/20 text-neutral-300 border-neutral-300/30";
-  if (pct >= 75) colorClass = "bg-emerald-500/20 text-emerald-300 border-emerald-300/30";
-  else if (pct >= 50) colorClass = "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30";
-  else if (pct >= 25) colorClass = "bg-yellow-500/20 text-yellow-300 border-yellow-300/30";
+  let colorClass = "bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-600";
+  if (pct >= 75) colorClass = "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/30";
+  else if (pct >= 50) colorClass = "bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30";
+  else if (pct >= 25) colorClass = "bg-yellow-50 dark:bg-yellow-500/15 text-yellow-700 dark:text-yellow-300 border-yellow-300 dark:border-yellow-500/30";
 
   return (
     <Badge className={`${colorClass} text-sm font-semibold`}>
@@ -392,7 +392,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                           {selectedJobId ? <Briefcase className="w-4 h-4 text-primary-500" /> : <Search className="w-4 h-4 text-primary-500" />}
                         </div>
                         <div className="min-w-0">
-                          <div className="text-sm font-medium text-neutral-100 truncate">
+                          <div className="text-sm font-medium text-neutral-900 dark:text-neutral-100 truncate">
                             {selectedJobId
                               ? employerPostings.find(p => p.cJobId === selectedJobId)?.cTitle || selectedJobId
                               : "General Search"}

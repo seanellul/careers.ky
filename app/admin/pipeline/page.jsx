@@ -248,7 +248,7 @@ export default function PipelinePage() {
                   setSearch(e.target.value);
                   setOffset(0);
                 }}
-                className="w-full pl-9 pr-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500"
+                className="w-full pl-9 pr-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-primary-500"
               />
             </div>
           </div>
@@ -267,7 +267,7 @@ export default function PipelinePage() {
                 setScoreMin(parseInt(e.target.value) || 0);
                 setOffset(0);
               }}
-              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-cyan-500"
+              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-primary-500"
             />
           </div>
 
@@ -284,7 +284,7 @@ export default function PipelinePage() {
                 setScoreMax(parseInt(e.target.value) || 100);
                 setOffset(0);
               }}
-              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-cyan-500"
+              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-primary-500"
             />
           </div>
 
@@ -299,7 +299,7 @@ export default function PipelinePage() {
                 setSegment(e.target.value);
                 setOffset(0);
               }}
-              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-cyan-500"
+              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-primary-500"
             >
               <option value="">All Segments</option>
               {segments.map((seg) => (
@@ -321,7 +321,7 @@ export default function PipelinePage() {
                 setStatus(e.target.value);
                 setOffset(0);
               }}
-              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-cyan-500"
+              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-primary-500"
             >
               <option value="">All Statuses</option>
               {statuses.map((st) => (
@@ -336,7 +336,7 @@ export default function PipelinePage() {
           <div className="flex items-end">
             <button
               onClick={handleExport}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-cyan-600 hover:bg-cyan-700 rounded text-white font-medium transition-colors"
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-primary-500 hover:bg-primary-600 rounded text-white font-medium transition-colors"
             >
               <Download size={16} />
               Export CSV

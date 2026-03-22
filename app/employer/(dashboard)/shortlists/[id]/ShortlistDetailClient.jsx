@@ -107,7 +107,7 @@ export default function ShortlistDetailClient({ shortlist, candidates: initialCa
                 onChange={(e) => setBulkMessage(e.target.value)}
                 rows={4}
                 placeholder="Your message..."
-                className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-200"
+                className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
               />
               <div className="flex gap-2 justify-end">
                 <Button variant="secondary" onClick={() => setShowBulkIntro(false)}>Cancel</Button>
@@ -123,7 +123,7 @@ export default function ShortlistDetailClient({ shortlist, candidates: initialCa
       {candidates.length > 0 ? (
         <div className="space-y-3">
           {candidates.map((c, i) => (
-            <Card key={c.id} className={`bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 ${selectedCandidates.has(c.candidate_id) ? "ring-1 ring-cyan-300/40" : ""}`}>
+            <Card key={c.id} className={`bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 ${selectedCandidates.has(c.candidate_id) ? "ring-1 ring-primary-300 dark:ring-primary-500/40" : ""}`}>
               <CardContent className="p-4">
                 <div className="flex items-start gap-3">
                   <label className="mt-1 cursor-pointer">
