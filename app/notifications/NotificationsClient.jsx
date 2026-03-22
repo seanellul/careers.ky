@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Bell, CheckCircle, ChevronLeft, ExternalLink } from "lucide-react";
+import t from "@/lib/theme";
 
 export default function NotificationsClient({ notifications, unreadCount, recipientType }) {
   const router = useRouter();
@@ -38,8 +39,8 @@ export default function NotificationsClient({ notifications, unreadCount, recipi
   };
 
   return (
-    <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
-      <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={{ backgroundImage: "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)", backgroundPosition: "0% 50%" }} />
+    <div className={`${t.page} w-full`}>
+      <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={t.pageGradientStyle} />
 
       <div className="mx-auto max-w-2xl px-4 sm:px-6 py-8">
         <div className="mb-6">
@@ -53,7 +54,7 @@ export default function NotificationsClient({ notifications, unreadCount, recipi
             <h1 className="text-3xl font-semibold tracking-tight mb-2 flex items-center gap-3">
               <Bell className="w-8 h-8" /> Notifications
             </h1>
-            {unreadCount > 0 && <p className="text-neutral-400">{unreadCount} unread</p>}
+            {unreadCount > 0 && <p className="text-neutral-500">{unreadCount} unread</p>}
           </div>
           {unreadCount > 0 && (
             <Button variant="secondary" onClick={handleMarkAll} disabled={markingAll} className="gap-2">
@@ -64,27 +65,27 @@ export default function NotificationsClient({ notifications, unreadCount, recipi
 
         <div className="space-y-3">
           {notifications.map(n => (
-            <Card key={n.id} className={`border transition ${n.is_read ? "bg-white/5 border-white/10" : "bg-cyan-500/10 border-cyan-300/20"}`}>
+            <Card key={n.id} className={`border transition ${n.is_read ? "bg-neutral-50 border-neutral-200" : "bg-primary-50 border-primary-200"}`}>
               <CardContent className="p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-medium">{n.title}</h3>
-                      {!n.is_read && <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30 text-xs">New</Badge>}
+                      {!n.is_read && <Badge className="bg-primary-50 text-primary-500 border-primary-200 text-xs">New</Badge>}
                     </div>
-                    {n.body && <p className="text-sm text-neutral-400 mb-2">{n.body}</p>}
+                    {n.body && <p className="text-sm text-neutral-500 mb-2">{n.body}</p>}
                     <div className="flex items-center gap-3">
                       <span className="text-xs text-neutral-500">{formatDate(n.created_at)}</span>
                       {n.link && (
-                        <Link href={n.link} className="text-xs text-cyan-300 hover:underline flex items-center gap-1">
+                        <Link href={n.link} className="text-xs text-primary-500 hover:underline flex items-center gap-1">
                           View <ExternalLink className="w-3 h-3" />
                         </Link>
                       )}
                     </div>
                   </div>
                   {!n.is_read && (
-                    <button onClick={() => handleMarkOne(n.id)} className="p-1 rounded hover:bg-white/10 transition" title="Mark as read">
-                      <CheckCircle className="w-4 h-4 text-neutral-400" />
+                    <button onClick={() => handleMarkOne(n.id)} className="p-1 rounded hover:bg-neutral-100 transition" title="Mark as read">
+                      <CheckCircle className="w-4 h-4 text-neutral-500" />
                     </button>
                   )}
                 </div>
@@ -93,11 +94,11 @@ export default function NotificationsClient({ notifications, unreadCount, recipi
           ))}
 
           {notifications.length === 0 && (
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-neutral-50 border-neutral-200">
               <CardContent className="p-12 text-center">
-                <Bell className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-400" />
+                <Bell className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-500" />
                 <h3 className="text-lg font-medium mb-2">No notifications yet</h3>
-                <p className="text-neutral-400">You'll be notified when new jobs match your profile or employers want to connect.</p>
+                <p className="text-neutral-500">You'll be notified when new jobs match your profile or employers want to connect.</p>
               </CardContent>
             </Card>
           )}

@@ -9,6 +9,7 @@ import LiveSearchClient from "@/app/jobs/LiveSearchClient";
 import EmployerListClient from "@/app/employers/EmployerListClient";
 import CareerTracksClient from "@/app/career-tracks/CareerTracksClient";
 import { Briefcase, Building2, Compass } from "lucide-react";
+import t from "@/lib/theme";
 
 const TABS = [
   { key: "jobs", label: "Jobs", icon: Briefcase },
@@ -135,24 +136,20 @@ export default function CareersClient({
   }, []);
 
   return (
-    <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
+    <div className={`${t.page} w-full`}>
       <div
         id="bg-gradient"
         aria-hidden
         className="fixed inset-0 -z-10 bg-[length:200%_200%]"
-        style={{
-          backgroundImage:
-            "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)",
-          backgroundPosition: "0% 50%",
-        }}
+        style={t.pageGradientStyle}
       />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 md:pt-12">
         {/* Macro stats bar */}
         <div ref={statsRef} className="grid grid-cols-3 gap-3 mb-6">
-          <div data-stat-card className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-cyan-400/15 grid place-items-center shrink-0">
-              <Briefcase className="w-4 h-4 text-cyan-300" />
+          <div data-stat-card className="bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 flex items-center gap-3">
+            <div className="h-9 w-9 rounded-lg bg-primary-50 grid place-items-center shrink-0">
+              <Briefcase className="w-4 h-4 text-primary-500" />
             </div>
             <div>
               <div className="text-xl font-semibold">
@@ -161,9 +158,9 @@ export default function CareersClient({
               <div className="text-[11px] text-neutral-500 uppercase tracking-wider">Active Jobs</div>
             </div>
           </div>
-          <div data-stat-card className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-emerald-400/15 grid place-items-center shrink-0">
-              <Building2 className="w-4 h-4 text-emerald-300" />
+          <div data-stat-card className="bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 flex items-center gap-3">
+            <div className="h-9 w-9 rounded-lg bg-emerald-50 grid place-items-center shrink-0">
+              <Building2 className="w-4 h-4 text-emerald-600" />
             </div>
             <div>
               <div className="text-xl font-semibold">
@@ -172,9 +169,9 @@ export default function CareersClient({
               <div className="text-[11px] text-neutral-500 uppercase tracking-wider">Employers</div>
             </div>
           </div>
-          <div data-stat-card className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-purple-400/15 grid place-items-center shrink-0">
-              <Building2 className="w-4 h-4 text-purple-300" />
+          <div data-stat-card className="bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 flex items-center gap-3">
+            <div className="h-9 w-9 rounded-lg bg-purple-50 grid place-items-center shrink-0">
+              <Building2 className="w-4 h-4 text-purple-600" />
             </div>
             <div>
               <div className="text-xl font-semibold">
@@ -188,12 +185,12 @@ export default function CareersClient({
         {/* Tab bar with sliding indicator */}
         <div
           ref={tabBarRef}
-          className="relative flex gap-1 p-1 rounded-xl bg-white/5 border border-white/10 mb-8 max-w-full overflow-x-auto"
+          className="relative flex gap-1 p-1 rounded-xl bg-neutral-50 border border-neutral-200 mb-8 max-w-full overflow-x-auto"
         >
           {/* Sliding pill */}
           <div
             ref={indicatorRef}
-            className="absolute top-1 bottom-1 rounded-lg bg-cyan-500/20 border border-cyan-300/30 pointer-events-none"
+            className="absolute top-1 bottom-1 rounded-lg bg-primary-50 border border-primary-200 pointer-events-none"
             style={{ opacity: 0 }}
           />
 
@@ -204,8 +201,8 @@ export default function CareersClient({
               onClick={() => setTab(key)}
               className={`relative z-10 flex items-center gap-2 px-2.5 sm:px-4 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 whitespace-nowrap ${
                 activeTab === key
-                  ? "text-cyan-300"
-                  : "text-neutral-400 hover:text-neutral-200"
+                  ? "text-primary-500"
+                  : "text-neutral-500 hover:text-neutral-700"
               }`}
             >
               <Icon className="w-4 h-4 hidden sm:inline" />

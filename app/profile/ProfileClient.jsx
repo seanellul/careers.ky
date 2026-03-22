@@ -15,9 +15,9 @@ import {
 } from "lucide-react";
 
 const AVAILABILITY_OPTIONS = [
-  { value: "actively_looking", label: "Actively Looking", color: "bg-emerald-500/20 text-emerald-300 border-emerald-300/30" },
-  { value: "open_to_offers", label: "Open to Offers", color: "bg-cyan-500/20 text-cyan-300 border-cyan-300/30" },
-  { value: "not_looking", label: "Not Looking", color: "bg-neutral-500/20 text-neutral-300 border-neutral-300/30" },
+  { value: "actively_looking", label: "Actively Looking", color: "bg-emerald-50 text-emerald-600 border-emerald-200" },
+  { value: "open_to_offers", label: "Open to Offers", color: "bg-primary-50 text-primary-500 border-primary-200" },
+  { value: "not_looking", label: "Not Looking", color: "bg-neutral-100 text-neutral-600 border-neutral-200" },
 ];
 
 const INDUSTRY_OPTIONS = [
@@ -27,6 +27,7 @@ const INDUSTRY_OPTIONS = [
 ];
 
 import { calcProfileStrength } from "@/lib/profileStrength";
+import t from "@/lib/theme";
 
 function ProfilePicture({ url, name, size = "lg", className = "" }) {
   const [imgError, setImgError] = useState(false);
@@ -39,12 +40,12 @@ function ProfilePicture({ url, name, size = "lg", className = "" }) {
         src={url}
         alt={name || "Profile"}
         onError={() => setImgError(true)}
-        className={`${sizeClasses} rounded-full object-cover border-2 border-white/10 ${className}`}
+        className={`${sizeClasses} rounded-full object-cover border-2 border-neutral-200 ${className}`}
       />
     );
   }
   return (
-    <div className={`${sizeClasses} rounded-full bg-gradient-to-br from-cyan-500/30 to-purple-500/30 grid place-items-center font-semibold text-cyan-300 border-2 border-white/10 ${className}`}>
+    <div className={`${sizeClasses} rounded-full bg-gradient-to-br from-primary-200 to-purple-200 grid place-items-center font-semibold text-primary-500 border-2 border-neutral-200 ${className}`}>
       {initial}
     </div>
   );
@@ -264,14 +265,14 @@ export default function ProfileClient({ candidate, interests, skills, notificati
   };
 
   return (
-    <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
-      <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={{ backgroundImage: "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)", backgroundPosition: "0% 50%" }} />
+    <div className={`${t.page} w-full`}>
+      <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={t.pageGradientStyle} />
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8">
 
         {/* Hero Section */}
         <div className="relative mb-8">
-          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur overflow-hidden">
+          <div className="rounded-2xl border border-neutral-200 bg-neutral-50 backdrop-blur overflow-hidden">
             {/* Top bar with actions */}
             <div className="flex items-center justify-end gap-2 px-6 pt-4">
               {!editing ? (
@@ -285,7 +286,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
               <Link href="/notifications">
                 <Button variant="secondary" size="sm" className="relative">
                   <Bell className="w-3.5 h-3.5" />
-                  {unreadCount > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 bg-cyan-500 rounded-full text-[10px] grid place-items-center">{unreadCount}</span>}
+                  {unreadCount > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary-500 rounded-full text-[10px] grid place-items-center">{unreadCount}</span>}
                 </Button>
               </Link>
               <Button variant="secondary" size="sm" onClick={handleLogout}><LogOut className="w-3.5 h-3.5" /></Button>
@@ -299,12 +300,12 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                     <ProfilePicture url={candidate.profile_picture_url} name={form.name} size="lg" />
                     <div className="flex-1 space-y-3">
                       <div>
-                        <label className="text-xs font-medium text-neutral-400 mb-1 block">Full Name</label>
-                        <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="bg-white/5 border-white/10" />
+                        <label className="text-xs font-medium text-neutral-500 mb-1 block">Full Name</label>
+                        <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="bg-neutral-50 border-neutral-200" />
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-neutral-400 mb-1 block">Headline</label>
-                        <Input value={form.headline} onChange={(e) => setForm({ ...form, headline: e.target.value.slice(0, 200) })} placeholder="e.g. Experienced accountant seeking opportunities in Cayman" className="bg-white/5 border-white/10" maxLength={200} />
+                        <label className="text-xs font-medium text-neutral-500 mb-1 block">Headline</label>
+                        <Input value={form.headline} onChange={(e) => setForm({ ...form, headline: e.target.value.slice(0, 200) })} placeholder="e.g. Experienced accountant seeking opportunities in Cayman" className="bg-neutral-50 border-neutral-200" maxLength={200} />
                         <div className="text-xs text-neutral-500 mt-1">{form.headline.length}/200</div>
                       </div>
                     </div>
@@ -319,23 +320,23 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                   <ProfilePicture url={candidate.profile_picture_url} name={candidate.name} size="lg" />
                   <div className="flex-1 min-w-0">
                     <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">{candidate.name || "Name not set"}</h1>
-                    {candidate.headline && <p className="text-neutral-300 mt-1">{candidate.headline}</p>}
+                    {candidate.headline && <p className="text-neutral-600 mt-1">{candidate.headline}</p>}
                     <div className="flex flex-wrap items-center gap-2 mt-3">
                       <Badge className={availOption?.color}>{availOption?.label || "Not set"}</Badge>
-                      {candidate.is_caymanian && <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30"><Shield className="w-3 h-3 mr-1" /> Caymanian</Badge>}
+                      {candidate.is_caymanian && <Badge className="bg-primary-50 text-primary-500 border-primary-200"><Shield className="w-3 h-3 mr-1" /> Caymanian</Badge>}
                     </div>
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-sm text-neutral-400">
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-sm text-neutral-500">
                       {candidate.location_code && (
-                        <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-pink-300" /> {locTypes.get(candidate.location_code)}</span>
+                        <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-pink-600" /> {locTypes.get(candidate.location_code)}</span>
                       )}
                       {candidate.education_code && (
-                        <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5 text-purple-300" /> {eduTypes.get(candidate.education_code)}</span>
+                        <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5 text-purple-600" /> {eduTypes.get(candidate.education_code)}</span>
                       )}
                       {candidate.experience_code && (
-                        <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5 text-orange-300" /> {expTypes.get(candidate.experience_code)}</span>
+                        <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5 text-orange-600" /> {expTypes.get(candidate.experience_code)}</span>
                       )}
                       {candidate.years_of_experience && (
-                        <span className="flex items-center gap-1"><Hash className="w-3.5 h-3.5 text-emerald-300" /> {candidate.years_of_experience} years</span>
+                        <span className="flex items-center gap-1"><Hash className="w-3.5 h-3.5 text-emerald-600" /> {candidate.years_of_experience} years</span>
                       )}
                     </div>
                   </div>
@@ -346,13 +347,13 @@ export default function ProfileClient({ candidate, interests, skills, notificati
         </div>
 
         {/* Profile Strength */}
-        <Card className="bg-white/5 border-white/10 mb-6">
+        <Card className="bg-neutral-50 border-neutral-200 mb-6">
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-sm font-semibold">Profile Strength</h3>
-              <span className="text-sm font-semibold text-cyan-300">{profileStrength.score}%</span>
+              <span className="text-sm font-semibold text-primary-500">{profileStrength.score}%</span>
             </div>
-            <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden mb-3">
+            <div className="w-full h-2 rounded-full bg-neutral-100 overflow-hidden mb-3">
               <div
                 className={`h-full rounded-full transition-all duration-500 ${
                   profileStrength.score >= 80 ? "bg-emerald-400" : profileStrength.score >= 50 ? "bg-cyan-400" : "bg-yellow-400"
@@ -363,7 +364,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
             {profileStrength.missing.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {profileStrength.missing.map((item) => (
-                  <span key={item} className="text-xs px-2 py-1 rounded-lg bg-white/5 border border-white/10 text-neutral-400">{item}</span>
+                  <span key={item} className="text-xs px-2 py-1 rounded-lg bg-neutral-50 border border-neutral-200 text-neutral-500">{item}</span>
                 ))}
               </div>
             )}
@@ -377,43 +378,43 @@ export default function ProfileClient({ candidate, interests, skills, notificati
 
         {/* Employer Preview Modal */}
         {showPreview && (
-          <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowPreview(false)}>
-            <Card className="bg-neutral-900 border-white/10 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+          <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowPreview(false)}>
+            <Card className="bg-white border-neutral-200 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold">Employer View</h3>
-                  <button onClick={() => setShowPreview(false)} className="text-neutral-400 hover:text-white"><X className="w-5 h-5" /></button>
+                  <button onClick={() => setShowPreview(false)} className="text-neutral-500 hover:text-neutral-900"><X className="w-5 h-5" /></button>
                 </div>
                 <p className="text-xs text-neutral-500 mb-4">This is what employers see in talent search (your name and email are hidden).</p>
 
-                <div className="p-4 rounded-xl border border-white/10 bg-white/5 space-y-3">
+                <div className="p-4 rounded-xl border border-neutral-200 bg-neutral-50 space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-white/10 grid place-items-center"><User className="w-5 h-5 text-neutral-400" /></div>
+                    <div className="w-10 h-10 rounded-full bg-neutral-100 grid place-items-center"><User className="w-5 h-5 text-neutral-500" /></div>
                     <div>
                       <div className="font-medium">Anonymous Candidate</div>
-                      {candidate.headline && <div className="text-xs text-neutral-400">{candidate.headline}</div>}
+                      {candidate.headline && <div className="text-xs text-neutral-500">{candidate.headline}</div>}
                       <div className="flex gap-2 mt-1">
                         <Badge className={availOption?.color}>{availOption?.label || "Not set"}</Badge>
-                        {candidate.is_caymanian && <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30"><Shield className="w-3 h-3 mr-1" /> Caymanian</Badge>}
+                        {candidate.is_caymanian && <Badge className="bg-primary-50 text-primary-500 border-primary-200"><Shield className="w-3 h-3 mr-1" /> Caymanian</Badge>}
                       </div>
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-xs">
-                    <div className="flex items-center gap-1"><BookOpen className="w-3 h-3 text-purple-300" /> {eduTypes.get(candidate.education_code) || "Not set"}</div>
-                    <div className="flex items-center gap-1"><Clock className="w-3 h-3 text-orange-300" /> {expTypes.get(candidate.experience_code) || "Not set"}</div>
-                    <div className="flex items-center gap-1"><MapPin className="w-3 h-3 text-pink-300" /> {locTypes.get(candidate.location_code) || "Not set"}</div>
+                    <div className="flex items-center gap-1"><BookOpen className="w-3 h-3 text-purple-600" /> {eduTypes.get(candidate.education_code) || "Not set"}</div>
+                    <div className="flex items-center gap-1"><Clock className="w-3 h-3 text-orange-600" /> {expTypes.get(candidate.experience_code) || "Not set"}</div>
+                    <div className="flex items-center gap-1"><MapPin className="w-3 h-3 text-pink-600" /> {locTypes.get(candidate.location_code) || "Not set"}</div>
                   </div>
                   {interests.length > 0 && (
                     <div className="flex flex-wrap gap-1">
                       {interests.map(i => (
-                        <Badge key={i.cisco_code} className="bg-white/5 border-white/10 text-neutral-300 text-xs">{i.title || i.cisco_code}</Badge>
+                        <Badge key={i.cisco_code} className="bg-neutral-50 border-neutral-200 text-neutral-600 text-xs">{i.title || i.cisco_code}</Badge>
                       ))}
                     </div>
                   )}
                   {skills.length > 0 && (
                     <div className="flex flex-wrap gap-1">
                       {skills.map(s => (
-                        <Badge key={s.id} className="bg-purple-500/10 text-purple-300 border-purple-300/20 text-xs">{s.name}</Badge>
+                        <Badge key={s.id} className="bg-purple-50 text-purple-600 border-purple-200 text-xs">{s.name}</Badge>
                       ))}
                     </div>
                   )}
@@ -432,14 +433,14 @@ export default function ProfileClient({ candidate, interests, skills, notificati
           <div className="lg:col-span-2 space-y-6">
 
             {/* About */}
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-neutral-50 border-neutral-200">
               <CardContent className="p-6">
                 <h2 className="text-lg font-semibold mb-3">About</h2>
                 {editing ? (
-                  <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} rows={4} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200" placeholder="Brief intro about yourself..." />
+                  <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} rows={4} className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-3 py-2 h-10 text-sm text-neutral-700" placeholder="Brief intro about yourself..." />
                 ) : (
                   candidate.bio ? (
-                    <p className="text-neutral-300 text-sm leading-relaxed">{candidate.bio}</p>
+                    <p className="text-neutral-600 text-sm leading-relaxed">{candidate.bio}</p>
                   ) : (
                     <p className="text-neutral-500 text-sm">No bio yet. Tell employers about yourself.</p>
                   )
@@ -448,29 +449,29 @@ export default function ProfileClient({ candidate, interests, skills, notificati
             </Card>
 
             {/* Professional Details */}
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-neutral-50 border-neutral-200">
               <CardContent className="p-6 space-y-4">
                 <h2 className="text-lg font-semibold flex items-center gap-2"><Briefcase className="w-5 h-5" /> Professional Details</h2>
                 {editing ? (
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div>
-                        <label className="text-xs font-medium text-neutral-400 mb-1 block">Education</label>
-                        <select value={form.educationCode} onChange={(e) => setForm({ ...form, educationCode: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200">
+                        <label className="text-xs font-medium text-neutral-500 mb-1 block">Education</label>
+                        <select value={form.educationCode} onChange={(e) => setForm({ ...form, educationCode: e.target.value })} className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-3 py-2 h-10 text-sm text-neutral-700">
                           <option value="">Select...</option>
                           {Array.from(eduTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-neutral-400 mb-1 block">Experience Level</label>
-                        <select value={form.experienceCode} onChange={(e) => setForm({ ...form, experienceCode: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200">
+                        <label className="text-xs font-medium text-neutral-500 mb-1 block">Experience Level</label>
+                        <select value={form.experienceCode} onChange={(e) => setForm({ ...form, experienceCode: e.target.value })} className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-3 py-2 h-10 text-sm text-neutral-700">
                           <option value="">Select...</option>
                           {Array.from(expTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                         </select>
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-neutral-400 mb-1 block">Location</label>
-                        <select value={form.locationCode} onChange={(e) => setForm({ ...form, locationCode: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200">
+                        <label className="text-xs font-medium text-neutral-500 mb-1 block">Location</label>
+                        <select value={form.locationCode} onChange={(e) => setForm({ ...form, locationCode: e.target.value })} className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-3 py-2 h-10 text-sm text-neutral-700">
                           <option value="">Select...</option>
                           {Array.from(locTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                         </select>
@@ -478,16 +479,16 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="text-xs font-medium text-neutral-400 mb-1 block">Years of Experience</label>
-                        <Input type="number" min="0" max="50" value={form.yearsOfExperience} onChange={(e) => setForm({ ...form, yearsOfExperience: e.target.value })} placeholder="e.g. 5" className="bg-white/5 border-white/10" />
+                        <label className="text-xs font-medium text-neutral-500 mb-1 block">Years of Experience</label>
+                        <Input type="number" min="0" max="50" value={form.yearsOfExperience} onChange={(e) => setForm({ ...form, yearsOfExperience: e.target.value })} placeholder="e.g. 5" className="bg-neutral-50 border-neutral-200" />
                       </div>
                       <div>
-                        <label className="text-xs font-medium text-neutral-400 mb-1 block">Portfolio URL</label>
-                        <Input value={form.portfolioUrl} onChange={(e) => setForm({ ...form, portfolioUrl: e.target.value })} placeholder="https://..." className="bg-white/5 border-white/10" />
+                        <label className="text-xs font-medium text-neutral-500 mb-1 block">Portfolio URL</label>
+                        <Input value={form.portfolioUrl} onChange={(e) => setForm({ ...form, portfolioUrl: e.target.value })} placeholder="https://..." className="bg-neutral-50 border-neutral-200" />
                       </div>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-neutral-400 mb-2 block">Preferred Industries</label>
+                      <label className="text-xs font-medium text-neutral-500 mb-2 block">Preferred Industries</label>
                       <div className="flex flex-wrap gap-2">
                         {INDUSTRY_OPTIONS.map(ind => (
                           <button
@@ -496,8 +497,8 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                             onClick={() => toggleIndustry(ind)}
                             className={`text-xs px-3 py-1.5 rounded-lg border transition ${
                               (form.preferredIndustries || []).includes(ind)
-                                ? "bg-cyan-500/20 text-cyan-300 border-cyan-300/30"
-                                : "bg-white/5 text-neutral-400 border-white/10 hover:border-white/20"
+                                ? "bg-primary-50 text-primary-500 border-primary-200"
+                                : "bg-neutral-50 text-neutral-500 border-neutral-200 hover:border-neutral-300"
                             }`}
                           >
                             {ind}
@@ -509,20 +510,20 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                 ) : (
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      <div className="flex items-center gap-2"><BookOpen className="w-4 h-4 text-purple-300" /><span className="text-sm">{eduTypes.get(candidate.education_code) || "Not set"}</span></div>
-                      <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-orange-300" /><span className="text-sm">{expTypes.get(candidate.experience_code) || "Not set"}</span></div>
-                      <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-pink-300" /><span className="text-sm">{locTypes.get(candidate.location_code) || "Not set"}</span></div>
+                      <div className="flex items-center gap-2"><BookOpen className="w-4 h-4 text-purple-600" /><span className="text-sm">{eduTypes.get(candidate.education_code) || "Not set"}</span></div>
+                      <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-orange-600" /><span className="text-sm">{expTypes.get(candidate.experience_code) || "Not set"}</span></div>
+                      <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-pink-600" /><span className="text-sm">{locTypes.get(candidate.location_code) || "Not set"}</span></div>
                     </div>
                     {(candidate.years_of_experience || candidate.portfolio_url || candidate.linkedin_url) && (
                       <div className="flex flex-wrap items-center gap-4 text-sm">
                         {candidate.years_of_experience && (
-                          <span className="flex items-center gap-1.5 text-neutral-300"><Hash className="w-3.5 h-3.5 text-emerald-300" /> {candidate.years_of_experience} years experience</span>
+                          <span className="flex items-center gap-1.5 text-neutral-600"><Hash className="w-3.5 h-3.5 text-emerald-600" /> {candidate.years_of_experience} years experience</span>
                         )}
                         {candidate.portfolio_url && (
-                          <a href={candidate.portfolio_url} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-cyan-300 hover:underline"><Globe className="w-3.5 h-3.5" /> Portfolio <ArrowUpRight className="w-3 h-3" /></a>
+                          <a href={candidate.portfolio_url} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-primary-500 hover:underline"><Globe className="w-3.5 h-3.5" /> Portfolio <ArrowUpRight className="w-3 h-3" /></a>
                         )}
                         {candidate.linkedin_url && (
-                          <a href={candidate.linkedin_url} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-cyan-300 hover:underline"><Linkedin className="w-3.5 h-3.5" /> LinkedIn <ArrowUpRight className="w-3 h-3" /></a>
+                          <a href={candidate.linkedin_url} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 text-primary-500 hover:underline"><Linkedin className="w-3.5 h-3.5" /> LinkedIn <ArrowUpRight className="w-3 h-3" /></a>
                         )}
                       </div>
                     )}
@@ -531,7 +532,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                         <div className="text-xs text-neutral-500 mb-1.5">Preferred Industries</div>
                         <div className="flex flex-wrap gap-1.5">
                           {candidate.preferred_industries.map(ind => (
-                            <Badge key={ind} className="bg-white/5 border-white/10 text-neutral-300 text-xs">{ind}</Badge>
+                            <Badge key={ind} className="bg-neutral-50 border-neutral-200 text-neutral-600 text-xs">{ind}</Badge>
                           ))}
                         </div>
                       </div>
@@ -542,7 +543,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
             </Card>
 
             {/* Career Interests */}
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-neutral-50 border-neutral-200">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-lg font-semibold flex items-center gap-2"><Star className="w-5 h-5" /> Career Interests</h2>
@@ -556,12 +557,12 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                 {editing && showInterestSearch && (
                   <div className="mb-4 space-y-2">
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
                       <Input
                         value={interestQuery}
                         onChange={(e) => setInterestQuery(e.target.value)}
                         placeholder="Search job titles to find CISCO codes..."
-                        className="pl-10 bg-white/5 border-white/10"
+                        className="pl-10 bg-neutral-50 border-neutral-200"
                         autoFocus
                       />
                     </div>
@@ -571,10 +572,10 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                           <button
                             key={i}
                             onClick={() => addInterest(s)}
-                            className="text-left rounded-xl px-3 py-2 border border-white/10 bg-white/5 hover:border-cyan-300/40 transition"
+                            className="text-left rounded-xl px-3 py-2 border border-neutral-200 bg-neutral-50 hover:border-primary-300 transition"
                           >
                             <div className="font-medium text-sm">{s.ciscoUnit?.title}</div>
-                            <div className="text-xs text-neutral-400">{s.label}</div>
+                            <div className="text-xs text-neutral-500">{s.label}</div>
                           </button>
                         ))}
                       </div>
@@ -587,12 +588,12 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                     {editInterests.map((i) => (
                       <div key={i.ciscoCode} className="flex items-center gap-1">
                         <Link href={`/job/${i.ciscoCode}`}>
-                          <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30 cursor-pointer hover:bg-cyan-500/30">
+                          <Badge className="bg-primary-50 text-primary-500 border-primary-200 cursor-pointer hover:bg-primary-100">
                             {i.title || i.ciscoCode}
                           </Badge>
                         </Link>
                         {editing && (
-                          <button onClick={() => removeInterest(i.ciscoCode)} className="text-neutral-400 hover:text-red-400">
+                          <button onClick={() => removeInterest(i.ciscoCode)} className="text-neutral-500 hover:text-red-500">
                             <X className="w-3 h-3" />
                           </button>
                         )}
@@ -600,13 +601,13 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                     ))}
                   </div>
                 ) : (
-                  <p className="text-neutral-400 text-sm">No career interests set. {editing ? "Click 'Add Interest' above to search." : <Link href="/career-tracks" className="text-cyan-300 hover:underline">Explore Career Tracks</Link>}</p>
+                  <p className="text-neutral-500 text-sm">No career interests set. {editing ? "Click 'Add Interest' above to search." : <Link href="/career-tracks" className="text-primary-500 hover:underline">Explore Career Tracks</Link>}</p>
                 )}
               </CardContent>
             </Card>
 
             {/* Skills */}
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-neutral-50 border-neutral-200">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-lg font-semibold flex items-center gap-2"><Briefcase className="w-5 h-5" /> Skills</h2>
@@ -620,12 +621,12 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                 {editing && showSkillSearch && (
                   <div className="mb-4 space-y-2">
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
                       <Input
                         value={skillQuery}
                         onChange={(e) => setSkillQuery(e.target.value)}
                         placeholder="Search skills..."
-                        className="pl-10 bg-white/5 border-white/10"
+                        className="pl-10 bg-neutral-50 border-neutral-200"
                         autoFocus
                       />
                     </div>
@@ -633,7 +634,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                       <div className="flex flex-wrap gap-2">
                         {skillSuggestions.map((s) => (
                           <button key={s.id} onClick={() => addSkill(s)}>
-                            <Badge className="bg-white/5 border-white/10 text-neutral-300 hover:border-purple-300/40 cursor-pointer">
+                            <Badge className="bg-neutral-50 border-neutral-200 text-neutral-600 hover:border-purple-300 cursor-pointer">
                               <Plus className="w-3 h-3 mr-1" /> {s.name}
                             </Badge>
                           </button>
@@ -645,11 +646,11 @@ export default function ProfileClient({ candidate, interests, skills, notificati
 
                 {editing && suggestedSkills.length > 0 && (
                   <div className="mb-4">
-                    <div className="text-xs text-neutral-400 mb-2">Suggested based on your interests</div>
+                    <div className="text-xs text-neutral-500 mb-2">Suggested based on your interests</div>
                     <div className="flex flex-wrap gap-2">
                       {suggestedSkills.map((s) => (
                         <button key={s.id} onClick={() => addSkill(s)}>
-                          <Badge className="bg-emerald-500/10 border-emerald-300/20 text-emerald-300 hover:bg-emerald-500/20 cursor-pointer">
+                          <Badge className="bg-emerald-50 border-emerald-200 text-emerald-600 hover:bg-emerald-50 cursor-pointer">
                             <Plus className="w-3 h-3 mr-1" /> {s.name}
                           </Badge>
                         </button>
@@ -662,9 +663,9 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                   <div className="flex flex-wrap gap-2">
                     {editSkills.map((s) => (
                       <div key={s.id} className="flex items-center gap-1">
-                        <Badge className="bg-purple-500/20 text-purple-300 border-purple-300/30">{s.name}</Badge>
+                        <Badge className="bg-purple-50 text-purple-600 border-purple-200">{s.name}</Badge>
                         {editing && (
-                          <button onClick={() => removeSkill(s.id)} className="text-neutral-400 hover:text-red-400">
+                          <button onClick={() => removeSkill(s.id)} className="text-neutral-500 hover:text-red-500">
                             <X className="w-3 h-3" />
                           </button>
                         )}
@@ -672,7 +673,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                     ))}
                   </div>
                 ) : (
-                  <p className="text-neutral-400 text-sm">No skills added yet. {editing ? "Click 'Add Skill' above or pick from suggestions." : "Skills will be suggested based on your career interests."}</p>
+                  <p className="text-neutral-500 text-sm">No skills added yet. {editing ? "Click 'Add Skill' above or pick from suggestions." : "Skills will be suggested based on your career interests."}</p>
                 )}
               </CardContent>
             </Card>
@@ -681,14 +682,14 @@ export default function ProfileClient({ candidate, interests, skills, notificati
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Status */}
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-neutral-50 border-neutral-200">
               <CardContent className="p-4 sm:p-6 space-y-4">
                 <h3 className="text-lg font-semibold">Status</h3>
                 {editing ? (
                   <div className="space-y-4">
                     <div>
-                      <label className="text-xs font-medium text-neutral-400 mb-2 block">Availability</label>
-                      <select value={form.availability} onChange={(e) => setForm({ ...form, availability: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200">
+                      <label className="text-xs font-medium text-neutral-500 mb-2 block">Availability</label>
+                      <select value={form.availability} onChange={(e) => setForm({ ...form, availability: e.target.value })} className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-3 py-2 h-10 text-sm text-neutral-700">
                         {AVAILABILITY_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                       </select>
                     </div>
@@ -703,9 +704,9 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                     <Badge className={availOption?.color}>{availOption?.label || "Not set"}</Badge>
                     <div className="flex items-center gap-2 text-sm">
                       {candidate.is_discoverable ? (
-                        <><Eye className="w-4 h-4 text-emerald-300" /><span className="text-emerald-300">Visible to employers</span></>
+                        <><Eye className="w-4 h-4 text-emerald-600" /><span className="text-emerald-600">Visible to employers</span></>
                       ) : (
-                        <><EyeOff className="w-4 h-4 text-neutral-400" /><span className="text-neutral-400">Hidden from employers</span></>
+                        <><EyeOff className="w-4 h-4 text-neutral-500" /><span className="text-neutral-500">Hidden from employers</span></>
                       )}
                     </div>
                   </div>
@@ -714,23 +715,23 @@ export default function ProfileClient({ candidate, interests, skills, notificati
             </Card>
 
             {/* Preferences */}
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-neutral-50 border-neutral-200">
               <CardContent className="p-4 sm:p-6 space-y-4">
                 <h3 className="text-lg font-semibold">Preferences</h3>
                 {editing ? (
                   <div className="space-y-4">
                     <div>
-                      <label className="text-xs font-medium text-neutral-400 mb-1 block">Minimum Salary (KYD/year)</label>
+                      <label className="text-xs font-medium text-neutral-500 mb-1 block">Minimum Salary (KYD/year)</label>
                       <Input
                         type="number"
                         value={form.salaryMin}
                         onChange={(e) => setForm({ ...form, salaryMin: e.target.value })}
                         placeholder="e.g. 60000"
-                        className="bg-white/5 border-white/10"
+                        className="bg-neutral-50 border-neutral-200"
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-neutral-400 mb-2 block">Work Type</label>
+                      <label className="text-xs font-medium text-neutral-500 mb-2 block">Work Type</label>
                       <div className="space-y-2">
                         {[["1", "Full-time"], ["2", "Part-time"], ["3", "Contract"]].map(([code, label]) => (
                           <label key={code} className="flex items-center gap-2 cursor-pointer">
@@ -755,46 +756,46 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                       <span className="text-sm">Willing to relocate</span>
                     </label>
                     <div>
-                      <label className="text-xs font-medium text-neutral-400 mb-1 block">Phone</label>
+                      <label className="text-xs font-medium text-neutral-500 mb-1 block">Phone</label>
                       <Input
                         value={form.phone}
                         onChange={(e) => setForm({ ...form, phone: e.target.value })}
                         placeholder="+1 345 ..."
-                        className="bg-white/5 border-white/10"
+                        className="bg-neutral-50 border-neutral-200"
                       />
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-neutral-400 mb-1 block">LinkedIn URL</label>
+                      <label className="text-xs font-medium text-neutral-500 mb-1 block">LinkedIn URL</label>
                       <Input
                         value={form.linkedinUrl}
                         onChange={(e) => setForm({ ...form, linkedinUrl: e.target.value })}
                         placeholder="https://linkedin.com/in/..."
-                        className="bg-white/5 border-white/10"
+                        className="bg-neutral-50 border-neutral-200"
                       />
                       <p className="text-xs text-neutral-500 mt-1">Shared with employers only after you accept an introduction.</p>
                     </div>
                     <div>
-                      <label className="text-xs font-medium text-neutral-400 mb-1 block">Resume Summary</label>
+                      <label className="text-xs font-medium text-neutral-500 mb-1 block">Resume Summary</label>
                       <textarea
                         value={form.resumeSummary}
                         onChange={(e) => setForm({ ...form, resumeSummary: e.target.value })}
                         rows={3}
                         placeholder="Anything the structured fields don't capture..."
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 h-10 text-sm text-neutral-200"
+                        className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-3 py-2 h-10 text-sm text-neutral-700"
                       />
                     </div>
                   </div>
                 ) : (
                   <div className="space-y-3 text-sm">
                     {candidate.salary_min ? (
-                      <div><span className="text-neutral-400">Minimum Salary:</span> KYD {candidate.salary_min.toLocaleString()}/yr</div>
+                      <div><span className="text-neutral-500">Minimum Salary:</span> KYD {candidate.salary_min.toLocaleString()}/yr</div>
                     ) : (
                       <div className="text-neutral-500">No minimum salary set</div>
                     )}
                     {candidate.work_type_preferences?.length > 0 ? (
                       <div className="flex flex-wrap gap-1">
                         {candidate.work_type_preferences.map(c => (
-                          <Badge key={c} className="bg-white/5 border-white/10 text-neutral-300 text-xs">
+                          <Badge key={c} className="bg-neutral-50 border-neutral-200 text-neutral-600 text-xs">
                             {c === "1" ? "Full-time" : c === "2" ? "Part-time" : c === "3" ? "Contract" : c}
                           </Badge>
                         ))}
@@ -803,16 +804,16 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                       <div className="text-neutral-500">No work type preferences set</div>
                     )}
                     {candidate.willing_to_relocate && (
-                      <div className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-emerald-300" /> <span className="text-emerald-300">Willing to relocate</span></div>
+                      <div className="flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-emerald-600" /> <span className="text-emerald-600">Willing to relocate</span></div>
                     )}
                     {candidate.phone && (
-                      <div className="flex items-center gap-1.5"><Phone className="w-3.5 h-3.5 text-neutral-400" /> {candidate.phone}</div>
+                      <div className="flex items-center gap-1.5"><Phone className="w-3.5 h-3.5 text-neutral-500" /> {candidate.phone}</div>
                     )}
                     {candidate.linkedin_url && (
-                      <div><span className="text-neutral-400">LinkedIn:</span> <a href={candidate.linkedin_url} target="_blank" rel="noreferrer" className="text-cyan-300 hover:underline">Profile</a></div>
+                      <div><span className="text-neutral-500">LinkedIn:</span> <a href={candidate.linkedin_url} target="_blank" rel="noreferrer" className="text-primary-500 hover:underline">Profile</a></div>
                     )}
                     {candidate.resume_summary && (
-                      <div><span className="text-neutral-400">Summary:</span> <span className="text-neutral-300">{candidate.resume_summary}</span></div>
+                      <div><span className="text-neutral-500">Summary:</span> <span className="text-neutral-600">{candidate.resume_summary}</span></div>
                     )}
                   </div>
                 )}
@@ -820,20 +821,20 @@ export default function ProfileClient({ candidate, interests, skills, notificati
             </Card>
 
             {/* Introductions */}
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-neutral-50 border-neutral-200">
               <CardContent className="p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-lg font-semibold flex items-center gap-2"><Send className="w-5 h-5" /> Introductions</h3>
-                  {pendingIntroCount > 0 && <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-300/30">{pendingIntroCount} pending</Badge>}
+                  {pendingIntroCount > 0 && <Badge className="bg-yellow-50 text-yellow-600 border-yellow-200">{pendingIntroCount} pending</Badge>}
                 </div>
-                <Link href="/introductions" className="text-sm text-cyan-300 hover:underline flex items-center gap-1">
+                <Link href="/introductions" className="text-sm text-primary-500 hover:underline flex items-center gap-1">
                   View all introductions <ChevronRight className="w-3 h-3" />
                 </Link>
               </CardContent>
             </Card>
 
             {/* Job Alerts */}
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-neutral-50 border-neutral-200">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold flex items-center gap-2"><Bell className="w-5 h-5" /> Job Alerts</h3>
@@ -841,19 +842,19 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                 {alertsLoaded && alerts.length > 0 ? (
                   <div className="space-y-3">
                     {alerts.map(a => (
-                      <div key={a.id} className="p-3 rounded-lg border border-white/10 bg-white/5 space-y-2">
+                      <div key={a.id} className="p-3 rounded-lg border border-neutral-200 bg-neutral-50 space-y-2">
                         <div className="flex items-center justify-between">
-                          <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30 text-xs">{a.frequency}</Badge>
-                          <button onClick={() => handleDeleteAlert(a.id)} className="text-neutral-400 hover:text-red-400">
+                          <Badge className="bg-primary-50 text-primary-500 border-primary-200 text-xs">{a.frequency}</Badge>
+                          <button onClick={() => handleDeleteAlert(a.id)} className="text-neutral-500 hover:text-red-500">
                             <X className="w-3 h-3" />
                           </button>
                         </div>
-                        <div className="text-xs text-neutral-400">
+                        <div className="text-xs text-neutral-500">
                           {a.filters?.ciscoCodes?.length ? `${a.filters.ciscoCodes.length} interest(s)` : "All interests"}
                         </div>
                         <button
                           onClick={() => handleToggleFrequency(a)}
-                          className="text-xs text-cyan-300 hover:underline"
+                          className="text-xs text-primary-500 hover:underline"
                         >
                           Switch to {a.frequency === "daily" ? "weekly" : "daily"}
                         </button>
@@ -861,7 +862,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                     ))}
                   </div>
                 ) : alertsLoaded ? (
-                  <p className="text-neutral-400 text-sm mb-3">No active alerts.</p>
+                  <p className="text-neutral-500 text-sm mb-3">No active alerts.</p>
                 ) : null}
                 <Button variant="secondary" size="sm" onClick={handleCreateAlert} className="gap-1 w-full mt-3">
                   <Plus className="w-3 h-3" /> Create Alert
@@ -870,24 +871,24 @@ export default function ProfileClient({ candidate, interests, skills, notificati
             </Card>
 
             {/* Recent Notifications */}
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-neutral-50 border-neutral-200">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold">Notifications</h3>
-                  {unreadCount > 0 && <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30">{unreadCount} new</Badge>}
+                  {unreadCount > 0 && <Badge className="bg-primary-50 text-primary-500 border-primary-200">{unreadCount} new</Badge>}
                 </div>
                 {notifications.length > 0 ? (
                   <div className="space-y-3">
                     {notifications.slice(0, 5).map(n => (
-                      <div key={n.id} className={`p-3 rounded-lg border ${n.is_read ? "bg-white/5 border-white/10" : "bg-cyan-500/10 border-cyan-300/20"}`}>
+                      <div key={n.id} className={`p-3 rounded-lg border ${n.is_read ? "bg-neutral-50 border-neutral-200" : "bg-primary-50 border-primary-200"}`}>
                         <div className="text-sm font-medium">{n.title}</div>
-                        {n.body && <div className="text-xs text-neutral-400 mt-1">{n.body}</div>}
+                        {n.body && <div className="text-xs text-neutral-500 mt-1">{n.body}</div>}
                       </div>
                     ))}
-                    <Link href="/notifications" className="text-sm text-cyan-300 hover:underline flex items-center gap-1">View all <ChevronRight className="w-3 h-3" /></Link>
+                    <Link href="/notifications" className="text-sm text-primary-500 hover:underline flex items-center gap-1">View all <ChevronRight className="w-3 h-3" /></Link>
                   </div>
                 ) : (
-                  <p className="text-neutral-400 text-sm">No notifications yet.</p>
+                  <p className="text-neutral-500 text-sm">No notifications yet.</p>
                 )}
               </CardContent>
             </Card>

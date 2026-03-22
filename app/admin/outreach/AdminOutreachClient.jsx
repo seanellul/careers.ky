@@ -56,10 +56,10 @@ export default function AdminOutreachClient({ initialEmployers }) {
   }
 
   const statusColors = {
-    not_contacted: "border-neutral-700 text-neutral-400",
-    contacted: "border-yellow-500/30 text-yellow-400",
-    responded: "border-blue-500/30 text-blue-400",
-    onboarded: "border-green-500/30 text-green-400",
+    not_contacted: "border-neutral-300 text-neutral-500",
+    contacted: "border-yellow-400 text-yellow-600",
+    responded: "border-blue-400 text-blue-600",
+    onboarded: "border-green-400 text-green-600",
   };
 
   return (
@@ -73,12 +73,12 @@ export default function AdminOutreachClient({ initialEmployers }) {
           const notes = editingNotes[emp.slug] ?? emp.notes ?? "";
 
           return (
-            <div key={emp.id} className="bg-neutral-900 border border-white/10 rounded-xl p-4">
+            <div key={emp.id} className="bg-white border border-neutral-200 rounded-xl p-4">
               <div className="flex items-start justify-between gap-4 mb-3">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-medium text-white">{emp.name}</span>
-                    <span className="text-xs px-1.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                    <span className="font-medium text-neutral-900">{emp.name}</span>
+                    <span className="text-xs px-1.5 py-0.5 rounded-full bg-primary-50 text-primary-500 border border-primary-200">
                       priority: {Number(emp.priority_score)}
                     </span>
                   </div>
@@ -91,16 +91,16 @@ export default function AdminOutreachClient({ initialEmployers }) {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => copyLink(emp.slug)}
-                    className="p-1.5 rounded-lg hover:bg-white/10 text-neutral-400 hover:text-white transition"
+                    className="p-1.5 rounded-lg hover:bg-neutral-100 text-neutral-500 hover:text-neutral-900 transition"
                     title="Copy pitch link"
                   >
-                    {copied === emp.slug ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copied === emp.slug ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
                   </button>
                   <a
                     href={`/pitch/${emp.slug}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-1.5 rounded-lg hover:bg-white/10 text-neutral-400 hover:text-white transition"
+                    className="p-1.5 rounded-lg hover:bg-neutral-100 text-neutral-500 hover:text-neutral-900 transition"
                     title="Preview pitch"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -113,16 +113,16 @@ export default function AdminOutreachClient({ initialEmployers }) {
                   value={status}
                   onChange={(e) => updateStatus(emp.slug, e.target.value)}
                   disabled={saving === emp.slug}
-                  className={`text-xs px-2 py-1.5 rounded-lg bg-transparent border ${statusColors[status]} focus:outline-none focus:border-cyan-500/50`}
+                  className={`text-xs px-2 py-1.5 rounded-lg bg-transparent border ${statusColors[status]} focus:outline-none focus:border-primary-500/50`}
                 >
                   {STATUSES.map((s) => (
-                    <option key={s} value={s} className="bg-neutral-900 text-white">
+                    <option key={s} value={s} className="bg-white text-neutral-900">
                       {s.replace(/_/g, " ")}
                     </option>
                   ))}
                 </select>
                 {emp.contacted_at && (
-                  <span className="text-xs text-neutral-600">
+                  <span className="text-xs text-neutral-500">
                     contacted {new Date(emp.contacted_at).toLocaleDateString()}
                   </span>
                 )}
@@ -134,13 +134,13 @@ export default function AdminOutreachClient({ initialEmployers }) {
                   onChange={(e) => setEditingNotes(prev => ({ ...prev, [emp.slug]: e.target.value }))}
                   placeholder="Add notes..."
                   rows={1}
-                  className="flex-1 text-sm px-3 py-2 bg-neutral-950 border border-white/5 rounded-lg text-neutral-300 placeholder-neutral-600 focus:outline-none focus:border-cyan-500/30 resize-none"
+                  className="flex-1 text-sm px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-neutral-600 placeholder-neutral-400 focus:outline-none focus:border-primary-300 resize-none"
                 />
                 {editingNotes[emp.slug] !== undefined && editingNotes[emp.slug] !== emp.notes && (
                   <button
                     onClick={() => saveNotes(emp.slug)}
                     disabled={saving === emp.slug}
-                    className="p-2 rounded-lg bg-cyan-500/15 text-cyan-300 hover:bg-cyan-500/25 transition"
+                    className="p-2 rounded-lg bg-primary-50 text-primary-500 hover:bg-primary-100 transition"
                     title="Save notes"
                   >
                     <Save className="w-3.5 h-3.5" />

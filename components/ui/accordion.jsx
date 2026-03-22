@@ -32,7 +32,7 @@ Accordion.displayName = "Accordion"
 
 const AccordionItem = React.forwardRef(({ className, value, children, ...props }, ref) => (
   <AccordionItemContext.Provider value={value}>
-    <div ref={ref} data-value={value} className={cn("border-b border-white/10", className)} {...props}>
+    <div ref={ref} data-value={value} className={cn("border-b border-neutral-200", className)} {...props}>
       {children}
     </div>
   </AccordionItemContext.Provider>

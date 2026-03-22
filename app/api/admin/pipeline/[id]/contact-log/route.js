@@ -1,13 +1,21 @@
+import { NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
+import { isAdmin } from "@/lib/admin-auth";
 import { getDb } from "../../../../../../lib/db.js";
 
 export async function POST(req, { params }) {
+  const session = await getSession();
+  if (!isAdmin(session)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const sql = getDb();
 
   try {
     const { id } = params;
     const body = await req.json();
 
-    const { activity_type, notes, created_by } = body;
+    const { activity_type, notes } = body;
 
     // Validate activity type
     const validTypes = [
@@ -22,47 +30,29 @@ export async function POST(req, { params }) {
     ];
 
     if (!validTypes.includes(activity_type)) {
-      return new Response(
-        JSON.stringify({
-          error: `Invalid activity_type. Must be one of: ${validTypes.join(", ")}`,
-        }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        }
+      return NextResponse.json(
+        { error: `Invalid activity_type. Must be one of: ${validTypes.join(", ")}` },
+        { status: 400 }
       );
     }
 
-    // Insert contact log entry
-    const result = await sql(
-      `
+    // Derive created_by from session instead of trusting client
+    const createdBy = session.candidateEmail || session.employerEmail || "admin";
+
+    const result = await sql`
       INSERT INTO contact_log (employer_id, activity_type, notes, created_by)
-      VALUES ($1, $2, $3, $4)
+      VALUES (${id}, ${activity_type}, ${notes || null}, ${createdBy})
       RETURNING *
-    `,
-      [id, activity_type, notes || null, created_by || "admin"]
-    );
+    `;
 
     // Update last_contacted timestamp
-    await sql("UPDATE sales_pipeline SET last_contacted = NOW() WHERE id = $1", [
-      id,
-    ]);
+    await sql`
+      UPDATE sales_pipeline SET last_contacted = NOW() WHERE id = ${id}
+    `;
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        data: result[0],
-      }),
-      {
-        status: 201,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return NextResponse.json({ success: true, data: result[0] }, { status: 201 });
   } catch (error) {
     console.error("Contact log error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

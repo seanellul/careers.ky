@@ -7,12 +7,12 @@ import {
 
 function StatCard({ label, value, icon: Icon, accent }) {
   return (
-    <div className="bg-neutral-900 border border-white/10 rounded-xl p-5">
+    <div className="bg-white border border-neutral-200 rounded-xl p-5">
       <div className="flex items-center justify-between mb-3">
         <span className="text-xs font-medium uppercase tracking-wider text-neutral-500">{label}</span>
-        <Icon className={`w-4 h-4 ${accent ? "text-cyan-400" : "text-neutral-600"}`} />
+        <Icon className={`w-4 h-4 ${accent ? "text-primary-500" : "text-neutral-400"}`} />
       </div>
-      <div className="text-2xl font-bold text-white">{typeof value === "number" ? value.toLocaleString() : value}</div>
+      <div className="text-2xl font-bold text-neutral-900">{typeof value === "number" ? value.toLocaleString() : value}</div>
     </div>
   );
 }

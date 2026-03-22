@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import t from "@/lib/theme";
 import {
   ChevronLeft,
   ExternalLink,
@@ -108,14 +109,14 @@ function FormatDescription({ text }) {
       {grouped.map((el, i) => {
         if (el.type === "heading") {
           return (
-            <h3 key={i} className="text-lg font-semibold text-white mt-6 first:mt-0">
+            <h3 key={i} className="text-lg font-semibold text-neutral-900 mt-6 first:mt-0">
               {el.text}
             </h3>
           );
         }
         if (el.type === "paragraph") {
           return (
-            <p key={i} className="text-neutral-300 leading-relaxed">
+            <p key={i} className="text-neutral-600 leading-relaxed">
               {el.text}
             </p>
           );
@@ -124,8 +125,8 @@ function FormatDescription({ text }) {
           return (
             <ul key={i} className="space-y-2 ml-1">
               {el.items.map((item, j) => (
-                <li key={j} className="flex gap-2 text-neutral-300">
-                  <span className="text-cyan-400 mt-1.5 shrink-0">
+                <li key={j} className="flex gap-2 text-neutral-600">
+                  <span className="text-primary-500 mt-1.5 shrink-0">
                     <svg width="6" height="6" viewBox="0 0 6 6" fill="currentColor"><circle cx="3" cy="3" r="3" /></svg>
                   </span>
                   <span className="leading-relaxed">{item}</span>
@@ -163,15 +164,15 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
   const isExpiring = daysLeft !== null && daysLeft <= 5 && daysLeft > 0;
 
   const requirements = [
-    job.medicalCheck && { icon: Heart, label: "Medical Check Required", color: "text-red-300" },
-    job.policeCheck && { icon: Shield, label: "Police Check Required", color: "text-yellow-300" },
-    job.drivingLicense && { icon: Car, label: "Driving License Required", color: "text-blue-300" },
-    job.coverLetterRequired && { icon: Mail, label: "Cover Letter Required", color: "text-purple-300" },
+    job.medicalCheck && { icon: Heart, label: "Medical Check Required", color: "text-red-500" },
+    job.policeCheck && { icon: Shield, label: "Police Check Required", color: "text-yellow-600" },
+    job.drivingLicense && { icon: Car, label: "Driving License Required", color: "text-blue-600" },
+    job.coverLetterRequired && { icon: Mail, label: "Cover Letter Required", color: "text-purple-600" },
   ].filter(Boolean);
 
   return (
-    <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
-      <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={{ backgroundImage: "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)", backgroundPosition: "0% 50%" }} />
+    <div className={`${t.page} w-full`}>
+      <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={t.pageGradientStyle} />
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
         {/* Back */}
@@ -185,21 +186,21 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
         <div className="mb-8">
           <div className="flex flex-wrap items-center gap-2 mb-3">
             {job.isActive ? (
-              <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-300/30">Active</Badge>
+              <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200">Active</Badge>
             ) : (
-              <Badge className="bg-neutral-500/20 text-neutral-300 border-neutral-300/30">Closed</Badge>
+              <Badge className="bg-neutral-100 text-neutral-600 border-neutral-200">Closed</Badge>
             )}
             {isExpiring && (
-              <Badge className="bg-red-500/20 text-red-300 border-red-300/30">Closes in {daysLeft} day{daysLeft !== 1 ? "s" : ""}</Badge>
+              <Badge className="bg-red-50 text-red-500 border-red-200">Closes in {daysLeft} day{daysLeft !== 1 ? "s" : ""}</Badge>
             )}
-            <Badge className="bg-white/5 border-white/10 text-neutral-400">WORC ID: {job.cJobId}</Badge>
+            <Badge className="bg-neutral-50 border-neutral-200 text-neutral-500">WORC ID: {job.cJobId}</Badge>
           </div>
 
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight mb-3">{job.cTitle}</h1>
 
           <Link
             href={`/employer/${encodeURIComponent(job.Employer?.trim().toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`}
-            className="inline-flex items-center gap-2 text-lg text-neutral-300 hover:text-cyan-300 transition mb-4"
+            className="inline-flex items-center gap-2 text-lg text-neutral-600 hover:text-primary-500 transition mb-4"
           >
             <Building2 className="w-5 h-5" /> {job.Employer}
           </Link>
@@ -236,7 +237,7 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
                     </Button>
                   )}
                   {interestState === "sent" && (
-                    <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-300/30 text-sm py-2 px-4">
+                    <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200 text-sm py-2 px-4">
                       <CheckCircle className="w-4 h-4 mr-1" /> Interest Expressed
                     </Badge>
                   )}
@@ -259,7 +260,7 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
               )}
               {/* WORC link — secondary */}
               <a href={worcUrl} target="_blank" rel="noreferrer">
-                <Button size="lg" variant="secondary" className="gap-2 text-neutral-400">
+                <Button size="lg" variant="secondary" className="gap-2 text-neutral-500">
                   <ExternalLink className="w-4 h-4" /> Apply on WORC
                 </Button>
               </a>
@@ -286,7 +287,7 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
                   });
                 }}
               >
-                {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
                 {copied ? "Copied!" : "Copy Link"}
               </Button>
             </div>
@@ -297,48 +298,48 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
           {/* Main Content */}
           <div className="md:col-span-2 space-y-6">
             {/* Key Details Grid */}
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-neutral-50 border-neutral-200">
               <CardContent className="p-4 sm:p-6">
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   <div className="flex items-start gap-3">
-                    <DollarSign className="w-5 h-5 text-emerald-300 shrink-0 mt-0.5" />
+                    <DollarSign className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                     <div>
-                      <div className="text-xs text-neutral-400">Salary</div>
+                      <div className="text-xs text-neutral-500">Salary</div>
                       <div className="text-sm font-medium">{job.salaryLong || job.salaryShort || "Not specified"}</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 text-pink-300 shrink-0 mt-0.5" />
+                    <MapPin className="w-5 h-5 text-pink-600 shrink-0 mt-0.5" />
                     <div>
-                      <div className="text-xs text-neutral-400">Location</div>
+                      <div className="text-xs text-neutral-500">Location</div>
                       <div className="text-sm font-medium">{locTypes.get(job.sLocation) || "Cayman Islands"}</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Briefcase className="w-5 h-5 text-cyan-300 shrink-0 mt-0.5" />
+                    <Briefcase className="w-5 h-5 text-primary-500 shrink-0 mt-0.5" />
                     <div>
-                      <div className="text-xs text-neutral-400">Work Type</div>
+                      <div className="text-xs text-neutral-500">Work Type</div>
                       <div className="text-sm font-medium">{workTypes.get(job.sWork) || "Full-time"}</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Clock className="w-5 h-5 text-orange-300 shrink-0 mt-0.5" />
+                    <Clock className="w-5 h-5 text-orange-600 shrink-0 mt-0.5" />
                     <div>
-                      <div className="text-xs text-neutral-400">Hours/Week</div>
+                      <div className="text-xs text-neutral-500">Hours/Week</div>
                       <div className="text-sm font-medium">{job.hoursPerWeek || "N/A"}</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <BookOpen className="w-5 h-5 text-purple-300 shrink-0 mt-0.5" />
+                    <BookOpen className="w-5 h-5 text-purple-600 shrink-0 mt-0.5" />
                     <div>
-                      <div className="text-xs text-neutral-400">Education</div>
+                      <div className="text-xs text-neutral-500">Education</div>
                       <div className="text-sm font-medium">{eduTypes.get(job.sEducation) || "Not specified"}</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Clock className="w-5 h-5 text-amber-300 shrink-0 mt-0.5" />
+                    <Clock className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                     <div>
-                      <div className="text-xs text-neutral-400">Experience</div>
+                      <div className="text-xs text-neutral-500">Experience</div>
                       <div className="text-sm font-medium">{expTypes.get(job.sExperience) || "Not specified"}</div>
                     </div>
                   </div>
@@ -348,7 +349,7 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
 
             {/* Job Description */}
             {job.jobDescription && (
-              <Card className="bg-white/5 border-white/10">
+              <Card className="bg-neutral-50 border-neutral-200">
                 <CardContent className="p-4 sm:p-6">
                   <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                     <FileText className="w-5 h-5" /> Job Description
@@ -360,12 +361,12 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
 
             {/* Requirements Checklist */}
             {requirements.length > 0 && (
-              <Card className="bg-white/5 border-white/10">
+              <Card className="bg-neutral-50 border-neutral-200">
                 <CardContent className="p-4 sm:p-6">
                   <h2 className="text-xl font-semibold mb-4">Application Requirements</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {requirements.map((req, i) => (
-                      <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+                      <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-neutral-50 border border-neutral-200">
                         <req.icon className={`w-5 h-5 ${req.color} shrink-0`} />
                         <span className="text-sm">{req.label}</span>
                       </div>
@@ -379,7 +380,7 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Interest / Apply Card */}
-            <Card className="bg-gradient-to-br from-cyan-500/10 to-emerald-500/10 border-cyan-300/20">
+            <Card className="bg-gradient-to-br from-primary-50 to-emerald-50 border-primary-200">
               <CardContent className="p-4 sm:p-6 space-y-4">
                 <h3 className="text-lg font-semibold">Interested in this role?</h3>
                 {job.isActive ? (
@@ -413,7 +414,7 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
                         )}
                         {interestState === "sent" && (
                           <div className="text-center">
-                            <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-300/30 text-sm py-2 px-4">
+                            <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200 text-sm py-2 px-4">
                               <CheckCircle className="w-4 h-4 mr-1" /> Interest Expressed
                             </Badge>
                           </div>
@@ -428,7 +429,7 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
                         {/* Employer viewing — no Express Interest, show WORC fallback */}
                         {session?.employerAccountId && (
                           <a href={worcUrl} target="_blank" rel="noreferrer" className="block">
-                            <Button variant="secondary" className="w-full gap-2 text-neutral-400">
+                            <Button variant="secondary" className="w-full gap-2 text-neutral-500">
                               <ExternalLink className="w-4 h-4" /> View on WORC
                             </Button>
                           </a>
@@ -436,7 +437,7 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
                         {/* WORC as subtle secondary link */}
                         {!session?.employerAccountId && (
                           <a href={worcUrl} target="_blank" rel="noreferrer" className="block text-center">
-                            <span className="text-xs text-neutral-500 hover:text-neutral-300 transition inline-flex items-center gap-1">
+                            <span className="text-xs text-neutral-500 hover:text-neutral-600 transition inline-flex items-center gap-1">
                               <ExternalLink className="w-3 h-3" /> Or apply directly on WORC
                             </span>
                           </a>
@@ -444,43 +445,43 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
                       </>
                     )}
                     {daysLeft !== null && daysLeft > 0 && (
-                      <p className="text-xs text-neutral-400 text-center">
+                      <p className="text-xs text-neutral-500 text-center">
                         {daysLeft} day{daysLeft !== 1 ? "s" : ""} remaining
                       </p>
                     )}
                   </>
                 ) : (
-                  <p className="text-sm text-neutral-400">This posting is no longer accepting applications.</p>
+                  <p className="text-sm text-neutral-500">This posting is no longer accepting applications.</p>
                 )}
               </CardContent>
             </Card>
 
             {/* Key Info Card */}
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-neutral-50 border-neutral-200">
               <CardContent className="p-4 sm:p-6 space-y-4">
                 <h3 className="text-lg font-semibold">Details</h3>
                 <div className="space-y-3 text-sm">
                   {job.numberOfPositions > 0 && (
                     <div className="flex items-center justify-between">
-                      <span className="text-neutral-400 flex items-center gap-2"><Users className="w-4 h-4" /> Positions</span>
+                      <span className="text-neutral-500 flex items-center gap-2"><Users className="w-4 h-4" /> Positions</span>
                       <span className="font-medium">{job.numberOfPositions}</span>
                     </div>
                   )}
                   {job.applicantCount > 0 && (
                     <div className="flex items-center justify-between">
-                      <span className="text-neutral-400 flex items-center gap-2"><Users className="w-4 h-4" /> Applicants</span>
+                      <span className="text-neutral-500 flex items-center gap-2"><Users className="w-4 h-4" /> Applicants</span>
                       <span className="font-medium">{job.applicantCount}</span>
                     </div>
                   )}
                   {job.kydPerAnnum > 0 && (
                     <div className="flex items-center justify-between">
-                      <span className="text-neutral-400 flex items-center gap-2"><DollarSign className="w-4 h-4" /> Annual (KYD)</span>
+                      <span className="text-neutral-500 flex items-center gap-2"><DollarSign className="w-4 h-4" /> Annual (KYD)</span>
                       <span className="font-medium">CI$ {Math.round(job.kydPerAnnum).toLocaleString()}</span>
                     </div>
                   )}
                   {job.Occupation && (
                     <div className="flex items-center justify-between">
-                      <span className="text-neutral-400 flex items-center gap-2"><Briefcase className="w-4 h-4" /> Industry</span>
+                      <span className="text-neutral-500 flex items-center gap-2"><Briefcase className="w-4 h-4" /> Industry</span>
                       <span className="font-medium text-right">{job.Occupation}</span>
                     </div>
                   )}
@@ -489,40 +490,40 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
             </Card>
 
             {/* Timeline Card */}
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-neutral-50 border-neutral-200">
               <CardContent className="p-4 sm:p-6 space-y-4">
                 <h3 className="text-lg font-semibold flex items-center gap-2"><Calendar className="w-5 h-5" /> Timeline</h3>
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-neutral-400">Posted</span>
+                    <span className="text-neutral-500">Posted</span>
                     <span>{formatDate(job.createdDate)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-neutral-400">Start Date</span>
+                    <span className="text-neutral-500">Start Date</span>
                     <span>{formatDate(job.startDate)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-neutral-400">Closing Date</span>
-                    <span className={isExpiring ? "text-red-300 font-medium" : ""}>{formatDate(job.endDate)}</span>
+                    <span className="text-neutral-500">Closing Date</span>
+                    <span className={isExpiring ? "text-red-500 font-medium" : ""}>{formatDate(job.endDate)}</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             {/* Employer Link */}
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-neutral-50 border-neutral-200">
               <CardContent className="p-4 sm:p-6">
                 <h3 className="text-lg font-semibold mb-3">Employer</h3>
                 <Link
                   href={`/employer/${encodeURIComponent(job.Employer?.trim().toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-300/40 transition"
+                  className="flex items-center gap-3 p-3 rounded-xl bg-neutral-50 border border-neutral-200 hover:border-primary-300 transition"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-white/10 grid place-items-center shrink-0">
-                    <Building2 className="w-5 h-5 text-neutral-400" />
+                  <div className="w-10 h-10 rounded-lg bg-neutral-100 grid place-items-center shrink-0">
+                    <Building2 className="w-5 h-5 text-neutral-500" />
                   </div>
                   <div>
                     <div className="font-medium text-sm">{job.Employer}</div>
-                    <div className="text-xs text-neutral-400">View employer profile</div>
+                    <div className="text-xs text-neutral-500">View employer profile</div>
                   </div>
                 </Link>
               </CardContent>

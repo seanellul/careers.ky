@@ -39,20 +39,20 @@ export default function CandidateDashboardSidebar() {
             onClick={() => setMobileOpen(false)}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition ${
               active
-                ? "bg-cyan-500/15 text-cyan-300 border border-cyan-300/20"
-                : "text-neutral-400 hover:bg-white/5 hover:text-neutral-200"
+                ? "bg-primary-50 text-primary-700 font-medium"
+                : "text-neutral-500 hover:bg-neutral-50 hover:text-neutral-800"
             }`}
           >
-            <Icon className={`w-4 h-4 ${active ? "text-cyan-300" : ""}`} />
+            <Icon className={`w-4 h-4 ${active ? "text-primary-600" : ""}`} />
             <span>{item.label}</span>
           </Link>
         );
       })}
 
-      <div className="my-2 border-t border-white/5" />
+      <div className="my-2 border-t border-neutral-200" />
       <Link
         href={externalLink.href}
-        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-neutral-400 hover:bg-white/5 hover:text-neutral-200 transition"
+        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-neutral-500 hover:bg-neutral-50 hover:text-neutral-800 transition"
       >
         <ExternalLink className="w-4 h-4" />
         <span>{externalLink.label}</span>
@@ -65,20 +65,20 @@ export default function CandidateDashboardSidebar() {
       {/* Mobile toggle button */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="md:hidden fixed bottom-4 left-4 z-40 p-3 rounded-xl bg-neutral-900 border border-white/10 shadow-lg"
+        className="md:hidden fixed bottom-4 left-4 z-40 p-3 rounded-xl bg-white border border-neutral-200 shadow-lg"
         aria-label="Open sidebar"
       >
-        <Menu className="w-5 h-5 text-neutral-300" />
+        <Menu className="w-5 h-5 text-neutral-600" />
       </button>
 
       {/* Mobile overlay */}
       {mobileOpen && (
         <div className="md:hidden fixed inset-0 z-40">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
-          <div className="absolute left-0 top-0 bottom-0 w-56 sm:w-64 bg-neutral-950 border-r border-white/10 p-4 overflow-y-auto">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+          <div className="absolute left-0 top-0 bottom-0 w-56 sm:w-64 bg-white border-r border-neutral-200 p-4 overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <span className="text-sm font-medium text-neutral-300">Navigation</span>
-              <button onClick={() => setMobileOpen(false)} className="p-1 rounded-lg hover:bg-white/10">
+              <span className="text-sm font-medium text-neutral-700">Navigation</span>
+              <button onClick={() => setMobileOpen(false)} className="p-1 rounded-lg hover:bg-neutral-100">
                 <X className="w-4 h-4 text-neutral-400" />
               </button>
             </div>

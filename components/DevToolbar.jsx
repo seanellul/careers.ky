@@ -71,14 +71,14 @@ export default function DevToolbar() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-[9999] bg-neutral-900 border border-orange-500/50 rounded-xl shadow-2xl p-3 text-xs text-neutral-200 space-y-2 w-64 max-w-[calc(100vw-2rem)]">
+    <div className="fixed bottom-4 right-4 z-[9999] bg-white border border-orange-500/50 rounded-xl shadow-2xl p-3 text-xs text-neutral-700 space-y-2 w-64 max-w-[calc(100vw-2rem)]">
       <div className="flex items-center justify-between">
-        <span className="font-bold text-orange-400">DEV TOOLBAR</span>
-        <button onClick={() => setMinimized(true)} className="text-neutral-500 hover:text-white text-sm leading-none">&minus;</button>
+        <span className="font-bold text-orange-500">DEV TOOLBAR</span>
+        <button onClick={() => setMinimized(true)} className="text-neutral-400 hover:text-neutral-900 text-sm leading-none">&minus;</button>
       </div>
 
-      <div className="text-neutral-400">
-        Current: <span className={`font-semibold ${currentRole === "employer" ? "text-cyan-300" : currentRole === "candidate" ? "text-emerald-300" : "text-red-300"}`}>
+      <div className="text-neutral-500">
+        Current: <span className={`font-semibold ${currentRole === "employer" ? "text-primary-500" : currentRole === "candidate" ? "text-emerald-600" : "text-red-500"}`}>
           {currentRole === "employer" ? "Employer" : currentRole === "candidate" ? "Candidate" : "Not signed in"}
         </span>
       </div>
@@ -89,14 +89,14 @@ export default function DevToolbar() {
         </div>
       )}
 
-      <div className="text-neutral-500 border-t border-white/10 pt-2 mt-1">
+      <div className="text-neutral-500 border-t border-neutral-200 pt-2 mt-1">
         Test without OAuth:
       </div>
       <button
         type="button"
         onClick={() => loginDevCandidate(true)}
         disabled={switching}
-        className="w-full px-2 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/20 border border-emerald-400/40 text-emerald-200 hover:bg-emerald-500/30 transition text-left"
+        className="w-full px-2 py-1.5 rounded-lg text-xs font-medium bg-emerald-50 border border-emerald-300 text-emerald-700 hover:bg-emerald-100 transition text-left"
       >
         New candidate → profile setup
       </button>
@@ -104,12 +104,12 @@ export default function DevToolbar() {
         type="button"
         onClick={() => loginDevCandidate(false)}
         disabled={switching}
-        className="w-full px-2 py-1.5 rounded-lg text-xs font-medium bg-white/5 border border-white/10 text-neutral-400 hover:text-white hover:border-white/20 transition text-left"
+        className="w-full px-2 py-1.5 rounded-lg text-xs font-medium bg-neutral-50 border border-neutral-200 text-neutral-500 hover:text-neutral-900 hover:border-neutral-300 transition text-left"
       >
         Stable dev candidate → dashboard
       </button>
 
-      <div className="text-neutral-500 border-t border-white/10 pt-2 mt-1">
+      <div className="text-neutral-500 border-t border-neutral-200 pt-2 mt-1">
         Switch existing DB user:
       </div>
       <div className="flex gap-1.5">
@@ -118,8 +118,8 @@ export default function DevToolbar() {
           disabled={switching}
           className={`flex-1 px-2 py-1.5 rounded-lg text-xs font-medium transition ${
             currentRole === "employer"
-              ? "bg-cyan-500/30 text-cyan-300 border border-cyan-300/30"
-              : "bg-white/5 border border-white/10 text-neutral-400 hover:text-white hover:border-cyan-300/30"
+              ? "bg-primary-50 text-primary-500 border border-primary-200"
+              : "bg-neutral-50 border border-neutral-200 text-neutral-500 hover:text-neutral-900 hover:border-primary-200"
           }`}
         >
           Employer
@@ -129,15 +129,15 @@ export default function DevToolbar() {
           disabled={switching}
           className={`flex-1 px-2 py-1.5 rounded-lg text-xs font-medium transition ${
             currentRole === "candidate"
-              ? "bg-emerald-500/30 text-emerald-300 border border-emerald-300/30"
-              : "bg-white/5 border border-white/10 text-neutral-400 hover:text-white hover:border-emerald-300/30"
+              ? "bg-emerald-50 text-emerald-600 border border-emerald-300"
+              : "bg-neutral-50 border border-neutral-200 text-neutral-500 hover:text-neutral-900 hover:border-emerald-300"
           }`}
         >
           Candidate
         </button>
       </div>
 
-      {switching && <div className="text-center text-orange-300">Switching...</div>}
+      {switching && <div className="text-center text-orange-500">Switching...</div>}
     </div>
   );
 }

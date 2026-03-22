@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import t from "@/lib/theme";
 import {
   Search,
   ChevronRight,
@@ -152,11 +153,11 @@ export default function CareerTracksClient({
 
   const Bar = ({ label, value, total, color = "bg-cyan-400" }) => (
     <div className="flex items-center gap-2">
-      <div className="w-16 sm:w-32 text-xs text-neutral-300 truncate" title={label}>{label}</div>
-      <div className="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
+      <div className="w-16 sm:w-32 text-xs text-neutral-600 truncate" title={label}>{label}</div>
+      <div className="flex-1 h-2 rounded-full bg-neutral-100 overflow-hidden">
         <div className={`h-full ${color}`} style={{ width: `${Math.round((value / Math.max(1, total)) * 100)}%` }} />
       </div>
-      <div className="w-12 sm:w-16 text-xs text-neutral-400 text-right">{Math.round((value / Math.max(1, total)) * 100)}%</div>
+      <div className="w-12 sm:w-16 text-xs text-neutral-500 text-right">{Math.round((value / Math.max(1, total)) * 100)}%</div>
     </div>
   );
 
@@ -164,9 +165,9 @@ export default function CareerTracksClient({
     <div className={embedded ? "" : "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8"}>
         <div className="mb-8">
           <h1 className="text-4xl font-semibold tracking-tight mb-4">
-            Explore <span className="text-cyan-300">Career Opportunities</span> in Cayman
+            Explore <span className="text-primary-500">Career Opportunities</span> in Cayman
           </h1>
-          <p className="text-neutral-300 text-lg max-w-3xl">
+          <p className="text-neutral-600 text-lg max-w-3xl">
             Discover the complete job market in Cayman through our comprehensive CISCO taxonomy. Find roles by industry, salary ranges, and requirements.
           </p>
         </div>
@@ -175,12 +176,12 @@ export default function CareerTracksClient({
         <div className="mb-8">
           <div className="flex flex-col lg:flex-row gap-4 mb-6">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search job titles, occupations, or industries..."
-                className="pl-10 bg-white/5 border-white/10"
+                className="pl-10 bg-neutral-50 border-neutral-200"
               />
             </div>
             <div className="flex gap-2">
@@ -205,12 +206,12 @@ export default function CareerTracksClient({
 
           {/* Search Results */}
           {searchQuery && suggestions.length > 0 && (
-            <Card className="bg-white/5 border-white/10 mb-6">
+            <Card className="bg-neutral-50 border-neutral-200 mb-6">
               <CardContent className="p-4">
                 <h3 className="font-semibold mb-3">
                   Search Results ({suggestions.length})
                   {selectedCiscoCodes.size > 0 && (
-                    <span className="text-cyan-300 ml-2">· {selectedCiscoCodes.size} selected</span>
+                    <span className="text-primary-500 ml-2">· {selectedCiscoCodes.size} selected</span>
                   )}
                 </h3>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -222,15 +223,15 @@ export default function CareerTracksClient({
                         onClick={() => toggleCiscoCode(result.sCISCO)}
                         className={`text-left p-3 rounded-xl border transition cursor-pointer ${
                           isSelected
-                            ? "bg-cyan-400/20 border-cyan-300/60 ring-2 ring-cyan-300/30"
-                            : "bg-white/5 border-white/10 hover:border-cyan-300/40 hover:bg-cyan-400/10"
+                            ? "bg-primary-50 border-primary-500 ring-2 ring-primary-200"
+                            : "bg-neutral-50 border-neutral-200 hover:border-primary-300 hover:bg-primary-50"
                         }`}
                       >
                         <div className="font-medium flex items-center justify-between">
                           <span>{result.label}</span>
-                          {isSelected && <Badge className="bg-cyan-500 text-white text-xs">✓</Badge>}
+                          {isSelected && <Badge className="bg-primary-500 text-white text-xs">✓</Badge>}
                         </div>
-                        <div className="text-sm text-neutral-400">CISCO Code: {result.sCISCO}</div>
+                        <div className="text-sm text-neutral-500">CISCO Code: {result.sCISCO}</div>
                       </button>
                     );
                   })}
@@ -241,7 +242,7 @@ export default function CareerTracksClient({
 
           {/* Market View Filters */}
           {viewMode === "market" && (
-            <Card className="bg-white/5 border-white/10 mb-6">
+            <Card className="bg-neutral-50 border-neutral-200 mb-6">
               <CardContent className="p-4">
                 <div className="flex flex-wrap items-center gap-4 mb-4">
                   <div className="flex items-center gap-2">
@@ -249,19 +250,19 @@ export default function CareerTracksClient({
                     <span className="text-sm font-medium">Filters:</span>
                   </div>
                   {selectedCiscoCodes.size > 0 && (
-                    <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30">
+                    <Badge className="bg-primary-50 text-primary-500 border-primary-200">
                       {selectedCiscoCodes.size} job{selectedCiscoCodes.size !== 1 ? "s" : ""} selected
                     </Badge>
                   )}
-                  <select value={filters.education} onChange={(e) => setFilters((p) => ({ ...p, education: e.target.value }))} className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 h-10 text-sm">
+                  <select value={filters.education} onChange={(e) => setFilters((p) => ({ ...p, education: e.target.value }))} className="bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2 h-10 text-sm">
                     <option value="">All Education Levels</option>
                     {Array.from(eduTypes.entries()).map(([k, v]) => (<option key={k} value={k}>{v}</option>))}
                   </select>
-                  <select value={filters.experience} onChange={(e) => setFilters((p) => ({ ...p, experience: e.target.value }))} className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 h-10 text-sm">
+                  <select value={filters.experience} onChange={(e) => setFilters((p) => ({ ...p, experience: e.target.value }))} className="bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2 h-10 text-sm">
                     <option value="">All Experience Levels</option>
                     {Array.from(expTypes.entries()).map(([k, v]) => (<option key={k} value={k}>{v}</option>))}
                   </select>
-                  <select value={filters.workType} onChange={(e) => setFilters((p) => ({ ...p, workType: e.target.value }))} className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 h-10 text-sm">
+                  <select value={filters.workType} onChange={(e) => setFilters((p) => ({ ...p, workType: e.target.value }))} className="bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2 h-10 text-sm">
                     <option value="">All Work Types</option>
                     {Array.from(workTypes.entries()).map(([k, v]) => (<option key={k} value={k}>{v}</option>))}
                   </select>
@@ -270,7 +271,7 @@ export default function CareerTracksClient({
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">Sort by:</span>
-                    <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 h-10 text-sm">
+                    <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2 h-10 text-sm">
                       <option value="count">Job Posts</option>
                       <option value="min">Min Salary</option>
                       <option value="max">Max Salary</option>
@@ -297,10 +298,10 @@ export default function CareerTracksClient({
                   <button
                     key={major.id}
                     onClick={() => { setSelectedMajor(major); setSelectedSubMajor(null); setSelectedMinor(null); }}
-                    className={`w-full text-left p-3 rounded-xl transition ${selectedMajor?.id === major.id ? "bg-cyan-400/15 text-cyan-200 border border-cyan-400/30" : "bg-white/5 border border-white/10 hover:border-white/20"}`}
+                    className={`w-full text-left p-3 rounded-xl transition ${selectedMajor?.id === major.id ? "bg-primary-50 text-primary-700 border border-primary-200" : "bg-neutral-50 border border-neutral-200 hover:border-neutral-300"}`}
                   >
                     <div className="font-medium">{major.title}</div>
-                    <div className="text-sm text-neutral-400">{major.children?.length || 0} subcategories</div>
+                    <div className="text-sm text-neutral-500">{major.children?.length || 0} subcategories</div>
                   </button>
                 ))}
               </div>
@@ -311,10 +312,10 @@ export default function CareerTracksClient({
                 <div className="space-y-2">
                   {selectedMajor.children?.map((subMajor) => (
                     <button key={subMajor.id} onClick={() => { setSelectedSubMajor(subMajor); setSelectedMinor(null); }}
-                      className={`w-full text-left p-3 rounded-xl transition ${selectedSubMajor?.id === subMajor.id ? "bg-emerald-400/15 text-emerald-200 border border-emerald-400/30" : "bg-white/5 border border-white/10 hover:border-white/20"}`}
+                      className={`w-full text-left p-3 rounded-xl transition ${selectedSubMajor?.id === subMajor.id ? "bg-emerald-50 text-emerald-700 border border-emerald-300" : "bg-neutral-50 border border-neutral-200 hover:border-neutral-300"}`}
                     >
                       <div className="font-medium">{subMajor.title}</div>
-                      <div className="text-sm text-neutral-400">{subMajor.children?.length || 0} specializations</div>
+                      <div className="text-sm text-neutral-500">{subMajor.children?.length || 0} specializations</div>
                     </button>
                   ))}
                 </div>
@@ -326,10 +327,10 @@ export default function CareerTracksClient({
                 <div className="space-y-2">
                   {selectedSubMajor.children?.map((minor) => (
                     <button key={minor.id} onClick={() => setSelectedMinor(minor)}
-                      className={`w-full text-left p-3 rounded-xl transition ${selectedMinor?.id === minor.id ? "bg-purple-400/15 text-purple-200 border border-purple-400/30" : "bg-white/5 border border-white/10 hover:border-white/20"}`}
+                      className={`w-full text-left p-3 rounded-xl transition ${selectedMinor?.id === minor.id ? "bg-purple-50 text-purple-700 border border-purple-300" : "bg-neutral-50 border border-neutral-200 hover:border-neutral-300"}`}
                     >
                       <div className="font-medium">{minor.title}</div>
-                      <div className="text-sm text-neutral-400">{minor.children?.length || 0} roles</div>
+                      <div className="text-sm text-neutral-500">{minor.children?.length || 0} roles</div>
                     </button>
                   ))}
                 </div>
@@ -343,12 +344,12 @@ export default function CareerTracksClient({
                     const stats = aggregates.get(unit.id);
                     return (
                       <Link key={unit.id} href={`/job/${unit.id}`}>
-                        <Card className="bg-white/5 border-white/10 hover:border-cyan-300/40 transition cursor-pointer">
+                        <Card className="bg-neutral-50 border-neutral-200 hover:border-primary-300 transition cursor-pointer">
                           <CardContent className="p-3">
                             <div className="font-medium mb-1">{unit.title}</div>
                             {stats && (
                               <div className="flex gap-2 text-xs">
-                                <Badge className="bg-neutral-800">{stats.count} posts</Badge>
+                                <Badge className="bg-neutral-50">{stats.count} posts</Badge>
                                 <Badge className="bg-emerald-800">CI$ {Math.round(stats.mean).toLocaleString()}</Badge>
                               </div>
                             )}
@@ -368,29 +369,29 @@ export default function CareerTracksClient({
                 const stats = aggregates.get(unit.id);
                 if (!stats) return null;
                 return (
-                  <Card key={unit.id} className="bg-white/5 border-white/10 hover:border-cyan-300/40 transition group">
+                  <Card key={unit.id} className="bg-neutral-50 border-neutral-200 hover:border-primary-300 transition group">
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-base mb-1 group-hover:text-cyan-300 transition line-clamp-2">{unit.title.replace(/\s+not elsewhere classified$/i, "")}</h3>
-                          <p className="text-xs text-neutral-400 line-clamp-2">{unit.description}</p>
+                          <h3 className="font-semibold text-base mb-1 group-hover:text-primary-500 transition line-clamp-2">{unit.title.replace(/\s+not elsewhere classified$/i, "")}</h3>
+                          <p className="text-xs text-neutral-500 line-clamp-2">{unit.description}</p>
                         </div>
-                        <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30 ml-2 shrink-0">{unit.id}</Badge>
+                        <Badge className="bg-primary-50 text-primary-500 border-primary-200 ml-2 shrink-0">{unit.id}</Badge>
                       </div>
-                      <div className="flex items-center gap-3 text-xs mb-4 px-3 py-2 bg-white/5 rounded-lg">
-                        <DollarSign className="w-3.5 h-3.5 text-emerald-300 shrink-0" />
-                        <span className="text-neutral-400">CI$ {Math.round(stats.min).toLocaleString()}</span>
+                      <div className="flex items-center gap-3 text-xs mb-4 px-3 py-2 bg-neutral-50 rounded-lg">
+                        <DollarSign className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                        <span className="text-neutral-500">CI$ {Math.round(stats.min).toLocaleString()}</span>
                         <span className="text-neutral-600">—</span>
-                        <span className="text-neutral-200 font-medium">CI$ {Math.round(stats.mean).toLocaleString()}</span>
+                        <span className="text-neutral-700 font-medium">CI$ {Math.round(stats.mean).toLocaleString()}</span>
                         <span className="text-neutral-600">—</span>
-                        <span className="text-neutral-400">CI$ {Math.round(stats.max).toLocaleString()}</span>
+                        <span className="text-neutral-500">CI$ {Math.round(stats.max).toLocaleString()}</span>
                       </div>
                       <div className="mb-4">
                         <div className="text-sm font-medium mb-2 flex items-center gap-2"><Users className="w-4 h-4" /> Market Overview ({stats.count} posts)</div>
                         {stats.dist && (
                           <div className="space-y-3">
                             <div>
-                              <div className="text-xs text-neutral-400 mb-1">Work Types</div>
+                              <div className="text-xs text-neutral-500 mb-1">Work Types</div>
                               <div className="space-y-1">
                                 {Object.entries(stats.dist.work).filter(([, v]) => v > 0).sort(([, a], [, b]) => b - a).slice(0, 3).map(([k, v]) => (
                                   <Bar key={k} label={workTypes.get(k) || k} value={v} total={stats.count} color="bg-emerald-400" />
@@ -398,7 +399,7 @@ export default function CareerTracksClient({
                               </div>
                             </div>
                             <div>
-                              <div className="text-xs text-neutral-400 mb-1">Education Levels</div>
+                              <div className="text-xs text-neutral-500 mb-1">Education Levels</div>
                               <div className="space-y-1">
                                 {Object.entries(stats.dist.edu).filter(([, v]) => v > 0).sort(([, a], [, b]) => b - a).slice(0, 3).map(([k, v]) => (
                                   <Bar key={k} label={eduTypes.get(k) || k} value={v} total={stats.count} color="bg-purple-400" />
@@ -431,16 +432,12 @@ export default function CareerTracksClient({
   if (embedded) return content;
 
   return (
-    <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
+    <div className={`${t.page} w-full`}>
       <div
         id="bg-gradient"
         aria-hidden
         className="fixed inset-0 -z-10 bg-[length:200%_200%]"
-        style={{
-          backgroundImage:
-            "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)",
-          backgroundPosition: "0% 50%",
-        }}
+        style={t.pageGradientStyle}
       />
       {content}
     </div>

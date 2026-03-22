@@ -4,22 +4,19 @@ import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import CandidateDashboardSidebar from "@/components/CandidateDashboardSidebar";
 import DashboardTransition from "@/components/DashboardTransition";
+import t from "@/lib/theme";
 
 export default async function CandidateDashboardLayout({ children }) {
   const session = await getSession();
   if (!session?.candidateId) redirect("/");
 
   return (
-    <div className="min-h-screen w-full bg-neutral-950 text-neutral-100">
+    <div className={t.page}>
       <div
         id="bg-gradient"
         aria-hidden
-        className="fixed inset-0 -z-10 bg-[length:200%_200%]"
-        style={{
-          backgroundImage:
-            "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 50% 110%, rgba(147,51,234,0.12) 0%, transparent 60%)",
-          backgroundPosition: "0% 50%",
-        }}
+        className={t.pageGradient}
+        style={t.pageGradientStyle}
       />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

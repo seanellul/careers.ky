@@ -1,45 +1,33 @@
+import { NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
+import { isAdmin } from "@/lib/admin-auth";
 import { getDb } from "../../../../../lib/db.js";
 
 export async function GET(req) {
+  const session = await getSession();
+  if (!isAdmin(session)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const sql = getDb();
 
   try {
     const { searchParams } = new URL(req.url);
 
-    // Parse filters (same as list endpoint)
     const scoreMin = parseInt(searchParams.get("score_min")) || 0;
     const scoreMax = parseInt(searchParams.get("score_max")) || 100;
     const segment = searchParams.get("segment");
     const status = searchParams.get("status");
     const search = searchParams.get("search");
 
-    // Build query
-    let query = "SELECT * FROM sales_pipeline WHERE score BETWEEN $1 AND $2";
-    const params = [scoreMin, scoreMax];
-    let paramCount = 2;
-
-    if (segment) {
-      paramCount++;
-      query += ` AND segment = $${paramCount}`;
-      params.push(segment);
-    }
-
-    if (status) {
-      paramCount++;
-      query += ` AND status = $${paramCount}`;
-      params.push(status);
-    }
-
-    if (search) {
-      paramCount++;
-      query += ` AND employer_name ILIKE $${paramCount}`;
-      params.push(`%${search}%`);
-    }
-
-    query += " ORDER BY score DESC";
-
-    // Get records
-    const records = await sql(query, params);
+    const records = await sql`
+      SELECT * FROM sales_pipeline
+      WHERE score BETWEEN ${scoreMin} AND ${scoreMax}
+      ${segment ? sql`AND segment = ${segment}` : sql``}
+      ${status ? sql`AND status = ${status}` : sql``}
+      ${search ? sql`AND employer_name ILIKE ${"%" + search + "%"}` : sql``}
+      ORDER BY score DESC
+    `;
 
     // Generate CSV
     const headers = [
@@ -73,9 +61,7 @@ export async function GET(req) {
         if (value === null || value === undefined) {
           return "";
         }
-        // Escape quotes in values
         const strValue = String(value).replace(/"/g, '""');
-        // Quote if contains comma, quote, or newline
         if (
           strValue.includes(",") ||
           strValue.includes('"') ||
@@ -90,7 +76,6 @@ export async function GET(req) {
 
     const csv = csvRows.join("\n");
 
-    // Return as downloadable file
     const timestamp = new Date().toISOString().split("T")[0];
     const filename = `pipeline-export-${timestamp}.csv`;
 
@@ -103,9 +88,6 @@ export async function GET(req) {
     });
   } catch (error) {
     console.error("Pipeline export error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

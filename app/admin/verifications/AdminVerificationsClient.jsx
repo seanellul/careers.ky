@@ -45,12 +45,12 @@ export default function AdminVerificationsClient({ initialRequests }) {
 
   const statusBadge = (status) => {
     const styles = {
-      pending: "bg-amber-500/20 text-amber-300 border-amber-500/30",
-      approved: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
-      rejected: "bg-red-500/20 text-red-300 border-red-500/30",
+      pending: "bg-amber-50 text-amber-600 border-amber-300",
+      approved: "bg-emerald-50 text-emerald-600 border-emerald-300",
+      rejected: "bg-red-50 text-red-500 border-red-300",
     };
     return (
-      <span className={`text-xs px-2 py-0.5 rounded-full border ${styles[status] || "bg-white/10 text-neutral-400 border-white/10"}`}>
+      <span className={`text-xs px-2 py-0.5 rounded-full border ${styles[status] || "bg-neutral-100 text-neutral-500 border-neutral-200"}`}>
         {status}
       </span>
     );
@@ -59,7 +59,7 @@ export default function AdminVerificationsClient({ initialRequests }) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <ShieldCheck className="w-6 h-6 text-cyan-300" />
+        <ShieldCheck className="w-6 h-6 text-primary-500" />
         <h1 className="text-2xl font-semibold">Employer Verifications</h1>
       </div>
 
@@ -70,7 +70,7 @@ export default function AdminVerificationsClient({ initialRequests }) {
             key={f}
             onClick={() => setFilter(f)}
             className={`px-3 py-1.5 rounded-lg text-sm transition ${
-              filter === f ? "bg-cyan-500/15 text-cyan-300 border border-cyan-300/20" : "text-neutral-400 hover:bg-white/5"
+              filter === f ? "bg-primary-50 text-primary-500 border border-primary-200" : "text-neutral-500 hover:bg-neutral-50"
             }`}
           >
             {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -93,7 +93,7 @@ export default function AdminVerificationsClient({ initialRequests }) {
           {filtered.map((req) => (
             <div
               key={req.id}
-              className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-3"
+              className="bg-white border border-neutral-200 rounded-xl p-4 space-y-3"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1 min-w-0">
@@ -101,7 +101,7 @@ export default function AdminVerificationsClient({ initialRequests }) {
                     <span className="font-medium">{req.account_name || "Unnamed"}</span>
                     {statusBadge(req.status)}
                   </div>
-                  <p className="text-sm text-neutral-400">{req.account_email}</p>
+                  <p className="text-sm text-neutral-500">{req.account_email}</p>
                 </div>
                 <div className="text-right shrink-0">
                   <p className="font-medium text-sm">{req.employer_name}</p>
@@ -112,8 +112,8 @@ export default function AdminVerificationsClient({ initialRequests }) {
               </div>
 
               <div className="flex items-center gap-4 text-xs text-neutral-500">
-                <span>Email domain: <span className="text-neutral-300">{req.email_domain || "N/A"}</span></span>
-                <span>Company domain: <span className="text-neutral-300">{req.employer_domain || "Not set"}</span></span>
+                <span>Email domain: <span className="text-neutral-600">{req.email_domain || "N/A"}</span></span>
+                <span>Company domain: <span className="text-neutral-600">{req.employer_domain || "Not set"}</span></span>
                 <span>{new Date(req.created_at).toLocaleDateString()}</span>
               </div>
 
@@ -125,7 +125,7 @@ export default function AdminVerificationsClient({ initialRequests }) {
                       value={domainInputs[req.id] || ""}
                       onChange={(e) => setDomainInputs((p) => ({ ...p, [req.id]: e.target.value }))}
                       placeholder="company.com"
-                      className="bg-white/5 border-white/10 h-8 text-sm"
+                      className="bg-neutral-50 border-neutral-200 h-8 text-sm"
                     />
                   </div>
                   <div className="flex-1">
@@ -134,7 +134,7 @@ export default function AdminVerificationsClient({ initialRequests }) {
                       value={notesInputs[req.id] || ""}
                       onChange={(e) => setNotesInputs((p) => ({ ...p, [req.id]: e.target.value }))}
                       placeholder="Reason for rejection..."
-                      className="bg-white/5 border-white/10 h-8 text-sm"
+                      className="bg-neutral-50 border-neutral-200 h-8 text-sm"
                     />
                   </div>
                   <Button

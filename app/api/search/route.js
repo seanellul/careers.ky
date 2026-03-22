@@ -4,7 +4,7 @@ import { titleSuggestions } from "@/lib/data";
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const q = searchParams.get("q") || "";
-  const limit = parseInt(searchParams.get("limit") || "10", 10);
+  const limit = Math.min(parseInt(searchParams.get("limit") || "10", 10), 50);
 
   if (!q.trim()) {
     return NextResponse.json({ suggestions: [] });

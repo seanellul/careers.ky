@@ -19,7 +19,7 @@ export default async function SignInPage() {
     <main className="min-h-[calc(100dvh-4rem)] flex flex-col items-center justify-center px-4 py-12 sm:py-16">
       <Suspense
         fallback={
-          <div className="w-full max-w-md mx-auto h-64 rounded-2xl bg-white/[0.03] border border-white/10 animate-pulse" />
+          <div className="w-full max-w-md mx-auto h-64 rounded-2xl bg-neutral-50 border border-neutral-200 animate-pulse" />
         }
       >
         <SignInClient />

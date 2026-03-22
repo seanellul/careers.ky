@@ -8,7 +8,7 @@ globs: *
 ## Stack
 - **Framework**: Next.js App Router — server components by default, add `"use client"` only when state/effects/browser APIs are needed
 - **Database**: postgres.js via `getDb()` from `lib/db.js` — no ORMs, use tagged template literals for parameterized queries
-- **Styling**: Tailwind CSS with dark theme (neutral-950 background), shadcn/ui components
+- **Styling**: Tailwind CSS with warm Caymanian theme (`lib/theme.js`), shadcn/ui components. Use `import t from "@/lib/theme"` for page shells, nav, cards, etc.
 - **Auth**: Magic link + session cookie flow, use `getSession()` from `lib/auth.js` for auth checks
 
 ## Data Model

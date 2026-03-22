@@ -72,9 +72,9 @@ export default function TeamClient({ members: initialMembers, invitations: initi
 
   const roleBadge = (role) => {
     const styles = {
-      owner: "bg-amber-500/20 text-amber-300 border-amber-500/30",
-      admin: "bg-cyan-500/20 text-cyan-300 border-cyan-500/30",
-      member: "bg-white/10 text-neutral-300 border-white/10",
+      owner: "bg-amber-50 text-amber-600 border-amber-300",
+      admin: "bg-primary-50 text-primary-500 border-primary-200",
+      member: "bg-neutral-100 text-neutral-600 border-neutral-200",
     };
     return (
       <span className={`text-xs px-2 py-0.5 rounded-full border ${styles[role] || styles.member}`}>
@@ -84,15 +84,15 @@ export default function TeamClient({ members: initialMembers, invitations: initi
   };
 
   const verificationBadge = (status) => {
-    if (status === "verified") return <span className="text-xs text-emerald-400">Verified</span>;
-    if (status === "pending") return <span className="text-xs text-amber-400">Pending</span>;
+    if (status === "verified") return <span className="text-xs text-emerald-600">Verified</span>;
+    if (status === "pending") return <span className="text-xs text-amber-600">Pending</span>;
     return <span className="text-xs text-neutral-500">{status}</span>;
   };
 
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-3">
-        <Users2 className="w-6 h-6 text-cyan-300" />
+        <Users2 className="w-6 h-6 text-primary-500" />
         <h1 className="text-2xl font-semibold">Team Management</h1>
       </div>
 
@@ -102,10 +102,10 @@ export default function TeamClient({ members: initialMembers, invitations: initi
         {members.map((member) => (
           <div
             key={member.id}
-            className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4"
+            className="bg-white border border-neutral-200 rounded-xl p-4 flex items-center gap-4"
           >
-            <div className="w-10 h-10 rounded-full bg-white/10 grid place-items-center shrink-0">
-              <span className="text-sm font-semibold text-neutral-300">
+            <div className="w-10 h-10 rounded-full bg-neutral-100 grid place-items-center shrink-0">
+              <span className="text-sm font-semibold text-neutral-600">
                 {(member.name || member.email)[0].toUpperCase()}
               </span>
             </div>
@@ -118,7 +118,7 @@ export default function TeamClient({ members: initialMembers, invitations: initi
                   <span className="text-xs text-neutral-500">(you)</span>
                 )}
               </div>
-              <p className="text-sm text-neutral-400 truncate">{member.email}</p>
+              <p className="text-sm text-neutral-500 truncate">{member.email}</p>
             </div>
 
             {currentRole === "owner" && member.id !== currentAccountId && member.role !== "owner" && (
@@ -127,7 +127,7 @@ export default function TeamClient({ members: initialMembers, invitations: initi
                   value={member.role}
                   onChange={(e) => handleRoleChange(member.id, e.target.value)}
                   disabled={processing === member.id}
-                  className="bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-sm text-neutral-200"
+                  className="bg-neutral-50 border border-neutral-200 rounded-lg px-2 py-1 text-sm text-neutral-700"
                 >
                   <option value="admin">Admin</option>
                   <option value="member">Member</option>
@@ -137,7 +137,7 @@ export default function TeamClient({ members: initialMembers, invitations: initi
                   variant="ghost"
                   onClick={() => handleRemove(member.id)}
                   disabled={processing === member.id}
-                  className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                  className="text-red-500 hover:text-red-600 hover:bg-red-50"
                 >
                   {processing === member.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                 </Button>
@@ -154,10 +154,10 @@ export default function TeamClient({ members: initialMembers, invitations: initi
           {invitations.map((inv) => (
             <div
               key={inv.id}
-              className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4"
+              className="bg-white border border-neutral-200 rounded-xl p-4 flex items-center gap-4"
             >
-              <div className="w-10 h-10 rounded-full bg-amber-500/10 grid place-items-center shrink-0">
-                <Mail className="w-4 h-4 text-amber-300" />
+              <div className="w-10 h-10 rounded-full bg-amber-50 grid place-items-center shrink-0">
+                <Mail className="w-4 h-4 text-amber-600" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
@@ -176,14 +176,14 @@ export default function TeamClient({ members: initialMembers, invitations: initi
       )}
 
       {/* Invite form */}
-      <div className="bg-white/5 border border-white/10 rounded-xl p-6 space-y-4">
+      <div className="bg-white border border-neutral-200 rounded-xl p-6 space-y-4">
         <div className="flex items-center gap-2">
-          <UserPlus className="w-5 h-5 text-cyan-300" />
+          <UserPlus className="w-5 h-5 text-primary-500" />
           <h2 className="text-lg font-medium">Invite Team Member</h2>
         </div>
 
         {error && (
-          <div className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
+          <div className="text-sm text-red-500 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
             {error}
           </div>
         )}
@@ -195,12 +195,12 @@ export default function TeamClient({ members: initialMembers, invitations: initi
             onChange={(e) => setInviteEmail(e.target.value)}
             placeholder="colleague@company.com"
             required
-            className="bg-white/5 border-white/10 flex-1"
+            className="bg-neutral-50 border-neutral-200 flex-1"
           />
           <select
             value={inviteRole}
             onChange={(e) => setInviteRole(e.target.value)}
-            className="bg-white/5 border border-white/10 rounded-lg px-3 text-sm text-neutral-200"
+            className="bg-neutral-50 border border-neutral-200 rounded-lg px-3 text-sm text-neutral-700"
           >
             <option value="member">Member</option>
             <option value="admin">Admin</option>

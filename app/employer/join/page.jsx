@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getDb } from "@/lib/db";
 import { Building2, CheckCircle, XCircle, Clock, LogIn } from "lucide-react";
 import Link from "next/link";
+import t from "@/lib/theme";
 
 export const metadata = { title: "Join Team — careers.ky" };
 
@@ -48,20 +49,20 @@ export default async function JoinTeamPage({ searchParams }) {
     return (
       <CenteredCard>
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-12 h-12 rounded-full bg-cyan-500/20 grid place-items-center">
-            <LogIn className="w-6 h-6 text-cyan-300" />
+          <div className="w-12 h-12 rounded-full bg-primary-50 grid place-items-center">
+            <LogIn className="w-6 h-6 text-primary-500" />
           </div>
           <div>
             <h2 className="text-xl font-semibold">Sign In Required</h2>
-            <p className="text-neutral-400 text-sm">You&apos;ve been invited to join {invitation.employer_name}</p>
+            <p className="text-neutral-500 text-sm">You&apos;ve been invited to join {invitation.employer_name}</p>
           </div>
         </div>
-        <p className="text-neutral-300 text-sm mb-4">
+        <p className="text-neutral-600 text-sm mb-4">
           Please sign in as an employer to accept this invitation.
         </p>
         <Link
           href={`/sign-in?type=employer&returnUrl=${returnUrl}`}
-          className="inline-block bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2.5 rounded-lg font-medium transition text-sm"
+          className="inline-block bg-primary-500 hover:bg-primary-600 text-white px-6 py-2.5 rounded-lg font-medium transition text-sm"
         >
           Sign In to Accept
         </Link>
@@ -102,15 +103,15 @@ export default async function JoinTeamPage({ searchParams }) {
 
 function CenteredCard({ children }) {
   return (
-    <div className="min-h-screen w-full bg-neutral-950 text-neutral-100 flex items-center justify-center p-4">
+    <div className="min-h-screen w-full bg-[#FEFCF3] text-neutral-800 flex items-center justify-center p-4">
       <div
         className="fixed inset-0 -z-10"
         style={{
           backgroundImage:
-            "radial-gradient(1200px 1200px at 10% 10%, rgba(56,189,248,0.18) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(34,197,94,0.18) 0%, transparent 60%)",
+            "radial-gradient(1200px 1200px at 10% 10%, rgba(0,119,182,0.06) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(244,162,97,0.06) 0%, transparent 60%)",
         }}
       />
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-8 max-w-md w-full">
+      <div className="bg-white border border-neutral-200 rounded-2xl p-8 max-w-md w-full">
         {children}
       </div>
     </div>
@@ -121,15 +122,15 @@ function ErrorState({ title, message }) {
   return (
     <CenteredCard>
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-12 h-12 rounded-full bg-red-500/20 grid place-items-center">
-          <XCircle className="w-6 h-6 text-red-300" />
+        <div className="w-12 h-12 rounded-full bg-red-50 grid place-items-center">
+          <XCircle className="w-6 h-6 text-red-500" />
         </div>
         <h2 className="text-xl font-semibold">{title}</h2>
       </div>
-      <p className="text-neutral-400 text-sm mb-4">{message}</p>
+      <p className="text-neutral-500 text-sm mb-4">{message}</p>
       <Link
         href="/"
-        className="inline-block text-cyan-300 hover:text-cyan-200 text-sm transition"
+        className="inline-block text-primary-500 hover:text-primary-600 text-sm transition"
       >
         Go to Homepage
       </Link>

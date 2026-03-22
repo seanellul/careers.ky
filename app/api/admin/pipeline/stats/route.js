@@ -1,10 +1,18 @@
+import { NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
+import { isAdmin } from "@/lib/admin-auth";
 import { getDb } from "../../../../../lib/db.js";
 
 export async function GET(req) {
+  const session = await getSession();
+  if (!isAdmin(session)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const sql = getDb();
 
   try {
-    const result = await sql(`
+    const result = await sql`
       SELECT
         COUNT(*) FILTER (WHERE score >= 70) as hot_leads,
         COUNT(*) FILTER (WHERE score BETWEEN 50 AND 69) as warm_leads,
@@ -21,54 +29,42 @@ export async function GET(req) {
         COUNT(DISTINCT segment) as segment_count,
         COUNT(DISTINCT industry) as industry_count
       FROM sales_pipeline
-    `);
+    `;
 
     const stats = result[0];
 
-    // Get segment breakdown
-    const segmentBreakdown = await sql(`
+    const segmentBreakdown = await sql`
       SELECT segment, COUNT(*) as count, AVG(score) as avg_score
       FROM sales_pipeline
       GROUP BY segment
       ORDER BY count DESC
-    `);
+    `;
 
-    // Get status breakdown
-    const statusBreakdown = await sql(`
+    const statusBreakdown = await sql`
       SELECT status, COUNT(*) as count
       FROM sales_pipeline
       GROUP BY status
       ORDER BY count DESC
-    `);
+    `;
 
-    // Get top 10 leads
-    const topLeads = await sql(`
+    const topLeads = await sql`
       SELECT id, employer_name, score, segment, status, last_contacted
       FROM sales_pipeline
       ORDER BY score DESC
       LIMIT 10
-    `);
+    `;
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        stats,
-        breakdown: {
-          bySegment: segmentBreakdown,
-          byStatus: statusBreakdown,
-        },
-        topLeads,
-      }),
-      {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return NextResponse.json({
+      success: true,
+      stats,
+      breakdown: {
+        bySegment: segmentBreakdown,
+        byStatus: statusBreakdown,
+      },
+      topLeads,
+    });
   } catch (error) {
     console.error("Pipeline stats error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

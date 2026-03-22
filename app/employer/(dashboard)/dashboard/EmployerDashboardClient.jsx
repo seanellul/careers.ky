@@ -15,9 +15,9 @@ import {
 } from "lucide-react";
 
 const STATUS_COLORS = {
-  pending: "bg-yellow-500/20 text-yellow-300 border-yellow-300/30",
-  accepted: "bg-emerald-500/20 text-emerald-300 border-emerald-300/30",
-  declined: "bg-red-500/20 text-red-300 border-red-300/30",
+  pending: "bg-yellow-50 text-yellow-700 border-yellow-300",
+  accepted: "bg-emerald-50 text-emerald-600 border-emerald-300",
+  declined: "bg-red-50 text-red-500 border-red-300",
 };
 
 const STAGE_LABELS = {
@@ -31,13 +31,13 @@ const STAGE_LABELS = {
 };
 
 const STAGE_COLORS = {
-  outreach: "bg-neutral-500/20 text-neutral-300 border-neutral-300/30",
-  responded: "bg-cyan-500/20 text-cyan-300 border-cyan-300/30",
-  interviewing: "bg-purple-500/20 text-purple-300 border-purple-300/30",
-  offered: "bg-yellow-500/20 text-yellow-300 border-yellow-300/30",
-  hired: "bg-emerald-500/20 text-emerald-300 border-emerald-300/30",
-  rejected: "bg-red-500/20 text-red-300 border-red-300/30",
-  archived: "bg-neutral-500/20 text-neutral-400 border-neutral-400/30",
+  outreach: "bg-neutral-100 text-neutral-600 border-neutral-300",
+  responded: "bg-primary-50 text-primary-500 border-primary-200",
+  interviewing: "bg-purple-50 text-purple-600 border-purple-300",
+  offered: "bg-yellow-50 text-yellow-700 border-yellow-300",
+  hired: "bg-emerald-50 text-emerald-600 border-emerald-300",
+  rejected: "bg-red-50 text-red-500 border-red-300",
+  archived: "bg-neutral-100 text-neutral-500 border-neutral-300",
 };
 
 const REJECTION_REASONS = [
@@ -103,11 +103,11 @@ function EmployerMessageThread({ introId }) {
       {messages.length > 0 && (
         <div className="space-y-2 max-h-60 overflow-y-auto">
           {messages.map(m => (
-            <div key={m.id} className={`text-sm p-2 rounded-lg ${m.sender_type === "employer" ? "bg-cyan-500/10 border border-cyan-300/20 ml-4" : "bg-white/5 border border-white/10 mr-4"}`}>
+            <div key={m.id} className={`text-sm p-2 rounded-lg ${m.sender_type === "employer" ? "bg-primary-50 border border-primary-200 ml-4" : "bg-neutral-50 border border-neutral-200 mr-4"}`}>
               <div className="text-xs text-neutral-500 mb-1">
                 {m.sender_type === "employer" ? "You" : "Candidate"} &middot; {new Date(m.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
               </div>
-              <div className="text-neutral-200">{m.body}</div>
+              <div className="text-neutral-700">{m.body}</div>
             </div>
           ))}
         </div>
@@ -120,7 +120,7 @@ function EmployerMessageThread({ introId }) {
           onKeyDown={e => e.key === "Enter" && handleSend()}
           placeholder="Type a message..."
           maxLength={2000}
-          className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-cyan-300/40"
+          className="flex-1 bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2 text-sm text-neutral-700 placeholder:text-neutral-400 focus:outline-none focus:border-primary-300"
         />
         <Button size="sm" onClick={handleSend} disabled={sending || !newMessage.trim()}>
           <Send className="w-3.5 h-3.5" />
@@ -259,12 +259,12 @@ export default function EmployerDashboardClient({ employer, stats, introductions
       <div className="flex flex-col sm:flex-row items-start justify-between gap-4 mb-8">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 rounded-xl bg-white/10 grid place-items-center">
-              <Building2 className="w-6 h-6 text-cyan-300" />
+            <div className="w-12 h-12 rounded-xl bg-neutral-100 grid place-items-center">
+              <Building2 className="w-6 h-6 text-primary-500" />
             </div>
             <div>
               <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight">{employer.name}</h1>
-              <p className="text-neutral-400 text-sm">Welcome back, {employerName}</p>
+              <p className="text-neutral-500 text-sm">Welcome back, {employerName}</p>
             </div>
           </div>
         </div>
@@ -280,47 +280,47 @@ export default function EmployerDashboardClient({ employer, stats, introductions
 
       {/* Stats Row */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-white border-neutral-200">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-cyan-400/15 grid place-items-center"><Send className="w-5 h-5 text-cyan-300" /></div>
-              <div><div className="text-2xl font-semibold">{stats.total}</div><div className="text-xs text-neutral-400">Total Intros</div></div>
+              <div className="h-10 w-10 rounded-xl bg-primary-50 grid place-items-center"><Send className="w-5 h-5 text-primary-500" /></div>
+              <div><div className="text-2xl font-semibold">{stats.total}</div><div className="text-xs text-neutral-500">Total Intros</div></div>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-white border-neutral-200">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-emerald-400/15 grid place-items-center"><CheckCircle className="w-5 h-5 text-emerald-300" /></div>
-              <div><div className="text-2xl font-semibold">{stats.responseRate}%</div><div className="text-xs text-neutral-400">Accept Rate</div></div>
+              <div className="h-10 w-10 rounded-xl bg-emerald-50 grid place-items-center"><CheckCircle className="w-5 h-5 text-emerald-600" /></div>
+              <div><div className="text-2xl font-semibold">{stats.responseRate}%</div><div className="text-xs text-neutral-500">Accept Rate</div></div>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-white border-neutral-200">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-purple-400/15 grid place-items-center"><Clock className="w-5 h-5 text-purple-300" /></div>
-              <div><div className="text-2xl font-semibold">{stats.avgResponseHours != null ? `${stats.avgResponseHours}h` : "--"}</div><div className="text-xs text-neutral-400">Avg Response</div></div>
+              <div className="h-10 w-10 rounded-xl bg-purple-50 grid place-items-center"><Clock className="w-5 h-5 text-purple-600" /></div>
+              <div><div className="text-2xl font-semibold">{stats.avgResponseHours != null ? `${stats.avgResponseHours}h` : "--"}</div><div className="text-xs text-neutral-500">Avg Response</div></div>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-white border-neutral-200">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-yellow-400/15 grid place-items-center"><Clock className="w-5 h-5 text-yellow-300" /></div>
-              <div><div className="text-2xl font-semibold">{stats.pending}</div><div className="text-xs text-neutral-400">Pending</div></div>
+              <div className="h-10 w-10 rounded-xl bg-yellow-50 grid place-items-center"><Clock className="w-5 h-5 text-yellow-600" /></div>
+              <div><div className="text-2xl font-semibold">{stats.pending}</div><div className="text-xs text-neutral-500">Pending</div></div>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-white border-neutral-200">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className={`h-10 w-10 rounded-xl ${monthTrend >= 0 ? "bg-emerald-400/15" : "bg-red-400/15"} grid place-items-center`}>
-                {monthTrend >= 0 ? <TrendingUp className="w-5 h-5 text-emerald-300" /> : <TrendingDown className="w-5 h-5 text-red-300" />}
+              <div className={`h-10 w-10 rounded-xl ${monthTrend >= 0 ? "bg-emerald-50" : "bg-red-50"} grid place-items-center`}>
+                {monthTrend >= 0 ? <TrendingUp className="w-5 h-5 text-emerald-600" /> : <TrendingDown className="w-5 h-5 text-red-500" />}
               </div>
               <div>
                 <div className="text-2xl font-semibold">{stats.thisMonth}</div>
-                <div className="text-xs text-neutral-400">This Month {monthTrend !== 0 && <span className={monthTrend > 0 ? "text-emerald-300" : "text-red-300"}>{monthTrend > 0 ? "+" : ""}{monthTrend}%</span>}</div>
+                <div className="text-xs text-neutral-500">This Month {monthTrend !== 0 && <span className={monthTrend > 0 ? "text-emerald-600" : "text-red-500"}>{monthTrend > 0 ? "+" : ""}{monthTrend}%</span>}</div>
               </div>
             </div>
           </CardContent>
@@ -330,7 +330,7 @@ export default function EmployerDashboardClient({ employer, stats, introductions
       <div className="grid md:grid-cols-3 gap-6">
         {/* Pipeline View */}
         <div className="md:col-span-2 space-y-6">
-          <Card className="bg-white/5 border-white/10">
+          <Card className="bg-white border-neutral-200">
             <CardContent className="p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"><Briefcase className="w-5 h-5" /> Hiring Pipeline</h2>
 
@@ -340,14 +340,14 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                   <label className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-2 block">Filter by posting</label>
                   <button
                     onClick={() => setJobDropdownOpen(!jobDropdownOpen)}
-                    className="w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition text-left"
+                    className="w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-neutral-50 border border-neutral-200 hover:border-neutral-300 transition text-left"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-8 h-8 rounded-lg bg-cyan-400/15 grid place-items-center shrink-0">
-                        {selectedJobId ? <Briefcase className="w-4 h-4 text-cyan-300" /> : <ClipboardList className="w-4 h-4 text-cyan-300" />}
+                      <div className="w-8 h-8 rounded-lg bg-primary-50 grid place-items-center shrink-0">
+                        {selectedJobId ? <Briefcase className="w-4 h-4 text-primary-500" /> : <ClipboardList className="w-4 h-4 text-primary-500" />}
                       </div>
                       <div className="min-w-0">
-                        <div className="text-sm font-medium text-neutral-100 truncate">
+                        <div className="text-sm font-medium text-neutral-800 truncate">
                           {selectedJobId
                             ? jobPostings.find(p => p.jobId === selectedJobId)?.title || selectedJobId
                             : "All Postings"}
@@ -357,13 +357,13 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                         </div>
                       </div>
                     </div>
-                    <ChevronDown className={`w-4 h-4 text-neutral-400 shrink-0 transition-transform ${jobDropdownOpen ? "rotate-180" : ""}`} />
+                    <ChevronDown className={`w-4 h-4 text-neutral-500 shrink-0 transition-transform ${jobDropdownOpen ? "rotate-180" : ""}`} />
                   </button>
 
                   {jobDropdownOpen && (
-                    <div className="absolute z-30 left-0 right-0 mt-2 rounded-xl bg-neutral-900 border border-white/10 shadow-2xl overflow-hidden">
+                    <div className="absolute z-30 left-0 right-0 mt-2 rounded-xl bg-white border border-neutral-200 shadow-2xl overflow-hidden">
                       {jobPostings.length > 5 && (
-                        <div className="p-2 border-b border-white/10">
+                        <div className="p-2 border-b border-neutral-200">
                           <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-500" />
                             <input
@@ -371,7 +371,7 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                               value={jobSearch}
                               onChange={(e) => setJobSearch(e.target.value)}
                               placeholder="Search postings..."
-                              className="w-full bg-white/5 border border-white/10 rounded-lg pl-9 pr-3 py-2 text-sm text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-cyan-300/40"
+                              className="w-full bg-neutral-50 border border-neutral-200 rounded-lg pl-9 pr-3 py-2 text-sm text-neutral-700 placeholder:text-neutral-400 focus:outline-none focus:border-primary-300"
                               autoFocus
                             />
                           </div>
@@ -381,7 +381,7 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                         <button
                           onClick={() => { setSelectedJobId(""); setJobDropdownOpen(false); setJobSearch(""); }}
                           className={`w-full text-left px-3 py-2.5 flex items-center gap-3 text-sm transition ${
-                            selectedJobId === "" ? "bg-cyan-500/10 text-cyan-200" : "hover:bg-white/5 text-neutral-300"
+                            selectedJobId === "" ? "bg-primary-50 text-primary-700" : "hover:bg-neutral-50 text-neutral-600"
                           }`}
                         >
                           <ClipboardList className="w-3.5 h-3.5 shrink-0 text-neutral-500" />
@@ -392,12 +392,12 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                             key={p.jobId}
                             onClick={() => { setSelectedJobId(p.jobId); setJobDropdownOpen(false); setJobSearch(""); }}
                             className={`w-full text-left px-3 py-2.5 flex items-center gap-3 text-sm transition ${
-                              selectedJobId === p.jobId ? "bg-cyan-500/10 text-cyan-200" : "hover:bg-white/5 text-neutral-300"
+                              selectedJobId === p.jobId ? "bg-primary-50 text-primary-700" : "hover:bg-neutral-50 text-neutral-600"
                             }`}
                           >
                             <Briefcase className="w-3.5 h-3.5 shrink-0 text-neutral-500" />
                             <span className="truncate">{p.title}</span>
-                            <span className="text-xs text-neutral-600 font-mono ml-auto shrink-0">{p.jobId}</span>
+                            <span className="text-xs text-neutral-400 font-mono ml-auto shrink-0">{p.jobId}</span>
                           </button>
                         ))}
                         {filteredPostings.length === 0 && (
@@ -419,7 +419,7 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                     <>
                       <button
                         onClick={() => setActiveStage("all")}
-                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${activeStage === "all" ? "bg-cyan-500/20 text-cyan-300 border border-cyan-300/30" : "bg-white/5 border border-white/10 text-neutral-400 hover:text-neutral-200"}`}
+                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${activeStage === "all" ? "bg-primary-50 text-primary-500 border border-primary-200" : "bg-neutral-50 border border-neutral-200 text-neutral-500 hover:text-neutral-700"}`}
                       >
                         All ({jobFiltered.length})
                       </button>
@@ -429,7 +429,7 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                           <button
                             key={stage}
                             onClick={() => setActiveStage(stage)}
-                            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${activeStage === stage ? STAGE_COLORS[stage]?.replace("bg-", "bg-") + " border" : "bg-white/5 border border-white/10 text-neutral-400 hover:text-neutral-200"}`}
+                            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${activeStage === stage ? STAGE_COLORS[stage]?.replace("bg-", "bg-") + " border" : "bg-neutral-50 border border-neutral-200 text-neutral-500 hover:text-neutral-700"}`}
                           >
                             {label} ({count})
                           </button>
@@ -443,12 +443,12 @@ export default function EmployerDashboardClient({ employer, stats, introductions
               {filteredIntros.length > 0 ? (
                 <div className="space-y-3">
                   {filteredIntros.slice(0, 15).map((intro) => (
-                    <div key={intro.id} className="p-4 rounded-xl border border-white/10 bg-white/5 space-y-2">
+                    <div key={intro.id} className="p-4 rounded-xl border border-neutral-200 bg-white space-y-2">
                       <div>
                         {intro.status === "accepted" && intro.candidate_name ? (
                           <div className="font-medium">{intro.candidate_name}</div>
                         ) : (
-                          <div className="font-medium text-neutral-400">Candidate</div>
+                          <div className="font-medium text-neutral-500">Candidate</div>
                         )}
                         <div className="text-xs text-neutral-500">
                           {intro.initiated_by === "candidate" ? "Expressed interest" : "Sent"} {new Date(intro.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
@@ -460,7 +460,7 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                           {intro.status || "pending"}
                         </Badge>
                         {intro.initiated_by === "candidate" && (
-                          <Badge className="bg-amber-500/20 text-amber-300 border-amber-300/30 text-xs">
+                          <Badge className="bg-amber-50 text-amber-600 border-amber-300 text-xs">
                             <HeartHandshake className="w-3 h-3 mr-1" /> Candidate Interest
                           </Badge>
                         )}
@@ -468,22 +468,22 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                           value={intro.stage || "outreach"}
                           onChange={(e) => handleStageChange(intro.id, e.target.value)}
                           disabled={updatingStage === intro.id}
-                          className="bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-xs text-neutral-200"
+                          className="bg-neutral-50 border border-neutral-200 rounded-lg px-2 py-1 text-xs text-neutral-700"
                         >
                           {Object.entries(STAGE_LABELS).map(([s, l]) => (
                             <option key={s} value={s}>{l}</option>
                           ))}
                         </select>
                         {intro.job_title ? (
-                          <Badge className="bg-purple-500/15 text-purple-300 border-purple-300/20 text-xs">
+                          <Badge className="bg-purple-50 text-purple-600 border-purple-200 text-xs">
                             <Briefcase className="w-3 h-3 mr-1 shrink-0" /> {intro.job_title}
                           </Badge>
                         ) : intro.job_id ? (
-                          <Badge className="bg-purple-500/15 text-purple-300 border-purple-300/20 text-xs">
+                          <Badge className="bg-purple-50 text-purple-600 border-purple-200 text-xs">
                             <Briefcase className="w-3 h-3 mr-1 shrink-0" /> {intro.job_id}
                           </Badge>
                         ) : (
-                          <Badge className="bg-white/5 text-neutral-500 border-white/10 text-xs">General</Badge>
+                          <Badge className="bg-neutral-50 text-neutral-500 border-neutral-200 text-xs">General</Badge>
                         )}
                       </div>
 
@@ -500,25 +500,25 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                       )}
 
                       {intro.message && (
-                        <div className="text-sm text-neutral-400 line-clamp-2 mb-2">{intro.message}</div>
+                        <div className="text-sm text-neutral-500 line-clamp-2 mb-2">{intro.message}</div>
                       )}
                       {intro.employer_notes && (
                         <div className="text-xs text-neutral-500 mt-1 italic">Notes: {intro.employer_notes}</div>
                       )}
                       {intro.rejection_reason && (
-                        <div className="text-xs text-red-300 mt-1 flex items-center gap-1">
+                        <div className="text-xs text-red-500 mt-1 flex items-center gap-1">
                           <AlertTriangle className="w-3 h-3" />
                           Rejection: {REJECTION_REASONS.find(r => r.value === intro.rejection_reason)?.label || intro.rejection_reason}
                           {intro.rejection_notes && <span className="text-neutral-500 ml-1">— {intro.rejection_notes}</span>}
                         </div>
                       )}
                       {intro.status === "accepted" && intro.candidate_email && (
-                        <div className="flex items-center gap-2 text-sm text-emerald-300 mt-2 p-2 rounded-lg bg-emerald-500/10 border border-emerald-300/20">
+                        <div className="flex items-center gap-2 text-sm text-emerald-600 mt-2 p-2 rounded-lg bg-emerald-50 border border-emerald-200">
                           <Mail className="w-4 h-4" />
                           <a href={`mailto:${intro.candidate_email}`} className="hover:underline">{intro.candidate_email}</a>
                           {intro.candidate_linkedin && (
                             <>
-                              <span className="text-neutral-500">|</span>
+                              <span className="text-neutral-400">|</span>
                               <a href={intro.candidate_linkedin} target="_blank" rel="noreferrer" className="hover:underline">LinkedIn</a>
                             </>
                           )}
@@ -530,7 +530,7 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                         <div className="mt-2">
                           <button
                             onClick={() => toggleMessages(intro.id)}
-                            className="flex items-center gap-1.5 text-xs text-neutral-400 hover:text-neutral-200 transition"
+                            className="flex items-center gap-1.5 text-xs text-neutral-500 hover:text-neutral-700 transition"
                           >
                             <MessageSquare className="w-3.5 h-3.5" />
                             Messages
@@ -545,7 +545,7 @@ export default function EmployerDashboardClient({ employer, stats, introductions
               ) : (
                 <div className="text-center py-8">
                   <Users className="w-12 h-12 mx-auto mb-3 opacity-50 text-neutral-400" />
-                  <p className="text-neutral-400 mb-3">{activeStage === "all" ? "No introductions yet." : `No introductions in ${STAGE_LABELS[activeStage]} stage.`}</p>
+                  <p className="text-neutral-500 mb-3">{activeStage === "all" ? "No introductions yet." : `No introductions in ${STAGE_LABELS[activeStage]} stage.`}</p>
                   <Link href="/employer/talent">
                     <Button className="gap-2"><Search className="w-4 h-4" /> Search Talent</Button>
                   </Link>
@@ -556,15 +556,15 @@ export default function EmployerDashboardClient({ employer, stats, introductions
 
           {/* Recent Activity */}
           {stats.recentActivity?.length > 0 && (
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-white border-neutral-200">
               <CardContent className="p-6">
                 <h2 className="text-xl font-semibold mb-4 flex items-center gap-2"><Activity className="w-5 h-5" /> Recent Activity</h2>
                 <div className="space-y-3">
                   {stats.recentActivity.slice(0, 10).map((a) => (
                     <div key={a.id} className="flex items-start gap-3 text-sm">
-                      <div className="w-2 h-2 rounded-full bg-cyan-400 mt-1.5 shrink-0" />
+                      <div className="w-2 h-2 rounded-full bg-primary-500 mt-1.5 shrink-0" />
                       <div className="flex-1">
-                        <div className="text-neutral-200">{ACTIVITY_LABELS[a.action] || a.action}</div>
+                        <div className="text-neutral-700">{ACTIVITY_LABELS[a.action] || a.action}</div>
                         {a.details && Object.keys(a.details).length > 0 && (
                           <div className="text-xs text-neutral-500">
                             {a.details.from && a.details.to && `${STAGE_LABELS[a.details.from] || a.details.from} → ${STAGE_LABELS[a.details.to] || a.details.to}`}
@@ -585,22 +585,22 @@ export default function EmployerDashboardClient({ employer, stats, introductions
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Company Profile */}
-          <Card className="bg-white/5 border-white/10">
+          <Card className="bg-white border-neutral-200">
             <CardContent className="p-6">
               <h3 className="text-lg font-semibold mb-3">Company Profile</h3>
               <div className="space-y-3">
                 <div className="text-sm">
-                  <span className="text-neutral-400">Name:</span>
+                  <span className="text-neutral-500">Name:</span>
                   <div className="font-medium">{employer.name}</div>
                 </div>
                 {employer.website && (
                   <div className="text-sm">
-                    <span className="text-neutral-400">Website:</span>
-                    <div><a href={employer.website} target="_blank" rel="noreferrer" className="text-cyan-300 hover:underline flex items-center gap-1"><Globe className="w-3 h-3" /> {employer.website}</a></div>
+                    <span className="text-neutral-500">Website:</span>
+                    <div><a href={employer.website} target="_blank" rel="noreferrer" className="text-primary-500 hover:underline flex items-center gap-1"><Globe className="w-3 h-3" /> {employer.website}</a></div>
                   </div>
                 )}
                 {employer.description && (
-                  <p className="text-sm text-neutral-300 line-clamp-3">{employer.description}</p>
+                  <p className="text-sm text-neutral-600 line-clamp-3">{employer.description}</p>
                 )}
               </div>
               <Link href="/employer/profile">
@@ -613,14 +613,14 @@ export default function EmployerDashboardClient({ employer, stats, introductions
 
           {/* Shortlists */}
           {shortlists && shortlists.length > 0 && (
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-white border-neutral-200">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold mb-3 flex items-center gap-2"><List className="w-5 h-5" /> Shortlists</h3>
                 <div className="space-y-2">
                   {shortlists.map(sl => (
-                    <Link key={sl.id} href={`/employer/shortlists/${sl.id}`} className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-300/30 transition text-sm">
+                    <Link key={sl.id} href={`/employer/shortlists/${sl.id}`} className="flex items-center justify-between p-3 rounded-xl bg-neutral-50 border border-neutral-200 hover:border-primary-200 transition text-sm">
                       <span>{sl.name}</span>
-                      <Badge className="bg-white/5 border-white/10 text-neutral-400">{sl.candidate_count || 0}</Badge>
+                      <Badge className="bg-neutral-50 border-neutral-200 text-neutral-500">{sl.candidate_count || 0}</Badge>
                     </Link>
                   ))}
                 </div>
@@ -633,13 +633,13 @@ export default function EmployerDashboardClient({ employer, stats, introductions
 
           {/* Saved Searches */}
           {savedSearches && savedSearches.length > 0 && (
-            <Card className="bg-white/5 border-white/10">
+            <Card className="bg-white border-neutral-200">
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold mb-3 flex items-center gap-2"><BookmarkPlus className="w-5 h-5" /> Saved Searches</h3>
                 <div className="space-y-2">
                   {savedSearches.map(ss => (
-                    <Link key={ss.id} href={`/employer/talent?${new URLSearchParams(ss.filters || {}).toString()}`} className="flex items-center gap-2 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-cyan-300/30 transition text-sm">
-                      <Search className="w-3 h-3 text-neutral-400" /> {ss.name}
+                    <Link key={ss.id} href={`/employer/talent?${new URLSearchParams(ss.filters || {}).toString()}`} className="flex items-center gap-2 p-3 rounded-xl bg-neutral-50 border border-neutral-200 hover:border-primary-200 transition text-sm">
+                      <Search className="w-3 h-3 text-neutral-500" /> {ss.name}
                     </Link>
                   ))}
                 </div>
@@ -651,19 +651,19 @@ export default function EmployerDashboardClient({ employer, stats, introductions
 
       {/* Rejection Reason Modal */}
       {rejectionModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-neutral-900 border border-white/10 rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white border border-neutral-200 rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl">
             <h3 className="text-lg font-semibold mb-1 flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-red-300" /> Rejection Reason
+              <AlertTriangle className="w-5 h-5 text-red-500" /> Rejection Reason
             </h3>
-            <p className="text-sm text-neutral-400 mb-4">WORC compliance requires documenting why a candidate was not selected.</p>
+            <p className="text-sm text-neutral-500 mb-4">WORC compliance requires documenting why a candidate was not selected.</p>
             <div className="space-y-3">
               <div>
                 <label className="text-sm font-medium mb-1 block">Reason *</label>
                 <select
                   value={rejectionReason}
                   onChange={e => setRejectionReason(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-neutral-200"
+                  className="w-full bg-neutral-50 border border-neutral-200 rounded-lg px-3 py-2 text-sm text-neutral-700"
                 >
                   <option value="">Select a reason...</option>
                   {REJECTION_REASONS.map(r => (
@@ -677,7 +677,7 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                   value={rejectionNotes}
                   onChange={e => setRejectionNotes(e.target.value)}
                   rows={3}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200"
+                  className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-3 py-2 text-sm text-neutral-700"
                   placeholder="Additional details..."
                 />
               </div>
