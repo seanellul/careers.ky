@@ -5,10 +5,10 @@ import { Search, Users, Shield, Eye, Zap, TrendingUp } from "lucide-react";
 
 function StatCard({ label, value, icon: Icon, accent }) {
   return (
-    <div className="bg-neutral-900 border border-white/10 rounded-xl p-5">
+    <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl p-5">
       <div className="flex items-center justify-between mb-3">
         <span className="text-xs font-medium uppercase tracking-wider text-neutral-500">{label}</span>
-        <Icon className={`w-4 h-4 ${accent ? "text-cyan-400" : "text-neutral-600"}`} />
+        <Icon className={`w-4 h-4 ${accent ? "text-primary-500" : "text-neutral-600"}`} />
       </div>
       <div className="text-2xl font-bold text-white">{typeof value === "number" ? value.toLocaleString() : value}</div>
     </div>
@@ -54,15 +54,15 @@ export default function AdminCandidatesClient({ candidates, stats }) {
           placeholder="Search by name, email, headline, or skill..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 bg-neutral-900 border border-white/10 rounded-lg text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-cyan-500/50"
+          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-cyan-500/50"
         />
       </div>
 
-      <div className="bg-neutral-900 border border-white/10 rounded-xl overflow-hidden">
+      <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/10">
+              <tr className="border-b border-neutral-200 dark:border-neutral-700">
                 <th className="text-left px-4 py-3 text-neutral-500 font-medium">Name</th>
                 <th className="text-left px-4 py-3 text-neutral-500 font-medium">Email</th>
                 <th className="text-left px-4 py-3 text-neutral-500 font-medium">Caymanian</th>
@@ -83,9 +83,9 @@ export default function AdminCandidatesClient({ candidates, stats }) {
                 const extraCount = skills.length - 3;
 
                 return (
-                  <tr key={c.id} className="border-b border-white/5 hover:bg-white/[0.02]">
+                  <tr key={c.id} className="border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800">
                     <td className="px-4 py-3 text-white font-medium">{c.name || "—"}</td>
-                    <td className="px-4 py-3 text-neutral-400">{c.email}</td>
+                    <td className="px-4 py-3 text-neutral-500">{c.email}</td>
                     <td className="px-4 py-3">
                       {c.is_caymanian ? (
                         <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/15 text-green-400 border border-green-500/20">Yes</span>
@@ -93,24 +93,24 @@ export default function AdminCandidatesClient({ candidates, stats }) {
                         <span className="text-xs text-neutral-500">No</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-neutral-400 text-xs">{c.education_label || "—"}</td>
-                    <td className="px-4 py-3 text-neutral-400 text-xs">{c.experience_label || "—"}</td>
+                    <td className="px-4 py-3 text-neutral-500 text-xs">{c.education_label || "—"}</td>
+                    <td className="px-4 py-3 text-neutral-500 text-xs">{c.experience_label || "—"}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1">
                         {shownSkills.map(s => (
-                          <span key={s} className="text-[11px] px-1.5 py-0.5 rounded bg-white/5 text-neutral-300 border border-white/10">
+                          <span key={s} className="text-[11px] px-1.5 py-0.5 rounded bg-white dark:bg-neutral-800 shadow-sm text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700">
                             {s}
                           </span>
                         ))}
                         {extraCount > 0 && (
-                          <span className="text-[11px] px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                          <span className="text-[11px] px-1.5 py-0.5 rounded bg-primary-50 dark:bg-primary-500/15 text-primary-500 border border-primary-200 dark:border-primary-500/30">
                             +{extraCount}
                           </span>
                         )}
                         {skills.length === 0 && <span className="text-neutral-600 text-xs">—</span>}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-neutral-400 text-xs capitalize">
+                    <td className="px-4 py-3 text-neutral-500 text-xs capitalize">
                       {(c.availability || "—").replace(/_/g, " ")}
                     </td>
                     <td className="px-4 py-3">

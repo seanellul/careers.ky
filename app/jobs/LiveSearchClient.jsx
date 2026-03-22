@@ -249,24 +249,24 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-4">
             Live Job <span className="text-primary-500">Market Search</span>
           </h1>
-          <p className="text-neutral-600 text-lg max-w-3xl">
+          <p className="text-neutral-600 dark:text-neutral-400 text-lg max-w-3xl">
             Browse {stats.total} active job postings across {stats.industries}+ industries in Cayman. Real-time data from WORC.
           </p>
           {(initialQ || initialEmployer || initialCisco) && (
             <div className="mt-4 flex flex-wrap gap-2">
-              {initialQ && <Badge className="bg-primary-50 text-primary-500 border-primary-200">Search: {initialQ}</Badge>}
-              {initialCisco && <Badge className="bg-purple-50 text-purple-600 border-purple-200">CISCO: {initialCisco}</Badge>}
-              {initialEmployer && <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200">Employer: {initialEmployer}</Badge>}
+              {initialQ && <Badge className="bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30">Search: {initialQ}</Badge>}
+              {initialCisco && <Badge className="bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700">CISCO: {initialCisco}</Badge>}
+              {initialEmployer && <Badge className="bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700">Employer: {initialEmployer}</Badge>}
             </div>
           )}
         </div>
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <Card className="bg-neutral-50 border-neutral-200"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-primary-50 grid place-items-center"><TrendingUp className="w-5 h-5 text-primary-500" /></div><div><div className="text-xl sm:text-2xl md:text-3xl font-semibold">{stats.total}</div><div className="text-xs md:text-sm text-neutral-500">Active Jobs</div></div></div></CardContent></Card>
-          <Card className="bg-neutral-50 border-neutral-200"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-emerald-50 grid place-items-center"><Building2 className="w-5 h-5 text-emerald-600" /></div><div><div className="text-xl sm:text-2xl md:text-3xl font-semibold">{stats.industries}+</div><div className="text-xs md:text-sm text-neutral-500">Industries</div></div></div></CardContent></Card>
-          <Card className="bg-neutral-50 border-neutral-200"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-purple-50 grid place-items-center"><MapPin className="w-5 h-5 text-purple-600" /></div><div><div className="text-xl sm:text-2xl md:text-3xl font-semibold">{stats.locations}</div><div className="text-xs md:text-sm text-neutral-500">Locations</div></div></div></CardContent></Card>
-          <Card className="bg-neutral-50 border-neutral-200"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-orange-50 grid place-items-center"><Calendar className="w-5 h-5 text-orange-600" /></div><div><div className="text-xl md:text-2xl font-semibold truncate">CI$ {Math.round(stats.avgSalary / 1000)}k</div><div className="text-xs md:text-sm text-neutral-500">Avg Salary</div></div></div></CardContent></Card>
+          <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-primary-50 dark:bg-primary-500/15 grid place-items-center"><TrendingUp className="w-5 h-5 text-primary-500" /></div><div><div className="text-xl sm:text-2xl md:text-3xl font-semibold">{stats.total}</div><div className="text-xs md:text-sm text-neutral-500">Active Jobs</div></div></div></CardContent></Card>
+          <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-primary-50 dark:bg-primary-500/15 grid place-items-center"><Building2 className="w-5 h-5 text-primary-500" /></div><div><div className="text-xl sm:text-2xl md:text-3xl font-semibold">{stats.industries}+</div><div className="text-xs md:text-sm text-neutral-500">Industries</div></div></div></CardContent></Card>
+          <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-primary-50 dark:bg-primary-500/15 grid place-items-center"><MapPin className="w-5 h-5 text-primary-500" /></div><div><div className="text-xl sm:text-2xl md:text-3xl font-semibold">{stats.locations}</div><div className="text-xs md:text-sm text-neutral-500">Locations</div></div></div></CardContent></Card>
+          <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-primary-50 dark:bg-primary-500/15 grid place-items-center"><Calendar className="w-5 h-5 text-primary-500" /></div><div><div className="text-xl md:text-2xl font-semibold truncate">CI$ {Math.round(stats.avgSalary / 1000)}k</div><div className="text-xs md:text-sm text-neutral-500">Avg Salary</div></div></div></CardContent></Card>
         </div>
 
         {/* Search */}
@@ -282,12 +282,12 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
             <div className="flex gap-2">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
-                <Input value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} placeholder="Search by job title or employer..." className="pl-10 bg-neutral-50 border-neutral-200 h-12 text-base" />
+                <Input value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} placeholder="Search by job title or employer..." className="pl-10 bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 h-12 text-base" />
               </div>
               {sessionLoaded && session?.employerCompanyName && (
                 <Button
                   variant={showMyJobs ? "default" : "secondary"}
-                  className={`gap-2 h-12 shrink-0 ${showMyJobs ? "bg-primary-50 text-primary-500 border border-primary-200" : ""}`}
+                  className={`gap-2 h-12 shrink-0 ${showMyJobs ? "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border border-primary-200 dark:border-primary-500/30" : ""}`}
                   onClick={() => {
                     const next = !showMyJobs;
                     setShowMyJobs(next);
@@ -300,35 +300,35 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
               )}
             </div>
             {showFilters && (
-              <Card className="bg-neutral-50 border-neutral-200">
+              <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
                 <CardContent className="p-4 md:p-6 space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
                     <div>
                       <label className="text-sm font-medium mb-2 block">Location</label>
-                      <select value={loc} onChange={(e) => { setLoc(Number(e.target.value)); setPage(1); }} className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-3 py-2 h-10 text-sm text-neutral-700">
+                      <select value={loc} onChange={(e) => { setLoc(Number(e.target.value)); setPage(1); }} className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 h-10 text-sm text-neutral-700 dark:text-neutral-300">
                         {Object.entries(LOCATION_KEY).map(([k, v]) => (<option key={k} value={k}>{v}</option>))}
                       </select>
                     </div>
                     <div>
                       <label className="text-sm font-medium mb-2 block">Work Type</label>
-                      <select value={type} onChange={(e) => { setType(Number(e.target.value)); setPage(1); }} className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-3 py-2 h-10 text-sm text-neutral-700">
+                      <select value={type} onChange={(e) => { setType(Number(e.target.value)); setPage(1); }} className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 h-10 text-sm text-neutral-700 dark:text-neutral-300">
                         {Object.entries(WORK_TYPE).map(([k, v]) => (<option key={k} value={k}>{v}</option>))}
                       </select>
                     </div>
                     <div>
                       <label className="text-sm font-medium mb-2 block">Employer</label>
-                      <Input value={employerFilter} onChange={(e) => { setEmployerFilter(e.target.value); setShowMyJobs(false); setPage(1); }} placeholder="Filter by employer..." className="bg-neutral-50 border-neutral-200" />
+                      <Input value={employerFilter} onChange={(e) => { setEmployerFilter(e.target.value); setShowMyJobs(false); setPage(1); }} placeholder="Filter by employer..." className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700" />
                     </div>
                     <div>
                       <label className="text-sm font-medium mb-2 block">Occupation</label>
-                      <select value={occGroup} onChange={(e) => { setOccGroup(e.target.value); setPage(1); }} className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-3 py-2 h-10 text-sm text-neutral-700">
+                      <select value={occGroup} onChange={(e) => { setOccGroup(e.target.value); setPage(1); }} className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 h-10 text-sm text-neutral-700 dark:text-neutral-300">
                         <option value="">All Occupations</option>
                         {occGroupOptions.map(o => (<option key={o.code} value={o.code}>{o.label} ({o.count})</option>))}
                       </select>
                     </div>
                     <div>
                       <label className="text-sm font-medium mb-2 block">Sort By</label>
-                      <select value={sort} onChange={(e) => setSort(Number(e.target.value))} className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-3 py-2 h-10 text-sm text-neutral-700">
+                      <select value={sort} onChange={(e) => setSort(Number(e.target.value))} className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 h-10 text-sm text-neutral-700 dark:text-neutral-300">
                         {Object.entries(SORT_KEY).map(([k, v]) => (<option key={k} value={k}>{v}</option>))}
                       </select>
                     </div>
@@ -340,7 +340,7 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                   </div>
 
                   {/* Skills Filter */}
-                  <div className="pt-3 border-t border-neutral-200">
+                  <div className="pt-3 border-t border-neutral-200 dark:border-neutral-700">
                     <label className="text-sm font-medium mb-2 block">Skills</label>
                     <div className="relative mb-2">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
@@ -348,14 +348,14 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                         value={skillQuery}
                         onChange={(e) => setSkillQuery(e.target.value)}
                         placeholder="Search skills (e.g. compliance, accounting)"
-                        className="pl-10 bg-neutral-50 border-neutral-200"
+                        className="pl-10 bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
                       />
                     </div>
                     {skillSuggestions.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-2">
                         {skillSuggestions.map(s => (
                           <button key={s.id} onClick={() => addSkill(s)}>
-                            <Badge className="bg-neutral-50 border-neutral-200 text-neutral-600 hover:border-purple-300 cursor-pointer">
+                            <Badge className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 hover:border-primary-300 cursor-pointer">
                               <Plus className="w-3 h-3 mr-1" /> {s.name}
                             </Badge>
                           </button>
@@ -365,7 +365,7 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                     {selectedSkills.length > 0 && (
                       <div className="flex flex-wrap gap-2">
                         {selectedSkills.map(s => (
-                          <Badge key={s.id} className="bg-purple-50 text-purple-600 border-purple-200 pr-1 flex items-center gap-1">
+                          <Badge key={s.id} className="bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30 pr-1 flex items-center gap-1">
                             {s.name}
                             <button onClick={() => removeSkill(s.id)} className="ml-1 hover:text-red-500">
                               <X className="w-3 h-3" />
@@ -382,7 +382,7 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
         </div>
 
         {/* Results */}
-        <div className="mb-6 text-sm text-neutral-600">
+        <div className="mb-6 text-sm text-neutral-600 dark:text-neutral-400">
           Showing {Math.min((page - 1) * pageSize + 1, sorted.length)}–{Math.min(page * pageSize, sorted.length)} of {sorted.length} jobs
         </div>
 
@@ -390,10 +390,10 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
           {view.map((j, idx) => {
             const salary = fmtSalaryDisplay(j);
             return (
-            <Card key={`${j.jobPostId || idx}`} className="job-card group bg-neutral-50 border-neutral-200 hover:border-neutral-300 hover:shadow-lg hover:shadow-primary-200/10 hover:-translate-y-0.5 transition-all duration-200 h-full">
+            <Card key={`${j.jobPostId || idx}`} className="job-card group bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 hover:shadow-lg hover:shadow-primary-200/10 hover:-translate-y-0.5 transition-all duration-200 h-full">
               <CardContent className="p-5 h-full flex flex-col">
                 <div className="mb-2">
-                  <span className="inline-block text-xs font-medium uppercase tracking-wide text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-full px-2.5 py-0.5">{WORK_TYPE[j.workType] || wtObj[j.workType] || "Role"}</span>
+                  <span className="inline-block text-xs font-medium uppercase tracking-wide text-primary-700 dark:text-primary-300 bg-primary-50 dark:bg-primary-500/15 border border-primary-200 dark:border-primary-500/30 rounded-full px-2.5 py-0.5">{WORK_TYPE[j.workType] || wtObj[j.workType] || "Role"}</span>
                 </div>
                 <Link href={`/jobs/${j.jobPostIdString || j.jobPostId}`} className="font-medium leading-tight group-hover:text-primary-500 mb-1.5 line-clamp-2 min-h-[2.5rem] flex items-start transition">{j.jobTitle || "Untitled role"}</Link>
                 <div className="text-sm text-neutral-500 mb-1.5 line-clamp-1">
@@ -404,18 +404,18 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                   <span>{LOCATION_KEY[j.jobLocation] || ltObj[j.jobLocation] || "Cayman Islands"}{j.hoursPerWeek ? ` · ${j.hoursPerWeek} hrs/wk` : ""}</span>
                 </div>
                 <div className="flex items-center gap-1.5 mb-3">
-                  <DollarSign className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span className="text-sm font-semibold text-neutral-800">{salary.main}</span>
+                  <DollarSign className="w-4 h-4 text-primary-500 shrink-0" />
+                  <span className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">{salary.main}</span>
                   {salary.suffix && <span className="text-xs text-neutral-500">{salary.suffix}</span>}
                 </div>
                 <div className="flex flex-wrap gap-1.5 mb-4">
                   {etObj[j.educationLevel] && (
-                    <Badge className="bg-purple-50 text-purple-600 border-purple-200 text-xs px-2 py-0.5 gap-1">
+                    <Badge className="bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700 text-xs px-2 py-0.5 gap-1">
                       <GraduationCap className="w-3 h-3" />{truncateText(etObj[j.educationLevel], 22)}
                     </Badge>
                   )}
                   {exObj[j.yearsOfExperience] && (
-                    <Badge className="bg-primary-50 text-primary-500 border-primary-200 text-xs px-2 py-0.5 gap-1">
+                    <Badge className="bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700 text-xs px-2 py-0.5 gap-1">
                       <Clock className="w-3 h-3" />{truncateText(exObj[j.yearsOfExperience], 22)}
                     </Badge>
                   )}
@@ -433,7 +433,7 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                               <button
                                 onClick={(e) => { e.preventDefault(); handleExpressInterest(jobId); }}
                                 disabled={sendingInterest === jobId}
-                                className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-primary-50 text-primary-500 border border-primary-200 hover:bg-primary-100 w-full gap-2 h-10 px-4 py-2 transition disabled:opacity-50"
+                                className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-primary-50 dark:bg-primary-500/15 text-primary-500 border border-primary-200 dark:border-primary-500/30 hover:bg-primary-100 w-full gap-2 h-10 px-4 py-2 transition disabled:opacity-50"
                               >
                                 <HeartHandshake className="w-4 h-4" /> {sendingInterest === jobId ? "Sending..." : "Express Interest"}
                               </button>
@@ -444,13 +444,13 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                               </div>
                             )}
                             {!session && (
-                              <Link href="/profile/setup" className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-primary-50 text-primary-500 border border-primary-200 hover:bg-primary-100 w-full gap-2 h-10 px-4 py-2 transition">
+                              <Link href="/profile/setup" className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-primary-50 dark:bg-primary-500/15 text-primary-500 border border-primary-200 dark:border-primary-500/30 hover:bg-primary-100 w-full gap-2 h-10 px-4 py-2 transition">
                                 <HeartHandshake className="w-4 h-4" /> Sign in to Express Interest
                               </Link>
                             )}
                           </>
                         )}
-                        <Link href={`/jobs/${jobId}`} className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-neutral-50 text-neutral-600 border border-neutral-200 hover:bg-neutral-100 w-full gap-2 h-10 px-4 py-2 transition">
+                        <Link href={`/jobs/${jobId}`} className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-white dark:bg-neutral-800 shadow-sm text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-800 w-full gap-2 h-10 px-4 py-2 transition">
                           View Details
                         </Link>
                       </>
@@ -465,7 +465,7 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
 
         {/* Pagination */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-sm text-neutral-600">Page {page} of {totalPages}</div>
+          <div className="text-sm text-neutral-600 dark:text-neutral-400">Page {page} of {totalPages}</div>
           <div className="flex gap-2">
             <Button variant="secondary" disabled={page === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>Previous</Button>
             <Button variant="secondary" disabled={page === totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>Next</Button>
@@ -473,7 +473,7 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
         </div>
 
         {sorted.length === 0 && (
-          <Card className="bg-neutral-50 border-neutral-200 mt-8">
+          <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mt-8">
             <CardContent className="p-12 text-center">
               <Search className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-500" />
               <h3 className="text-lg font-medium mb-2">No jobs found</h3>

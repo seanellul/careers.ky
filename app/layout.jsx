@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import { Suspense } from "react";
 import PostHogProvider, { PostHogPageView } from "@/components/PostHogProvider";
 import { SessionProvider } from "@/components/SessionProvider";
+import ThemeProvider from "@/components/ThemeProvider";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import DevToolbar from "@/components/DevToolbar";
@@ -36,17 +37,26 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" >
-      <body className="min-h-screen bg-amber-50 text-slate-900 antialiased">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem("ck_theme")==="dark")document.documentElement.classList.add("dark")}catch(e){}`,
+          }}
+        />
+      </head>
+      <body className="min-h-screen bg-[#FEFCF3] dark:bg-[#121212] text-neutral-800 dark:text-neutral-100 antialiased">
         <PostHogProvider>
           <SessionProvider>
-            <Suspense fallback={null}>
-              <PostHogPageView />
-            </Suspense>
-            <Navigation />
-            {children}
-            <Footer />
-            <DevToolbar />
+            <ThemeProvider>
+              <Suspense fallback={null}>
+                <PostHogPageView />
+              </Suspense>
+              <Navigation />
+              {children}
+              <Footer />
+              <DevToolbar />
+            </ThemeProvider>
           </SessionProvider>
         </PostHogProvider>
       </body>

@@ -73,8 +73,8 @@ export default function TeamClient({ members: initialMembers, invitations: initi
   const roleBadge = (role) => {
     const styles = {
       owner: "bg-amber-50 text-amber-600 border-amber-300",
-      admin: "bg-primary-50 text-primary-500 border-primary-200",
-      member: "bg-neutral-100 text-neutral-600 border-neutral-200",
+      admin: "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30",
+      member: "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700",
     };
     return (
       <span className={`text-xs px-2 py-0.5 rounded-full border ${styles[role] || styles.member}`}>
@@ -102,10 +102,10 @@ export default function TeamClient({ members: initialMembers, invitations: initi
         {members.map((member) => (
           <div
             key={member.id}
-            className="bg-white border border-neutral-200 rounded-xl p-4 flex items-center gap-4"
+            className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl p-4 flex items-center gap-4"
           >
-            <div className="w-10 h-10 rounded-full bg-neutral-100 grid place-items-center shrink-0">
-              <span className="text-sm font-semibold text-neutral-600">
+            <div className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-neutral-800 grid place-items-center shrink-0">
+              <span className="text-sm font-semibold text-neutral-600 dark:text-neutral-400">
                 {(member.name || member.email)[0].toUpperCase()}
               </span>
             </div>
@@ -127,7 +127,7 @@ export default function TeamClient({ members: initialMembers, invitations: initi
                   value={member.role}
                   onChange={(e) => handleRoleChange(member.id, e.target.value)}
                   disabled={processing === member.id}
-                  className="bg-neutral-50 border border-neutral-200 rounded-lg px-2 py-1 text-sm text-neutral-700"
+                  className="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-lg px-2 py-1 text-sm text-neutral-700 dark:text-neutral-300"
                 >
                   <option value="admin">Admin</option>
                   <option value="member">Member</option>
@@ -154,7 +154,7 @@ export default function TeamClient({ members: initialMembers, invitations: initi
           {invitations.map((inv) => (
             <div
               key={inv.id}
-              className="bg-white border border-neutral-200 rounded-xl p-4 flex items-center gap-4"
+              className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl p-4 flex items-center gap-4"
             >
               <div className="w-10 h-10 rounded-full bg-amber-50 grid place-items-center shrink-0">
                 <Mail className="w-4 h-4 text-amber-600" />
@@ -176,7 +176,7 @@ export default function TeamClient({ members: initialMembers, invitations: initi
       )}
 
       {/* Invite form */}
-      <div className="bg-white border border-neutral-200 rounded-xl p-6 space-y-4">
+      <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl p-6 space-y-4">
         <div className="flex items-center gap-2">
           <UserPlus className="w-5 h-5 text-primary-500" />
           <h2 className="text-lg font-medium">Invite Team Member</h2>
@@ -195,12 +195,12 @@ export default function TeamClient({ members: initialMembers, invitations: initi
             onChange={(e) => setInviteEmail(e.target.value)}
             placeholder="colleague@company.com"
             required
-            className="bg-neutral-50 border-neutral-200 flex-1"
+            className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 flex-1"
           />
           <select
             value={inviteRole}
             onChange={(e) => setInviteRole(e.target.value)}
-            className="bg-neutral-50 border border-neutral-200 rounded-lg px-3 text-sm text-neutral-700"
+            className="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-lg px-3 text-sm text-neutral-700 dark:text-neutral-300"
           >
             <option value="member">Member</option>
             <option value="admin">Admin</option>

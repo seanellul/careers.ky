@@ -125,14 +125,14 @@ export default function ProfileEditClient({ employer }) {
     }
   };
 
-  const inputCls = "bg-white/5 border-white/10 text-neutral-200 placeholder:text-neutral-600";
+  const inputCls = "bg-white dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400 dark:placeholder:text-neutral-500";
 
   return (
     <div className="space-y-8 max-w-3xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Edit Profile</h1>
-          <p className="text-neutral-400 text-sm mt-1">Customize how your company appears on careers.ky</p>
+          <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">Edit Profile</h1>
+          <p className="text-neutral-500 text-sm mt-1">Customize how your company appears on careers.ky</p>
         </div>
         <Button onClick={handleSave} disabled={saving} className="gap-2">
           {saved ? <><Check className="w-4 h-4" /> Saved</> : saving ? "Saving..." : <><Save className="w-4 h-4" /> Save Changes</>}
@@ -140,20 +140,20 @@ export default function ProfileEditClient({ employer }) {
       </div>
 
       {/* Branding */}
-      <Card className="bg-white/5 border-white/10">
+      <Card>
         <CardContent className="p-6 space-y-4">
-          <h2 className="text-lg font-semibold flex items-center gap-2"><Image className="w-5 h-5 text-cyan-300" /> Branding</h2>
+          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100"><Image className="w-5 h-5 text-primary-500" /> Branding</h2>
           <div>
-            <label className="text-sm font-medium mb-1 block">Logo URL</label>
+            <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Logo URL</label>
             <Input value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} placeholder="https://example.com/logo.png" className={inputCls} />
           </div>
           <div>
-            <label className="text-sm font-medium mb-1 block">Cover Image URL</label>
+            <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Cover Image URL</label>
             <Input value={coverUrl} onChange={(e) => setCoverUrl(e.target.value)} placeholder="https://example.com/cover.jpg" className={inputCls} />
             <p className="text-xs text-neutral-500 mt-1">Recommended: 1200x400px. Shown at the top of your public profile.</p>
           </div>
           <div>
-            <label className="text-sm font-medium mb-1 block">Tagline</label>
+            <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Tagline</label>
             <Input value={tagline} onChange={(e) => setTagline(e.target.value)} placeholder="Your company motto or one-liner" maxLength={200} className={inputCls} />
             <p className="text-xs text-neutral-500 mt-1">{tagline.length}/200 characters</p>
           </div>
@@ -161,28 +161,28 @@ export default function ProfileEditClient({ employer }) {
       </Card>
 
       {/* Company Details */}
-      <Card className="bg-white/5 border-white/10">
+      <Card>
         <CardContent className="p-6 space-y-4">
-          <h2 className="text-lg font-semibold flex items-center gap-2"><Building2 className="w-5 h-5 text-cyan-300" /> Company Details</h2>
+          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100"><Building2 className="w-5 h-5 text-primary-500" /> Company Details</h2>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium mb-1 block">Company Size</label>
-              <select value={companySize} onChange={(e) => setCompanySize(e.target.value)} className={`w-full rounded-md px-3 py-2 text-sm ${inputCls} border`}>
+              <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Company Size</label>
+              <select value={companySize} onChange={(e) => setCompanySize(e.target.value)} className={`w-full rounded-xl px-3 py-2 text-sm ${inputCls} border`}>
                 {SIZE_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block">Year Founded</label>
+              <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Year Founded</label>
               <Input type="number" value={yearFounded} onChange={(e) => setYearFounded(e.target.value)} placeholder="2010" min={1800} max={new Date().getFullYear()} className={inputCls} />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block">Headquarters</label>
+              <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Headquarters</label>
               <Input value={headquarters} onChange={(e) => setHeadquarters(e.target.value)} placeholder="George Town, Grand Cayman" className={inputCls} />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block">Industry</label>
+              <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Industry</label>
               <Input value={industry} onChange={(e) => setIndustry(e.target.value)} placeholder="Financial Services" className={inputCls} />
             </div>
           </div>
@@ -190,24 +190,24 @@ export default function ProfileEditClient({ employer }) {
       </Card>
 
       {/* Online Presence */}
-      <Card className="bg-white/5 border-white/10">
+      <Card>
         <CardContent className="p-6 space-y-4">
-          <h2 className="text-lg font-semibold flex items-center gap-2"><Globe className="w-5 h-5 text-cyan-300" /> Online Presence</h2>
+          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100"><Globe className="w-5 h-5 text-primary-500" /> Online Presence</h2>
           <div>
-            <label className="text-sm font-medium mb-1 block">Website</label>
+            <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Website</label>
             <Input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://yourcompany.com" className={inputCls} />
           </div>
           <div className="grid sm:grid-cols-3 gap-4">
             <div>
-              <label className="text-sm font-medium mb-1 flex items-center gap-1"><Linkedin className="w-3 h-3" /> LinkedIn</label>
+              <label className="text-sm font-medium mb-1 flex items-center gap-1 text-neutral-700 dark:text-neutral-300"><Linkedin className="w-3 h-3" /> LinkedIn</label>
               <Input value={linkedin} onChange={(e) => setLinkedin(e.target.value)} placeholder="https://linkedin.com/company/..." className={inputCls} />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 flex items-center gap-1"><Twitter className="w-3 h-3" /> Twitter / X</label>
+              <label className="text-sm font-medium mb-1 flex items-center gap-1 text-neutral-700 dark:text-neutral-300"><Twitter className="w-3 h-3" /> Twitter / X</label>
               <Input value={twitter} onChange={(e) => setTwitter(e.target.value)} placeholder="https://x.com/..." className={inputCls} />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 flex items-center gap-1"><Instagram className="w-3 h-3" /> Instagram</label>
+              <label className="text-sm font-medium mb-1 flex items-center gap-1 text-neutral-700 dark:text-neutral-300"><Instagram className="w-3 h-3" /> Instagram</label>
               <Input value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="https://instagram.com/..." className={inputCls} />
             </div>
           </div>
@@ -215,11 +215,11 @@ export default function ProfileEditClient({ employer }) {
       </Card>
 
       {/* About */}
-      <Card className="bg-white/5 border-white/10">
+      <Card>
         <CardContent className="p-6 space-y-4">
-          <h2 className="text-lg font-semibold flex items-center gap-2"><Type className="w-5 h-5 text-cyan-300" /> About</h2>
+          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100"><Type className="w-5 h-5 text-primary-500" /> About</h2>
           <div>
-            <label className="text-sm font-medium mb-1 block">Company Description</label>
+            <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Company Description</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -232,16 +232,16 @@ export default function ProfileEditClient({ employer }) {
       </Card>
 
       {/* Benefits & Perks */}
-      <Card className="bg-white/5 border-white/10">
+      <Card>
         <CardContent className="p-6 space-y-6">
-          <h2 className="text-lg font-semibold flex items-center gap-2"><Briefcase className="w-5 h-5 text-cyan-300" /> Benefits & Perks</h2>
-          <p className="text-sm text-neutral-400">Select the benefits your company offers. These will be displayed on your public profile.</p>
+          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100"><Briefcase className="w-5 h-5 text-primary-500" /> Benefits & Perks</h2>
+          <p className="text-sm text-neutral-500">Select the benefits your company offers. These will be displayed on your public profile.</p>
 
           {PERK_CATEGORIES.map((cat) => {
             const perks = PREDEFINED_PERKS.filter((p) => p.category === cat.id);
             return (
               <div key={cat.id}>
-                <h3 className="text-sm font-medium text-neutral-300 mb-2">{cat.label}</h3>
+                <h3 className="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-2">{cat.label}</h3>
                 <div className="flex flex-wrap gap-2">
                   {perks.map((perk) => (
                     <button
@@ -249,8 +249,8 @@ export default function ProfileEditClient({ employer }) {
                       onClick={() => togglePerk(perk.id)}
                       className={`px-3 py-1.5 rounded-lg text-sm border transition ${
                         selectedPerks.has(perk.id)
-                          ? "bg-cyan-500/20 text-cyan-300 border-cyan-300/30"
-                          : "bg-white/5 text-neutral-400 border-white/10 hover:border-white/20"
+                          ? "bg-primary-50 dark:bg-primary-500/15 text-primary-600 dark:text-primary-300 border-primary-300 dark:border-primary-500/30"
+                          : "bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600"
                       }`}
                     >
                       {selectedPerks.has(perk.id) && <Check className="w-3 h-3 inline mr-1" />}
@@ -264,13 +264,13 @@ export default function ProfileEditClient({ employer }) {
 
           {/* Custom perks */}
           <div>
-            <h3 className="text-sm font-medium text-neutral-300 mb-2">Custom Benefits</h3>
+            <h3 className="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-2">Custom Benefits</h3>
             {customPerks.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-3">
                 {customPerks.map((cp, i) => (
-                  <Badge key={i} className="bg-purple-500/20 text-purple-300 border-purple-300/30 gap-1">
+                  <Badge key={i} className="bg-purple-50 dark:bg-purple-500/15 text-purple-600 dark:text-purple-300 border-purple-200 dark:border-purple-500/30 gap-1">
                     {cp.label}
-                    <button onClick={() => removeCustomPerk(i)} className="ml-1 hover:text-white">
+                    <button onClick={() => removeCustomPerk(i)} className="ml-1 hover:text-red-500">
                       <X className="w-3 h-3" />
                     </button>
                   </Badge>
@@ -290,7 +290,7 @@ export default function ProfileEditClient({ employer }) {
               <select
                 value={newCustomCategory}
                 onChange={(e) => setNewCustomCategory(e.target.value)}
-                className={`rounded-md px-3 py-2 text-sm ${inputCls} border`}
+                className={`rounded-xl px-3 py-2 text-sm ${inputCls} border`}
               >
                 {PERK_CATEGORIES.map((cat) => (
                   <option key={cat.id} value={cat.id}>{cat.label}</option>
@@ -305,10 +305,10 @@ export default function ProfileEditClient({ employer }) {
       </Card>
 
       {/* Section Visibility */}
-      <Card className="bg-white/5 border-white/10">
+      <Card>
         <CardContent className="p-6 space-y-4">
-          <h2 className="text-lg font-semibold flex items-center gap-2"><Eye className="w-5 h-5 text-cyan-300" /> Section Visibility</h2>
-          <p className="text-sm text-neutral-400">Control which sections appear on your public profile page.</p>
+          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100"><Eye className="w-5 h-5 text-primary-500" /> Section Visibility</h2>
+          <p className="text-sm text-neutral-500">Control which sections appear on your public profile page.</p>
           <div className="space-y-3">
             {[
               { key: "about", label: "About", desc: "Company description and details" },
@@ -316,15 +316,15 @@ export default function ProfileEditClient({ employer }) {
               { key: "jobs", label: "Open Positions", desc: "Active job postings" },
               { key: "insights", label: "Hiring Insights", desc: "Salary ranges, top roles, hiring patterns" },
             ].map((section) => (
-              <div key={section.key} className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10">
+              <div key={section.key} className="flex items-center justify-between p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
                 <div>
-                  <div className="text-sm font-medium">{section.label}</div>
+                  <div className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{section.label}</div>
                   <div className="text-xs text-neutral-500">{section.desc}</div>
                 </div>
                 <button
                   onClick={() => toggleSection(section.key)}
                   className={`relative w-11 h-6 rounded-full transition-colors ${
-                    sectionVisibility[section.key] ? "bg-cyan-500" : "bg-white/10"
+                    sectionVisibility[section.key] ? "bg-primary-500" : "bg-neutral-300 dark:bg-neutral-600"
                   }`}
                 >
                   <div className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${

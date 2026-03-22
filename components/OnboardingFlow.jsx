@@ -244,7 +244,7 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
       <header className={t.nav}>
         <div className={t.navInner}>
-          <span className="font-semibold tracking-tight text-neutral-900">
+          <span className="font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
             Build your <span className="text-primary-500">career plan</span>
           </span>
           <div className="flex items-center gap-3">
@@ -263,7 +263,7 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
                   setEverEmployed(undefined);
                   setSelectedTitle(null);
                 }}
-                className="text-neutral-500 hover:text-neutral-900 text-sm"
+                className="text-neutral-500 hover:text-neutral-900 dark:text-neutral-100 dark:hover:text-neutral-100 text-sm"
               >
                 Start again
               </button>
@@ -276,13 +276,13 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
       </header>
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-12">
-        <Card className="bg-white border-neutral-200">
+        <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700">
           <CardContent className="p-6">
             <Steps />
 
             {currentStepId === "persona" && (
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-neutral-900">Where are you right now?</h3>
+                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">Where are you right now?</h3>
                 <p className="text-neutral-500 mb-4">Pick a starting point to tune recommendations.</p>
                 <div className="grid sm:grid-cols-3 gap-3">
                   {[
@@ -298,10 +298,10 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
                         if (o.id === "employed") setEverEmployed(true);
                         else if (o.id === "unemployed") setEverEmployed(undefined);
                       }}
-                      className={`cursor-pointer border ${persona === o.id ? "border-primary-500 bg-primary-50" : "border-neutral-200 bg-white hover:bg-neutral-50"}`}
+                      className={`cursor-pointer border ${persona === o.id ? "border-primary-500 bg-primary-50 dark:bg-primary-500/15" : "border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800"}`}
                     >
                       <CardContent className="p-4">
-                        <div className="font-medium mb-1 text-neutral-900">{o.title}</div>
+                        <div className="font-medium mb-1 text-neutral-900 dark:text-neutral-100">{o.title}</div>
                         <p className="text-sm text-neutral-500">{o.desc}</p>
                       </CardContent>
                     </Card>
@@ -317,14 +317,14 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
             {currentStepId === "education" && (
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-neutral-900">Your highest education</h3>
+                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">Your highest education</h3>
                 <p className="text-neutral-500 mb-4">Pick the closest match.</p>
                 <div className="grid sm:grid-cols-2 gap-2">
                   {Array.from(eduTypes.entries()).map(([k, v]) => (
                     <button
                       key={k}
                       onClick={() => setEducation(k)}
-                      className={`text-left rounded-xl px-3 py-2 border text-neutral-700 ${education === k ? "border-primary-500 bg-primary-50" : "border-neutral-200 bg-white hover:bg-neutral-50"}`}
+                      className={`text-left rounded-xl px-3 py-2 border text-neutral-700 dark:text-neutral-300 ${education === k ? "border-primary-500 bg-primary-50 dark:bg-primary-500/15" : "border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800"}`}
                     >
                       {v}
                     </button>
@@ -343,14 +343,14 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
             {currentStepId === "experience" && (
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-neutral-900">Your experience level</h3>
+                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">Your experience level</h3>
                 <p className="text-neutral-500 mb-4">For your current or most recent role.</p>
                 <div className="grid sm:grid-cols-2 gap-2">
                   {Array.from(expTypes.entries()).map(([k, v]) => (
                     <button
                       key={k}
                       onClick={() => setExperience(k)}
-                      className={`text-left rounded-xl px-3 py-2 border text-neutral-700 ${experience === k ? "border-primary-500 bg-primary-50" : "border-neutral-200 bg-white hover:bg-neutral-50"}`}
+                      className={`text-left rounded-xl px-3 py-2 border text-neutral-700 dark:text-neutral-300 ${experience === k ? "border-primary-500 bg-primary-50 dark:bg-primary-500/15" : "border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800"}`}
                     >
                       {v}
                     </button>
@@ -369,7 +369,7 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
             {currentStepId === "ever" && (
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-neutral-900">Have you been employed before?</h3>
+                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">Have you been employed before?</h3>
                 <div className="flex gap-3">
                   <Button variant={everEmployed === true ? "default" : "secondary"} onClick={() => setEverEmployed(true)}>
                     Yes
@@ -391,7 +391,7 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
             {(currentStepId === "search" || currentStepId === "currentJob" || currentStepId === "lastJob") && (
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-neutral-900">
+                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">
                   {currentStepId === "currentJob"
                     ? "Search your current job"
                     : currentStepId === "lastJob"
@@ -417,19 +417,19 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
                         setPickedUnit(s?.ciscoUnit || null);
                         setQuery(s?.label || query);
                       }}
-                      className={`text-left rounded-xl px-3 py-2 border ${selectedTitle?.label === s.label ? "border-accent-500 bg-accent-50" : "border-neutral-200 bg-white hover:bg-neutral-50"}`}
+                      className={`text-left rounded-xl px-3 py-2 border ${selectedTitle?.label === s.label ? "border-accent-500 bg-accent-50" : "border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800"}`}
                     >
-                      <div className="font-medium text-neutral-900">{s.label}</div>
+                      <div className="font-medium text-neutral-900 dark:text-neutral-100">{s.label}</div>
                       <div className="text-xs text-neutral-500">{s.ciscoUnit?.title}</div>
                     </button>
                   ))}
                 </div>
                 {selectedTitle?.ciscoUnit && (
-                  <Card className="bg-primary-50 border-primary-200 mt-4">
+                  <Card className="bg-primary-50 dark:bg-primary-500/15 border-primary-200 dark:border-primary-500/30 mt-4">
                     <CardContent className="p-4">
                       <div className="text-sm text-neutral-500">Matched CISCO</div>
-                      <div className="font-medium text-neutral-900">{selectedTitle.ciscoUnit.title}</div>
-                      <p className="text-sm text-neutral-600 whitespace-pre-line">{selectedTitle.ciscoUnit.description}</p>
+                      <div className="font-medium text-neutral-900 dark:text-neutral-100">{selectedTitle.ciscoUnit.title}</div>
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-line">{selectedTitle.ciscoUnit.description}</p>
                     </CardContent>
                   </Card>
                 )}
@@ -446,7 +446,7 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
             {currentStepId === "tax" && (
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-neutral-900">Choose a field</h3>
+                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">Choose a field</h3>
                 <p className="text-neutral-500 mb-4">Drill into the CISCO taxonomy.</p>
                 <div className="grid md:grid-cols-12 gap-4">
                   <div className="md:col-span-5 space-y-2 max-h-[240px] md:max-h-[360px] overflow-auto pr-2">
@@ -454,7 +454,7 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
                       <button
                         key={m.id}
                         onClick={() => setPickedMajor(m.id)}
-                        className={`w-full text-left rounded-xl px-3 py-2 text-sm ${pickedMajor === m.id ? "bg-primary-50 text-primary-700 font-medium" : "bg-neutral-50 text-neutral-700 hover:bg-neutral-100"}`}
+                        className={`w-full text-left rounded-xl px-3 py-2 text-sm ${pickedMajor === m.id ? "bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 font-medium" : "bg-neutral-50 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800"}`}
                       >
                         {m.title}
                       </button>
@@ -472,10 +472,10 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
                               setPickedUnit(u);
                               setSelectedTitle(null);
                             }}
-                            className={`cursor-pointer border ${pickedUnit?.id === u.id ? "border-accent-500 bg-accent-50" : "border-neutral-200 bg-white hover:bg-neutral-50"}`}
+                            className={`cursor-pointer border ${pickedUnit?.id === u.id ? "border-accent-500 bg-accent-50" : "border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800"}`}
                           >
                             <CardContent className="p-4">
-                              <div className="font-medium mb-1 text-neutral-900">{u.title}</div>
+                              <div className="font-medium mb-1 text-neutral-900 dark:text-neutral-100">{u.title}</div>
                               <p className="text-xs text-neutral-500 line-clamp-3">{u.description}</p>
                             </CardContent>
                           </Card>
@@ -496,25 +496,25 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
             {currentStepId === "insights" && (
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-neutral-900">Your match</h3>
+                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">Your match</h3>
                 <p className="text-neutral-500 mb-4">Review details, then see live jobs.</p>
                 <div className="grid md:grid-cols-2 gap-4">
-                  <Card className="bg-white border-neutral-200">
+                  <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700">
                     <CardContent className="p-4 space-y-2">
                       <div className="text-sm text-neutral-500">CISCO unit</div>
-                      <div className="font-medium text-lg text-neutral-900">{pickedUnit?.title || "—"}</div>
-                      <p className="text-sm text-neutral-600 whitespace-pre-line">{pickedUnit?.description}</p>
+                      <div className="font-medium text-lg text-neutral-900 dark:text-neutral-100">{pickedUnit?.title || "—"}</div>
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-line">{pickedUnit?.description}</p>
                     </CardContent>
                   </Card>
-                  <Card className="bg-white border-neutral-200">
+                  <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700">
                     <CardContent className="p-4">
                       <div className="text-sm text-neutral-500 mb-2">Historic opportunity snapshot</div>
                       {pickedUnit && agg.get(String(pickedUnit.id)) ? (
-                        <div className="space-y-1 text-sm text-neutral-700">
-                          <div><Badge className="bg-neutral-100 border-neutral-200 text-neutral-600 mr-2">Posts</Badge>{agg.get(String(pickedUnit.id)).count}</div>
-                          <div><Badge className="bg-neutral-100 border-neutral-200 text-neutral-600 mr-2">Min</Badge>CI$ {Math.round(agg.get(String(pickedUnit.id)).min).toLocaleString()}</div>
-                          <div><Badge className="bg-neutral-100 border-neutral-200 text-neutral-600 mr-2">Mean</Badge>CI$ {Math.round(agg.get(String(pickedUnit.id)).mean).toLocaleString()}</div>
-                          <div><Badge className="bg-neutral-100 border-neutral-200 text-neutral-600 mr-2">Max</Badge>CI$ {Math.round(agg.get(String(pickedUnit.id)).max).toLocaleString()}</div>
+                        <div className="space-y-1 text-sm text-neutral-700 dark:text-neutral-300">
+                          <div><Badge className="bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 mr-2">Posts</Badge>{agg.get(String(pickedUnit.id)).count}</div>
+                          <div><Badge className="bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 mr-2">Min</Badge>CI$ {Math.round(agg.get(String(pickedUnit.id)).min).toLocaleString()}</div>
+                          <div><Badge className="bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 mr-2">Mean</Badge>CI$ {Math.round(agg.get(String(pickedUnit.id)).mean).toLocaleString()}</div>
+                          <div><Badge className="bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 mr-2">Max</Badge>CI$ {Math.round(agg.get(String(pickedUnit.id)).max).toLocaleString()}</div>
                         </div>
                       ) : (
                         <div className="text-neutral-500 text-sm">No historic data for this unit.</div>
@@ -525,8 +525,8 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
                 {/* Auth prompt for unauthenticated users */}
                 {authChecked && !authSession && (
-                  <div className="mt-4 p-4 rounded-xl bg-gradient-to-r from-primary-50 to-emerald-50 border border-primary-200">
-                    <div className="text-sm font-medium mb-1 text-neutral-900">Save your interests and get matched?</div>
+                  <div className="mt-4 p-4 rounded-xl bg-gradient-to-r from-primary-50 to-emerald-50 border border-primary-200 dark:border-primary-500/30">
+                    <div className="text-sm font-medium mb-1 text-neutral-900 dark:text-neutral-100">Save your interests and get matched?</div>
                     <p className="text-xs text-neutral-500 mb-3">Sign in free to create your profile and get introduced to employers looking for {pickedUnit?.title || "your skills"}.</p>
                     <div className="flex flex-col sm:flex-row gap-2">
                       <a

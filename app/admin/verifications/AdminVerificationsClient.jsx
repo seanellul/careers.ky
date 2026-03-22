@@ -50,7 +50,7 @@ export default function AdminVerificationsClient({ initialRequests }) {
       rejected: "bg-red-50 text-red-500 border-red-300",
     };
     return (
-      <span className={`text-xs px-2 py-0.5 rounded-full border ${styles[status] || "bg-neutral-100 text-neutral-500 border-neutral-200"}`}>
+      <span className={`text-xs px-2 py-0.5 rounded-full border ${styles[status] || "bg-neutral-100 dark:bg-neutral-800 text-neutral-500 border-neutral-200 dark:border-neutral-700"}`}>
         {status}
       </span>
     );
@@ -70,7 +70,7 @@ export default function AdminVerificationsClient({ initialRequests }) {
             key={f}
             onClick={() => setFilter(f)}
             className={`px-3 py-1.5 rounded-lg text-sm transition ${
-              filter === f ? "bg-primary-50 text-primary-500 border border-primary-200" : "text-neutral-500 hover:bg-neutral-50"
+              filter === f ? "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border border-primary-200 dark:border-primary-500/30" : "text-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800"
             }`}
           >
             {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -93,7 +93,7 @@ export default function AdminVerificationsClient({ initialRequests }) {
           {filtered.map((req) => (
             <div
               key={req.id}
-              className="bg-white border border-neutral-200 rounded-xl p-4 space-y-3"
+              className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl p-4 space-y-3"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1 min-w-0">
@@ -112,8 +112,8 @@ export default function AdminVerificationsClient({ initialRequests }) {
               </div>
 
               <div className="flex items-center gap-4 text-xs text-neutral-500">
-                <span>Email domain: <span className="text-neutral-600">{req.email_domain || "N/A"}</span></span>
-                <span>Company domain: <span className="text-neutral-600">{req.employer_domain || "Not set"}</span></span>
+                <span>Email domain: <span className="text-neutral-600 dark:text-neutral-400">{req.email_domain || "N/A"}</span></span>
+                <span>Company domain: <span className="text-neutral-600 dark:text-neutral-400">{req.employer_domain || "Not set"}</span></span>
                 <span>{new Date(req.created_at).toLocaleDateString()}</span>
               </div>
 
@@ -125,7 +125,7 @@ export default function AdminVerificationsClient({ initialRequests }) {
                       value={domainInputs[req.id] || ""}
                       onChange={(e) => setDomainInputs((p) => ({ ...p, [req.id]: e.target.value }))}
                       placeholder="company.com"
-                      className="bg-neutral-50 border-neutral-200 h-8 text-sm"
+                      className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 h-8 text-sm"
                     />
                   </div>
                   <div className="flex-1">
@@ -134,7 +134,7 @@ export default function AdminVerificationsClient({ initialRequests }) {
                       value={notesInputs[req.id] || ""}
                       onChange={(e) => setNotesInputs((p) => ({ ...p, [req.id]: e.target.value }))}
                       placeholder="Reason for rejection..."
-                      className="bg-neutral-50 border-neutral-200 h-8 text-sm"
+                      className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 h-8 text-sm"
                     />
                   </div>
                   <Button

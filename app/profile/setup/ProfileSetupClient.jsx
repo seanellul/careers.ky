@@ -113,10 +113,10 @@ export default function ProfileSetupClient({ candidate }) {
         <div className="flex items-center gap-2 mb-8">
           {STEPS.map((s, i) => (
             <div key={s} className="flex items-center gap-2 flex-1">
-              <div className={`w-8 h-8 rounded-full grid place-items-center text-sm font-medium flex-shrink-0 ${i <= step ? "bg-primary-500 text-white" : "bg-neutral-100 text-neutral-500"}`}>
+              <div className={`w-8 h-8 rounded-full grid place-items-center text-sm font-medium flex-shrink-0 ${i <= step ? "bg-primary-50 dark:bg-primary-500/150 text-white" : "bg-neutral-100 dark:bg-neutral-800 text-neutral-500"}`}>
                 {i < step ? <CheckCircle2 className="w-4 h-4" /> : i + 1}
               </div>
-              {i < STEPS.length - 1 && <div className={`h-px flex-1 ${i < step ? "bg-primary-500" : "bg-neutral-100"}`} />}
+              {i < STEPS.length - 1 && <div className={`h-px flex-1 ${i < step ? "bg-primary-50 dark:bg-primary-500/150" : "bg-neutral-100 dark:bg-neutral-800"}`} />}
             </div>
           ))}
         </div>
@@ -124,10 +124,10 @@ export default function ProfileSetupClient({ candidate }) {
 
         {/* Step 0: About You */}
         {step === 0 && (
-          <Card className="bg-neutral-50 border-neutral-200">
+          <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
             <CardContent className="p-8 space-y-6">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-full bg-primary-50 grid place-items-center">
+                <div className="w-10 h-10 rounded-full bg-primary-50 dark:bg-primary-500/15 grid place-items-center">
                   <User className="w-5 h-5 text-primary-500" />
                 </div>
                 <h2 className="text-2xl font-semibold">About You</h2>
@@ -138,7 +138,7 @@ export default function ProfileSetupClient({ candidate }) {
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   placeholder="Your full name"
-                  className="bg-neutral-50 border-neutral-200"
+                  className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
                   autoFocus
                 />
               </div>
@@ -148,12 +148,12 @@ export default function ProfileSetupClient({ candidate }) {
                   value={form.headline}
                   onChange={(e) => setForm({ ...form, headline: e.target.value.slice(0, 200) })}
                   placeholder="e.g. Experienced accountant seeking opportunities in Cayman"
-                  className="bg-neutral-50 border-neutral-200"
+                  className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
                   maxLength={200}
                 />
                 <div className="text-xs text-neutral-500 mt-1">A short tagline visible on your profile</div>
               </div>
-              <label className="flex items-center gap-3 p-4 rounded-xl bg-neutral-50 border border-neutral-200 cursor-pointer hover:border-primary-200 transition">
+              <label className="flex items-center gap-3 p-4 rounded-xl bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 cursor-pointer hover:border-primary-200 dark:hover:border-primary-500/30 transition">
                 <input
                   type="checkbox"
                   checked={form.isCaymanian}
@@ -174,10 +174,10 @@ export default function ProfileSetupClient({ candidate }) {
 
         {/* Step 1: Career Interests */}
         {step === 1 && (
-          <Card className="bg-neutral-50 border-neutral-200">
+          <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
             <CardContent className="p-8 space-y-6">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-full bg-primary-50 grid place-items-center">
+                <div className="w-10 h-10 rounded-full bg-primary-50 dark:bg-primary-500/15 grid place-items-center">
                   <Star className="w-5 h-5 text-primary-500" />
                 </div>
                 <div>
@@ -192,7 +192,7 @@ export default function ProfileSetupClient({ candidate }) {
                   value={interestQuery}
                   onChange={(e) => setInterestQuery(e.target.value)}
                   placeholder="Search job titles (e.g. Accountant, Nurse, Developer)"
-                  className="pl-10 bg-neutral-50 border-neutral-200"
+                  className="pl-10 bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
                   autoFocus
                 />
               </div>
@@ -203,7 +203,7 @@ export default function ProfileSetupClient({ candidate }) {
                     <button
                       key={i}
                       onClick={() => addInterest(s)}
-                      className="text-left rounded-xl px-3 py-2.5 border border-neutral-200 bg-neutral-50 hover:border-primary-300 hover:bg-neutral-100 transition"
+                      className="text-left rounded-xl px-3 py-2.5 border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 shadow-sm hover:border-primary-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition"
                     >
                       <div className="font-medium text-sm">{s.ciscoUnit?.title}</div>
                       <div className="text-xs text-neutral-500">{s.label}</div>
@@ -217,7 +217,7 @@ export default function ProfileSetupClient({ candidate }) {
                   <div className="text-sm text-neutral-500 mb-2">Selected ({selectedInterests.length}/3)</div>
                   <div className="flex flex-wrap gap-2">
                     {selectedInterests.map(i => (
-                      <Badge key={i.ciscoCode} className="bg-primary-50 text-primary-500 border-primary-200 pr-1 flex items-center gap-1 py-1">
+                      <Badge key={i.ciscoCode} className="bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30 pr-1 flex items-center gap-1 py-1">
                         {i.title}
                         <button
                           onClick={() => setSelectedInterests(selectedInterests.filter(x => x.ciscoCode !== i.ciscoCode))}
@@ -245,25 +245,25 @@ export default function ProfileSetupClient({ candidate }) {
 
         {/* Step 2: All Set */}
         {step === 2 && (
-          <Card className="bg-neutral-50 border-neutral-200">
+          <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
             <CardContent className="p-8 space-y-6 text-center">
               <div className="w-16 h-16 rounded-full bg-emerald-50 grid place-items-center mx-auto">
                 <Sparkles className="w-8 h-8 text-emerald-600" />
               </div>
               <div>
                 <h2 className="text-2xl font-semibold mb-2">You're all set!</h2>
-                <p className="text-neutral-600 text-sm max-w-sm mx-auto">
+                <p className="text-neutral-600 dark:text-neutral-400 text-sm max-w-sm mx-auto">
                   Your profile is ready. Employers can now find you when searching for local talent.
                   You can add more details — education, experience, skills — from your dashboard anytime.
                 </p>
               </div>
 
               {selectedInterests.length > 0 && (
-                <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-4 text-left">
+                <div className="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl p-4 text-left">
                   <div className="text-sm text-neutral-500 mb-2">Your career interests</div>
                   <div className="flex flex-wrap gap-2">
                     {selectedInterests.map(i => (
-                      <Badge key={i.ciscoCode} className="bg-primary-50 text-primary-500 border-primary-200">
+                      <Badge key={i.ciscoCode} className="bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30">
                         {i.title}
                       </Badge>
                     ))}

@@ -109,14 +109,14 @@ function FormatDescription({ text }) {
       {grouped.map((el, i) => {
         if (el.type === "heading") {
           return (
-            <h3 key={i} className="text-lg font-semibold text-neutral-900 mt-6 first:mt-0">
+            <h3 key={i} className="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mt-6 first:mt-0">
               {el.text}
             </h3>
           );
         }
         if (el.type === "paragraph") {
           return (
-            <p key={i} className="text-neutral-600 leading-relaxed">
+            <p key={i} className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
               {el.text}
             </p>
           );
@@ -125,7 +125,7 @@ function FormatDescription({ text }) {
           return (
             <ul key={i} className="space-y-2 ml-1">
               {el.items.map((item, j) => (
-                <li key={j} className="flex gap-2 text-neutral-600">
+                <li key={j} className="flex gap-2 text-neutral-600 dark:text-neutral-400">
                   <span className="text-primary-500 mt-1.5 shrink-0">
                     <svg width="6" height="6" viewBox="0 0 6 6" fill="currentColor"><circle cx="3" cy="3" r="3" /></svg>
                   </span>
@@ -164,10 +164,10 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
   const isExpiring = daysLeft !== null && daysLeft <= 5 && daysLeft > 0;
 
   const requirements = [
-    job.medicalCheck && { icon: Heart, label: "Medical Check Required", color: "text-red-500" },
-    job.policeCheck && { icon: Shield, label: "Police Check Required", color: "text-yellow-600" },
-    job.drivingLicense && { icon: Car, label: "Driving License Required", color: "text-blue-600" },
-    job.coverLetterRequired && { icon: Mail, label: "Cover Letter Required", color: "text-purple-600" },
+    job.medicalCheck && { icon: Heart, label: "Medical Check Required", color: "text-neutral-600 dark:text-neutral-400" },
+    job.policeCheck && { icon: Shield, label: "Police Check Required", color: "text-neutral-600 dark:text-neutral-400" },
+    job.drivingLicense && { icon: Car, label: "Driving License Required", color: "text-neutral-600 dark:text-neutral-400" },
+    job.coverLetterRequired && { icon: Mail, label: "Cover Letter Required", color: "text-neutral-600 dark:text-neutral-400" },
   ].filter(Boolean);
 
   return (
@@ -186,21 +186,21 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
         <div className="mb-8">
           <div className="flex flex-wrap items-center gap-2 mb-3">
             {job.isActive ? (
-              <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200">Active</Badge>
+              <Badge className="bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30">Active</Badge>
             ) : (
-              <Badge className="bg-neutral-100 text-neutral-600 border-neutral-200">Closed</Badge>
+              <Badge className="bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700">Closed</Badge>
             )}
             {isExpiring && (
               <Badge className="bg-red-50 text-red-500 border-red-200">Closes in {daysLeft} day{daysLeft !== 1 ? "s" : ""}</Badge>
             )}
-            <Badge className="bg-neutral-50 border-neutral-200 text-neutral-500">WORC ID: {job.cJobId}</Badge>
+            <Badge className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-500">WORC ID: {job.cJobId}</Badge>
           </div>
 
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight mb-3">{job.cTitle}</h1>
 
           <Link
             href={`/employer/${encodeURIComponent(job.Employer?.trim().toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`}
-            className="inline-flex items-center gap-2 text-lg text-neutral-600 hover:text-primary-500 transition mb-4"
+            className="inline-flex items-center gap-2 text-lg text-neutral-600 dark:text-neutral-400 hover:text-primary-500 transition mb-4"
           >
             <Building2 className="w-5 h-5" /> {job.Employer}
           </Link>
@@ -298,18 +298,18 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
           {/* Main Content */}
           <div className="md:col-span-2 space-y-6">
             {/* Key Details Grid */}
-            <Card className="bg-neutral-50 border-neutral-200">
+            <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
               <CardContent className="p-4 sm:p-6">
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   <div className="flex items-start gap-3">
-                    <DollarSign className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                    <DollarSign className="w-5 h-5 text-primary-500 shrink-0 mt-0.5" />
                     <div>
                       <div className="text-xs text-neutral-500">Salary</div>
                       <div className="text-sm font-medium">{job.salaryLong || job.salaryShort || "Not specified"}</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <MapPin className="w-5 h-5 text-pink-600 shrink-0 mt-0.5" />
+                    <MapPin className="w-5 h-5 text-primary-500 shrink-0 mt-0.5" />
                     <div>
                       <div className="text-xs text-neutral-500">Location</div>
                       <div className="text-sm font-medium">{locTypes.get(job.sLocation) || "Cayman Islands"}</div>
@@ -323,21 +323,21 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Clock className="w-5 h-5 text-orange-600 shrink-0 mt-0.5" />
+                    <Clock className="w-5 h-5 text-primary-500 shrink-0 mt-0.5" />
                     <div>
                       <div className="text-xs text-neutral-500">Hours/Week</div>
                       <div className="text-sm font-medium">{job.hoursPerWeek || "N/A"}</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <BookOpen className="w-5 h-5 text-purple-600 shrink-0 mt-0.5" />
+                    <BookOpen className="w-5 h-5 text-primary-500 shrink-0 mt-0.5" />
                     <div>
                       <div className="text-xs text-neutral-500">Education</div>
                       <div className="text-sm font-medium">{eduTypes.get(job.sEducation) || "Not specified"}</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <Clock className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                    <Clock className="w-5 h-5 text-primary-500 shrink-0 mt-0.5" />
                     <div>
                       <div className="text-xs text-neutral-500">Experience</div>
                       <div className="text-sm font-medium">{expTypes.get(job.sExperience) || "Not specified"}</div>
@@ -349,7 +349,7 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
 
             {/* Job Description */}
             {job.jobDescription && (
-              <Card className="bg-neutral-50 border-neutral-200">
+              <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
                 <CardContent className="p-4 sm:p-6">
                   <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                     <FileText className="w-5 h-5" /> Job Description
@@ -361,12 +361,12 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
 
             {/* Requirements Checklist */}
             {requirements.length > 0 && (
-              <Card className="bg-neutral-50 border-neutral-200">
+              <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
                 <CardContent className="p-4 sm:p-6">
                   <h2 className="text-xl font-semibold mb-4">Application Requirements</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {requirements.map((req, i) => (
-                      <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-neutral-50 border border-neutral-200">
+                      <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700">
                         <req.icon className={`w-5 h-5 ${req.color} shrink-0`} />
                         <span className="text-sm">{req.label}</span>
                       </div>
@@ -380,7 +380,7 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Interest / Apply Card */}
-            <Card className="bg-gradient-to-br from-primary-50 to-emerald-50 border-primary-200">
+            <Card className="bg-gradient-to-br from-primary-50 to-primary-100 border-primary-200 dark:border-primary-500/30">
               <CardContent className="p-4 sm:p-6 space-y-4">
                 <h3 className="text-lg font-semibold">Interested in this role?</h3>
                 {job.isActive ? (
@@ -437,7 +437,7 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
                         {/* WORC as subtle secondary link */}
                         {!session?.employerAccountId && (
                           <a href={worcUrl} target="_blank" rel="noreferrer" className="block text-center">
-                            <span className="text-xs text-neutral-500 hover:text-neutral-600 transition inline-flex items-center gap-1">
+                            <span className="text-xs text-neutral-500 hover:text-neutral-600 dark:text-neutral-400 transition inline-flex items-center gap-1">
                               <ExternalLink className="w-3 h-3" /> Or apply directly on WORC
                             </span>
                           </a>
@@ -457,7 +457,7 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
             </Card>
 
             {/* Key Info Card */}
-            <Card className="bg-neutral-50 border-neutral-200">
+            <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
               <CardContent className="p-4 sm:p-6 space-y-4">
                 <h3 className="text-lg font-semibold">Details</h3>
                 <div className="space-y-3 text-sm">
@@ -490,7 +490,7 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
             </Card>
 
             {/* Timeline Card */}
-            <Card className="bg-neutral-50 border-neutral-200">
+            <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
               <CardContent className="p-4 sm:p-6 space-y-4">
                 <h3 className="text-lg font-semibold flex items-center gap-2"><Calendar className="w-5 h-5" /> Timeline</h3>
                 <div className="space-y-3 text-sm">
@@ -511,14 +511,14 @@ export default function JobPostingClient({ job, worcUrl, workTypes: wtObj, eduTy
             </Card>
 
             {/* Employer Link */}
-            <Card className="bg-neutral-50 border-neutral-200">
+            <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
               <CardContent className="p-4 sm:p-6">
                 <h3 className="text-lg font-semibold mb-3">Employer</h3>
                 <Link
                   href={`/employer/${encodeURIComponent(job.Employer?.trim().toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"))}`}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-neutral-50 border border-neutral-200 hover:border-primary-300 transition"
+                  className="flex items-center gap-3 p-3 rounded-xl bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 hover:border-primary-300 transition"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-neutral-100 grid place-items-center shrink-0">
+                  <div className="w-10 h-10 rounded-lg bg-neutral-100 dark:bg-neutral-800 grid place-items-center shrink-0">
                     <Building2 className="w-5 h-5 text-neutral-500" />
                   </div>
                   <div>

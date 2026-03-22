@@ -82,7 +82,7 @@ export default function SignInForm({ initialLoginType = "candidate" }) {
       </Link>
 
       <div>
-        <h1 className="text-2xl font-semibold text-neutral-900 tracking-tight">
+        <h1 className="text-2xl font-semibold text-neutral-900 dark:text-neutral-100 tracking-tight">
           {loginType === "candidate"
             ? "Get discovered by Cayman's top employers"
             : "Find your next hire in the Cayman Islands"}
@@ -94,7 +94,7 @@ export default function SignInForm({ initialLoginType = "candidate" }) {
 
       <div
         ref={segmentBarRef}
-        className="relative flex rounded-xl p-1 bg-neutral-100 border border-neutral-200 gap-1"
+        className="relative flex rounded-xl p-1 bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 gap-1"
         role="tablist"
         aria-label="Account type"
       >
@@ -112,7 +112,7 @@ export default function SignInForm({ initialLoginType = "candidate" }) {
           className={`relative z-10 flex-1 flex items-center justify-center gap-2 py-3 px-2 sm:px-3 rounded-lg text-sm font-semibold min-h-[48px] transition-colors duration-200 ${
             loginType === "candidate"
               ? "text-primary-700"
-              : "text-neutral-400 hover:text-neutral-600"
+              : "text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300"
           }`}
         >
           <User className="w-4 h-4 shrink-0" />
@@ -130,7 +130,7 @@ export default function SignInForm({ initialLoginType = "candidate" }) {
           className={`relative z-10 flex-1 flex items-center justify-center gap-2 py-3 px-2 sm:px-3 rounded-lg text-sm font-semibold min-h-[48px] transition-colors duration-200 ${
             loginType === "employer"
               ? "text-accent-600"
-              : "text-neutral-400 hover:text-neutral-600"
+              : "text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300"
           }`}
         >
           <Building2 className="w-4 h-4 shrink-0" />
@@ -154,7 +154,7 @@ export default function SignInForm({ initialLoginType = "candidate" }) {
               "Skip the recruiter fees — connect with talent yourself",
             ]
         ).map((item) => (
-          <li key={item} className="flex items-start gap-2 text-sm text-neutral-600">
+          <li key={item} className="flex items-start gap-2 text-sm text-neutral-600 dark:text-neutral-400">
             <CheckCircle2
               className={`w-4 h-4 mt-0.5 shrink-0 ${
                 loginType === "candidate" ? "text-primary-500" : "text-accent-500"
@@ -168,7 +168,7 @@ export default function SignInForm({ initialLoginType = "candidate" }) {
       <div className="flex flex-col gap-3">
         <a
           href={`/api/auth/google?type=${loginType}`}
-          className="flex items-center justify-center gap-2 px-4 py-3 min-h-[48px] rounded-xl bg-neutral-900 text-white text-sm font-medium hover:bg-neutral-800 transition"
+          className="flex items-center justify-center gap-2 px-4 py-3 min-h-[48px] rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4" />

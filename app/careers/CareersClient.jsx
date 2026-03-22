@@ -147,8 +147,8 @@ export default function CareersClient({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 md:pt-12">
         {/* Macro stats bar */}
         <div ref={statsRef} className="grid grid-cols-3 gap-3 mb-6">
-          <div data-stat-card className="bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-primary-50 grid place-items-center shrink-0">
+          <div data-stat-card className="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-4 py-3 flex items-center gap-3">
+            <div className="h-9 w-9 rounded-lg bg-primary-50 dark:bg-primary-500/15 grid place-items-center shrink-0">
               <Briefcase className="w-4 h-4 text-primary-500" />
             </div>
             <div>
@@ -158,9 +158,9 @@ export default function CareersClient({
               <div className="text-[11px] text-neutral-500 uppercase tracking-wider">Active Jobs</div>
             </div>
           </div>
-          <div data-stat-card className="bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-emerald-50 grid place-items-center shrink-0">
-              <Building2 className="w-4 h-4 text-emerald-600" />
+          <div data-stat-card className="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-4 py-3 flex items-center gap-3">
+            <div className="h-9 w-9 rounded-lg bg-primary-50 dark:bg-primary-500/15 grid place-items-center shrink-0">
+              <Building2 className="w-4 h-4 text-primary-500" />
             </div>
             <div>
               <div className="text-xl font-semibold">
@@ -169,9 +169,9 @@ export default function CareersClient({
               <div className="text-[11px] text-neutral-500 uppercase tracking-wider">Employers</div>
             </div>
           </div>
-          <div data-stat-card className="bg-neutral-50 border border-neutral-200 rounded-xl px-4 py-3 flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-purple-50 grid place-items-center shrink-0">
-              <Building2 className="w-4 h-4 text-purple-600" />
+          <div data-stat-card className="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-4 py-3 flex items-center gap-3">
+            <div className="h-9 w-9 rounded-lg bg-primary-50 dark:bg-primary-500/15 grid place-items-center shrink-0">
+              <Building2 className="w-4 h-4 text-primary-500" />
             </div>
             <div>
               <div className="text-xl font-semibold">
@@ -185,12 +185,12 @@ export default function CareersClient({
         {/* Tab bar with sliding indicator */}
         <div
           ref={tabBarRef}
-          className="relative flex gap-1 p-1 rounded-xl bg-neutral-50 border border-neutral-200 mb-8 max-w-full overflow-x-auto"
+          className="relative flex gap-1 p-1 rounded-xl bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 mb-8 max-w-full overflow-x-auto"
         >
           {/* Sliding pill */}
           <div
             ref={indicatorRef}
-            className="absolute top-1 bottom-1 rounded-lg bg-primary-50 border border-primary-200 pointer-events-none"
+            className="absolute top-1 bottom-1 rounded-lg bg-primary-50 dark:bg-primary-500/15 border border-primary-200 dark:border-primary-500/30 pointer-events-none"
             style={{ opacity: 0 }}
           />
 
@@ -202,7 +202,7 @@ export default function CareersClient({
               className={`relative z-10 flex items-center gap-2 px-2.5 sm:px-4 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 whitespace-nowrap ${
                 activeTab === key
                   ? "text-primary-500"
-                  : "text-neutral-500 hover:text-neutral-700"
+                  : "text-neutral-500 hover:text-neutral-700 dark:text-neutral-300"
               }`}
             >
               <Icon className="w-4 h-4 hidden sm:inline" />

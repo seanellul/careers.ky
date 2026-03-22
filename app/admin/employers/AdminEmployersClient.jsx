@@ -5,10 +5,10 @@ import { Search, Building2, UserCheck, Users, TrendingUp } from "lucide-react";
 
 function StatCard({ label, value, icon: Icon, accent }) {
   return (
-    <div className="bg-neutral-900 border border-white/10 rounded-xl p-5">
+    <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl p-5">
       <div className="flex items-center justify-between mb-3">
         <span className="text-xs font-medium uppercase tracking-wider text-neutral-500">{label}</span>
-        <Icon className={`w-4 h-4 ${accent ? "text-cyan-400" : "text-neutral-600"}`} />
+        <Icon className={`w-4 h-4 ${accent ? "text-primary-500" : "text-neutral-600"}`} />
       </div>
       <div className="text-2xl font-bold text-white">{typeof value === "number" ? value.toLocaleString() : value}</div>
     </div>
@@ -74,15 +74,15 @@ export default function AdminEmployersClient({ employers, stats }) {
           placeholder="Search by company, admin email, or industry..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 bg-neutral-900 border border-white/10 rounded-lg text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-cyan-500/50"
+          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-cyan-500/50"
         />
       </div>
 
-      <div className="bg-neutral-900 border border-white/10 rounded-xl overflow-hidden">
+      <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-white/10">
+              <tr className="border-b border-neutral-200 dark:border-neutral-700">
                 <th className="text-left px-4 py-3 text-neutral-500 font-medium">Company</th>
                 <th className="text-left px-4 py-3 text-neutral-500 font-medium">Admin Email(s)</th>
                 <th className="text-left px-4 py-3 text-neutral-500 font-medium">Industry</th>
@@ -105,7 +105,7 @@ export default function AdminEmployersClient({ employers, stats }) {
               {sorted.map((e) => {
                 const emails = (e.admin_emails || []).filter(Boolean);
                 return (
-                  <tr key={e.id} className="border-b border-white/5 hover:bg-white/[0.02]">
+                  <tr key={e.id} className="border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800">
                     <td className="px-4 py-3">
                       <div className="font-medium text-white">{e.name}</div>
                       {e.claimed && (
@@ -116,16 +116,16 @@ export default function AdminEmployersClient({ employers, stats }) {
                     </td>
                     <td className="px-4 py-3">
                       {emails.length > 0 ? (
-                        <span className="text-neutral-300 text-xs">{emails.join(", ")}</span>
+                        <span className="text-neutral-600 dark:text-neutral-500 text-xs">{emails.join(", ")}</span>
                       ) : (
                         <span className="text-neutral-600 text-xs">No account</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-neutral-400 text-xs">{e.industry || "—"}</td>
-                    <td className="px-4 py-3 text-neutral-300">{Number(e.job_count)}</td>
-                    <td className="px-4 py-3 text-neutral-300">{Number(e.active_jobs)}</td>
-                    <td className="px-4 py-3 text-neutral-300">{Number(e.interest_count)}</td>
-                    <td className="px-4 py-3 text-neutral-300">{Number(e.intro_count)}</td>
+                    <td className="px-4 py-3 text-neutral-500 text-xs">{e.industry || "—"}</td>
+                    <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">{Number(e.job_count)}</td>
+                    <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">{Number(e.active_jobs)}</td>
+                    <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">{Number(e.interest_count)}</td>
+                    <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">{Number(e.intro_count)}</td>
                     <td className="px-4 py-3 text-neutral-500 text-xs">
                       {new Date(e.created_at).toISOString().slice(0, 10)}
                     </td>

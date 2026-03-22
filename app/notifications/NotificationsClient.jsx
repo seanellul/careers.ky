@@ -65,13 +65,13 @@ export default function NotificationsClient({ notifications, unreadCount, recipi
 
         <div className="space-y-3">
           {notifications.map(n => (
-            <Card key={n.id} className={`border transition ${n.is_read ? "bg-neutral-50 border-neutral-200" : "bg-primary-50 border-primary-200"}`}>
+            <Card key={n.id} className={`border transition ${n.is_read ? "bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700" : "bg-primary-50 dark:bg-primary-500/15 border-primary-200 dark:border-primary-500/30"}`}>
               <CardContent className="p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-medium">{n.title}</h3>
-                      {!n.is_read && <Badge className="bg-primary-50 text-primary-500 border-primary-200 text-xs">New</Badge>}
+                      {!n.is_read && <Badge className="bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30 text-xs">New</Badge>}
                     </div>
                     {n.body && <p className="text-sm text-neutral-500 mb-2">{n.body}</p>}
                     <div className="flex items-center gap-3">
@@ -84,7 +84,7 @@ export default function NotificationsClient({ notifications, unreadCount, recipi
                     </div>
                   </div>
                   {!n.is_read && (
-                    <button onClick={() => handleMarkOne(n.id)} className="p-1 rounded hover:bg-neutral-100 transition" title="Mark as read">
+                    <button onClick={() => handleMarkOne(n.id)} className="p-1 rounded hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-800 transition" title="Mark as read">
                       <CheckCircle className="w-4 h-4 text-neutral-500" />
                     </button>
                   )}
@@ -94,7 +94,7 @@ export default function NotificationsClient({ notifications, unreadCount, recipi
           ))}
 
           {notifications.length === 0 && (
-            <Card className="bg-neutral-50 border-neutral-200">
+            <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
               <CardContent className="p-12 text-center">
                 <Bell className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-500" />
                 <h3 className="text-lg font-medium mb-2">No notifications yet</h3>

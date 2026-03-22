@@ -10,7 +10,7 @@ export default function ProfileError({ error, reset }) {
     <div className={t.page}>
       <div id="bg-gradient" aria-hidden className={t.pageGradient} style={t.pageGradientStyle} />
       <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8 py-20">
-        <Card className="bg-white border-neutral-200">
+        <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700">
           <CardContent className="p-8 text-center">
             <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
             <h1 className="text-xl font-semibold mb-2">Profile error</h1>

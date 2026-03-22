@@ -79,7 +79,7 @@ export default function EmployerSetupClient() {
 
       <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-full bg-primary-50 grid place-items-center mx-auto mb-4">
+          <div className="w-16 h-16 rounded-full bg-primary-50 dark:bg-primary-500/15 grid place-items-center mx-auto mb-4">
             <Building2 className="w-8 h-8 text-primary-500" />
           </div>
           <h1 className="text-3xl font-semibold tracking-tight mb-2">Employer Setup</h1>
@@ -97,7 +97,7 @@ export default function EmployerSetupClient() {
               <div key={label} className="flex items-center gap-2">
                 {i > 0 && <ChevronRight className="w-4 h-4 text-neutral-500" />}
                 <div className={`flex items-center gap-2 ${isActive ? "text-primary-500" : "text-neutral-500"}`}>
-                  <div className={`w-8 h-8 rounded-full grid place-items-center text-sm font-semibold ${isActive ? "bg-primary-50 border border-primary-200" : "bg-neutral-50 border border-neutral-200"}`}>{num}</div>
+                  <div className={`w-8 h-8 rounded-full grid place-items-center text-sm font-semibold ${isActive ? "bg-primary-50 dark:bg-primary-500/15 border border-primary-200 dark:border-primary-500/30" : "bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700"}`}>{num}</div>
                   <span className="text-sm font-medium hidden sm:inline">{label}</span>
                 </div>
               </div>
@@ -106,7 +106,7 @@ export default function EmployerSetupClient() {
         </div>
 
         {step === 1 && (
-          <Card className="bg-white border-neutral-200">
+          <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700">
             <CardContent className="p-6 space-y-4">
               <h2 className="text-xl font-semibold">Find your company</h2>
               <p className="text-neutral-500 text-sm">Search for your company from our database of Cayman employers.</p>
@@ -117,7 +117,7 @@ export default function EmployerSetupClient() {
                   value={searchQuery}
                   onChange={(e) => { setSearchQuery(e.target.value); setSelectedEmployer(null); }}
                   placeholder="Search company name..."
-                  className="pl-10 bg-neutral-50 border-neutral-200"
+                  className="pl-10 bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
                   autoFocus
                 />
               </div>
@@ -132,12 +132,12 @@ export default function EmployerSetupClient() {
                       onClick={() => setSelectedEmployer(emp)}
                       className={`w-full text-left p-3 rounded-xl border transition ${
                         selectedEmployer?.id === emp.id
-                          ? "bg-primary-50 border-primary-200"
-                          : "bg-neutral-50 border-neutral-200 hover:border-neutral-300"
+                          ? "bg-primary-50 dark:bg-primary-500/15 border-primary-200 dark:border-primary-500/30"
+                          : "bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600"
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-neutral-100 grid place-items-center shrink-0">
+                        <div className="w-10 h-10 rounded-lg bg-neutral-100 dark:bg-neutral-800 grid place-items-center shrink-0">
                           <Building2 className="w-5 h-5 text-neutral-500" />
                         </div>
                         <div>
@@ -163,7 +163,7 @@ export default function EmployerSetupClient() {
         )}
 
         {step === 2 && (
-          <Card className="bg-white border-neutral-200">
+          <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700">
             <CardContent className="p-6 space-y-4">
               <div className="flex items-center gap-3 mb-2">
                 <CheckCircle className="w-6 h-6 text-emerald-600" />
@@ -173,11 +173,11 @@ export default function EmployerSetupClient() {
 
               <div>
                 <label className="text-sm font-medium mb-1 block flex items-center gap-1"><Globe className="w-3 h-3" /> Website</label>
-                <Input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://example.com" className="bg-neutral-50 border-neutral-200" />
+                <Input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://example.com" className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700" />
               </div>
               <div>
                 <label className="text-sm font-medium mb-1 block flex items-center gap-1"><FileText className="w-3 h-3" /> Description</label>
-                <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} placeholder="Brief description of your company..." className="w-full bg-neutral-50 border border-neutral-200 rounded-xl px-3 py-2 text-sm text-neutral-700" />
+                <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} placeholder="Brief description of your company..." className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300" />
               </div>
 
               <div className="flex gap-3">
@@ -193,7 +193,7 @@ export default function EmployerSetupClient() {
         )}
 
         {step === 3 && (
-          <Card className="bg-white border-neutral-200">
+          <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700">
             <CardContent className="p-6 space-y-5">
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-12 h-12 rounded-full bg-amber-50 grid place-items-center">
@@ -205,12 +205,12 @@ export default function EmployerSetupClient() {
                 </div>
               </div>
 
-              <p className="text-neutral-600 text-sm leading-relaxed">
+              <p className="text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed">
                 Our team reviews new employer accounts and will be in touch shortly — usually within 24 hours.
               </p>
 
-              <div className="bg-primary-50 border border-primary-200 rounded-xl p-4">
-                <p className="text-primary-700 text-sm">
+              <div className="bg-primary-50 dark:bg-primary-500/15 border border-primary-200 dark:border-primary-500/30 rounded-xl p-4">
+                <p className="text-primary-700 dark:text-primary-300 text-sm">
                   <strong>Tip:</strong> Sign in with your <span className="font-mono">@{selectedEmployer?.name?.toLowerCase().replace(/\s+/g, "")}.com</span> email for instant verification.
                 </p>
               </div>

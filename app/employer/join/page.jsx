@@ -49,7 +49,7 @@ export default async function JoinTeamPage({ searchParams }) {
     return (
       <CenteredCard>
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-12 h-12 rounded-full bg-primary-50 grid place-items-center">
+          <div className="w-12 h-12 rounded-full bg-primary-50 dark:bg-primary-500/15 grid place-items-center">
             <LogIn className="w-6 h-6 text-primary-500" />
           </div>
           <div>
@@ -57,7 +57,7 @@ export default async function JoinTeamPage({ searchParams }) {
             <p className="text-neutral-500 text-sm">You&apos;ve been invited to join {invitation.employer_name}</p>
           </div>
         </div>
-        <p className="text-neutral-600 text-sm mb-4">
+        <p className="text-neutral-600 dark:text-neutral-400 text-sm mb-4">
           Please sign in as an employer to accept this invitation.
         </p>
         <Link
@@ -103,7 +103,7 @@ export default async function JoinTeamPage({ searchParams }) {
 
 function CenteredCard({ children }) {
   return (
-    <div className="min-h-screen w-full bg-[#FEFCF3] text-neutral-800 flex items-center justify-center p-4">
+    <div className="min-h-screen w-full bg-[#FEFCF3] dark:bg-[#121212] text-neutral-800 dark:text-neutral-200 flex items-center justify-center p-4">
       <div
         className="fixed inset-0 -z-10"
         style={{
@@ -111,7 +111,7 @@ function CenteredCard({ children }) {
             "radial-gradient(1200px 1200px at 10% 10%, rgba(0,119,182,0.06) 0%, transparent 60%), radial-gradient(900px 900px at 90% 20%, rgba(244,162,97,0.06) 0%, transparent 60%)",
         }}
       />
-      <div className="bg-white border border-neutral-200 rounded-2xl p-8 max-w-md w-full">
+      <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-2xl p-8 max-w-md w-full">
         {children}
       </div>
     </div>
@@ -130,7 +130,7 @@ function ErrorState({ title, message }) {
       <p className="text-neutral-500 text-sm mb-4">{message}</p>
       <Link
         href="/"
-        className="inline-block text-primary-500 hover:text-primary-600 text-sm transition"
+        className="inline-block text-primary-500 hover:text-primary-600 dark:text-primary-400 text-sm transition"
       >
         Go to Homepage
       </Link>

@@ -3,8 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, Bell, LogOut, User, ChevronDown, Building2 } from "lucide-react";
+import { Menu, X, Bell, LogOut, User, ChevronDown, Building2, Sun, Moon } from "lucide-react";
 import { useSession } from "@/components/SessionProvider";
+import { useTheme } from "@/components/ThemeProvider";
+import Logo from "@/components/Logo";
 import t from "@/lib/theme";
 
 export default function Navigation() {
@@ -15,6 +17,7 @@ export default function Navigation() {
   const dropdownRef = useRef(null);
 
   const { session, loading, refresh } = useSession();
+  const { theme, toggle: toggleTheme } = useTheme();
 
   const unreadCount = session?.unreadCount || 0;
   const pendingIntroCount = session?.pendingIntroCount || 0;
@@ -69,19 +72,15 @@ export default function Navigation() {
       <div className={t.navInner}>
         <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
           <div className="h-8 w-8">
-            <img
-              src="/images/logo-careers.png"
-              alt="careers.ky logo"
-              className="w-full h-full object-contain"
-            />
+            <Logo />
           </div>
-          <span className="font-semibold tracking-tight text-neutral-900">
+          <span className="font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
             careers<span className="text-primary-500">.ky</span>
           </span>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6 text-sm text-neutral-500">
+        <nav className="hidden md:flex items-center gap-6 text-sm text-neutral-500 dark:text-neutral-400">
           {navItems.map((item) =>
             isNavActive(item.href) ? (
               <span key={item.href} className="text-primary-600 font-medium flex items-center gap-1.5">
@@ -96,7 +95,7 @@ export default function Navigation() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="hover:text-neutral-900 transition flex items-center gap-1.5"
+                className="hover:text-neutral-900 dark:hover:text-neutral-100 transition flex items-center gap-1.5"
               >
                 {item.label}
                 {item.badge > 0 && (
@@ -107,6 +106,14 @@ export default function Navigation() {
               </Link>
             )
           )}
+
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition text-neutral-500 dark:text-neutral-400"
+            aria-label="Toggle dark mode"
+          >
+            {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
 
           {!loading && !session && (
             <Link
@@ -119,7 +126,7 @@ export default function Navigation() {
 
           {!loading && session && (
             <div className="flex items-center gap-3">
-              <Link href="/notifications" className="relative p-2 rounded-lg hover:bg-neutral-100 transition text-neutral-600">
+              <Link href="/notifications" className="relative p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition text-neutral-600 dark:text-neutral-400">
                 <Bell className="w-4 h-4" />
                 {unreadCount > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-accent-500 rounded-full text-[10px] grid place-items-center font-semibold text-white">
@@ -133,19 +140,19 @@ export default function Navigation() {
                   onClick={() => setShowDropdown(!showDropdown)}
                   className="flex items-center gap-2 p-2 rounded-lg hover:bg-neutral-100 transition"
                 >
-                  <div className="w-7 h-7 rounded-full bg-primary-50 text-primary-600 grid place-items-center text-xs font-semibold">
+                  <div className="w-7 h-7 rounded-full bg-primary-50 dark:bg-primary-500/20 text-primary-600 dark:text-primary-300 grid place-items-center text-xs font-semibold">
                     {initial}
                   </div>
                   <ChevronDown className="w-3 h-3 text-neutral-400" />
                 </button>
 
                 {showDropdown && (
-                  <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-neutral-200 rounded-xl shadow-xl overflow-hidden z-50">
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl shadow-xl overflow-hidden z-50">
                     {isEmployer ? (
                       <Link
                         href="/employer/profile"
                         onClick={() => setShowDropdown(false)}
-                        className="flex items-center gap-2 px-4 py-3 text-sm text-neutral-700 hover:bg-neutral-50 transition"
+                        className="flex items-center gap-2 px-4 py-3 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition"
                       >
                         <Building2 className="w-4 h-4" /> Company Profile
                       </Link>
@@ -153,7 +160,7 @@ export default function Navigation() {
                       <Link
                         href="/profile"
                         onClick={() => setShowDropdown(false)}
-                        className="flex items-center gap-2 px-4 py-3 text-sm text-neutral-700 hover:bg-neutral-50 transition"
+                        className="flex items-center gap-2 px-4 py-3 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition"
                       >
                         <User className="w-4 h-4" /> Profile
                       </Link>
@@ -161,7 +168,7 @@ export default function Navigation() {
                     <Link
                       href="/notifications"
                       onClick={() => setShowDropdown(false)}
-                      className="flex items-center gap-2 px-4 py-3 text-sm text-neutral-700 hover:bg-neutral-50 transition"
+                      className="flex items-center gap-2 px-4 py-3 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition"
                     >
                       <Bell className="w-4 h-4" /> Notifications
                     </Link>
@@ -181,7 +188,7 @@ export default function Navigation() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 rounded-lg bg-neutral-100 hover:bg-neutral-200 transition text-neutral-600"
+          className="md:hidden p-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition text-neutral-600 dark:text-neutral-400"
           aria-label="Toggle menu"
         >
           {mobileMenuOpen ? (
@@ -194,7 +201,7 @@ export default function Navigation() {
 
       {/* Mobile Navigation Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-neutral-200 bg-white/95 backdrop-blur">
+        <div className="md:hidden border-t border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-[#121212]/95 backdrop-blur">
           <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex flex-col gap-3">
             {navItems.map((item) =>
               isNavActive(item.href) ? (
@@ -214,7 +221,7 @@ export default function Navigation() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-3 rounded-lg bg-neutral-50 hover:bg-neutral-100 transition text-neutral-600 hover:text-neutral-900 text-left flex items-center justify-between"
+                  className="px-4 py-3 rounded-lg bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 text-left flex items-center justify-between"
                 >
                   {item.label}
                   {item.badge > 0 && (
@@ -228,15 +235,15 @@ export default function Navigation() {
             {!loading && session && (
               <>
                 {isEmployer ? (
-                  <Link href="/employer/profile" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-neutral-50 hover:bg-neutral-100 transition text-neutral-600 hover:text-neutral-900">
+                  <Link href="/employer/profile" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100">
                     Company Profile
                   </Link>
                 ) : (
-                  <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-neutral-50 hover:bg-neutral-100 transition text-neutral-600 hover:text-neutral-900">
+                  <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100">
                     My Profile
                   </Link>
                 )}
-                <Link href="/notifications" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-neutral-50 hover:bg-neutral-100 transition text-neutral-600 hover:text-neutral-900">
+                <Link href="/notifications" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100">
                   Notifications
                 </Link>
                 <button onClick={handleLogout} className="px-4 py-3 rounded-lg bg-neutral-50 hover:bg-neutral-100 transition text-red-500 text-left">

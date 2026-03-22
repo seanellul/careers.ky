@@ -11,7 +11,7 @@ export default function Error({ error, reset }) {
       <div id="bg-gradient" aria-hidden className={t.pageGradient} style={t.pageGradientStyle} />
 
       <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8 py-20">
-        <Card className="bg-white border-neutral-200">
+        <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700">
           <CardContent className="p-8 text-center">
             <div className="w-16 h-16 rounded-full bg-red-50 grid place-items-center mx-auto mb-4">
               <AlertTriangle className="w-8 h-8 text-red-500" />
