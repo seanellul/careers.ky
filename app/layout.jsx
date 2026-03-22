@@ -36,8 +36,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className="dark">
-      <body className="min-h-screen bg-neutral-950 text-neutral-100 antialiased">
+    <html lang="en" >
+      <body className="min-h-screen bg-amber-50 text-slate-900 antialiased">
         <PostHogProvider>
           <SessionProvider>
             <Suspense fallback={null}>
