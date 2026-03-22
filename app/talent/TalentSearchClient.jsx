@@ -19,7 +19,7 @@ const AVAILABILITY_LABELS = {
 };
 const AVAILABILITY_COLORS = {
   actively_looking: "bg-emerald-500/20 text-emerald-300 border-emerald-300/30",
-  open_to_offers: "bg-cyan-500/20 text-cyan-300 border-cyan-300/30",
+  open_to_offers: "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30",
   not_looking: "bg-neutral-500/20 text-neutral-300 border-neutral-300/30",
 };
 
@@ -33,7 +33,7 @@ function ScoreBadge({ score }) {
   const pct = Math.round(score);
   let colorClass = "bg-neutral-500/20 text-neutral-300 border-neutral-300/30";
   if (pct >= 75) colorClass = "bg-emerald-500/20 text-emerald-300 border-emerald-300/30";
-  else if (pct >= 50) colorClass = "bg-cyan-500/20 text-cyan-300 border-cyan-300/30";
+  else if (pct >= 50) colorClass = "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30";
   else if (pct >= 25) colorClass = "bg-yellow-500/20 text-yellow-300 border-yellow-300/30";
 
   return (
@@ -55,10 +55,10 @@ function ScoreBreakdown({ scores }) {
   ];
 
   return (
-    <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-400">
+    <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-500">
       {items.map((item) => (
         <span key={item.label}>
-          {item.label}: <span className={item.score > 0 ? "text-neutral-200" : ""}>{item.score}/{item.max}</span>
+          {item.label}: <span className={item.score > 0 ? "text-neutral-700 dark:text-neutral-300" : ""}>{item.score}/{item.max}</span>
         </span>
       ))}
     </div>
@@ -349,20 +349,20 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
     <>
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-4">
-            Cayman <span className="text-cyan-300">Talent Pool</span>
+            Cayman <span className="text-primary-500">Talent Pool</span>
           </h1>
-          <p className="text-neutral-300 text-lg max-w-3xl">
+          <p className="text-neutral-600 dark:text-neutral-500 text-lg max-w-3xl">
             Search for local talent by career interests, skills, education, and experience. Candidates are ranked by match quality.
           </p>
         </div>
 
         {/* Employer Login Gate */}
         {!session?.employerAccountId && (
-          <Card className="bg-white/5 border-white/10 mb-8">
+          <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-8">
             <CardContent className="p-8 text-center space-y-4">
-              <div className="w-16 h-16 rounded-full bg-cyan-500/20 grid place-items-center mx-auto"><Users className="w-8 h-8 text-cyan-300" /></div>
+              <div className="w-16 h-16 rounded-full bg-primary-50 dark:bg-primary-500/15 grid place-items-center mx-auto"><Users className="w-8 h-8 text-primary-500" /></div>
               <h2 className="text-2xl font-semibold">Employer Access Required</h2>
-              <p className="text-neutral-300 max-w-md mx-auto">Sign in to search the talent pool and request introductions.</p>
+              <p className="text-neutral-600 dark:text-neutral-500 max-w-md mx-auto">Sign in to search the talent pool and request introductions.</p>
               <a
                 href="/api/auth/google?type=employer"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-white text-neutral-900 text-sm font-medium hover:bg-neutral-100 transition"
@@ -377,7 +377,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
         {/* Search Filters */}
         {session?.employerAccountId && (
           <>
-            <Card className="bg-white/[0.03] border-white/10 mb-8">
+            <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-8">
               <CardContent className="p-5 space-y-0">
                 {/* Job Selector — searchable dropdown */}
                 {employerPostings.length > 0 && (
@@ -385,11 +385,11 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                     <label className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-2 block">Recruiting for</label>
                     <button
                       onClick={() => setJobDropdownOpen(!jobDropdownOpen)}
-                      className="w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition text-left"
+                      className="w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 transition text-left"
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-8 h-8 rounded-lg bg-cyan-400/15 grid place-items-center shrink-0">
-                          {selectedJobId ? <Briefcase className="w-4 h-4 text-cyan-300" /> : <Search className="w-4 h-4 text-cyan-300" />}
+                        <div className="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-500/15 grid place-items-center shrink-0">
+                          {selectedJobId ? <Briefcase className="w-4 h-4 text-primary-500" /> : <Search className="w-4 h-4 text-primary-500" />}
                         </div>
                         <div className="min-w-0">
                           <div className="text-sm font-medium text-neutral-100 truncate">
@@ -402,12 +402,12 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                           </div>
                         </div>
                       </div>
-                      <ChevronDown className={`w-4 h-4 text-neutral-400 shrink-0 transition-transform ${jobDropdownOpen ? "rotate-180" : ""}`} />
+                      <ChevronDown className={`w-4 h-4 text-neutral-500 shrink-0 transition-transform ${jobDropdownOpen ? "rotate-180" : ""}`} />
                     </button>
 
                     {jobDropdownOpen && (
-                      <div className="absolute z-30 left-0 right-0 mt-2 rounded-xl bg-neutral-900 border border-white/10 shadow-2xl overflow-hidden">
-                        <div className="p-2 border-b border-white/10">
+                      <div className="absolute z-30 left-0 right-0 mt-2 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 shadow-2xl overflow-hidden">
+                        <div className="p-2 border-b border-neutral-200 dark:border-neutral-700">
                           <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-500" />
                             <input
@@ -415,7 +415,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                               value={jobSearch}
                               onChange={(e) => setJobSearch(e.target.value)}
                               placeholder="Search postings..."
-                              className="w-full bg-white/5 border border-white/10 rounded-lg pl-9 pr-3 py-2 text-sm text-neutral-200 placeholder:text-neutral-600 focus:outline-none focus:border-cyan-300/40"
+                              className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-lg pl-9 pr-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 placeholder:text-neutral-600 focus:outline-none focus:border-primary-300 dark:focus:border-primary-500/40"
                               autoFocus
                             />
                           </div>
@@ -424,7 +424,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                           <button
                             onClick={() => handleSelectJob("")}
                             className={`w-full text-left px-3 py-2.5 flex items-center gap-3 text-sm transition ${
-                              selectedJobId === "" ? "bg-cyan-500/10 text-cyan-200" : "hover:bg-white/5 text-neutral-300"
+                              selectedJobId === "" ? "bg-primary-50 dark:bg-primary-500/15 text-primary-600 dark:text-primary-300" : "hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-500"
                             }`}
                           >
                             <Search className="w-3.5 h-3.5 shrink-0 text-neutral-500" />
@@ -435,7 +435,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                               key={p.cJobId}
                               onClick={() => handleSelectJob(p.cJobId)}
                               className={`w-full text-left px-3 py-2.5 flex items-center gap-3 text-sm transition ${
-                                selectedJobId === p.cJobId ? "bg-cyan-500/10 text-cyan-200" : "hover:bg-white/5 text-neutral-300"
+                                selectedJobId === p.cJobId ? "bg-primary-50 dark:bg-primary-500/15 text-primary-600 dark:text-primary-300" : "hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-500"
                               }`}
                             >
                               <Briefcase className="w-3.5 h-3.5 shrink-0 text-neutral-500" />
@@ -456,7 +456,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                 <div className="pt-4">
                   <button
                     onClick={() => setShowFilters(!showFilters)}
-                    className="flex items-center gap-2 text-xs font-medium text-neutral-500 hover:text-neutral-300 transition uppercase tracking-wider"
+                    className="flex items-center gap-2 text-xs font-medium text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-500 transition uppercase tracking-wider"
                   >
                     <Filter className="w-3.5 h-3.5" /> Refine Filters
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showFilters ? "rotate-180" : ""}`} />
@@ -467,24 +467,24 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                   <div className="pt-4 space-y-5">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                       <div>
-                        <label className="text-sm font-medium mb-2 block text-neutral-400">Career Interest (CISCO)</label>
-                        <Input value={ciscoSearch} onChange={(e) => setCiscoSearch(e.target.value)} placeholder="Search occupations..." className="bg-white/5 border-white/10 mb-2" />
-                        <select value={ciscoCode} onChange={(e) => setCiscoCode(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200" size={4}>
+                        <label className="text-sm font-medium mb-2 block text-neutral-500">Career Interest (CISCO)</label>
+                        <Input value={ciscoSearch} onChange={(e) => setCiscoSearch(e.target.value)} placeholder="Search occupations..." className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-2" />
+                        <select value={ciscoCode} onChange={(e) => setCiscoCode(e.target.value)} className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300" size={4}>
                           <option value="">Any occupation</option>
                           {filteredCisco.map(c => <option key={c.code} value={c.code}>{c.title} ({c.code})</option>)}
                         </select>
                       </div>
                       <div className="space-y-4">
                         <div>
-                          <label className="text-sm font-medium mb-2 block text-neutral-400">Education</label>
-                          <select value={educationCode} onChange={(e) => setEducationCode(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                          <label className="text-sm font-medium mb-2 block text-neutral-500">Education</label>
+                          <select value={educationCode} onChange={(e) => setEducationCode(e.target.value)} className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300">
                             <option value="">Any education</option>
                             {Array.from(eduTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                           </select>
                         </div>
                         <div>
-                          <label className="text-sm font-medium mb-2 block text-neutral-400">Experience</label>
-                          <select value={experienceCode} onChange={(e) => setExperienceCode(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                          <label className="text-sm font-medium mb-2 block text-neutral-500">Experience</label>
+                          <select value={experienceCode} onChange={(e) => setExperienceCode(e.target.value)} className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300">
                             <option value="">Any experience</option>
                             {Array.from(expTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                           </select>
@@ -492,15 +492,15 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                       </div>
                       <div className="space-y-4">
                         <div>
-                          <label className="text-sm font-medium mb-2 block text-neutral-400">Location</label>
-                          <select value={locationCode} onChange={(e) => setLocationCode(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                          <label className="text-sm font-medium mb-2 block text-neutral-500">Location</label>
+                          <select value={locationCode} onChange={(e) => setLocationCode(e.target.value)} className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300">
                             <option value="">Any location</option>
                             {Array.from(locTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                           </select>
                         </div>
                         <div>
-                          <label className="text-sm font-medium mb-2 block text-neutral-400">Availability</label>
-                          <select value={availability} onChange={(e) => setAvailability(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200">
+                          <label className="text-sm font-medium mb-2 block text-neutral-500">Availability</label>
+                          <select value={availability} onChange={(e) => setAvailability(e.target.value)} className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300">
                             <option value="">Any availability</option>
                             <option value="actively_looking">Actively Looking</option>
                             <option value="open_to_offers">Open to Offers</option>
@@ -511,21 +511,21 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
 
                     {/* Skills Filter */}
                     <div>
-                      <label className="text-sm font-medium mb-2 block text-neutral-400">Skills</label>
+                      <label className="text-sm font-medium mb-2 block text-neutral-500">Skills</label>
                       <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
                         <Input
                           value={skillSearch}
                           onChange={(e) => setSkillSearch(e.target.value)}
                           placeholder="Search skills to filter by..."
-                          className="pl-10 bg-white/5 border-white/10"
+                          className="pl-10 bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
                         />
                       </div>
                       {skillSuggestions.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-2">
                           {skillSuggestions.slice(0, 10).map((s) => (
                             <button key={s.id} onClick={() => { setSelectedSkills([...selectedSkills, s]); setSkillSearch(""); }}>
-                              <Badge className="bg-white/5 border-white/10 text-neutral-300 hover:border-purple-300/40 cursor-pointer">
+                              <Badge className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-500 hover:border-purple-300/40 cursor-pointer">
                                 <Plus className="w-3 h-3 mr-1" /> {s.name}
                               </Badge>
                             </button>
@@ -537,7 +537,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                           {selectedSkills.map((s) => (
                             <div key={s.id} className="flex items-center gap-1">
                               <Badge className="bg-purple-500/20 text-purple-300 border-purple-300/30">{s.name}</Badge>
-                              <button onClick={() => setSelectedSkills(selectedSkills.filter(sk => sk.id !== s.id))} className="text-neutral-400 hover:text-red-400">
+                              <button onClick={() => setSelectedSkills(selectedSkills.filter(sk => sk.id !== s.id))} className="text-neutral-500 hover:text-red-400">
                                 <X className="w-3 h-3" />
                               </button>
                             </div>
@@ -549,7 +549,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                     <div className="flex items-center gap-4">
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" checked={isCaymanian} onChange={(e) => setIsCaymanian(e.target.checked)} className="rounded" />
-                        <span className="text-sm flex items-center gap-1"><Shield className="w-3 h-3 text-cyan-300" /> Caymanian Only</span>
+                        <span className="text-sm flex items-center gap-1"><Shield className="w-3 h-3 text-primary-500" /> Caymanian Only</span>
                       </label>
                     </div>
 
@@ -565,16 +565,16 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
             {searching && (
               <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
-                  <Card key={i} className="bg-white/5 border-white/10 animate-pulse">
+                  <Card key={i} className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 animate-pulse">
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-full bg-white/10" />
+                        <div className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-neutral-800" />
                         <div className="flex-1 space-y-3">
-                          <div className="h-4 bg-white/10 rounded w-1/4" />
-                          <div className="h-3 bg-white/10 rounded w-1/2" />
+                          <div className="h-4 bg-neutral-100 dark:bg-neutral-800 rounded w-1/4" />
+                          <div className="h-3 bg-neutral-100 dark:bg-neutral-800 rounded w-1/2" />
                           <div className="flex gap-2">
-                            <div className="h-5 bg-white/10 rounded w-16" />
-                            <div className="h-5 bg-white/10 rounded w-20" />
+                            <div className="h-5 bg-neutral-100 dark:bg-neutral-800 rounded w-16" />
+                            <div className="h-5 bg-neutral-100 dark:bg-neutral-800 rounded w-20" />
                           </div>
                         </div>
                       </div>
@@ -586,8 +586,8 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
 
             {/* Bulk Actions Bar */}
             {!searching && results.length > 0 && selectedCandidates.size > 0 && (
-              <div className="mb-4 p-3 rounded-xl bg-cyan-500/10 border border-cyan-300/20 flex items-center justify-between">
-                <span className="text-sm text-cyan-300">{selectedCandidates.size} selected</span>
+              <div className="mb-4 p-3 rounded-xl bg-primary-50 dark:bg-primary-500/15 border border-primary-200 dark:border-primary-500/30 flex items-center justify-between">
+                <span className="text-sm text-primary-500">{selectedCandidates.size} selected</span>
                 <div className="flex gap-2">
                   <Button size="sm" variant="secondary" onClick={() => setShowBulkIntro(true)} className="gap-1">
                     <Send className="w-3 h-3" /> Send Intros
@@ -602,16 +602,16 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
             {/* Bulk Intro Modal */}
             {showBulkIntro && (
               <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowBulkIntro(false)}>
-                <Card className="bg-neutral-900 border-white/10 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+                <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
                   <CardContent className="p-6 space-y-4">
                     <h3 className="text-lg font-semibold">Send Bulk Introductions</h3>
-                    <p className="text-sm text-neutral-400">Sending to {selectedCandidates.size} candidate{selectedCandidates.size !== 1 ? "s" : ""}</p>
+                    <p className="text-sm text-neutral-500">Sending to {selectedCandidates.size} candidate{selectedCandidates.size !== 1 ? "s" : ""}</p>
                     {templates.length > 0 && (
                       <div>
                         <label className="text-sm font-medium mb-1 block">Use Template</label>
                         <select
                           onChange={(e) => { const t = templates.find(t => t.id === Number(e.target.value)); if (t) setBulkMessage(t.message); }}
-                          className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200"
+                          className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
                         >
                           <option value="">Select a template...</option>
                           {templates.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
@@ -623,7 +623,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                       onChange={(e) => setBulkMessage(e.target.value)}
                       rows={4}
                       placeholder="Your message to these candidates..."
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200"
+                      className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
                     />
                     <div className="flex gap-2 justify-end">
                       <Button variant="secondary" onClick={() => setShowBulkIntro(false)}>Cancel</Button>
@@ -639,17 +639,17 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
             {/* Results */}
             {!searching && hasSearched && results.length > 0 && (
               <div className="space-y-4">
-                <div className="flex items-center justify-between text-sm text-neutral-300 mb-2">
+                <div className="flex items-center justify-between text-sm text-neutral-600 dark:text-neutral-500 mb-2">
                   <div className="flex items-center gap-3">
                     <span>{total} candidate{total !== 1 ? "s" : ""} found</span>
-                    <button onClick={selectAll} className="text-xs text-cyan-300 hover:underline">
+                    <button onClick={selectAll} className="text-xs text-primary-500 hover:underline">
                       {selectedCandidates.size === results.length ? "Deselect all" : "Select all"}
                     </button>
                   </div>
                   <span className="flex items-center gap-1"><TrendingUp className="w-3 h-3" /> Ranked by match score</span>
                 </div>
                 {results.map((c, i) => (
-                  <Card key={c.id} className={`bg-white/5 border-white/10 hover:border-cyan-300/40 transition ${selectedCandidates.has(c.id) ? "ring-1 ring-cyan-300/40" : ""}`}>
+                  <Card key={c.id} className={`bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 hover:border-primary-200 dark:hover:border-primary-500/30 transition ${selectedCandidates.has(c.id) ? "ring-1 ring-primary-300 dark:ring-primary-500/40" : ""}`}>
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex items-start gap-3 flex-1">
@@ -663,7 +663,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                           </label>
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-3">
-                              <div className="w-10 h-10 rounded-full bg-white/10 grid place-items-center"><Users className="w-5 h-5 text-neutral-400" /></div>
+                              <div className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-neutral-800 grid place-items-center"><Users className="w-5 h-5 text-neutral-500" /></div>
                               <div className="flex-1">
                                 <div className="flex items-center gap-2">
                                   <span className="font-medium">Candidate #{(page - 1) * pageSize + i + 1}</span>
@@ -671,7 +671,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                                 </div>
                                 <div className="flex gap-2">
                                   <Badge className={AVAILABILITY_COLORS[c.availability] || ""}>{AVAILABILITY_LABELS[c.availability] || c.availability}</Badge>
-                                  {c.is_caymanian && <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30"><Shield className="w-3 h-3 mr-1" /> Caymanian</Badge>}
+                                  {c.is_caymanian && <Badge className="bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30"><Shield className="w-3 h-3 mr-1" /> Caymanian</Badge>}
                                 </div>
                               </div>
                             </div>
@@ -681,13 +681,13 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                               <div className="mb-3">
                                 <button
                                   onClick={() => setExpandedScore(expandedScore === c.id ? null : c.id)}
-                                  className="text-xs text-neutral-400 hover:text-neutral-200 flex items-center gap-1"
+                                  className="text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-600 dark:hover:text-neutral-500 flex items-center gap-1"
                                 >
                                   {expandedScore === c.id ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
                                   Match breakdown
                                 </button>
                                 {expandedScore === c.id && (
-                                  <div className="mt-2 p-2 rounded-lg bg-white/5 border border-white/10">
+                                  <div className="mt-2 p-2 rounded-lg bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700">
                                     <ScoreBreakdown scores={c.scores} />
                                   </div>
                                 )}
@@ -702,7 +702,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                             {c.interests?.length > 0 && (
                               <div className="flex flex-wrap gap-1 mb-2">
                                 {c.interests.map((int) => (
-                                  <Badge key={int.cisco_code} className="bg-white/5 border-white/10 text-neutral-300 text-xs">{int.title || int.cisco_code}</Badge>
+                                  <Badge key={int.cisco_code} className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-500 text-xs">{int.title || int.cisco_code}</Badge>
                                 ))}
                               </div>
                             )}
@@ -734,12 +734,12 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                                 <List className="w-3 h-3" /> Save
                               </Button>
                               {showShortlistDropdown === c.id && (
-                                <div className="absolute right-0 top-full mt-1 w-48 bg-neutral-900 border border-white/10 rounded-xl shadow-xl overflow-hidden z-20">
+                                <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-xl overflow-hidden z-20">
                                   {shortlists.map(sl => (
                                     <button
                                       key={sl.id}
                                       onClick={() => handleAddToShortlist(sl.id, c.id)}
-                                      className="w-full text-left px-3 py-2 text-sm hover:bg-white/5 transition"
+                                      className="w-full text-left px-3 py-2 text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800 transition"
                                     >
                                       {sl.name}
                                     </button>
@@ -753,12 +753,12 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
 
                       {/* Inline Intro Form */}
                       {expandedIntro === c.id && !introSent.has(c.id) && (
-                        <div className="mt-4 pt-4 border-t border-white/10 space-y-3">
+                        <div className="mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-700 space-y-3">
                           <div className="text-sm font-medium">Send an introduction request</div>
                           {templates.length > 0 && (
                             <select
                               onChange={(e) => { const t = templates.find(t => t.id === Number(e.target.value)); if (t) setIntroMessage(t.message); }}
-                              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200"
+                              className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
                             >
                               <option value="">Use a template...</option>
                               {templates.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
@@ -769,7 +769,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                             onChange={(e) => setIntroMessage(e.target.value)}
                             rows={3}
                             placeholder="Introduce yourself and explain why you'd like to connect..."
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-neutral-200 focus:outline-none focus:border-cyan-300/40"
+                            className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-primary-300 dark:focus:border-primary-500/40"
                             autoFocus
                           />
                           <div className="flex gap-2 justify-end">
@@ -790,7 +790,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                     <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => handlePageChange(page - 1)}>
                       <ChevronLeft className="w-4 h-4" />
                     </Button>
-                    <span className="text-sm text-neutral-400">
+                    <span className="text-sm text-neutral-500">
                       Page {page} of {totalPages}
                     </span>
                     <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => handlePageChange(page + 1)}>
@@ -802,23 +802,23 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
             )}
 
             {!searching && hasSearched && results.length === 0 && (
-              <Card className="bg-white/5 border-white/10">
+              <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
                 <CardContent className="p-12 text-center">
-                  <Users className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-400" />
+                  <Users className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-500" />
                   <h3 className="text-lg font-medium mb-2">No candidates found</h3>
-                  <p className="text-neutral-400">Try broadening your search filters.</p>
+                  <p className="text-neutral-500">Try broadening your search filters.</p>
                 </CardContent>
               </Card>
             )}
 
             {!searching && !hasSearched && (
-              <Card className="bg-white/5 border-white/10">
+              <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
                 <CardContent className="p-12 text-center">
-                  <Users className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-400" />
+                  <Users className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-500" />
                   <h3 className="text-lg font-medium mb-2">
                     {selectedJobId ? "Ready to find matches" : "Select a role or search broadly"}
                   </h3>
-                  <p className="text-neutral-400">
+                  <p className="text-neutral-500">
                     {selectedJobId
                       ? `Hit "Search Talent" to find candidates matching your selected role.`
                       : "Pick a job posting above to find matched candidates, or run a general search."}
@@ -832,7 +832,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
               <div className="mt-8">
                 <button
                   onClick={() => setShowIntroductions(!showIntroductions)}
-                  className="flex items-center gap-2 text-lg font-semibold mb-4 hover:text-cyan-300 transition"
+                  className="flex items-center gap-2 text-lg font-semibold mb-4 hover:text-primary-500 transition"
                 >
                   <Send className="w-5 h-5" />
                   My Introductions ({introductions.length})
@@ -842,12 +842,12 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                 {showIntroductions && (
                   <div className="space-y-3">
                     {introductions.map((intro) => (
-                      <Card key={intro.id} className="bg-white/5 border-white/10">
+                      <Card key={intro.id} className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">
                             <div>
                               <div className="font-medium text-sm">Candidate</div>
-                              <div className="text-xs text-neutral-400">
+                              <div className="text-xs text-neutral-500">
                                 Sent {new Date(intro.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                               </div>
                             </div>
@@ -856,7 +856,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
                             </Badge>
                           </div>
                           {intro.message && (
-                            <div className="mt-2 text-xs text-neutral-400 line-clamp-2">{intro.message}</div>
+                            <div className="mt-2 text-xs text-neutral-500 line-clamp-2">{intro.message}</div>
                           )}
                         </CardContent>
                       </Card>

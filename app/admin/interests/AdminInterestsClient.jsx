@@ -38,17 +38,17 @@ export default function AdminInterestsClient({ interests }) {
           placeholder="Search by candidate, employer, or job..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 bg-neutral-900 border border-white/10 rounded-lg text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-cyan-500/50"
+          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-cyan-500/50"
         />
       </div>
 
       <div className="space-y-4">
         {grouped.map((group) => (
-          <div key={group.name} className="bg-neutral-900 border border-white/10 rounded-xl overflow-hidden">
-            <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
+          <div key={group.name} className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl overflow-hidden">
+            <div className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="font-medium text-white">{group.name}</span>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/20">
+                <span className="text-xs px-2 py-0.5 rounded-full bg-primary-50 dark:bg-primary-500/15 text-primary-500 border border-primary-200 dark:border-primary-500/30">
                   {group.items.length} interest{group.items.length !== 1 && "s"}
                 </span>
               </div>
@@ -64,7 +64,7 @@ export default function AdminInterestsClient({ interests }) {
             </div>
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-white/5">
+                <tr className="border-b border-neutral-200 dark:border-neutral-700">
                   <th className="text-left px-4 py-2 text-neutral-500 font-medium text-xs">Candidate</th>
                   <th className="text-left px-4 py-2 text-neutral-500 font-medium text-xs">Email</th>
                   <th className="text-left px-4 py-2 text-neutral-500 font-medium text-xs">Caymanian</th>
@@ -75,9 +75,9 @@ export default function AdminInterestsClient({ interests }) {
               </thead>
               <tbody>
                 {group.items.map((item) => (
-                  <tr key={item.id} className="border-b border-white/[0.03] hover:bg-white/[0.02]">
+                  <tr key={item.id} className="border-b border-white/[0.03] hover:bg-neutral-50 dark:hover:bg-neutral-800">
                     <td className="px-4 py-2 text-white">{item.candidate_name || "—"}</td>
-                    <td className="px-4 py-2 text-neutral-400">{item.candidate_email}</td>
+                    <td className="px-4 py-2 text-neutral-500">{item.candidate_email}</td>
                     <td className="px-4 py-2">
                       {item.is_caymanian ? (
                         <span className="text-green-400 text-xs">Yes</span>
@@ -85,7 +85,7 @@ export default function AdminInterestsClient({ interests }) {
                         <span className="text-neutral-500 text-xs">No</span>
                       )}
                     </td>
-                    <td className="px-4 py-2 text-neutral-300">{item.job_title || "—"}</td>
+                    <td className="px-4 py-2 text-neutral-600 dark:text-neutral-400">{item.job_title || "—"}</td>
                     <td className="px-4 py-2 text-neutral-500 text-xs">
                       {new Date(item.created_at).toLocaleDateString()}
                     </td>

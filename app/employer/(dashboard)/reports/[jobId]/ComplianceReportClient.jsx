@@ -165,7 +165,7 @@ export default function ComplianceReportClient({ report, employerName, jobId }) 
     <div>
       {/* Actions */}
       <div className="flex items-center justify-between mb-6">
-        <Link href="/employer/reports" className="flex items-center gap-2 text-neutral-400 hover:text-white transition text-sm">
+        <Link href="/employer/reports" className="flex items-center gap-2 text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 transition text-sm">
           <ArrowLeft className="w-4 h-4" /> Back to Reports
         </Link>
         <div className="flex gap-2">
@@ -181,15 +181,15 @@ export default function ComplianceReportClient({ report, employerName, jobId }) 
       </div>
 
       {/* Report Header */}
-      <Card className="bg-white/5 border-white/10 mb-6">
+      <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-6">
         <CardContent className="p-6">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-cyan-500/20 grid place-items-center">
-              <FileText className="w-6 h-6 text-cyan-300" />
+            <div className="w-12 h-12 rounded-xl bg-primary-50 dark:bg-primary-500/15 grid place-items-center">
+              <FileText className="w-6 h-6 text-primary-500" />
             </div>
             <div className="flex-1">
               <h1 className="text-2xl font-semibold mb-1">Compliance Report</h1>
-              <div className="text-sm text-neutral-400 space-y-0.5">
+              <div className="text-sm text-neutral-500 space-y-0.5">
                 <div><strong>Employer:</strong> {employerName}</div>
                 <div><strong>Job Title:</strong> {job.title}</div>
                 <div><strong>WORC Job ID:</strong> {job.job_id}</div>
@@ -203,21 +203,21 @@ export default function ComplianceReportClient({ report, employerName, jobId }) 
 
       {/* Summary Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><Users className="w-5 h-5 mx-auto mb-1 text-cyan-300" /><div className="text-2xl font-semibold">{summary.totalContacted}</div><div className="text-xs text-neutral-400">Total Contacted</div></CardContent></Card>
-        <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><CheckCircle className="w-5 h-5 mx-auto mb-1 text-emerald-300" /><div className="text-2xl font-semibold">{summary.responseRate}%</div><div className="text-xs text-neutral-400">Response Rate</div></CardContent></Card>
-        <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><Shield className="w-5 h-5 mx-auto mb-1 text-cyan-300" /><div className="text-2xl font-semibold">{summary.caymanianCount}</div><div className="text-xs text-neutral-400">Caymanians Contacted</div></CardContent></Card>
-        <Card className="bg-white/5 border-white/10"><CardContent className="p-4 text-center"><Briefcase className="w-5 h-5 mx-auto mb-1 text-purple-300" /><div className="text-2xl font-semibold">{summary.stageBreakdown?.hired || 0}</div><div className="text-xs text-neutral-400">Hired</div></CardContent></Card>
+        <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"><CardContent className="p-4 text-center"><Users className="w-5 h-5 mx-auto mb-1 text-primary-500" /><div className="text-2xl font-semibold">{summary.totalContacted}</div><div className="text-xs text-neutral-500">Total Contacted</div></CardContent></Card>
+        <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"><CardContent className="p-4 text-center"><CheckCircle className="w-5 h-5 mx-auto mb-1 text-emerald-300" /><div className="text-2xl font-semibold">{summary.responseRate}%</div><div className="text-xs text-neutral-500">Response Rate</div></CardContent></Card>
+        <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"><CardContent className="p-4 text-center"><Shield className="w-5 h-5 mx-auto mb-1 text-primary-500" /><div className="text-2xl font-semibold">{summary.caymanianCount}</div><div className="text-xs text-neutral-500">Caymanians Contacted</div></CardContent></Card>
+        <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"><CardContent className="p-4 text-center"><Briefcase className="w-5 h-5 mx-auto mb-1 text-purple-300" /><div className="text-2xl font-semibold">{summary.stageBreakdown?.hired || 0}</div><div className="text-xs text-neutral-500">Hired</div></CardContent></Card>
       </div>
 
       {/* Pipeline Breakdown */}
       {Object.keys(summary.stageBreakdown || {}).length > 0 && (
-        <Card className="bg-white/5 border-white/10 mb-6">
+        <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-6">
           <CardContent className="p-6">
             <h2 className="text-lg font-semibold mb-3">Pipeline Breakdown</h2>
             <div className="flex flex-wrap gap-3">
               {Object.entries(summary.stageBreakdown).map(([stage, count]) => (
                 <div key={stage} className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm">
-                  <span className="text-neutral-400">{STAGE_LABELS[stage] || stage}:</span>
+                  <span className="text-neutral-500">{STAGE_LABELS[stage] || stage}:</span>
                   <span className="font-semibold">{count}</span>
                 </div>
               ))}
@@ -228,7 +228,7 @@ export default function ComplianceReportClient({ report, employerName, jobId }) 
 
       {/* Rejection Reason Breakdown */}
       {Object.keys(summary.rejectionBreakdown || {}).length > 0 && (
-        <Card className="bg-white/5 border-white/10 mb-6">
+        <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-6">
           <CardContent className="p-6">
             <h2 className="text-lg font-semibold mb-3">Rejection Reasons</h2>
             <div className="flex flex-wrap gap-3">
@@ -244,44 +244,44 @@ export default function ComplianceReportClient({ report, employerName, jobId }) 
       )}
 
       {/* Candidate Table */}
-      <Card className="bg-white/5 border-white/10 mb-6">
+      <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-6">
         <CardContent className="p-6">
           <h2 className="text-lg font-semibold mb-4">Candidates Contacted</h2>
           {intros.length === 0 ? (
-            <p className="text-neutral-400 text-sm">No candidates have been contacted for this position yet.</p>
+            <p className="text-neutral-500 text-sm">No candidates have been contacted for this position yet.</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-white/10 text-left">
-                    <th className="pb-2 pr-3 text-neutral-400 font-medium">#</th>
-                    <th className="pb-2 pr-3 text-neutral-400 font-medium">Caymanian</th>
-                    <th className="pb-2 pr-3 text-neutral-400 font-medium">Education</th>
-                    <th className="pb-2 pr-3 text-neutral-400 font-medium">Experience</th>
-                    <th className="pb-2 pr-3 text-neutral-400 font-medium">Location</th>
-                    <th className="pb-2 pr-3 text-neutral-400 font-medium">Match</th>
-                    <th className="pb-2 pr-3 text-neutral-400 font-medium">Status</th>
-                    <th className="pb-2 pr-3 text-neutral-400 font-medium">Stage</th>
-                    <th className="pb-2 pr-3 text-neutral-400 font-medium">Initiated By</th>
-                    <th className="pb-2 pr-3 text-neutral-400 font-medium">Rejection Reason</th>
-                    <th className="pb-2 pr-3 text-neutral-400 font-medium">Contacted</th>
-                    <th className="pb-2 text-neutral-400 font-medium">Responded</th>
+                  <tr className="border-b border-neutral-200 dark:border-neutral-700 text-left">
+                    <th className="pb-2 pr-3 text-neutral-500 font-medium">#</th>
+                    <th className="pb-2 pr-3 text-neutral-500 font-medium">Caymanian</th>
+                    <th className="pb-2 pr-3 text-neutral-500 font-medium">Education</th>
+                    <th className="pb-2 pr-3 text-neutral-500 font-medium">Experience</th>
+                    <th className="pb-2 pr-3 text-neutral-500 font-medium">Location</th>
+                    <th className="pb-2 pr-3 text-neutral-500 font-medium">Match</th>
+                    <th className="pb-2 pr-3 text-neutral-500 font-medium">Status</th>
+                    <th className="pb-2 pr-3 text-neutral-500 font-medium">Stage</th>
+                    <th className="pb-2 pr-3 text-neutral-500 font-medium">Initiated By</th>
+                    <th className="pb-2 pr-3 text-neutral-500 font-medium">Rejection Reason</th>
+                    <th className="pb-2 pr-3 text-neutral-500 font-medium">Contacted</th>
+                    <th className="pb-2 text-neutral-500 font-medium">Responded</th>
                   </tr>
                 </thead>
                 <tbody>
                   {intros.map((intro, i) => (
-                    <tr key={intro.id} className="border-b border-white/5">
+                    <tr key={intro.id} className="border-b border-neutral-200 dark:border-neutral-700">
                       <td className="py-2.5 pr-3 font-medium">Candidate #{i + 1}</td>
                       <td className="py-2.5 pr-3">
                         {intro.is_caymanian ? (
-                          <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-300/30">Yes</Badge>
+                          <Badge className="bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30">Yes</Badge>
                         ) : (
                           <span className="text-neutral-500">No</span>
                         )}
                       </td>
-                      <td className="py-2.5 pr-3 text-neutral-300">{intro.education_code || "--"}</td>
-                      <td className="py-2.5 pr-3 text-neutral-300">{intro.experience_code || "--"}</td>
-                      <td className="py-2.5 pr-3 text-neutral-300">{intro.location_code || "--"}</td>
+                      <td className="py-2.5 pr-3 text-neutral-600 dark:text-neutral-500">{intro.education_code || "--"}</td>
+                      <td className="py-2.5 pr-3 text-neutral-600 dark:text-neutral-500">{intro.experience_code || "--"}</td>
+                      <td className="py-2.5 pr-3 text-neutral-600 dark:text-neutral-500">{intro.location_code || "--"}</td>
                       <td className="py-2.5 pr-3">{intro.match_score != null ? `${Math.round(Number(intro.match_score))}%` : "--"}</td>
                       <td className="py-2.5 pr-3">
                         <Badge className={
@@ -290,11 +290,11 @@ export default function ComplianceReportClient({ report, employerName, jobId }) 
                           "bg-yellow-500/20 text-yellow-300 border-yellow-300/30"
                         }>{intro.status || "pending"}</Badge>
                       </td>
-                      <td className="py-2.5 pr-3 text-neutral-300">{STAGE_LABELS[intro.stage] || intro.stage || "Outreach"}</td>
+                      <td className="py-2.5 pr-3 text-neutral-600 dark:text-neutral-500">{STAGE_LABELS[intro.stage] || intro.stage || "Outreach"}</td>
                       <td className="py-2.5 pr-3 text-neutral-300 capitalize">{intro.initiated_by || "employer"}</td>
-                      <td className="py-2.5 pr-3 text-neutral-300">{intro.rejection_reason ? (REJECTION_REASON_LABELS[intro.rejection_reason] || intro.rejection_reason) : "--"}</td>
-                      <td className="py-2.5 pr-3 text-neutral-400">{formatDate(intro.created_at)}</td>
-                      <td className="py-2.5 text-neutral-400">{formatDate(intro.responded_at)}</td>
+                      <td className="py-2.5 pr-3 text-neutral-600 dark:text-neutral-500">{intro.rejection_reason ? (REJECTION_REASON_LABELS[intro.rejection_reason] || intro.rejection_reason) : "--"}</td>
+                      <td className="py-2.5 pr-3 text-neutral-500">{formatDate(intro.created_at)}</td>
+                      <td className="py-2.5 text-neutral-500">{formatDate(intro.responded_at)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -306,7 +306,7 @@ export default function ComplianceReportClient({ report, employerName, jobId }) 
 
       {/* Activity Timeline */}
       {activity.length > 0 && (
-        <Card className="bg-white/5 border-white/10 mb-6">
+        <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-6">
           <CardContent className="p-6">
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <Activity className="w-5 h-5" /> Activity Timeline
@@ -314,9 +314,9 @@ export default function ComplianceReportClient({ report, employerName, jobId }) 
             <div className="space-y-3">
               {activity.map((a) => (
                 <div key={a.id} className="flex items-start gap-3 text-sm">
-                  <div className="w-2 h-2 rounded-full bg-cyan-400 mt-1.5 shrink-0" />
+                  <div className="w-2 h-2 rounded-full bg-primary-500 mt-1.5 shrink-0" />
                   <div className="flex-1">
-                    <div className="text-neutral-200">{ACTIVITY_LABELS[a.action] || a.action}</div>
+                    <div className="text-neutral-700 dark:text-neutral-300">{ACTIVITY_LABELS[a.action] || a.action}</div>
                     {a.details && a.details.from && a.details.to && (
                       <div className="text-xs text-neutral-500">{STAGE_LABELS[a.details.from] || a.details.from} &rarr; {STAGE_LABELS[a.details.to] || a.details.to}</div>
                     )}

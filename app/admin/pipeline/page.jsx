@@ -422,7 +422,7 @@ export default function PipelinePage() {
                     <td className="px-4 py-3">
                       <Link
                         href={`/admin/pipeline/${record.id}`}
-                        className="text-white hover:text-cyan-400 transition-colors font-medium"
+                        className="text-white hover:text-primary-500 transition-colors font-medium"
                       >
                         {record.employer_name}
                       </Link>
@@ -432,7 +432,7 @@ export default function PipelinePage() {
                     </td>
                     <td className="px-4 py-3 text-center">
                       <div className="flex items-center justify-center gap-2">
-                        <TrendingUp size={16} className="text-cyan-400" />
+                        <TrendingUp size={16} className="text-primary-500" />
                         <span className="font-semibold text-white">
                           {record.score}
                         </span>
@@ -467,7 +467,7 @@ export default function PipelinePage() {
                     <td className="px-4 py-3 text-right">
                       <Link
                         href={`/admin/pipeline/${record.id}`}
-                        className="inline-flex items-center justify-center gap-1 text-cyan-400 hover:text-cyan-300 transition-colors"
+                        className="inline-flex items-center justify-center gap-1 text-primary-500 hover:text-primary-500 transition-colors"
                       >
                         <span className="text-sm">View</span>
                         <ChevronRight size={16} />

@@ -30,19 +30,19 @@ export default function AlertsClient({ alerts: initialAlerts }) {
     <div>
       <div className="mb-8">
         <h1 className="text-2xl md:text-3xl font-semibold tracking-tight mb-2">
-          <span className="text-cyan-300">Job Alerts</span>
+          <span className="text-primary-500">Job Alerts</span>
         </h1>
-        <p className="text-neutral-400">
+        <p className="text-neutral-500">
           Get notified when new jobs match your criteria.
         </p>
       </div>
 
       {alerts.length === 0 ? (
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
           <CardContent className="p-12 text-center">
-            <Bell className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-400" />
+            <Bell className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-500" />
             <h3 className="text-lg font-medium mb-2">No alerts set up</h3>
-            <p className="text-neutral-400">
+            <p className="text-neutral-500">
               Job alerts will be available soon. Check back later.
             </p>
           </CardContent>
@@ -50,12 +50,12 @@ export default function AlertsClient({ alerts: initialAlerts }) {
       ) : (
         <div className="space-y-3">
           {alerts.map((alert) => (
-            <Card key={alert.id} className="bg-white/5 border-white/10">
+            <Card key={alert.id} className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
               <CardContent className="p-5">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-cyan-500/15 grid place-items-center shrink-0">
-                      <Bell className="w-4 h-4 text-cyan-300" />
+                    <div className="w-9 h-9 rounded-lg bg-primary-50 dark:bg-primary-500/15 grid place-items-center shrink-0">
+                      <Bell className="w-4 h-4 text-primary-500" />
                     </div>
                     <div>
                       <div className="font-medium text-sm mb-1">
@@ -63,12 +63,12 @@ export default function AlertsClient({ alerts: initialAlerts }) {
                       </div>
                       <div className="flex flex-wrap gap-1.5">
                         {alert.frequency && (
-                          <Badge className="bg-white/5 border-white/10 text-neutral-300 text-xs">
+                          <Badge className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 text-xs">
                             {alert.frequency}
                           </Badge>
                         )}
                         {alert.filters?.location && (
-                          <Badge className="bg-white/5 border-white/10 text-neutral-300 text-xs">
+                          <Badge className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 text-xs">
                             {alert.filters.location}
                           </Badge>
                         )}

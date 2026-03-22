@@ -162,7 +162,7 @@ export default function PipelineDetailPage({ params }) {
       <div className="text-center py-20">
         <AlertCircle size={48} className="mx-auto text-red-500 mb-4" />
         <p className="text-slate-400">Employer not found</p>
-        <Link href="/admin/pipeline" className="text-cyan-400 hover:text-cyan-300 mt-4 inline-block">
+        <Link href="/admin/pipeline" className="text-primary-500 hover:text-primary-500 mt-4 inline-block">
           Back to Pipeline
         </Link>
       </div>
@@ -251,7 +251,7 @@ export default function PipelineDetailPage({ params }) {
                 <div className="text-slate-400 text-xs uppercase mb-1">
                   Recommended Tier
                 </div>
-                <div className="text-lg font-semibold text-cyan-400">
+                <div className="text-lg font-semibold text-primary-500">
                   {employer.recommended_tier}
                 </div>
               </div>
