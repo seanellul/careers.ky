@@ -429,7 +429,7 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                           <button
                             key={stage}
                             onClick={() => setActiveStage(stage)}
-                            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition ${activeStage === stage ? STAGE_COLORS[stage]?.replace("bg-", "bg-") + " border" : "bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 text-neutral-500 hover:text-neutral-700 dark:text-neutral-300"}`}
+                            className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition ${activeStage === stage ? "bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30" : "bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"}`}
                           >
                             {label} ({count})
                           </button>
@@ -443,7 +443,7 @@ export default function EmployerDashboardClient({ employer, stats, introductions
               {filteredIntros.length > 0 ? (
                 <div className="space-y-3">
                   {filteredIntros.slice(0, 15).map((intro) => (
-                    <div key={intro.id} className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 space-y-2">
+                    <div key={intro.id} className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 space-y-2">
                       <div>
                         {intro.status === "accepted" && intro.candidate_name ? (
                           <div className="font-medium">{intro.candidate_name}</div>
@@ -460,7 +460,7 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                           {intro.status || "pending"}
                         </Badge>
                         {intro.initiated_by === "candidate" && (
-                          <Badge className="bg-amber-50 text-amber-600 border-amber-300 text-xs">
+                          <Badge className="bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30 text-xs">
                             <HeartHandshake className="w-3 h-3 mr-1" /> Candidate Interest
                           </Badge>
                         )}
@@ -475,11 +475,11 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                           ))}
                         </select>
                         {intro.job_title ? (
-                          <Badge className="bg-purple-50 text-purple-600 border-purple-200 text-xs">
+                          <Badge className="bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 border-neutral-200 dark:border-neutral-600 text-xs">
                             <Briefcase className="w-3 h-3 mr-1 shrink-0" /> {intro.job_title}
                           </Badge>
                         ) : intro.job_id ? (
-                          <Badge className="bg-purple-50 text-purple-600 border-purple-200 text-xs">
+                          <Badge className="bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 border-neutral-200 dark:border-neutral-600 text-xs">
                             <Briefcase className="w-3 h-3 mr-1 shrink-0" /> {intro.job_id}
                           </Badge>
                         ) : (
@@ -513,7 +513,7 @@ export default function EmployerDashboardClient({ employer, stats, introductions
                         </div>
                       )}
                       {intro.status === "accepted" && intro.candidate_email && (
-                        <div className="flex items-center gap-2 text-sm text-emerald-600 mt-2 p-2 rounded-lg bg-emerald-50 border border-emerald-200">
+                        <div className="flex items-center gap-2 text-sm text-primary-600 dark:text-primary-400 mt-2 p-2 rounded-lg bg-primary-50 dark:bg-primary-500/10 border border-primary-200 dark:border-primary-500/30">
                           <Mail className="w-4 h-4" />
                           <a href={`mailto:${intro.candidate_email}`} className="hover:underline">{intro.candidate_email}</a>
                           {intro.candidate_linkedin && (
