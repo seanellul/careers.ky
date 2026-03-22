@@ -261,8 +261,8 @@ export default function HomeClient({
               </div>
             </div>
             <div className="lg:col-span-5">
-              <div className="rounded-3xl p-1.5 bg-gradient-to-b from-primary-200 via-primary-50 to-transparent">
-                <div className="rounded-2xl bg-white/80 border border-neutral-200 dark:border-neutral-700 p-4 md:p-6">
+              <div className="rounded-3xl p-1.5 bg-gradient-to-b from-primary-200 via-primary-50 to-transparent dark:from-primary-500/20 dark:via-primary-500/5 dark:to-transparent">
+                <div className="rounded-2xl bg-white/80 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-700 p-4 md:p-6">
                   <div className="text-sm text-neutral-500 mb-4">
                     Market Snapshot
                   </div>
