@@ -32,12 +32,12 @@ const STAGE_LABELS = {
 
 const STAGE_COLORS = {
   outreach: "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-700",
-  responded: "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30",
-  interviewing: "bg-purple-50 text-purple-600 border-purple-300",
-  offered: "bg-yellow-50 text-yellow-700 border-yellow-300",
-  hired: "bg-emerald-50 text-emerald-600 border-emerald-300",
-  rejected: "bg-red-50 text-red-500 border-red-300",
-  archived: "bg-neutral-100 dark:bg-neutral-800 text-neutral-500 border-neutral-300 dark:border-neutral-700",
+  responded: "bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30",
+  interviewing: "bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30",
+  offered: "bg-yellow-50 dark:bg-yellow-500/15 text-yellow-700 dark:text-yellow-300 border-yellow-300 dark:border-yellow-500/30",
+  hired: "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/30",
+  rejected: "bg-red-50 dark:bg-red-500/15 text-red-600 dark:text-red-300 border-red-300 dark:border-red-500/30",
+  archived: "bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 border-neutral-300 dark:border-neutral-700",
 };
 
 const REJECTION_REASONS = [
@@ -280,46 +280,46 @@ export default function EmployerDashboardClient({ employer, stats, introductions
 
       {/* Stats Row */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-        <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700">
+        <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-primary-50 dark:bg-primary-500/15 grid place-items-center"><Send className="w-5 h-5 text-primary-500" /></div>
-              <div><div className="text-2xl font-semibold">{stats.total}</div><div className="text-xs text-neutral-500">Total Intros</div></div>
+              <div className="h-10 w-10 rounded-xl bg-primary-100 dark:bg-primary-500/20 grid place-items-center"><Send className="w-5 h-5 text-primary-600 dark:text-primary-400" /></div>
+              <div><div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{stats.total}</div><div className="text-xs text-neutral-500">Total Intros</div></div>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700">
+        <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-emerald-50 grid place-items-center"><CheckCircle className="w-5 h-5 text-emerald-600" /></div>
-              <div><div className="text-2xl font-semibold">{stats.responseRate}%</div><div className="text-xs text-neutral-500">Accept Rate</div></div>
+              <div className="h-10 w-10 rounded-xl bg-primary-100 dark:bg-primary-500/20 grid place-items-center"><CheckCircle className="w-5 h-5 text-primary-600 dark:text-primary-400" /></div>
+              <div><div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{stats.responseRate}%</div><div className="text-xs text-neutral-500">Accept Rate</div></div>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700">
+        <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-purple-50 grid place-items-center"><Clock className="w-5 h-5 text-purple-600" /></div>
-              <div><div className="text-2xl font-semibold">{stats.avgResponseHours != null ? `${stats.avgResponseHours}h` : "--"}</div><div className="text-xs text-neutral-500">Avg Response</div></div>
+              <div className="h-10 w-10 rounded-xl bg-primary-100 dark:bg-primary-500/20 grid place-items-center"><Clock className="w-5 h-5 text-primary-600 dark:text-primary-400" /></div>
+              <div><div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{stats.avgResponseHours != null ? `${stats.avgResponseHours}h` : "--"}</div><div className="text-xs text-neutral-500">Avg Response</div></div>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700">
+        <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-yellow-50 grid place-items-center"><Clock className="w-5 h-5 text-yellow-600" /></div>
-              <div><div className="text-2xl font-semibold">{stats.pending}</div><div className="text-xs text-neutral-500">Pending</div></div>
+              <div className="h-10 w-10 rounded-xl bg-yellow-100 dark:bg-yellow-500/20 grid place-items-center"><Clock className="w-5 h-5 text-yellow-600 dark:text-yellow-400" /></div>
+              <div><div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{stats.pending}</div><div className="text-xs text-neutral-500">Pending</div></div>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700">
+        <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className={`h-10 w-10 rounded-xl ${monthTrend >= 0 ? "bg-emerald-50" : "bg-red-50"} grid place-items-center`}>
+              <div className={`h-10 w-10 rounded-xl ${monthTrend >= 0 ? "bg-emerald-100 dark:bg-emerald-500/20" : "bg-red-100 dark:bg-red-500/20"} grid place-items-center`}>
                 {monthTrend >= 0 ? <TrendingUp className="w-5 h-5 text-emerald-600" /> : <TrendingDown className="w-5 h-5 text-red-500" />}
               </div>
               <div>
-                <div className="text-2xl font-semibold">{stats.thisMonth}</div>
+                <div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{stats.thisMonth}</div>
                 <div className="text-xs text-neutral-500">This Month {monthTrend !== 0 && <span className={monthTrend > 0 ? "text-emerald-600" : "text-red-500"}>{monthTrend > 0 ? "+" : ""}{monthTrend}%</span>}</div>
               </div>
             </div>

@@ -145,8 +145,8 @@ export default function CandidateDashboardClient({
         </div>
         <div className="p-4 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 shadow-sm">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-purple-100 dark:bg-purple-500/20 grid place-items-center">
-              <HeartHandshake className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+            <div className="h-10 w-10 rounded-xl bg-primary-100 dark:bg-primary-500/20 grid place-items-center">
+              <HeartHandshake className="w-5 h-5 text-primary-600 dark:text-primary-400" />
             </div>
             <div>
               <div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{jobInterests.length}</div>
