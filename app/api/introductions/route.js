@@ -7,9 +7,19 @@ import {
   checkEmployerForJob, createCandidateInterest, respondToIntroductionAsEmployer,
   createJobInterest, getJobPostingById,
 } from "@/lib/data";
+import { rateLimit, getClientIp, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(request) {
   const session = await getSession();
+
+  // Rate limit: 20 interests per user per hour, or 10 per IP for unauthenticated
+  const key = session?.candidateId
+    ? `interest:user:${session.candidateId}`
+    : session?.employerAccountId
+      ? `interest:employer:${session.employerAccountId}`
+      : `interest:ip:${getClientIp(request)}`;
+  const check = rateLimit(key, 20, 60 * 60 * 1000);
+  if (check.limited) return rateLimitResponse(3600);
 
   try {
     const body = await request.json();

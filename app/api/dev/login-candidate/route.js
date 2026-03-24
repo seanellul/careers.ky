@@ -6,7 +6,7 @@ import { upsertCandidate } from "@/lib/data";
 
 // DEV ONLY — sign in as a synthetic candidate (no OAuth). For testing onboarding without OAuth emails.
 export async function POST(request) {
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === "production" || !process.env.DEV_MODE) {
     return NextResponse.json({ error: "Not available" }, { status: 404 });
   }
 

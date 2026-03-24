@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { createSession } from "@/lib/auth";
 import {
   getCandidateByEmail,
@@ -6,8 +7,15 @@ import {
   getEmployerAccountByEmail,
   upsertEmployerAccount,
 } from "@/lib/data";
+import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function GET(request) {
+  const ip = getClientIp(request);
+  const check = rateLimit(`oauth-cb:ip:${ip}`, 10, 5 * 60 * 1000);
+  if (check.limited) {
+    return NextResponse.redirect(new URL("/?error=too_many_attempts", request.url));
+  }
+
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   const stateParam = searchParams.get("state");
@@ -17,12 +25,25 @@ export async function GET(request) {
     return NextResponse.redirect(new URL("/?error=google_denied", request.url));
   }
 
-  // Decode state
+  // Validate state nonce against cookie
   let type = "candidate";
+  const cookieStore = await cookies();
+  const storedNonce = cookieStore.get("ck_oauth_nonce")?.value;
+
   try {
     const state = JSON.parse(Buffer.from(stateParam, "base64url").toString());
     type = state.type || "candidate";
-  } catch {}
+
+    if (!storedNonce || !state.nonce || storedNonce !== state.nonce) {
+      console.error("OAuth CSRF check failed: nonce mismatch");
+      return NextResponse.redirect(new URL("/?error=invalid_state", request.url));
+    }
+  } catch {
+    return NextResponse.redirect(new URL("/?error=invalid_state", request.url));
+  }
+
+  // Clear the nonce cookie
+  cookieStore.delete("ck_oauth_nonce");
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || new URL(request.url).origin;
   const redirectUri = `${baseUrl}/api/auth/google/callback`;

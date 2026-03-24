@@ -5,7 +5,7 @@ import crypto from "crypto";
 
 // DEV ONLY — quick role switching without OAuth
 export async function POST(request) {
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === "production" || !process.env.DEV_MODE) {
     return NextResponse.json({ error: "Not available" }, { status: 404 });
   }
 

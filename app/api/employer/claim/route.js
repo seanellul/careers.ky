@@ -2,12 +2,17 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 import { extractDomain, domainsMatch, getCompanyDomain, sendVerificationNotificationToTeam } from "@/lib/verification";
+import { rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(request) {
   const session = await getSession();
   if (!session?.employerAccountId) {
     return NextResponse.json({ error: "Employer access required" }, { status: 401 });
   }
+
+  // 5 claim attempts per user per hour
+  const check = rateLimit(`claim:user:${session.employerAccountId}`, 5, 60 * 60 * 1000);
+  if (check.limited) return rateLimitResponse(3600);
 
   try {
     const { employerId } = await request.json();
@@ -35,6 +40,14 @@ export async function POST(request) {
     const existingAccounts = await sql`
       SELECT id FROM employer_accounts WHERE employer_id = ${employerId} AND id != ${session.employerAccountId}
     `;
+
+    // If employer already has a verified owner, require verification for new claims
+    const verifiedOwners = await sql`
+      SELECT id FROM employer_accounts
+      WHERE employer_id = ${employerId} AND verification_status = 'verified' AND id != ${session.employerAccountId}
+    `;
+    const hasVerifiedOwner = verifiedOwners.length > 0;
+
     const role = existingAccounts.length > 0 ? "member" : "owner";
 
     // Domain verification logic
@@ -45,10 +58,12 @@ export async function POST(request) {
     let verificationStatus;
     let verifiedBy = null;
 
-    if (isDomainMatch) {
+    if (isDomainMatch && !hasVerifiedOwner) {
+      // Auto-verify only if domain matches AND no one else already owns this employer
       verificationStatus = "verified";
       verifiedBy = "domain_match";
     } else {
+      // Require manual verification if domain doesn't match OR employer already has a verified owner
       verificationStatus = "pending";
     }
 
