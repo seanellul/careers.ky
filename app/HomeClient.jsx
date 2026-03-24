@@ -177,67 +177,6 @@ export default function HomeClient({
                 </p>
               </div>
 
-              {/* Key Features */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-                <button
-                  onClick={() => setAuthModalOpen(true)}
-                  className="flex items-start gap-3 p-4 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200/80 dark:border-neutral-700 shadow-sm hover:border-primary-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer text-left w-full"
-                >
-                  <div className="h-8 w-8 rounded-lg bg-primary-50 dark:bg-primary-500/15 grid place-items-center flex-shrink-0">
-                    <User className="w-4 h-4 text-primary-500" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-sm mb-1">Create Profile</div>
-                    <div className="text-xs text-neutral-500">
-                      Get seen by every employer
-                    </div>
-                  </div>
-                </button>
-                <Link
-                  href="/careers?tab=career-tracks"
-                  href="/careers?tab=career-tracks"
-                  className="flex items-start gap-3 p-4 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200/80 dark:border-neutral-700 shadow-sm hover:border-emerald-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer text-left"
-                >
-                  <div className="h-8 w-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/15 grid place-items-center flex-shrink-0">
-                    <Compass className="w-4 h-4 text-emerald-600" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-sm mb-1">Career Tracks</div>
-                    <div className="text-xs text-neutral-500">
-                      Explore by industry & salary
-                    </div>
-                  </div>
-                </Link>
-                <Link
-                  href="/careers"
-                  className="flex items-start gap-3 p-4 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200/80 dark:border-neutral-700 shadow-sm hover:border-purple-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer text-left"
-                >
-                  <div className="h-8 w-8 rounded-lg bg-purple-50 dark:bg-purple-500/15 grid place-items-center flex-shrink-0">
-                    <Search className="w-4 h-4 text-purple-600" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-sm mb-1">Live Search</div>
-                    <div className="text-xs text-neutral-500">
-                      Browse active job postings
-                    </div>
-                  </div>
-                </Link>
-                <Link
-                  href="/talent"
-                  className="flex items-start gap-3 p-4 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200/80 dark:border-neutral-700 shadow-sm hover:border-orange-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer text-left"
-                >
-                  <div className="h-8 w-8 rounded-lg bg-orange-50 dark:bg-orange-500/15 grid place-items-center flex-shrink-0">
-                    <Users className="w-4 h-4 text-orange-600" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-sm mb-1">Find Talent</div>
-                    <div className="text-xs text-neutral-500">
-                      Search local talent pool
-                    </div>
-                  </div>
-                </Link>
-              </div>
-
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button
