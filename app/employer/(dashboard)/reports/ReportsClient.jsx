@@ -43,8 +43,8 @@ export default function ReportsClient({ postings, employerName }) {
                     <div className="flex items-center gap-2 mb-1">
                       <span className="font-medium text-lg">{p.cTitle}</span>
                       <Badge className={p.isActive
-                        ? "bg-emerald-500/20 text-emerald-300 border-emerald-300/30"
-                        : "bg-neutral-500/20 text-neutral-500 border-neutral-400/30"
+                        ? "bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-300/30"
+                        : "bg-neutral-100 dark:bg-neutral-500/20 text-neutral-600 dark:text-neutral-500 border-neutral-300 dark:border-neutral-400/30"
                       }>
                         {p.isActive ? "Active" : "Closed"}
                       </Badge>

@@ -198,7 +198,7 @@ export default function HomeClient({
                   href="/careers?tab=career-tracks"
                   className="flex items-start gap-3 p-4 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200/80 dark:border-neutral-700 shadow-sm hover:border-emerald-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer text-left"
                 >
-                  <div className="h-8 w-8 rounded-lg bg-emerald-50 grid place-items-center flex-shrink-0">
+                  <div className="h-8 w-8 rounded-lg bg-emerald-50 dark:bg-emerald-500/15 grid place-items-center flex-shrink-0">
                     <Compass className="w-4 h-4 text-emerald-600" />
                   </div>
                   <div>
@@ -212,7 +212,7 @@ export default function HomeClient({
                   href="/careers"
                   className="flex items-start gap-3 p-4 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200/80 dark:border-neutral-700 shadow-sm hover:border-purple-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer text-left"
                 >
-                  <div className="h-8 w-8 rounded-lg bg-purple-50 grid place-items-center flex-shrink-0">
+                  <div className="h-8 w-8 rounded-lg bg-purple-50 dark:bg-purple-500/15 grid place-items-center flex-shrink-0">
                     <Search className="w-4 h-4 text-purple-600" />
                   </div>
                   <div>
@@ -226,7 +226,7 @@ export default function HomeClient({
                   href="/talent"
                   className="flex items-start gap-3 p-4 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200/80 dark:border-neutral-700 shadow-sm hover:border-orange-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition cursor-pointer text-left"
                 >
-                  <div className="h-8 w-8 rounded-lg bg-orange-50 grid place-items-center flex-shrink-0">
+                  <div className="h-8 w-8 rounded-lg bg-orange-50 dark:bg-orange-500/15 grid place-items-center flex-shrink-0">
                     <Users className="w-4 h-4 text-orange-600" />
                   </div>
                   <div>

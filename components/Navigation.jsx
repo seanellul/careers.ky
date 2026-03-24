@@ -129,7 +129,7 @@ export default function Navigation() {
               <Link href="/notifications" className="relative p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition text-neutral-600 dark:text-neutral-400">
                 <Bell className="w-4 h-4" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-accent-500 rounded-full text-[10px] grid place-items-center font-semibold text-white">
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-accent-500 dark:bg-accent-600 rounded-full text-[10px] grid place-items-center font-semibold text-white ring-2 ring-white dark:ring-[#121212]">
                     {unreadCount > 9 ? "9+" : unreadCount}
                   </span>
                 )}
@@ -138,7 +138,7 @@ export default function Navigation() {
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
-                  className="flex items-center gap-2 p-2 rounded-lg hover:bg-neutral-100 transition"
+                  className="flex items-center gap-2 p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition"
                 >
                   <div className="w-7 h-7 rounded-full bg-primary-50 dark:bg-primary-500/20 text-primary-600 dark:text-primary-300 grid place-items-center text-xs font-semibold">
                     {initial}
@@ -174,7 +174,7 @@ export default function Navigation() {
                     </Link>
                     <button
                       onClick={handleLogout}
-                      className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-neutral-50 transition w-full text-left text-red-500"
+                      className="flex items-center gap-2 px-4 py-3 text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800 transition w-full text-left text-red-500"
                     >
                       <LogOut className="w-4 h-4" /> Sign Out
                     </button>
@@ -207,7 +207,7 @@ export default function Navigation() {
               isNavActive(item.href) ? (
                 <div
                   key={item.href}
-                  className="px-4 py-3 rounded-lg bg-primary-50 border border-primary-200 text-primary-700 font-medium flex items-center justify-between"
+                  className="px-4 py-3 rounded-lg bg-primary-50 dark:bg-primary-500/15 border border-primary-200 dark:border-primary-500/30 text-primary-700 dark:text-primary-200 font-medium flex items-center justify-between"
                 >
                   {item.label}
                   {item.badge > 0 && (
@@ -246,7 +246,7 @@ export default function Navigation() {
                 <Link href="/notifications" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100">
                   Notifications
                 </Link>
-                <button onClick={handleLogout} className="px-4 py-3 rounded-lg bg-neutral-50 hover:bg-neutral-100 transition text-red-500 text-left">
+                <button onClick={handleLogout} className="px-4 py-3 rounded-lg bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition text-red-500 text-left">
                   Sign Out
                 </button>
               </>

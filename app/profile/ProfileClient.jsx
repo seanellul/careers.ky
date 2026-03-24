@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 const AVAILABILITY_OPTIONS = [
-  { value: "actively_looking", label: "Actively Looking", color: "bg-emerald-50 text-emerald-600 border-emerald-200" },
+  { value: "actively_looking", label: "Actively Looking", color: "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30" },
   { value: "open_to_offers", label: "Open to Offers", color: "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30" },
   { value: "not_looking", label: "Not Looking", color: "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700" },
 ];
@@ -45,7 +45,7 @@ function ProfilePicture({ url, name, size = "lg", className = "" }) {
     );
   }
   return (
-    <div className={`${sizeClasses} rounded-full bg-gradient-to-br from-primary-200 to-purple-200 grid place-items-center font-semibold text-primary-500 border-2 border-neutral-200 dark:border-neutral-700 ${className}`}>
+    <div className={`${sizeClasses} rounded-full bg-gradient-to-br from-primary-200 to-purple-200 dark:from-primary-500/30 dark:to-purple-500/30 grid place-items-center font-semibold text-primary-600 dark:text-primary-300 border-2 border-neutral-200 dark:border-neutral-700 ${className}`}>
       {initial}
     </div>
   );
@@ -286,7 +286,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
               <Link href="/notifications">
                 <Button variant="secondary" size="sm" className="relative">
                   <Bell className="w-3.5 h-3.5" />
-                  {unreadCount > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary-50 dark:bg-primary-500/150 rounded-full text-[10px] grid place-items-center">{unreadCount}</span>}
+                  {unreadCount > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 bg-accent-500 rounded-full text-[10px] grid place-items-center font-semibold text-white ring-2 ring-white dark:ring-neutral-800">{unreadCount}</span>}
                 </Button>
               </Link>
               <Button variant="secondary" size="sm" onClick={handleLogout}><LogOut className="w-3.5 h-3.5" /></Button>
