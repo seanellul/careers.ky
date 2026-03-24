@@ -45,9 +45,9 @@ export default function AdminVerificationsClient({ initialRequests }) {
 
   const statusBadge = (status) => {
     const styles = {
-      pending: "bg-amber-50 text-amber-600 border-amber-300",
-      approved: "bg-emerald-50 text-emerald-600 border-emerald-300",
-      rejected: "bg-red-50 text-red-500 border-red-300",
+      pending: "bg-amber-50 dark:bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-300 dark:border-amber-500/30",
+      approved: "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-300 dark:border-emerald-500/30",
+      rejected: "bg-red-50 dark:bg-red-500/15 text-red-500 dark:text-red-400 border-red-300 dark:border-red-500/30",
     };
     return (
       <span className={`text-xs px-2 py-0.5 rounded-full border ${styles[status] || "bg-neutral-100 dark:bg-neutral-800 text-neutral-500 border-neutral-200 dark:border-neutral-700"}`}>

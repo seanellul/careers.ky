@@ -460,7 +460,7 @@ export default function HomeClient({
                         <div className="text-sm text-neutral-600 dark:text-neutral-400 mb-2">
                           Live posting
                         </div>
-                        <div className="font-medium mb-1 text-white group-hover:text-primary-500 transition">
+                        <div className="font-medium mb-1 text-neutral-900 dark:text-white group-hover:text-primary-500 transition">
                           {truncateText(job.jobTitle, 25)}
                         </div>
                         {job.employerName && (
@@ -559,7 +559,7 @@ export default function HomeClient({
       {/* Jobs CTA Section */}
       <section id="jobs" className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Card className="bg-gradient-to-br from-primary-50 via-emerald-50 to-purple-50 border-neutral-300 dark:border-neutral-700 backdrop-blur-md shadow-2xl">
+          <Card className="bg-gradient-to-br from-primary-50 via-emerald-50 to-purple-50 dark:from-neutral-900 dark:via-neutral-900 dark:to-neutral-800 border-neutral-300 dark:border-neutral-700 backdrop-blur-md shadow-2xl">
             <CardContent className="p-8 md:p-12 text-center">
               <h3 className="text-2xl md:text-3xl font-semibold tracking-tight mb-4">
                 Ready to explore{" "}
@@ -665,10 +665,10 @@ export default function HomeClient({
       <section className="py-16">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div
-            className="rounded-3xl p-1.5 bg-gradient-to-r from-primary-200 via-emerald-100 to-primary-100"
+            className="rounded-3xl p-1.5 bg-gradient-to-r from-primary-200 via-emerald-100 to-primary-100 dark:from-primary-500/20 dark:via-emerald-500/10 dark:to-primary-500/20"
             id="cta-gradient"
           >
-            <div className="rounded-[20px] bg-white/80 border border-neutral-200 dark:border-neutral-700 p-8">
+            <div className="rounded-[20px] bg-white/80 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-700 p-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-3">
                   <div className="text-sm text-neutral-500">For Candidates</div>

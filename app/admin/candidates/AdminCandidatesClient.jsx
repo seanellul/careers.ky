@@ -10,7 +10,7 @@ function StatCard({ label, value, icon: Icon, accent }) {
         <span className="text-xs font-medium uppercase tracking-wider text-neutral-500">{label}</span>
         <Icon className={`w-4 h-4 ${accent ? "text-primary-500" : "text-neutral-600"}`} />
       </div>
-      <div className="text-2xl font-bold text-white">{typeof value === "number" ? value.toLocaleString() : value}</div>
+      <div className="text-2xl font-bold text-neutral-900 dark:text-white">{typeof value === "number" ? value.toLocaleString() : value}</div>
     </div>
   );
 }
@@ -54,7 +54,7 @@ export default function AdminCandidatesClient({ candidates, stats }) {
           placeholder="Search by name, email, headline, or skill..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-primary-500/50"
+          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm text-neutral-900 dark:text-white placeholder-neutral-500 focus:outline-none focus:border-primary-500/50"
         />
       </div>
 
@@ -84,7 +84,7 @@ export default function AdminCandidatesClient({ candidates, stats }) {
 
                 return (
                   <tr key={c.id} className="border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800">
-                    <td className="px-4 py-3 text-white font-medium">{c.name || "—"}</td>
+                    <td className="px-4 py-3 text-neutral-900 dark:text-white font-medium">{c.name || "—"}</td>
                     <td className="px-4 py-3 text-neutral-500">{c.email}</td>
                     <td className="px-4 py-3">
                       {c.is_caymanian ? (

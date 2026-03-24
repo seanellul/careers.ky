@@ -152,7 +152,7 @@ export default function PipelineDetailPage({ params }) {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader size={32} className="animate-spin text-slate-500" />
+        <Loader size={32} className="animate-spin text-neutral-500" />
       </div>
     );
   }
@@ -161,7 +161,7 @@ export default function PipelineDetailPage({ params }) {
     return (
       <div className="text-center py-20">
         <AlertCircle size={48} className="mx-auto text-red-500 mb-4" />
-        <p className="text-slate-400">Employer not found</p>
+        <p className="text-neutral-500 dark:text-neutral-400">Employer not found</p>
         <Link href="/admin/pipeline" className="text-primary-500 hover:text-primary-500 mt-4 inline-block">
           Back to Pipeline
         </Link>
@@ -176,13 +176,13 @@ export default function PipelineDetailPage({ params }) {
         <div>
           <Link
             href="/admin/pipeline"
-            className="inline-flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-colors mb-4"
+            className="inline-flex items-center gap-2 text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors mb-4"
           >
             <ArrowLeft size={16} />
             Back to Pipeline
           </Link>
-          <h1 className="text-3xl font-bold text-white">{employer.employer_name}</h1>
-          <div className="text-slate-400 mt-2">
+          <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">{employer.employer_name}</h1>
+          <div className="text-neutral-500 dark:text-neutral-400 mt-2">
             <div>
               <strong>Rank:</strong> #{employer.priority_rank} • <strong>Score:</strong>{" "}
               {employer.score}/100 • <strong>Segment:</strong> {employer.segment}
@@ -199,8 +199,8 @@ export default function PipelineDetailPage({ params }) {
         <div
           className={`flex items-center gap-3 px-4 py-3 rounded-lg ${
             message.type === "success"
-              ? "bg-emerald-900/30 border border-emerald-700 text-emerald-100"
-              : "bg-red-900/30 border border-red-700 text-red-100"
+              ? "bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-100"
+              : "bg-red-50 dark:bg-red-900/30 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-100"
           }`}
         >
           {message.type === "success" ? (
@@ -216,39 +216,39 @@ export default function PipelineDetailPage({ params }) {
         {/* Main Info */}
         <div className="lg:col-span-2 space-y-6">
           {/* Employer Info Card */}
-          <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-white mb-4">
+          <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg p-6">
+            <h2 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
               Employer Information
             </h2>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <div className="text-slate-400 text-xs uppercase mb-1">
+                <div className="text-neutral-500 dark:text-neutral-400 text-xs uppercase mb-1">
                   Total Jobs (Last Year)
                 </div>
-                <div className="text-2xl font-bold text-white">
+                <div className="text-2xl font-bold text-neutral-900 dark:text-white">
                   {employer.total_jobs}
                 </div>
               </div>
               <div>
-                <div className="text-slate-400 text-xs uppercase mb-1">
+                <div className="text-neutral-500 dark:text-neutral-400 text-xs uppercase mb-1">
                   Active Jobs
                 </div>
-                <div className="text-2xl font-bold text-white">
+                <div className="text-2xl font-bold text-neutral-900 dark:text-white">
                   {employer.active_jobs}
                 </div>
               </div>
               <div>
-                <div className="text-slate-400 text-xs uppercase mb-1">
+                <div className="text-neutral-500 dark:text-neutral-400 text-xs uppercase mb-1">
                   Average Salary
                 </div>
-                <div className="text-2xl font-bold text-white">
+                <div className="text-2xl font-bold text-neutral-900 dark:text-white">
                   {employer.avg_salary
                     ? `$${employer.avg_salary.toLocaleString()}`
                     : "N/A"}
                 </div>
               </div>
               <div>
-                <div className="text-slate-400 text-xs uppercase mb-1">
+                <div className="text-neutral-500 dark:text-neutral-400 text-xs uppercase mb-1">
                   Recommended Tier
                 </div>
                 <div className="text-lg font-semibold text-primary-500">
@@ -256,26 +256,26 @@ export default function PipelineDetailPage({ params }) {
                 </div>
               </div>
             </div>
-            <div className="mt-4 pt-4 border-t border-slate-700">
-              <div className="text-slate-400 text-xs uppercase mb-2">
+            <div className="mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-700">
+              <div className="text-neutral-500 dark:text-neutral-400 text-xs uppercase mb-2">
                 Suggested Hook
               </div>
-              <p className="text-white text-sm leading-relaxed">
+              <p className="text-neutral-900 dark:text-white text-sm leading-relaxed">
                 {employer.suggested_hook}
               </p>
             </div>
           </div>
 
           {/* Status & Contact Info */}
-          <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-white mb-4">
+          <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg p-6">
+            <h2 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
               Sales Information
             </h2>
 
             <div className="space-y-4">
               {/* Status */}
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
+                <label className="block text-xs font-semibold text-neutral-600 dark:text-neutral-300 uppercase mb-2">
                   Status
                 </label>
                 <select
@@ -296,7 +296,7 @@ export default function PipelineDetailPage({ params }) {
 
               {/* Contact Person */}
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
+                <label className="block text-xs font-semibold text-neutral-600 dark:text-neutral-300 uppercase mb-2">
                   Contact Person
                 </label>
                 <input
@@ -304,13 +304,13 @@ export default function PipelineDetailPage({ params }) {
                   value={contactPerson}
                   onChange={(e) => setContactPerson(e.target.value)}
                   placeholder="Name of contact"
-                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-primary-500"
+                  className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded text-neutral-900 dark:text-white placeholder-neutral-500 focus:outline-none focus:border-primary-500"
                 />
               </div>
 
               {/* Contact Email */}
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase mb-2 flex items-center gap-2">
+                <label className="block text-xs font-semibold text-neutral-600 dark:text-neutral-300 uppercase mb-2 flex items-center gap-2">
                   <Mail size={14} /> Email
                 </label>
                 <input
@@ -318,13 +318,13 @@ export default function PipelineDetailPage({ params }) {
                   value={contactEmail}
                   onChange={(e) => setContactEmail(e.target.value)}
                   placeholder="email@company.com"
-                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-primary-500"
+                  className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded text-neutral-900 dark:text-white placeholder-neutral-500 focus:outline-none focus:border-primary-500"
                 />
               </div>
 
               {/* Contact Phone */}
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase mb-2 flex items-center gap-2">
+                <label className="block text-xs font-semibold text-neutral-600 dark:text-neutral-300 uppercase mb-2 flex items-center gap-2">
                   <Phone size={14} /> Phone
                 </label>
                 <input
@@ -332,26 +332,26 @@ export default function PipelineDetailPage({ params }) {
                   value={contactPhone}
                   onChange={(e) => setContactPhone(e.target.value)}
                   placeholder="+1 (123) 456-7890"
-                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-primary-500"
+                  className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded text-neutral-900 dark:text-white placeholder-neutral-500 focus:outline-none focus:border-primary-500"
                 />
               </div>
 
               {/* Next Followup */}
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase mb-2 flex items-center gap-2">
+                <label className="block text-xs font-semibold text-neutral-600 dark:text-neutral-300 uppercase mb-2 flex items-center gap-2">
                   <Calendar size={14} /> Next Followup
                 </label>
                 <input
                   type="date"
                   value={nextFollowup}
                   onChange={(e) => setNextFollowup(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-primary-500"
+                  className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded text-neutral-900 dark:text-white focus:outline-none focus:border-primary-500"
                 />
               </div>
 
               {/* Response Received */}
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
+                <label className="block text-xs font-semibold text-neutral-600 dark:text-neutral-300 uppercase mb-2">
                   Response Received
                 </label>
                 <textarea
@@ -359,21 +359,21 @@ export default function PipelineDetailPage({ params }) {
                   onChange={(e) => setResponseReceived(e.target.value)}
                   placeholder="What did they respond with?"
                   rows="3"
-                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-primary-500"
+                  className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded text-neutral-900 dark:text-white placeholder-neutral-500 focus:outline-none focus:border-primary-500"
                 />
               </div>
             </div>
           </div>
 
           {/* Notes */}
-          <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-white mb-4">Notes</h2>
+          <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg p-6">
+            <h2 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">Notes</h2>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add notes about this employer..."
               rows="5"
-              className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-primary-500"
+              className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded text-neutral-900 dark:text-white placeholder-neutral-500 focus:outline-none focus:border-primary-500"
             />
           </div>
 
@@ -400,26 +400,26 @@ export default function PipelineDetailPage({ params }) {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Last Activity */}
-          <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-            <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
+          <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg p-6">
+            <h3 className="font-semibold text-neutral-900 dark:text-white mb-4 flex items-center gap-2">
               <Clock size={18} />
               Last Activity
             </h3>
             {employer.last_contacted ? (
               <div className="text-sm">
-                <div className="text-slate-400">
+                <div className="text-neutral-500 dark:text-neutral-400">
                   {new Date(employer.last_contacted).toLocaleDateString()}{" "}
                   {new Date(employer.last_contacted).toLocaleTimeString()}
                 </div>
               </div>
             ) : (
-              <div className="text-slate-500 text-sm">No contact yet</div>
+              <div className="text-neutral-500 text-sm">No contact yet</div>
             )}
 
             {employer.next_followup && (
-              <div className="mt-3 pt-3 border-t border-slate-700">
-                <div className="text-xs text-slate-400 mb-1">Next Followup:</div>
-                <div className="text-white">
+              <div className="mt-3 pt-3 border-t border-neutral-200 dark:border-neutral-700">
+                <div className="text-xs text-neutral-500 dark:text-neutral-400 mb-1">Next Followup:</div>
+                <div className="text-neutral-900 dark:text-white">
                   {new Date(employer.next_followup).toLocaleDateString()}
                 </div>
               </div>
@@ -427,14 +427,14 @@ export default function PipelineDetailPage({ params }) {
           </div>
 
           {/* Log Activity */}
-          <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-            <h3 className="font-semibold text-white mb-4">Log Activity</h3>
+          <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg p-6">
+            <h3 className="font-semibold text-neutral-900 dark:text-white mb-4">Log Activity</h3>
 
             <div className="space-y-3">
               <select
                 value={activityType}
                 onChange={(e) => setActivityType(e.target.value)}
-                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white focus:outline-none focus:border-primary-500"
+                className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded text-neutral-900 dark:text-white focus:outline-none focus:border-primary-500"
               >
                 <option value="">Select activity...</option>
                 <option value="email_sent">Email Sent</option>
@@ -451,7 +451,7 @@ export default function PipelineDetailPage({ params }) {
                 onChange={(e) => setActivityNotes(e.target.value)}
                 placeholder="Notes about this interaction..."
                 rows="3"
-                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-500 focus:outline-none focus:border-primary-500 text-sm"
+                className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded text-neutral-900 dark:text-white placeholder-neutral-500 focus:outline-none focus:border-primary-500 text-sm"
               />
 
               <button
@@ -464,27 +464,27 @@ export default function PipelineDetailPage({ params }) {
           </div>
 
           {/* Contact Log */}
-          <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-            <h3 className="font-semibold text-white mb-4">Contact History</h3>
+          <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg p-6">
+            <h3 className="font-semibold text-neutral-900 dark:text-white mb-4">Contact History</h3>
 
             <div className="space-y-3 max-h-96 overflow-y-auto">
               {contactLog.length === 0 ? (
-                <div className="text-slate-500 text-sm">No activity yet</div>
+                <div className="text-neutral-500 text-sm">No activity yet</div>
               ) : (
                 contactLog.map((log) => (
                   <div
                     key={log.id}
-                    className="text-sm border-l-2 border-slate-600 pl-3 py-2"
+                    className="text-sm border-l-2 border-neutral-300 dark:border-neutral-600 pl-3 py-2"
                   >
-                    <div className="font-medium text-slate-300">
+                    <div className="font-medium text-neutral-700 dark:text-neutral-300">
                       {log.activity_type.replace(/_/g, " ")}
                     </div>
                     {log.notes && (
-                      <div className="text-slate-400 text-xs mt-1">
+                      <div className="text-neutral-500 dark:text-neutral-400 text-xs mt-1">
                         {log.notes}
                       </div>
                     )}
-                    <div className="text-slate-500 text-xs mt-1">
+                    <div className="text-neutral-400 dark:text-neutral-500 text-xs mt-1">
                       {new Date(log.created_at).toLocaleDateString()}
                     </div>
                   </div>

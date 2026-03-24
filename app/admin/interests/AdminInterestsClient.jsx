@@ -38,7 +38,7 @@ export default function AdminInterestsClient({ interests }) {
           placeholder="Search by candidate, employer, or job..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-primary-500/50"
+          className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg text-sm text-neutral-900 dark:text-white placeholder-neutral-500 focus:outline-none focus:border-primary-500/50"
         />
       </div>
 
@@ -47,7 +47,7 @@ export default function AdminInterestsClient({ interests }) {
           <div key={group.name} className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl overflow-hidden">
             <div className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="font-medium text-white">{group.name}</span>
+                <span className="font-medium text-neutral-900 dark:text-white">{group.name}</span>
                 <span className="text-xs px-2 py-0.5 rounded-full bg-primary-50 dark:bg-primary-500/15 text-primary-500 border border-primary-200 dark:border-primary-500/30">
                   {group.items.length} interest{group.items.length !== 1 && "s"}
                 </span>
@@ -76,7 +76,7 @@ export default function AdminInterestsClient({ interests }) {
               <tbody>
                 {group.items.map((item) => (
                   <tr key={item.id} className="border-b border-neutral-100 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800">
-                    <td className="px-4 py-2 text-white">{item.candidate_name || "—"}</td>
+                    <td className="px-4 py-2 text-neutral-900 dark:text-white">{item.candidate_name || "—"}</td>
                     <td className="px-4 py-2 text-neutral-500">{item.candidate_email}</td>
                     <td className="px-4 py-2">
                       {item.is_caymanian ? (
