@@ -45,7 +45,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body className="min-h-screen bg-[#FEFCF3] dark:bg-[#121212] text-neutral-800 dark:text-neutral-100 antialiased">
+      <body className="min-h-screen bg-[#FEFCF3] dark:bg-[#171412] text-neutral-800 dark:text-neutral-100 antialiased">
         <PostHogProvider>
           <SessionProvider>
             <ThemeProvider>

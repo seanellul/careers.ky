@@ -129,7 +129,7 @@ export default function Navigation() {
               <Link href="/notifications" className="relative p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition text-neutral-600 dark:text-neutral-400">
                 <Bell className="w-4 h-4" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-accent-500 dark:bg-accent-600 rounded-full text-[10px] grid place-items-center font-semibold text-white ring-2 ring-white dark:ring-[#121212]">
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-accent-500 dark:bg-accent-600 rounded-full text-[10px] grid place-items-center font-semibold text-white ring-2 ring-white dark:ring-[#171412]">
                     {unreadCount > 9 ? "9+" : unreadCount}
                   </span>
                 )}
@@ -201,7 +201,7 @@ export default function Navigation() {
 
       {/* Mobile Navigation Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-[#121212]/95 backdrop-blur">
+        <div className="md:hidden border-t border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-[#171412]/95 backdrop-blur">
           <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex flex-col gap-3">
             {navItems.map((item) =>
               isNavActive(item.href) ? (

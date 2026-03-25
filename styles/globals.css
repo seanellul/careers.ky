@@ -27,22 +27,22 @@
     }
 
     .dark {
-        --background: 0 0% 7%;              /* #121212 */
-        --foreground: 0 0% 90%;             /* neutral-100 */
-        --card: 0 0% 10%;                   /* #1a1a1a */
-        --card-foreground: 0 0% 90%;
-        --muted: 0 0% 15%;
-        --muted-foreground: 0 0% 55%;
+        --background: 30 10% 8%;             /* #171412 warm charcoal */
+        --foreground: 30 5% 90%;             /* warm off-white */
+        --card: 24 8% 10%;                  /* #1C1917 stone-900 */
+        --card-foreground: 30 5% 90%;
+        --muted: 24 6% 14%;
+        --muted-foreground: 30 4% 55%;
         --primary: 201 100% 36%;            /* ocean stays */
         --primary-foreground: 0 0% 100%;
-        --secondary: 0 0% 15%;
-        --secondary-foreground: 0 0% 85%;
+        --secondary: 24 6% 14%;
+        --secondary-foreground: 30 5% 85%;
         --accent: 16 74% 53%;              /* coral stays */
         --accent-foreground: 0 0% 100%;
         --destructive: 0 84% 60%;
         --destructive-foreground: 0 0% 100%;
-        --border: 0 0% 20%;
-        --input: 0 0% 25%;
+        --border: 20 6% 18%;               /* warm border */
+        --input: 20 6% 22%;                /* warm input */
         --ring: 201 100% 36%;
     }
 
@@ -55,7 +55,7 @@
     }
 
     .dark body {
-        background-color: #121212;
+        background-color: #171412;
     }
 }
 

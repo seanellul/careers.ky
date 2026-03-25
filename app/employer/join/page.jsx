@@ -103,7 +103,7 @@ export default async function JoinTeamPage({ searchParams }) {
 
 function CenteredCard({ children }) {
   return (
-    <div className="min-h-screen w-full bg-[#FEFCF3] dark:bg-[#121212] text-neutral-800 dark:text-neutral-200 flex items-center justify-center p-4">
+    <div className="min-h-screen w-full bg-[#FEFCF3] dark:bg-[#171412] text-neutral-800 dark:text-neutral-200 flex items-center justify-center p-4">
       <div
         className="fixed inset-0 -z-10"
         style={{
