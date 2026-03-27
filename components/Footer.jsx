@@ -44,6 +44,16 @@ export default function Footer() {
             Making hiring talent visible, accessible and fair. Job postings synced daily from WORC.
           </p>
         </div>
+        <div className="mt-4 pt-4 border-t border-white/5 text-xs text-center text-neutral-500">
+          Built by{" "}
+          <a href="https://seanellul.com" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-300 transition-colors">
+            Sean Ellul
+          </a>
+          {" · "}
+          <a href="https://seanellul.com" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-300 transition-colors">
+            seanellul.com
+          </a>
+        </div>
       </div>
     </footer>
   );
