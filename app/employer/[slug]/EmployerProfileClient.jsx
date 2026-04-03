@@ -11,6 +11,7 @@ import {
   ChevronLeft, ExternalLink, Calendar, Users, Search,
   BookOpen, Clock, BarChart3, Globe, Heart, GraduationCap,
   Baby, Sun, Star, ChevronDown, ChevronUp, Linkedin, Twitter, Instagram,
+  FileText, Hash, AlertCircle,
 } from "lucide-react";
 import { generateWORCSearchURL } from "@/lib/data";
 import t from "@/lib/theme";
@@ -24,6 +25,14 @@ const CATEGORY_ICONS = {
   office: Building2,
 };
 
+const BAR_COLORS = [
+  "bg-primary-500",
+  "bg-accent-500",
+  "bg-cayman-sand",
+  "bg-primary-400",
+  "bg-primary-300",
+];
+
 export default function EmployerProfileClient({ profile, perks: perkGroups, workTypes: wtObj, eduTypes: etObj, expTypes: exObj, locTypes: ltObj }) {
   const { employer, postings, stats, topRoles, distributions, timeline, industries } = profile;
 
@@ -35,15 +44,31 @@ export default function EmployerProfileClient({ profile, perks: perkGroups, work
   const locTypes = useMemo(() => new Map(Object.entries(ltObj)), [ltObj]);
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [insightsOpen, setInsightsOpen] = useState(false);
+  const [pastSearchQuery, setPastSearchQuery] = useState("");
+  const [expandedPostings, setExpandedPostings] = useState(new Set());
+  const [showAllPast, setShowAllPast] = useState(false);
 
   const activePostings = useMemo(() => postings.filter((p) => p.isActive), [postings]);
+  const pastPostings = useMemo(() => postings.filter((p) => !p.isActive), [postings]);
 
   const filteredJobs = useMemo(() => {
     if (!searchQuery) return activePostings;
     const q = searchQuery.toLowerCase();
     return activePostings.filter((p) => p.cTitle?.toLowerCase().includes(q));
   }, [activePostings, searchQuery]);
+
+  const filteredPastJobs = useMemo(() => {
+    let filtered = pastPostings;
+    if (pastSearchQuery) {
+      const q = pastSearchQuery.toLowerCase();
+      filtered = filtered.filter((p) =>
+        p.cTitle?.toLowerCase().includes(q) ||
+        p.jobDescription?.toLowerCase().includes(q) ||
+        p.Occupation?.toLowerCase().includes(q)
+      );
+    }
+    return showAllPast ? filtered : filtered.slice(0, 10);
+  }, [pastPostings, pastSearchQuery, showAllPast]);
 
   const formatSalary = (p) => {
     if (p["Salary Description"]) return p["Salary Description"];
@@ -52,15 +77,28 @@ export default function EmployerProfileClient({ profile, perks: perkGroups, work
     return "Salary not specified";
   };
 
+  const formatDate = (d) => {
+    if (!d) return null;
+    return new Date(d).toLocaleDateString("en-KY", { year: "numeric", month: "short", day: "numeric" });
+  };
+
+  const togglePosting = (id) => {
+    setExpandedPostings((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
   const socialLinks = employer.social_links || {};
 
-  const Bar = ({ label, value, total, color = "bg-primary-300" }) => (
+  const Bar = ({ label, value, total, color = "bg-primary-500" }) => (
     <div className="flex items-center gap-2">
-      <div className="w-16 sm:w-24 md:w-32 text-xs text-neutral-600 dark:text-neutral-400 truncate" title={label}>{label}</div>
-      <div className="flex-1 h-2 rounded-full bg-neutral-100 dark:bg-neutral-800 overflow-hidden">
-        <div className={`h-full ${color}`} style={{ width: `${Math.round((value / Math.max(1, total)) * 100)}%` }} />
+      <div className="w-20 sm:w-28 md:w-36 text-xs text-neutral-600 dark:text-neutral-400 truncate" title={label}>{label}</div>
+      <div className="flex-1 h-3 rounded-full bg-neutral-100 dark:bg-neutral-800 overflow-hidden">
+        <div className={`h-full rounded-full ${color} transition-all`} style={{ width: `${Math.max(4, Math.round((value / Math.max(1, total)) * 100))}%` }} />
       </div>
-      <div className="w-12 sm:w-16 text-xs text-neutral-500 text-right">{value} ({Math.round((value / Math.max(1, total)) * 100)}%)</div>
+      <div className="w-16 text-xs text-neutral-500 text-right font-medium">{value} ({Math.round((value / Math.max(1, total)) * 100)}%)</div>
     </div>
   );
 
@@ -73,21 +111,20 @@ export default function EmployerProfileClient({ profile, perks: perkGroups, work
         {employer.cover_url ? (
           <div className="h-40 sm:h-48 md:h-64 w-full overflow-hidden">
             <img src={employer.cover_url} alt="" className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#FEFCF3] via-[#FEFCF3]/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#FEFCF3] via-[#FEFCF3]/40 to-transparent dark:from-[#171412] dark:via-[#171412]/40" />
           </div>
         ) : (
-          <div className="h-40 sm:h-48 md:h-64 w-full bg-gradient-to-br from-primary-100 via-neutral-50 to-primary-50">
-            <div className="absolute inset-0 bg-gradient-to-t from-[#FEFCF3] via-transparent to-transparent" />
+          <div className="h-40 sm:h-48 md:h-64 w-full bg-gradient-to-br from-primary-100 via-neutral-50 to-primary-50 dark:from-primary-500/10 dark:via-neutral-900 dark:to-primary-500/5">
+            <div className="absolute inset-0 bg-gradient-to-t from-[#FEFCF3] via-transparent to-transparent dark:from-[#171412]" />
           </div>
         )}
 
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="relative -mt-12 sm:-mt-16 md:-mt-20 flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
-            {/* Logo */}
             {employer.logo_url ? (
-              <img src={employer.logo_url} alt={employer.name} className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl object-contain bg-white dark:bg-neutral-900 border-4 border-[#FEFCF3] shadow-xl" />
+              <img src={employer.logo_url} alt={employer.name} className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl object-contain bg-white dark:bg-neutral-900 border-4 border-[#FEFCF3] dark:border-[#171412] shadow-xl" />
             ) : (
-              <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl bg-white dark:bg-neutral-800 shadow-sm border-4 border-[#FEFCF3] grid place-items-center shadow-xl">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-2xl bg-white dark:bg-neutral-800 shadow-sm border-4 border-[#FEFCF3] dark:border-[#171412] grid place-items-center shadow-xl">
                 <Building2 className="w-10 h-10 text-neutral-500" />
               </div>
             )}
@@ -98,14 +135,16 @@ export default function EmployerProfileClient({ profile, perks: perkGroups, work
 
               <div className="flex items-center gap-3 mt-3 flex-wrap">
                 {stats.activePostings > 0 && (
-                  <Badge className="bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30">Currently Hiring</Badge>
+                  <Badge className="bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/30">Currently Hiring</Badge>
                 )}
                 {employer.claimed && (
                   <Badge className="bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30">Verified</Badge>
                 )}
+                {stats.totalPostings > 0 && (
+                  <Badge className="bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700">{stats.totalPostings} total postings</Badge>
+                )}
               </div>
 
-              {/* Company quick info */}
               <div className="flex items-center gap-4 mt-3 flex-wrap text-sm text-neutral-500">
                 {employer.company_size && (
                   <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" /> {employer.company_size} employees</span>
@@ -121,7 +160,6 @@ export default function EmployerProfileClient({ profile, perks: perkGroups, work
                 )}
               </div>
 
-              {/* Links */}
               <div className="flex items-center gap-3 mt-3 flex-wrap">
                 {employer.website && (
                   <a href={employer.website} target="_blank" rel="noreferrer" className="text-sm text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-100 flex items-center gap-1 transition">
@@ -150,10 +188,31 @@ export default function EmployerProfileClient({ profile, perks: perkGroups, work
       </div>
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-8 space-y-10">
-        {/* Back link */}
         <Link href="/employers">
           <Button variant="secondary" className="gap-2"><ChevronLeft className="w-4 h-4" /> All Employers</Button>
         </Link>
+
+        {/* Quick Stats Bar */}
+        {stats.totalPostings > 0 && (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <Card className={t.card}><CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-primary-500">{stats.activePostings}</div>
+              <div className="text-sm text-neutral-500">Active Now</div>
+            </CardContent></Card>
+            <Card className={t.card}><CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold">{stats.totalPostings}</div>
+              <div className="text-sm text-neutral-500">All-Time Posts</div>
+            </CardContent></Card>
+            {stats.avgSalary > 0 && <Card className={t.card}><CardContent className="p-4 text-center">
+              <div className="text-xl font-bold">CI$ {Math.round(stats.avgSalary).toLocaleString()}</div>
+              <div className="text-sm text-neutral-500">Avg Salary</div>
+            </CardContent></Card>}
+            {stats.maxSalary > 0 && <Card className={t.card}><CardContent className="p-4 text-center">
+              <div className="text-xl font-bold">CI$ {Math.round(stats.maxSalary).toLocaleString()}</div>
+              <div className="text-sm text-neutral-500">Highest Salary</div>
+            </CardContent></Card>}
+          </div>
+        )}
 
         {/* About Section */}
         {sections.about && (employer.description || employer.company_size || employer.headquarters) && (
@@ -165,40 +224,32 @@ export default function EmployerProfileClient({ profile, perks: perkGroups, work
             {(employer.company_size || employer.year_founded || employer.headquarters || employer.industry) && (
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
                 {employer.company_size && (
-                  <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
-                    <CardContent className="p-4 text-center">
-                      <Users className="w-5 h-5 text-primary-500 mx-auto mb-2" />
-                      <div className="text-lg font-semibold">{employer.company_size}</div>
-                      <div className="text-xs text-neutral-500">Employees</div>
-                    </CardContent>
-                  </Card>
+                  <Card className={t.card}><CardContent className="p-4 text-center">
+                    <Users className="w-5 h-5 text-primary-500 mx-auto mb-2" />
+                    <div className="text-lg font-semibold">{employer.company_size}</div>
+                    <div className="text-xs text-neutral-500">Employees</div>
+                  </CardContent></Card>
                 )}
                 {employer.year_founded && (
-                  <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
-                    <CardContent className="p-4 text-center">
-                      <Calendar className="w-5 h-5 text-primary-500 mx-auto mb-2" />
-                      <div className="text-lg font-semibold">{employer.year_founded}</div>
-                      <div className="text-xs text-neutral-500">Founded</div>
-                    </CardContent>
-                  </Card>
+                  <Card className={t.card}><CardContent className="p-4 text-center">
+                    <Calendar className="w-5 h-5 text-primary-500 mx-auto mb-2" />
+                    <div className="text-lg font-semibold">{employer.year_founded}</div>
+                    <div className="text-xs text-neutral-500">Founded</div>
+                  </CardContent></Card>
                 )}
                 {employer.headquarters && (
-                  <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
-                    <CardContent className="p-4 text-center">
-                      <MapPin className="w-5 h-5 text-primary-500 mx-auto mb-2" />
-                      <div className="text-lg font-semibold">{employer.headquarters}</div>
-                      <div className="text-xs text-neutral-500">Headquarters</div>
-                    </CardContent>
-                  </Card>
+                  <Card className={t.card}><CardContent className="p-4 text-center">
+                    <MapPin className="w-5 h-5 text-primary-500 mx-auto mb-2" />
+                    <div className="text-lg font-semibold">{employer.headquarters}</div>
+                    <div className="text-xs text-neutral-500">Headquarters</div>
+                  </CardContent></Card>
                 )}
                 {employer.industry && (
-                  <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
-                    <CardContent className="p-4 text-center">
-                      <Briefcase className="w-5 h-5 text-primary-500 mx-auto mb-2" />
-                      <div className="text-lg font-semibold">{employer.industry}</div>
-                      <div className="text-xs text-neutral-500">Industry</div>
-                    </CardContent>
-                  </Card>
+                  <Card className={t.card}><CardContent className="p-4 text-center">
+                    <Briefcase className="w-5 h-5 text-primary-500 mx-auto mb-2" />
+                    <div className="text-lg font-semibold">{employer.industry}</div>
+                    <div className="text-xs text-neutral-500">Industry</div>
+                  </CardContent></Card>
                 )}
               </div>
             )}
@@ -243,21 +294,22 @@ export default function EmployerProfileClient({ profile, perks: perkGroups, work
             {activePostings.length > 0 && (
               <div className="relative mb-4 max-w-md">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
-                <Input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search by job title..." className="pl-10 bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700" />
+                <Input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search active positions..." className="pl-10 bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700" />
               </div>
             )}
 
             {filteredJobs.length > 0 ? (
               <div className="grid gap-3">
                 {filteredJobs.map((p, i) => (
-                  <Card key={p.cJobId || i} className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 hover:border-primary-300 transition">
+                  <Card key={p.cJobId || i} className={`${t.card} hover:border-primary-300 dark:hover:border-primary-500/40 transition`}>
                     <CardContent className="p-4">
                       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                         <div className="flex-1 min-w-0">
                           <h3 className="font-medium truncate">{p.cTitle}</h3>
-                          <div className="flex items-center gap-3 text-sm text-neutral-500 mt-1">
+                          <div className="flex items-center gap-3 text-sm text-neutral-500 mt-1 flex-wrap">
                             {workTypes.get(p.sWork) && <span>{workTypes.get(p.sWork)}</span>}
                             {locTypes.get(p.sLocation) && <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {locTypes.get(p.sLocation)}</span>}
+                            {p.numPositions > 1 && <span className="flex items-center gap-1"><Hash className="w-3 h-3" /> {p.numPositions} positions</span>}
                           </div>
                         </div>
                         <div className="text-right shrink-0 space-y-1">
@@ -266,11 +318,6 @@ export default function EmployerProfileClient({ profile, perks: perkGroups, work
                             <Link href={`/jobs/${p.cJobId}`}>
                               <Button size="sm" className="gap-1 text-xs h-7">View Details</Button>
                             </Link>
-                            <a href={generateWORCSearchURL(p)} target="_blank" rel="noreferrer">
-                              <Button size="sm" variant="secondary" className="gap-1 text-xs h-7">
-                                <ExternalLink className="w-3 h-3" /> Apply on WORC
-                              </Button>
-                            </a>
                           </div>
                         </div>
                       </div>
@@ -279,16 +326,17 @@ export default function EmployerProfileClient({ profile, perks: perkGroups, work
                 ))}
               </div>
             ) : activePostings.length === 0 ? (
-              <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
+              <Card className={t.card}>
                 <CardContent className="p-8 text-center">
-                  <Briefcase className="w-10 h-10 mx-auto mb-3 text-neutral-500" />
+                  <Briefcase className="w-10 h-10 mx-auto mb-3 text-neutral-400" />
                   <p className="text-neutral-500">No open positions at the moment.</p>
+                  {pastPostings.length > 0 && <p className="text-sm text-neutral-400 mt-1">See past postings below for hiring history.</p>}
                 </CardContent>
               </Card>
             ) : (
-              <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
+              <Card className={t.card}>
                 <CardContent className="p-8 text-center">
-                  <Search className="w-10 h-10 mx-auto mb-3 text-neutral-500" />
+                  <Search className="w-10 h-10 mx-auto mb-3 text-neutral-400" />
                   <p className="text-neutral-500">No positions match &ldquo;{searchQuery}&rdquo;</p>
                 </CardContent>
               </Card>
@@ -296,135 +344,304 @@ export default function EmployerProfileClient({ profile, perks: perkGroups, work
           </section>
         )}
 
-        {/* Hiring Insights (collapsible accordion) */}
-        {sections.insights && stats.totalPostings > 0 && (
+        {/* Past Postings */}
+        {pastPostings.length > 0 && (
           <section>
-            <button
-              onClick={() => setInsightsOpen(!insightsOpen)}
-              className="flex items-center gap-3 w-full text-left"
-            >
-              <h2 className="text-2xl font-semibold">Hiring Insights</h2>
-              <Badge className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-500">{stats.totalPostings} postings</Badge>
-              {insightsOpen ? <ChevronUp className="w-5 h-5 text-neutral-500 ml-auto" /> : <ChevronDown className="w-5 h-5 text-neutral-500 ml-auto" />}
-            </button>
+            <h2 className="text-2xl font-semibold mb-1">
+              Past Postings <span className="text-neutral-500 text-lg font-normal">({pastPostings.length})</span>
+            </h2>
+            <p className="text-sm text-neutral-500 mb-4">Historical job postings from {employer.name}. These positions are no longer active.</p>
 
-            {insightsOpen && (
-              <div className="mt-6 space-y-6">
-                {/* Stats overview */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"><CardContent className="p-4 text-center"><div className="text-2xl font-semibold">{stats.totalPostings}</div><div className="text-sm text-neutral-500">Total Posts</div></CardContent></Card>
-                  <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"><CardContent className="p-4 text-center"><div className="text-2xl font-semibold">{stats.activePostings}</div><div className="text-sm text-neutral-500">Active Now</div></CardContent></Card>
-                  {stats.avgSalary > 0 && <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"><CardContent className="p-4 text-center"><div className="text-xl font-semibold">CI$ {Math.round(stats.avgSalary).toLocaleString()}</div><div className="text-sm text-neutral-500">Avg Salary</div></CardContent></Card>}
-                  {stats.maxSalary > 0 && <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"><CardContent className="p-4 text-center"><div className="text-xl font-semibold">CI$ {Math.round(stats.maxSalary).toLocaleString()}</div><div className="text-sm text-neutral-500">Max Salary</div></CardContent></Card>}
-                </div>
+            {pastPostings.length > 5 && (
+              <div className="relative mb-4 max-w-md">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+                <Input value={pastSearchQuery} onChange={(e) => setPastSearchQuery(e.target.value)} placeholder="Search past postings..." className="pl-10 bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700" />
+              </div>
+            )}
 
-                {/* Salary range */}
-                {stats.minSalary > 0 && (
-                  <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
-                    <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold mb-3 flex items-center gap-2"><DollarSign className="w-5 h-5" /> Salary Range</h3>
-                      <div className="space-y-2">
-                        <div className="flex justify-between"><span className="text-neutral-500">Minimum</span><span className="font-medium">CI$ {Math.round(stats.minSalary).toLocaleString()}</span></div>
-                        <div className="flex justify-between"><span className="text-neutral-500">Average</span><span className="font-medium">CI$ {Math.round(stats.avgSalary).toLocaleString()}</span></div>
-                        <div className="flex justify-between"><span className="text-neutral-500">Maximum</span><span className="font-medium">CI$ {Math.round(stats.maxSalary).toLocaleString()}</span></div>
-                      </div>
+            <div className="grid gap-3">
+              {filteredPastJobs.map((p, i) => {
+                const isExpanded = expandedPostings.has(p.cJobId || i);
+                return (
+                  <Card key={p.cJobId || i} className={`${t.card} transition`}>
+                    <CardContent className="p-0">
+                      <button
+                        onClick={() => togglePosting(p.cJobId || i)}
+                        className="w-full p-4 text-left flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 rounded-2xl transition"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-medium truncate">{p.cTitle}</h3>
+                            <Badge className="bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700 text-[10px] shrink-0">Closed</Badge>
+                          </div>
+                          <div className="flex items-center gap-3 text-sm text-neutral-500 mt-1 flex-wrap">
+                            {p.Occupation && <span className="text-xs">{p.Occupation}</span>}
+                            {p.createdDate && <span className="flex items-center gap-1 text-xs"><Calendar className="w-3 h-3" /> {formatDate(p.createdDate)}</span>}
+                            {workTypes.get(p.sWork) && <span className="text-xs">{workTypes.get(p.sWork)}</span>}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 shrink-0">
+                          <div className="text-sm text-neutral-600 dark:text-neutral-400 font-medium">{formatSalary(p)}</div>
+                          {isExpanded ? <ChevronUp className="w-4 h-4 text-neutral-400" /> : <ChevronDown className="w-4 h-4 text-neutral-400" />}
+                        </div>
+                      </button>
+
+                      {isExpanded && (
+                        <div className="px-4 pb-4 border-t border-neutral-100 dark:border-neutral-800 pt-4 space-y-4">
+                          {/* Posting details grid */}
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 text-sm">
+                            {workTypes.get(p.sWork) && (
+                              <div>
+                                <div className="text-xs text-neutral-400 mb-0.5">Work Type</div>
+                                <div className="font-medium">{workTypes.get(p.sWork)}</div>
+                              </div>
+                            )}
+                            {locTypes.get(p.sLocation) && (
+                              <div>
+                                <div className="text-xs text-neutral-400 mb-0.5">Location</div>
+                                <div className="font-medium">{locTypes.get(p.sLocation)}</div>
+                              </div>
+                            )}
+                            {eduTypes.get(p.sEducation) && (
+                              <div>
+                                <div className="text-xs text-neutral-400 mb-0.5">Education</div>
+                                <div className="font-medium">{eduTypes.get(p.sEducation)}</div>
+                              </div>
+                            )}
+                            {expTypes.get(p.sExperience) && (
+                              <div>
+                                <div className="text-xs text-neutral-400 mb-0.5">Experience</div>
+                                <div className="font-medium">{expTypes.get(p.sExperience)}</div>
+                              </div>
+                            )}
+                            {p["Hours Per Week"] > 0 && (
+                              <div>
+                                <div className="text-xs text-neutral-400 mb-0.5">Hours/Week</div>
+                                <div className="font-medium">{p["Hours Per Week"]}</div>
+                              </div>
+                            )}
+                            {p.numPositions > 0 && (
+                              <div>
+                                <div className="text-xs text-neutral-400 mb-0.5">Positions</div>
+                                <div className="font-medium">{p.numPositions}</div>
+                              </div>
+                            )}
+                            {p.payFrequency && (
+                              <div>
+                                <div className="text-xs text-neutral-400 mb-0.5">Pay Frequency</div>
+                                <div className="font-medium capitalize">{p.payFrequency}</div>
+                              </div>
+                            )}
+                            <div>
+                              <div className="text-xs text-neutral-400 mb-0.5">Salary</div>
+                              <div className="font-medium">{formatSalary(p)}</div>
+                            </div>
+                            {p.createdDate && (
+                              <div>
+                                <div className="text-xs text-neutral-400 mb-0.5">Posted</div>
+                                <div className="font-medium">{formatDate(p.createdDate)}</div>
+                              </div>
+                            )}
+                            {p.endDate && (
+                              <div>
+                                <div className="text-xs text-neutral-400 mb-0.5">Closed</div>
+                                <div className="font-medium">{formatDate(p.endDate)}</div>
+                              </div>
+                            )}
+                            {p.applicantCount > 0 && (
+                              <div>
+                                <div className="text-xs text-neutral-400 mb-0.5">Applicants</div>
+                                <div className="font-medium">{p.applicantCount}</div>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Job Description */}
+                          {p.jobDescription && (
+                            <div>
+                              <h4 className="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-2 flex items-center gap-1.5">
+                                <FileText className="w-3.5 h-3.5" /> Job Description
+                              </h4>
+                              <div className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-line bg-neutral-50 dark:bg-neutral-800/50 rounded-xl p-4 max-h-64 overflow-y-auto">
+                                {p.jobDescription}
+                              </div>
+                            </div>
+                          )}
+
+                          <div className="flex gap-2 pt-1">
+                            <Link href={`/jobs/${p.cJobId}`}>
+                              <Button size="sm" variant="secondary" className="gap-1 text-xs h-7">View Full Posting</Button>
+                            </Link>
+                          </div>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
-                )}
+                );
+              })}
+            </div>
 
-                {/* Top Roles */}
-                {topRoles.length > 0 && (
-                  <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
+            {!showAllPast && !pastSearchQuery && pastPostings.length > 10 && (
+              <div className="mt-4 text-center">
+                <Button variant="secondary" onClick={() => setShowAllPast(true)} className="gap-2">
+                  Show All {pastPostings.length} Past Postings <ChevronDown className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* Hiring Insights - shown open by default */}
+        {sections.insights && stats.totalPostings > 0 && (
+          <section>
+            <h2 className="text-2xl font-semibold mb-6">Hiring Insights</h2>
+
+            <div className="space-y-6">
+              {/* Salary range */}
+              {stats.minSalary > 0 && (
+                <Card className={t.card}>
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><DollarSign className="w-5 h-5 text-primary-500" /> Salary Range</h3>
+                    <div className="grid grid-cols-3 gap-4 text-center">
+                      <div>
+                        <div className="text-sm text-neutral-500 mb-1">Minimum</div>
+                        <div className="text-lg font-bold">CI$ {Math.round(stats.minSalary).toLocaleString()}</div>
+                      </div>
+                      <div className="border-x border-neutral-200 dark:border-neutral-700">
+                        <div className="text-sm text-neutral-500 mb-1">Average</div>
+                        <div className="text-lg font-bold text-primary-500">CI$ {Math.round(stats.avgSalary).toLocaleString()}</div>
+                      </div>
+                      <div>
+                        <div className="text-sm text-neutral-500 mb-1">Maximum</div>
+                        <div className="text-lg font-bold">CI$ {Math.round(stats.maxSalary).toLocaleString()}</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Top Roles */}
+              {topRoles.length > 0 && (
+                <Card className={t.card}>
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><Users className="w-5 h-5 text-primary-500" /> Most Hired Roles</h3>
+                    <div className="space-y-2.5">
+                      {topRoles.map((role, i) => (
+                        <Bar key={i} label={role.title} value={role.count} total={stats.totalPostings} color={BAR_COLORS[i % BAR_COLORS.length]} />
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Distributions - two columns on desktop */}
+              <div className="grid md:grid-cols-2 gap-6">
+                {Object.entries(distributions.work).length > 0 && (
+                  <Card className={t.card}>
                     <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><Users className="w-5 h-5" /> Top Roles</h3>
-                      <div className="space-y-2">
-                        {topRoles.map((role, i) => (
-                          <Bar key={i} label={role.title} value={role.count} total={stats.totalPostings} color="bg-primary-300" />
+                      <h3 className="text-base font-semibold mb-4 flex items-center gap-2"><Briefcase className="w-4 h-4 text-primary-500" /> Work Types</h3>
+                      <div className="space-y-2.5">
+                        {Object.entries(distributions.work).map(([k, v], i) => (
+                          <Bar key={k} label={workTypes.get(k) || k} value={v} total={stats.totalPostings} color={BAR_COLORS[i % BAR_COLORS.length]} />
                         ))}
                       </div>
                     </CardContent>
                   </Card>
                 )}
 
-                {/* Distributions */}
-                <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
-                  <CardContent className="p-6">
-                    <h3 className="text-lg font-semibold mb-4 flex items-center gap-2"><BarChart3 className="w-5 h-5" /> Hiring Patterns</h3>
-                    <div className="space-y-6">
-                      <div>
-                        <h4 className="text-sm font-medium mb-3 flex items-center gap-2"><Briefcase className="w-4 h-4" /> Work Types</h4>
-                        <div className="space-y-2">{Object.entries(distributions.work).map(([k, v]) => <Bar key={k} label={workTypes.get(k) || k} value={v} total={stats.totalPostings} color="bg-primary-300" />)}</div>
-                      </div>
-                      <div>
-                        <h4 className="text-sm font-medium mb-3 flex items-center gap-2"><BookOpen className="w-4 h-4" /> Education</h4>
-                        <div className="space-y-2">{Object.entries(distributions.edu).map(([k, v]) => <Bar key={k} label={eduTypes.get(k) || k} value={v} total={stats.totalPostings} color="bg-primary-200" />)}</div>
-                      </div>
-                      <div>
-                        <h4 className="text-sm font-medium mb-3 flex items-center gap-2"><Clock className="w-4 h-4" /> Experience</h4>
-                        <div className="space-y-2">{Object.entries(distributions.exp).map(([k, v]) => <Bar key={k} label={expTypes.get(k) || k} value={v} total={stats.totalPostings} color="bg-primary-300" />)}</div>
-                      </div>
-                      <div>
-                        <h4 className="text-sm font-medium mb-3 flex items-center gap-2"><MapPin className="w-4 h-4" /> Locations</h4>
-                        <div className="space-y-2">{Object.entries(distributions.loc).map(([k, v]) => <Bar key={k} label={locTypes.get(k) || k} value={v} total={stats.totalPostings} color="bg-primary-200" />)}</div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Timeline */}
-                {timeline.length > 0 && (() => {
-                  const maxCount = Math.max(...timeline.map((t) => t[1]));
-                  const MONTHS_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-                  const formatMonth = (m) => {
-                    const [y, mo] = m.split("-");
-                    return { short: MONTHS_SHORT[parseInt(mo, 10) - 1], year: y };
-                  };
-                  const totalPostings = timeline.reduce((s, t) => s + t[1], 0);
-                  return (
-                    <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
-                      <CardContent className="p-6">
-                        <div className="flex items-center justify-between mb-1">
-                          <h3 className="text-lg font-semibold flex items-center gap-2"><Calendar className="w-5 h-5" /> Hiring Timeline</h3>
-                          <span className="text-sm text-neutral-500">{totalPostings} total postings</span>
-                        </div>
-                        <div className="pt-4">
-                          <div className="flex items-end gap-1" style={{ height: "10rem" }}>
-                            {timeline.map(([month, count]) => {
-                              const pct = count / maxCount;
-                              const barHeight = Math.max(6, Math.round(pct * 120));
-                              const { short, year } = formatMonth(month);
-                              const showYear = month.endsWith("-01") || timeline[0][0] === month;
-                              return (
-                                <div key={month} className="flex-1 flex flex-col items-center group" title={`${short} ${year}: ${count} posting${count !== 1 ? "s" : ""}`}>
-                                  <div className="text-[11px] text-neutral-500 mb-1 opacity-0 group-hover:opacity-100 transition-opacity font-medium">{count}</div>
-                                  <div className="w-full max-w-[2.5rem] mx-auto rounded-t transition-colors bg-primary-300 group-hover:bg-primary-400" style={{ height: `${barHeight}px` }} />
-                                  <div className="text-[10px] text-neutral-500 mt-2 leading-none">{short}</div>
-                                  {showYear && <div className="text-[9px] text-neutral-600 dark:text-neutral-400 leading-none mt-0.5">{year}</div>}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })()}
-
-                {/* Industries */}
-                {industries.length > 0 && (
-                  <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
+                {Object.entries(distributions.edu).length > 0 && (
+                  <Card className={t.card}>
                     <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold mb-4">Industries</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {industries.map(([name, count]) => (
-                          <Badge key={name} className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400">{name} ({count})</Badge>
+                      <h3 className="text-base font-semibold mb-4 flex items-center gap-2"><BookOpen className="w-4 h-4 text-accent-500" /> Education Requirements</h3>
+                      <div className="space-y-2.5">
+                        {Object.entries(distributions.edu).map(([k, v], i) => (
+                          <Bar key={k} label={eduTypes.get(k) || k} value={v} total={stats.totalPostings} color={BAR_COLORS[(i + 1) % BAR_COLORS.length]} />
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {Object.entries(distributions.exp).length > 0 && (
+                  <Card className={t.card}>
+                    <CardContent className="p-6">
+                      <h3 className="text-base font-semibold mb-4 flex items-center gap-2"><Clock className="w-4 h-4 text-cayman-sand" /> Experience Levels</h3>
+                      <div className="space-y-2.5">
+                        {Object.entries(distributions.exp).map(([k, v], i) => (
+                          <Bar key={k} label={expTypes.get(k) || k} value={v} total={stats.totalPostings} color={BAR_COLORS[(i + 2) % BAR_COLORS.length]} />
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {Object.entries(distributions.loc).length > 0 && (
+                  <Card className={t.card}>
+                    <CardContent className="p-6">
+                      <h3 className="text-base font-semibold mb-4 flex items-center gap-2"><MapPin className="w-4 h-4 text-accent-500" /> Locations</h3>
+                      <div className="space-y-2.5">
+                        {Object.entries(distributions.loc).map(([k, v], i) => (
+                          <Bar key={k} label={locTypes.get(k) || k} value={v} total={stats.totalPostings} color={BAR_COLORS[(i + 3) % BAR_COLORS.length]} />
                         ))}
                       </div>
                     </CardContent>
                   </Card>
                 )}
               </div>
-            )}
+
+              {/* Timeline */}
+              {timeline.length > 0 && (() => {
+                const maxCount = Math.max(...timeline.map((t) => t[1]));
+                const MONTHS_SHORT = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+                const formatMonth = (m) => {
+                  const [y, mo] = m.split("-");
+                  return { short: MONTHS_SHORT[parseInt(mo, 10) - 1], year: y };
+                };
+                const totalPostings = timeline.reduce((s, t) => s + t[1], 0);
+                return (
+                  <Card className={t.card}>
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between mb-1">
+                        <h3 className="text-lg font-semibold flex items-center gap-2"><Calendar className="w-5 h-5 text-primary-500" /> Hiring Timeline</h3>
+                        <span className="text-sm text-neutral-500">{totalPostings} total postings</span>
+                      </div>
+                      <div className="pt-4">
+                        <div className="flex items-end gap-1" style={{ height: "10rem" }}>
+                          {timeline.map(([month, count]) => {
+                            const pct = count / maxCount;
+                            const barHeight = Math.max(6, Math.round(pct * 120));
+                            const { short, year } = formatMonth(month);
+                            const showYear = month.endsWith("-01") || timeline[0][0] === month;
+                            return (
+                              <div key={month} className="flex-1 flex flex-col items-center group" title={`${short} ${year}: ${count} posting${count !== 1 ? "s" : ""}`}>
+                                <div className="text-[11px] text-neutral-500 mb-1 opacity-0 group-hover:opacity-100 transition-opacity font-medium">{count}</div>
+                                <div className="w-full max-w-[2.5rem] mx-auto rounded-t transition-colors bg-primary-500 group-hover:bg-primary-400" style={{ height: `${barHeight}px` }} />
+                                <div className="text-[10px] text-neutral-500 mt-2 leading-none">{short}</div>
+                                {showYear && <div className="text-[9px] text-neutral-600 dark:text-neutral-400 leading-none mt-0.5">{year}</div>}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })()}
+
+              {/* Industries */}
+              {industries.length > 0 && (
+                <Card className={t.card}>
+                  <CardContent className="p-6">
+                    <h3 className="text-lg font-semibold mb-4">Industries</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {industries.map(([name, count]) => (
+                        <Badge key={name} className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 px-3 py-1.5">{name} ({count})</Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
           </section>
         )}
 
