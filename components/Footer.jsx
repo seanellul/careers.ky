@@ -44,6 +44,29 @@ export default function Footer() {
             Making hiring talent visible, accessible and fair. Job postings synced daily from WORC.
           </p>
         </div>
+        <div className="mt-4 pt-4 border-t border-white/5 text-xs text-center text-neutral-500">
+          Built by{" "}
+          <a href="https://seanellul.com" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-300 transition-colors">
+            Sean Ellul
+          </a>
+          <span className="mx-2">·</span>
+          Also:{" "}
+          <a href="https://legislation.ky" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-300 transition-colors">
+            Legislation.ky
+          </a>
+          <span className="mx-1">|</span>
+          <a href="https://constitution.ky" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-300 transition-colors">
+            Constitution.ky
+          </a>
+          <span className="mx-1">|</span>
+          <a href="https://cheap.ky" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-300 transition-colors">
+            Cheap.ky
+          </a>
+          <span className="mx-1">|</span>
+          <a href="https://caybooks.com" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-300 transition-colors">
+            CayBooks
+          </a>
+        </div>
       </div>
     </footer>
   );
