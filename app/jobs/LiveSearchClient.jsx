@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, Filter, TrendingUp, MapPin, Building2, Calendar, X, Plus, HeartHandshake, CheckCircle, DollarSign, GraduationCap, Clock } from "lucide-react";
+import posthog from "posthog-js";
 import gsap from "gsap";
 import t from "@/lib/theme";
 
@@ -103,8 +104,14 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
     fetch("/api/auth/session").then(r => r.json()).then(d => { setSession(d.authenticated ? d : null); setSessionLoaded(true); }).catch(() => setSessionLoaded(true));
   }, []);
 
-  const handleExpressInterest = async (jobId) => {
+  const handleExpressInterest = async (job) => {
+    const jobId = job.jobPostIdString || job.jobPostId;
     setSendingInterest(jobId);
+    posthog.capture("express_interest_clicked", {
+      job_id: jobId,
+      job_title: job.jobTitle,
+      employer_name: job.employerName,
+    });
     try {
       const res = await fetch("/api/introductions", {
         method: "POST",
@@ -118,6 +125,13 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
       setSendingInterest(null);
     }
   };
+
+  const changePage = useCallback((next) => {
+    setPage(next);
+    if (containerRef.current) {
+      containerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
 
   // Sync filter state to URL
   const updateURL = useCallback(() => {
@@ -282,7 +296,7 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
             <div className="flex gap-2">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
-                <Input value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} placeholder="Search by job title or employer..." className="pl-10 bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 h-12 text-base" />
+                <Input value={q} onChange={(e) => { setQ(e.target.value); setPage(1); posthog.capture("filter_applied", { filter_type: "search", value: e.target.value }); }} placeholder="Search by job title or employer..." className="pl-10 bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 h-12 text-base" />
               </div>
               {sessionLoaded && session?.employerCompanyName && (
                 <Button
@@ -387,7 +401,19 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
         </div>
 
         <div ref={containerRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
-          {view.map((j, idx) => {
+          {paginating ? Array.from({ length: pageSize }).map((_, i) => (
+            <Card key={i} className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 h-full">
+              <CardContent className="p-5 space-y-3">
+                <div className="h-5 w-16 rounded-full bg-neutral-100 dark:bg-neutral-700 animate-pulse" />
+                <div className="h-4 w-3/4 rounded bg-neutral-100 dark:bg-neutral-700 animate-pulse" />
+                <div className="h-3 w-1/2 rounded bg-neutral-100 dark:bg-neutral-700 animate-pulse" />
+                <div className="h-3 w-2/3 rounded bg-neutral-100 dark:bg-neutral-700 animate-pulse" />
+                <div className="h-3 w-1/3 rounded bg-neutral-100 dark:bg-neutral-700 animate-pulse" />
+                <div className="mt-4 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-700 animate-pulse" />
+                <div className="h-10 rounded-xl bg-neutral-100 dark:bg-neutral-700 animate-pulse" />
+              </CardContent>
+            </Card>
+          )) : view.map((j, idx) => {
             const salary = fmtSalaryDisplay(j);
             return (
             <Card key={`${j.jobPostId || idx}`} className="job-card group bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 hover:shadow-lg hover:shadow-primary-200/10 hover:-translate-y-0.5 transition-all duration-200 h-full">
@@ -431,7 +457,7 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
                           <>
                             {isCandidate && !alreadySent && (
                               <button
-                                onClick={(e) => { e.preventDefault(); handleExpressInterest(jobId); }}
+                                onClick={(e) => { e.preventDefault(); handleExpressInterest(j); }}
                                 disabled={sendingInterest === jobId}
                                 className="inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium bg-primary-50 dark:bg-primary-500/15 text-primary-500 border border-primary-200 dark:border-primary-500/30 hover:bg-primary-100 w-full gap-2 h-10 px-4 py-2 transition disabled:opacity-50"
                               >
@@ -467,8 +493,8 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-sm text-neutral-600 dark:text-neutral-400">Page {page} of {totalPages}</div>
           <div className="flex gap-2">
-            <Button variant="secondary" disabled={page === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>Previous</Button>
-            <Button variant="secondary" disabled={page === totalPages} onClick={() => setPage((p) => Math.min(totalPages, p + 1))}>Next</Button>
+            <Button variant="secondary" disabled={page === 1} onClick={() => changePage(Math.max(1, page - 1))}>Previous</Button>
+            <Button variant="secondary" disabled={page === totalPages} onClick={() => changePage(Math.min(totalPages, page + 1))}>Next</Button>
           </div>
         </div>
 
