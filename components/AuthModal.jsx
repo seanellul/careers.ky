@@ -3,12 +3,14 @@
 import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import t from "@/lib/theme";
+import posthog from "posthog-js";
 
 export default function AuthModal({ open, onClose, type = "candidate" }) {
   const overlayRef = useRef(null);
 
   useEffect(() => {
     if (!open) return;
+    posthog.capture("sign_up_started", { auth_type: type });
     const handleEsc = (e) => {
       if (e.key === "Escape") onClose?.();
     };
@@ -49,6 +51,7 @@ export default function AuthModal({ open, onClose, type = "candidate" }) {
         <div className="flex flex-col gap-3">
           <a
             href={`/api/auth/google?type=${loginType}`}
+            onClick={() => posthog.capture("auth_method_chosen", { method: "google", auth_type: loginType })}
             className="flex items-center justify-center gap-2 px-4 py-3 min-h-[48px] rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium hover:bg-neutral-800 dark:hover:bg-neutral-100 transition"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -61,6 +64,7 @@ export default function AuthModal({ open, onClose, type = "candidate" }) {
           </a>
           <a
             href={`/api/auth/linkedin?type=${loginType}`}
+            onClick={() => posthog.capture("auth_method_chosen", { method: "linkedin", auth_type: loginType })}
             className="flex items-center justify-center gap-2 px-4 py-3 min-h-[48px] rounded-xl text-white text-sm font-medium hover:opacity-90 transition"
             style={{ backgroundColor: "#0A66C2" }}
           >

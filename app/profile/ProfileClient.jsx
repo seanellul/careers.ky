@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import posthog from "posthog-js";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -178,6 +179,11 @@ export default function ProfileClient({ candidate, interests, skills, notificati
         }),
       });
       if (res.ok) {
+        posthog.capture("profile_updated", {
+          skills_count: editSkills.length,
+          interests_count: editInterests.length,
+          is_discoverable: form.isDiscoverable,
+        });
         setEditing(false);
         router.refresh();
       }
@@ -451,7 +457,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
             {/* Professional Details */}
             <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
               <CardContent className="p-6 space-y-4">
-                <h2 className="text-lg font-semibold flex items-center gap-2"><Briefcase className="w-5 h-5" /> Professional Details</h2>
+                <h2 className="text-lg font-semibold flex items-center gap-2"><Briefcase className="w-5 h-5 pointer-events-none" aria-hidden="true" /> Professional Details</h2>
                 {editing ? (
                   <div className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -546,7 +552,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
             <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold flex items-center gap-2"><Star className="w-5 h-5" /> Career Interests</h2>
+                  <h2 className="text-lg font-semibold flex items-center gap-2"><Star className="w-5 h-5 pointer-events-none" aria-hidden="true" /> Career Interests</h2>
                   {editing && (
                     <Button variant="secondary" size="sm" onClick={() => setShowInterestSearch(!showInterestSearch)} className="gap-1">
                       <Plus className="w-3 h-3" /> Add Interest
@@ -593,8 +599,8 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                           </Badge>
                         </Link>
                         {editing && (
-                          <button onClick={() => removeInterest(i.ciscoCode)} className="text-neutral-500 hover:text-red-500">
-                            <X className="w-3 h-3" />
+                          <button onClick={() => removeInterest(i.ciscoCode)} className="text-neutral-500 hover:text-red-500 p-1 -m-1 rounded">
+                            <X className="w-3.5 h-3.5" />
                           </button>
                         )}
                       </div>
@@ -610,7 +616,7 @@ export default function ProfileClient({ candidate, interests, skills, notificati
             <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-semibold flex items-center gap-2"><Briefcase className="w-5 h-5" /> Skills</h2>
+                  <h2 className="text-lg font-semibold flex items-center gap-2"><Briefcase className="w-5 h-5 pointer-events-none" aria-hidden="true" /> Skills</h2>
                   {editing && (
                     <Button variant="secondary" size="sm" onClick={() => setShowSkillSearch(!showSkillSearch)} className="gap-1">
                       <Plus className="w-3 h-3" /> Add Skill
@@ -665,8 +671,8 @@ export default function ProfileClient({ candidate, interests, skills, notificati
                       <div key={s.id} className="flex items-center gap-1">
                         <Badge className="bg-purple-50 text-purple-600 border-purple-200">{s.name}</Badge>
                         {editing && (
-                          <button onClick={() => removeSkill(s.id)} className="text-neutral-500 hover:text-red-500">
-                            <X className="w-3 h-3" />
+                          <button onClick={() => removeSkill(s.id)} className="text-neutral-500 hover:text-red-500 p-1 -m-1 rounded">
+                            <X className="w-3.5 h-3.5" />
                           </button>
                         )}
                       </div>

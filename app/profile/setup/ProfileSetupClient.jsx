@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import posthog from "posthog-js";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -86,6 +87,11 @@ export default function ProfileSetupClient({ candidate }) {
         }),
       });
       if (res.ok) {
+        posthog.capture("sign_up_completed", {
+          is_caymanian: form.isCaymanian,
+          is_discoverable: form.isDiscoverable,
+          interests_count: selectedInterests.length,
+        });
         try { localStorage.removeItem("ck_onboarding"); } catch {}
         // Check for stored redirect from auth flow
         try {

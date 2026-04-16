@@ -495,6 +495,80 @@ export default function HomeClient({
         </div>
       </section>
 
+      {/* Employer Value Prop */}
+      <section className="py-20 bg-gradient-to-b from-transparent via-emerald-50/40 to-transparent dark:via-emerald-500/5">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-10 items-center">
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-2 text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/25 rounded-full px-3 py-1 text-sm font-medium">
+                <Building2 className="w-4 h-4" /> For Employers
+              </div>
+              <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
+                Stop paying <span className="text-red-500 line-through">15–25%</span> per hire.
+                <br />
+                <span className="text-emerald-600">CI$299/month</span> replaces your recruiter.
+              </h2>
+              <p className="text-neutral-600 dark:text-neutral-400 text-lg">
+                Search Caymanian talent directly. Send introductions. Hire faster. Build relationships. One flat fee — no per-hire commissions.
+              </p>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center p-4 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm">
+                  <div className="text-2xl font-semibold text-emerald-600">CI$90K+</div>
+                  <div className="text-xs text-neutral-500 mt-1">saved/year vs recruiters</div>
+                </div>
+                <div className="text-center p-4 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm">
+                  <div className="text-2xl font-semibold text-primary-500">{jobCount}</div>
+                  <div className="text-xs text-neutral-500 mt-1">active postings</div>
+                </div>
+                <div className="text-center p-4 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 shadow-sm">
+                  <div className="text-2xl font-semibold text-orange-600">Direct</div>
+                  <div className="text-xs text-neutral-500 mt-1">candidate connections</div>
+                </div>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link href="/talent" onClick={() => { if (typeof window !== "undefined") { import("posthog-js").then(ph => ph.default.capture("employer_cta_clicked", { source: "homepage_employer_section" })); } }}>
+                  <Button size="lg" className="gap-2 h-12 text-base bg-emerald-600 hover:bg-emerald-700 text-white border-0">
+                    <Users className="w-4 h-4" />
+                    Search Caymanian Talent
+                  </Button>
+                </Link>
+                <Link href="/employer/setup">
+                  <Button size="lg" variant="secondary" className="gap-2 h-12 text-base">
+                    <Building2 className="w-4 h-4" />
+                    Set Up Employer Account
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            <div className="rounded-3xl p-1.5 bg-gradient-to-b from-emerald-200 via-emerald-50 to-transparent dark:from-emerald-500/20 dark:via-emerald-500/5 dark:to-transparent">
+              <div className="rounded-2xl bg-white/80 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-700 p-6 space-y-4">
+                <div className="text-sm text-neutral-500">Cost comparison</div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3 rounded-xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/25">
+                    <div>
+                      <div className="text-sm font-medium text-red-700 dark:text-red-400">Traditional Recruiter</div>
+                      <div className="text-xs text-red-600/70 dark:text-red-400/70">15–25% of first-year salary</div>
+                    </div>
+                    <div className="text-lg font-semibold text-red-600">CI$10–16K<span className="text-xs font-normal">/hire</span></div>
+                  </div>
+                  <div className="text-center text-xs text-neutral-500">vs</div>
+                  <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/25">
+                    <div>
+                      <div className="text-sm font-medium text-emerald-700 dark:text-emerald-400">careers.ky Pro</div>
+                      <div className="text-xs text-emerald-600/70 dark:text-emerald-400/70">Unlimited hires, one flat fee</div>
+                    </div>
+                    <div className="text-lg font-semibold text-emerald-600">CI$299<span className="text-xs font-normal">/mo</span></div>
+                  </div>
+                </div>
+                <div className="text-center text-xs text-neutral-500 pt-2 border-t border-neutral-200 dark:border-neutral-700">
+                  10 hires/year = <span className="font-semibold text-emerald-600">CI$90–150K saved</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Jobs CTA Section */}
       <section id="jobs" className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
