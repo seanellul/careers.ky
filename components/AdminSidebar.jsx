@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, Users, Building2, Presentation, Heart, Send, ShieldCheck, Menu, X,
+  LayoutDashboard, Users, Building2, Presentation, Heart, Send, ShieldCheck, Menu, X, ListOrdered,
 } from "lucide-react";
 
 export default function AdminSidebar() {
@@ -19,6 +19,7 @@ export default function AdminSidebar() {
     { href: "/admin/verifications", label: "Verifications", icon: ShieldCheck },
     { href: "/admin/interests", label: "Interests", icon: Heart },
     { href: "/admin/outreach", label: "Outreach", icon: Send },
+    { href: "/admin/waitlist", label: "Waitlist", icon: ListOrdered },
   ];
 
   const isActive = (href) => {

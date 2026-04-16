@@ -1,0 +1,146 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "careers.ky logo careers.ky" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "careers.ky logo" [ref=e6]
+        - generic [ref=e7]: careers.ky
+      - navigation [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "Careers" [ref=e10] [cursor=pointer]:
+          - /url: /careers
+        - link "About" [ref=e11] [cursor=pointer]:
+          - /url: /about
+        - link "Dashboard" [ref=e148] [cursor=pointer]:
+          - /url: /employer/dashboard
+        - button "Toggle dark mode" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+        - generic [ref=e66]:
+          - link "3" [ref=e67] [cursor=pointer]:
+            - /url: /notifications
+            - img [ref=e68]
+            - generic [ref=e71]: "3"
+          - button "S" [ref=e73] [cursor=pointer]:
+            - generic [ref=e74]: S
+            - img [ref=e75]
+  - generic [ref=e17]:
+    - generic [ref=e18]:
+      - heading "Cayman Talent Pool" [level=1] [ref=e77]
+      - paragraph [ref=e78]: Search for local talent by career interests, skills, education, and experience. Candidates are ranked by match quality.
+    - generic [ref=e80]:
+      - generic [ref=e81]:
+        - generic [ref=e82]:
+          - img [ref=e83]
+          - text: careers.ky Pro — Early Access
+        - heading "Stop paying 15–25% per hire." [level=1] [ref=e87]
+        - paragraph [ref=e88]: Search Caymanian talent directly. Send introductions. One flat monthly fee — no recruiters, no per-hire commissions.
+        - generic [ref=e89]:
+          - generic [ref=e90]:
+            - img [ref=e92]
+            - generic [ref=e97]:
+              - generic [ref=e98]: Search talent directly
+              - generic [ref=e99]: Filter by skills, CISCO code, experience, location & availability
+          - generic [ref=e100]:
+            - img [ref=e102]
+            - generic [ref=e104]:
+              - generic [ref=e105]: Automated compliance records
+              - generic [ref=e106]: Timestamped proof you considered Caymanian candidates
+          - generic [ref=e107]:
+            - img [ref=e109]
+            - generic [ref=e112]:
+              - generic [ref=e113]: CI$299/month flat fee
+              - generic [ref=e114]: Hiring 10 people a year? Save CI$90–150K vs recruiters
+        - generic [ref=e115]:
+          - strong [ref=e116]: "Early access:"
+          - text: We're onboarding employers in batches. Join now to secure your spot.
+      - generic [ref=e118]:
+        - heading "Join the waitlist" [level=2] [ref=e119]
+        - paragraph [ref=e120]: Free to join. We'll email you when your access is ready.
+        - generic [ref=e121]:
+          - generic [ref=e122]:
+            - generic [ref=e123]:
+              - generic [ref=e124]: Your name
+              - textbox "Jane Smith" [ref=e125]
+            - generic [ref=e126]:
+              - generic [ref=e127]: Work email *
+              - textbox "jane@company.com" [ref=e128]
+          - generic [ref=e129]:
+            - generic [ref=e130]: Company name *
+            - textbox "Acme Ltd." [ref=e131]
+          - generic [ref=e132]:
+            - generic [ref=e133]: Company size
+            - generic [ref=e134]:
+              - button "1–10 employees" [ref=e135] [cursor=pointer]
+              - button "11–50 employees" [ref=e136] [cursor=pointer]
+              - button "51–200 employees" [ref=e137] [cursor=pointer]
+              - button "201–500 employees" [ref=e138] [cursor=pointer]
+              - button "500+ employees" [ref=e139] [cursor=pointer]
+          - generic [ref=e140]:
+            - generic [ref=e141]: What are you primarily hiring for? (optional)
+            - textbox "e.g. Finance, Legal, Hospitality..." [ref=e142]
+          - button "Join Waitlist" [ref=e143] [cursor=pointer]:
+            - text: Join Waitlist
+            - img [ref=e144]
+          - paragraph [ref=e146]: No payment required. We'll email you when you're approved.
+  - contentinfo [ref=e19]:
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - img "careers.ky logo" [ref=e24]
+          - generic [ref=e25]:
+            - generic [ref=e26]: careers.ky
+            - generic [ref=e27]: A Caymanian-First Careers Platform
+        - generic [ref=e28]:
+          - generic [ref=e29]:
+            - generic [ref=e30]: For Job Seekers
+            - generic [ref=e31]:
+              - link "Career Tracks" [ref=e32] [cursor=pointer]:
+                - /url: /careers?tab=career-tracks
+              - link "Live Search" [ref=e33] [cursor=pointer]:
+                - /url: /careers?tab=jobs
+              - link "Create Profile" [ref=e34] [cursor=pointer]:
+                - /url: /profile/setup
+          - generic [ref=e35]:
+            - generic [ref=e36]: For Employers
+            - generic [ref=e37]:
+              - link "Employer Directory" [ref=e38] [cursor=pointer]:
+                - /url: /employers
+              - link "Search Talent" [ref=e39] [cursor=pointer]:
+                - /url: /talent
+        - generic [ref=e40]:
+          - link "About" [ref=e41] [cursor=pointer]:
+            - /url: /about
+          - link "FAQ" [ref=e42] [cursor=pointer]:
+            - /url: "#faq"
+      - paragraph [ref=e44]: Making hiring talent visible, accessible and fair. Job postings synced daily from WORC.
+      - generic [ref=e45]:
+        - text: Built by
+        - link "Sean Ellul" [ref=e46] [cursor=pointer]:
+          - /url: https://seanellul.com
+        - text: "·Also:"
+        - link "Legislation.ky" [ref=e47] [cursor=pointer]:
+          - /url: https://legislation.ky
+        - text: "|"
+        - link "Constitution.ky" [ref=e48] [cursor=pointer]:
+          - /url: https://constitution.ky
+        - text: "|"
+        - link "Cheap.ky" [ref=e49] [cursor=pointer]:
+          - /url: https://cheap.ky
+        - text: "|"
+        - link "CayBooks" [ref=e50] [cursor=pointer]:
+          - /url: https://caybooks.com
+  - generic [ref=e51]:
+    - generic [ref=e52]:
+      - generic [ref=e53]: DEV TOOLBAR
+      - button "−" [ref=e54] [cursor=pointer]
+    - generic [ref=e55]: "Current: Employer"
+    - generic [ref=e147]: Sean Ellul
+    - generic [ref=e56]: "Test without OAuth:"
+    - button "New candidate → profile setup" [ref=e57] [cursor=pointer]
+    - button "Stable dev candidate → dashboard" [ref=e58] [cursor=pointer]
+    - generic [ref=e59]: "Switch existing DB user:"
+    - generic [ref=e60]:
+      - button "Employer" [ref=e61] [cursor=pointer]
+      - button "Candidate" [ref=e62] [cursor=pointer]
+  - alert [ref=e63]

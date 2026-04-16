@@ -1,0 +1,143 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "careers.ky logo careers.ky" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "careers.ky logo" [ref=e6]
+        - generic [ref=e7]: careers.ky
+      - navigation [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "Careers" [ref=e10] [cursor=pointer]:
+          - /url: /careers
+        - link "About" [ref=e11] [cursor=pointer]:
+          - /url: /about
+        - button "Toggle dark mode" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+  - generic [ref=e17]:
+    - complementary [ref=e18]:
+      - navigation [ref=e20]:
+        - generic [ref=e21]: Admin
+        - link "Overview" [ref=e22] [cursor=pointer]:
+          - /url: /admin
+          - img [ref=e23]
+          - generic [ref=e28]: Overview
+        - link "Candidates" [ref=e29] [cursor=pointer]:
+          - /url: /admin/candidates
+          - img [ref=e30]
+          - generic [ref=e35]: Candidates
+        - link "Employers" [ref=e36] [cursor=pointer]:
+          - /url: /admin/employers
+          - img [ref=e37]
+          - generic [ref=e41]: Employers
+        - link "Pitch Decks" [ref=e42] [cursor=pointer]:
+          - /url: /admin/pitches
+          - img [ref=e43]
+          - generic [ref=e46]: Pitch Decks
+        - link "Verifications" [ref=e47] [cursor=pointer]:
+          - /url: /admin/verifications
+          - img [ref=e48]
+          - generic [ref=e51]: Verifications
+        - link "Interests" [ref=e52] [cursor=pointer]:
+          - /url: /admin/interests
+          - img [ref=e53]
+          - generic [ref=e55]: Interests
+        - link "Outreach" [ref=e56] [cursor=pointer]:
+          - /url: /admin/outreach
+          - img [ref=e57]
+          - generic [ref=e60]: Outreach
+        - link "Waitlist" [ref=e61] [cursor=pointer]:
+          - /url: /admin/waitlist
+          - img [ref=e62]
+          - generic [ref=e65]: Waitlist
+    - main [ref=e66]:
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - heading "Employer Waitlist" [level=1] [ref=e69]
+          - paragraph [ref=e70]: Manage Pro waitlist signups
+        - generic [ref=e71]:
+          - generic [ref=e73]:
+            - generic [ref=e74]: "0"
+            - generic [ref=e75]: Total
+          - generic [ref=e77]:
+            - generic [ref=e78]: "0"
+            - generic [ref=e79]: Pending
+          - generic [ref=e81]:
+            - generic [ref=e82]: "0"
+            - generic [ref=e83]: Approved
+        - generic [ref=e84]:
+          - img [ref=e85]
+          - textbox "Search by company, email or name..." [ref=e88]
+        - table [ref=e91]:
+          - rowgroup [ref=e92]:
+            - row "Company Contact Size Hiring For Joined Status" [ref=e93]:
+              - columnheader "Company" [ref=e94]
+              - columnheader "Contact" [ref=e95]
+              - columnheader "Size" [ref=e96]
+              - columnheader "Hiring For" [ref=e97]
+              - columnheader "Joined" [ref=e98]
+              - columnheader "Status" [ref=e99]
+              - columnheader [ref=e100]
+          - rowgroup [ref=e101]:
+            - row "No entries found" [ref=e102]:
+              - cell "No entries found" [ref=e103]
+  - contentinfo [ref=e104]:
+    - generic [ref=e105]:
+      - generic [ref=e106]:
+        - generic [ref=e107]:
+          - img "careers.ky logo" [ref=e109]
+          - generic [ref=e110]:
+            - generic [ref=e111]: careers.ky
+            - generic [ref=e112]: A Caymanian-First Careers Platform
+        - generic [ref=e113]:
+          - generic [ref=e114]:
+            - generic [ref=e115]: For Job Seekers
+            - generic [ref=e116]:
+              - link "Career Tracks" [ref=e117] [cursor=pointer]:
+                - /url: /careers?tab=career-tracks
+              - link "Live Search" [ref=e118] [cursor=pointer]:
+                - /url: /careers?tab=jobs
+              - link "Create Profile" [ref=e119] [cursor=pointer]:
+                - /url: /profile/setup
+          - generic [ref=e120]:
+            - generic [ref=e121]: For Employers
+            - generic [ref=e122]:
+              - link "Employer Directory" [ref=e123] [cursor=pointer]:
+                - /url: /employers
+              - link "Search Talent" [ref=e124] [cursor=pointer]:
+                - /url: /talent
+        - generic [ref=e125]:
+          - link "About" [ref=e126] [cursor=pointer]:
+            - /url: /about
+          - link "FAQ" [ref=e127] [cursor=pointer]:
+            - /url: "#faq"
+      - paragraph [ref=e129]: Making hiring talent visible, accessible and fair. Job postings synced daily from WORC.
+      - generic [ref=e130]:
+        - text: Built by
+        - link "Sean Ellul" [ref=e131] [cursor=pointer]:
+          - /url: https://seanellul.com
+        - text: "·Also:"
+        - link "Legislation.ky" [ref=e132] [cursor=pointer]:
+          - /url: https://legislation.ky
+        - text: "|"
+        - link "Constitution.ky" [ref=e133] [cursor=pointer]:
+          - /url: https://constitution.ky
+        - text: "|"
+        - link "Cheap.ky" [ref=e134] [cursor=pointer]:
+          - /url: https://cheap.ky
+        - text: "|"
+        - link "CayBooks" [ref=e135] [cursor=pointer]:
+          - /url: https://caybooks.com
+  - generic [ref=e136]:
+    - generic [ref=e137]:
+      - generic [ref=e138]: DEV TOOLBAR
+      - button "−" [ref=e139] [cursor=pointer]
+    - generic [ref=e140]: "Current: Not signed in"
+    - generic [ref=e141]: "Test without OAuth:"
+    - button "New candidate → profile setup" [ref=e142] [cursor=pointer]
+    - button "Stable dev candidate → dashboard" [ref=e143] [cursor=pointer]
+    - generic [ref=e144]: "Switch existing DB user:"
+    - generic [ref=e145]:
+      - button "Employer" [ref=e146] [cursor=pointer]
+      - button "Candidate" [ref=e147] [cursor=pointer]
+  - alert [ref=e148]
