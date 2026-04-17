@@ -95,6 +95,9 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
   const pageSize = 12;
 
   // Session for Express Interest
+  const [paginating, setPaginating] = useState(false);
+
+  // Session for Express Interest
   const [session, setSession] = useState(null);
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [interestSent, setInterestSent] = useState({}); // jobId -> true
@@ -127,11 +130,14 @@ export default function LiveSearchClient({ jobs: allJobs, workTypes: wtObj = {},
   };
 
   const changePage = useCallback((next) => {
+    if (paginating) return;
+    setPaginating(true);
     setPage(next);
     if (containerRef.current) {
       containerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-  }, []);
+    setTimeout(() => setPaginating(false), 400);
+  }, [paginating]);
 
   // Sync filter state to URL
   const updateURL = useCallback(() => {
