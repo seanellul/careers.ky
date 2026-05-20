@@ -1,7 +1,7 @@
-export const dynamic = "force-dynamic";
-
-import { getEmployerList } from "@/lib/data";
+import { getCachedEmployerList } from "@/lib/cached-data";
 import EmployerListClient from "./EmployerListClient";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Employers — Companies Hiring in Cayman",
@@ -9,6 +9,6 @@ export const metadata = {
 };
 
 export default async function EmployersPage() {
-  const employers = await getEmployerList();
+  const employers = await getCachedEmployerList();
   return <EmployerListClient employers={employers} />;
 }

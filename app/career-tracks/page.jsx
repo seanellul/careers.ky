@@ -1,12 +1,12 @@
 import { Suspense } from "react";
+import { buildCiscoTree } from "@/lib/data";
 import {
-  loadCISCO,
-  buildCiscoTree,
-  loadAggregates,
-  loadWorkTypes,
-  loadEducationTypes,
-  loadExperienceTypes,
-} from "@/lib/data";
+  getCachedCisco,
+  getCachedAggregates,
+  getCachedWorkTypes,
+  getCachedEducationTypes,
+  getCachedExperienceTypes,
+} from "@/lib/cached-data";
 import CareerTracksClient from "./CareerTracksClient";
 
 export const dynamic = "force-dynamic";
@@ -20,11 +20,11 @@ export const metadata = {
 export default async function CareerTracksPage() {
   const [ciscoRows, aggregates, workTypes, eduTypes, expTypes] =
     await Promise.all([
-      loadCISCO(),
-      loadAggregates(),
-      loadWorkTypes(),
-      loadEducationTypes(),
-      loadExperienceTypes(),
+      getCachedCisco(),
+      getCachedAggregates(),
+      getCachedWorkTypes(),
+      getCachedEducationTypes(),
+      getCachedExperienceTypes(),
     ]);
 
   const tree = buildCiscoTree(ciscoRows);

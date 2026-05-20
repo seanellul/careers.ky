@@ -1,12 +1,12 @@
 import { Suspense } from "react";
 import {
-  getActiveJobPostings,
-  loadWorkTypes,
-  loadEducationTypes,
-  loadExperienceTypes,
-  loadLocationTypes,
-  loadCISCO,
-} from "@/lib/data";
+  getCachedActiveJobs,
+  getCachedWorkTypes,
+  getCachedEducationTypes,
+  getCachedExperienceTypes,
+  getCachedLocationTypes,
+  getCachedCisco,
+} from "@/lib/cached-data";
 import LiveSearchClient from "./LiveSearchClient";
 
 export const dynamic = "force-dynamic";
@@ -19,12 +19,12 @@ export const metadata = {
 
 export default async function JobsPage() {
   const [postings, workTypes, eduTypes, expTypes, locTypes, ciscoRows] = await Promise.all([
-    getActiveJobPostings(),
-    loadWorkTypes(),
-    loadEducationTypes(),
-    loadExperienceTypes(),
-    loadLocationTypes(),
-    loadCISCO(),
+    getCachedActiveJobs(),
+    getCachedWorkTypes(),
+    getCachedEducationTypes(),
+    getCachedExperienceTypes(),
+    getCachedLocationTypes(),
+    getCachedCisco(),
   ]);
 
   const ciscoSubMajors = Object.fromEntries(

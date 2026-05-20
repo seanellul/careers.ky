@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { getDb } from "@/lib/db";
 import { fetchWORCJobs } from "@/lib/worc-client";
 import { runMatchAlerts } from "@/lib/match-alerts";
@@ -114,6 +115,9 @@ export async function GET(request) {
     } catch (empAlertErr) {
       console.error("[WORC Sync] Employer match alerts error (non-fatal):", empAlertErr.message);
     }
+
+    revalidateTag("jobs");
+    revalidateTag("employers");
 
     console.log(`[WORC Sync] Complete. Synced: ${count}, Stale: ${staleResult.length}, Alerts: ${alertsProcessed}, EmployerAlerts: ${employerAlertsProcessed}`);
 

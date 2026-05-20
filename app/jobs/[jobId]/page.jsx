@@ -1,11 +1,10 @@
+import { getJobPostingById, generateWORCSearchURL } from "@/lib/data";
 import {
-  getJobPostingById,
-  loadWorkTypes,
-  loadEducationTypes,
-  loadExperienceTypes,
-  loadLocationTypes,
-  generateWORCSearchURL,
-} from "@/lib/data";
+  getCachedWorkTypes,
+  getCachedEducationTypes,
+  getCachedExperienceTypes,
+  getCachedLocationTypes,
+} from "@/lib/cached-data";
 import { notFound } from "next/navigation";
 import JobPostingClient from "./JobPostingClient";
 
@@ -28,10 +27,10 @@ export default async function JobPostingPage({ params }) {
   const { jobId } = await params;
   const [job, workTypes, eduTypes, expTypes, locTypes] = await Promise.all([
     getJobPostingById(jobId),
-    loadWorkTypes(),
-    loadEducationTypes(),
-    loadExperienceTypes(),
-    loadLocationTypes(),
+    getCachedWorkTypes(),
+    getCachedEducationTypes(),
+    getCachedExperienceTypes(),
+    getCachedLocationTypes(),
   ]);
 
   if (!job) notFound();

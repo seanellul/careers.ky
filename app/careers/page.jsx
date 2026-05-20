@@ -1,15 +1,15 @@
 import { Suspense } from "react";
+import { buildCiscoTree } from "@/lib/data";
 import {
-  loadCISCO,
-  buildCiscoTree,
-  loadAggregates,
-  loadWorkTypes,
-  loadEducationTypes,
-  loadExperienceTypes,
-  loadLocationTypes,
-  getActiveJobPostings,
-  getEmployerList,
-} from "@/lib/data";
+  getCachedCisco,
+  getCachedAggregates,
+  getCachedWorkTypes,
+  getCachedEducationTypes,
+  getCachedExperienceTypes,
+  getCachedLocationTypes,
+  getCachedActiveJobs,
+  getCachedEmployerList,
+} from "@/lib/cached-data";
 import CareersClient from "./CareersClient";
 
 export const dynamic = "force-dynamic";
@@ -23,14 +23,14 @@ export const metadata = {
 export default async function CareersPage() {
   const [ciscoRows, aggregates, workTypes, eduTypes, expTypes, locTypes, postings, employers] =
     await Promise.all([
-      loadCISCO(),
-      loadAggregates(),
-      loadWorkTypes(),
-      loadEducationTypes(),
-      loadExperienceTypes(),
-      loadLocationTypes(),
-      getActiveJobPostings(),
-      getEmployerList(),
+      getCachedCisco(),
+      getCachedAggregates(),
+      getCachedWorkTypes(),
+      getCachedEducationTypes(),
+      getCachedExperienceTypes(),
+      getCachedLocationTypes(),
+      getCachedActiveJobs(),
+      getCachedEmployerList(),
     ]);
 
   const tree = buildCiscoTree(ciscoRows);

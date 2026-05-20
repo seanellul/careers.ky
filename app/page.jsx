@@ -1,13 +1,11 @@
+import { buildCiscoTree } from "@/lib/data";
 import {
-  loadAggregates,
-  loadCISCO,
-  buildCiscoTree,
-  getActiveJobPostings,
-} from "@/lib/data";
-import { getDb } from "@/lib/db";
+  getCachedCisco,
+  getCachedAggregates,
+  getCachedActiveJobs,
+  getCachedEmployerCount,
+} from "@/lib/cached-data";
 import HomeClient from "./HomeClient";
-
-export const dynamic = "force-dynamic";
 
 export default async function HomePage({ searchParams: searchParamsPromise }) {
   const searchParams = await searchParamsPromise;
@@ -16,20 +14,13 @@ export default async function HomePage({ searchParams: searchParamsPromise }) {
     searchParams?.onboarding === "1" ||
     searchParams?.planner === "true";
 
-  const [ciscoRows, aggregates, activePostings, employerCount] = await Promise.all([
-    loadCISCO(),
-    loadAggregates(),
-    getActiveJobPostings(),
-    (async () => {
-      try {
-        const sql = getDb();
-        const rows = await sql`SELECT COUNT(*) as count FROM employers`;
-        return Number(rows[0].count);
-      } catch {
-        return 0;
-      }
-    })(),
+  const [ciscoRows, aggregatesEntries, activePostings, employerCount] = await Promise.all([
+    getCachedCisco(),
+    getCachedAggregates(),
+    getCachedActiveJobs(),
+    getCachedEmployerCount().catch(() => 0),
   ]);
+  const aggregates = new Map(aggregatesEntries);
 
   const tree = buildCiscoTree(ciscoRows);
 
