@@ -11,7 +11,10 @@
     "seed-pipeline": "node scripts/seed-pipeline.js",
     "sync-worc": "node scripts/sync-worc.js",
     "migrate": "node scripts/migrate.js",
-    "seed-skills": "node scripts/seed-skills.js"
+    "seed-skills": "node scripts/seed-skills.js",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
@@ -31,7 +34,10 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "autoprefixer": "^10.4.19",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.7",
     "postcss": "^8.4.38",
+    "prettier": "^3.8.4",
     "tailwindcss": "^3.4.3"
   }
 }
