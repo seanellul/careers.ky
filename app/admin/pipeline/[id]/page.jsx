@@ -162,7 +162,10 @@ export default function PipelineDetailPage({ params }) {
       <div className="text-center py-20">
         <AlertCircle size={48} className="mx-auto text-red-500 mb-4" />
         <p className="text-neutral-500 dark:text-neutral-400">Employer not found</p>
-        <Link href="/admin/pipeline" className="text-primary-500 hover:text-primary-500 mt-4 inline-block">
+        <Link
+          href="/admin/pipeline"
+          className="text-primary-500 hover:text-primary-500 mt-4 inline-block"
+        >
           Back to Pipeline
         </Link>
       </div>
@@ -181,7 +184,9 @@ export default function PipelineDetailPage({ params }) {
             <ArrowLeft size={16} />
             Back to Pipeline
           </Link>
-          <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">{employer.employer_name}</h1>
+          <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">
+            {employer.employer_name}
+          </h1>
           <div className="text-neutral-500 dark:text-neutral-400 mt-2">
             <div>
               <strong>Rank:</strong> #{employer.priority_rank} • <strong>Score:</strong>{" "}
@@ -203,11 +208,7 @@ export default function PipelineDetailPage({ params }) {
               : "bg-red-50 dark:bg-red-900/30 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-100"
           }`}
         >
-          {message.type === "success" ? (
-            <CheckCircle size={20} />
-          ) : (
-            <AlertCircle size={20} />
-          )}
+          {message.type === "success" ? <CheckCircle size={20} /> : <AlertCircle size={20} />}
           {message.text}
         </div>
       )}
@@ -242,9 +243,7 @@ export default function PipelineDetailPage({ params }) {
                   Average Salary
                 </div>
                 <div className="text-2xl font-bold text-neutral-900 dark:text-white">
-                  {employer.avg_salary
-                    ? `$${employer.avg_salary.toLocaleString()}`
-                    : "N/A"}
+                  {employer.avg_salary ? `$${employer.avg_salary.toLocaleString()}` : "N/A"}
                 </div>
               </div>
               <div>
@@ -418,7 +417,9 @@ export default function PipelineDetailPage({ params }) {
 
             {employer.next_followup && (
               <div className="mt-3 pt-3 border-t border-neutral-200 dark:border-neutral-700">
-                <div className="text-xs text-neutral-500 dark:text-neutral-400 mb-1">Next Followup:</div>
+                <div className="text-xs text-neutral-500 dark:text-neutral-400 mb-1">
+                  Next Followup:
+                </div>
                 <div className="text-neutral-900 dark:text-white">
                   {new Date(employer.next_followup).toLocaleDateString()}
                 </div>

@@ -29,11 +29,5 @@ export default async function ComplianceReportPage({ params }) {
   const report = await getComplianceReportData(session.employerAccountId, jobId);
   if (!report) redirect("/employer/reports");
 
-  return (
-    <ComplianceReportClient
-      report={report}
-      employerName={employers[0].name}
-      jobId={jobId}
-    />
-  );
+  return <ComplianceReportClient report={report} employerName={employers[0].name} jobId={jobId} />;
 }

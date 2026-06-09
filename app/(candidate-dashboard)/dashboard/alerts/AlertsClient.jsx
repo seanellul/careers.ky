@@ -32,9 +32,7 @@ export default function AlertsClient({ alerts: initialAlerts }) {
         <h1 className="text-2xl md:text-3xl font-semibold tracking-tight mb-2">
           <span className="text-primary-500">Job Alerts</span>
         </h1>
-        <p className="text-neutral-500">
-          Get notified when new jobs match your criteria.
-        </p>
+        <p className="text-neutral-500">Get notified when new jobs match your criteria.</p>
       </div>
 
       {alerts.length === 0 ? (
@@ -42,15 +40,16 @@ export default function AlertsClient({ alerts: initialAlerts }) {
           <CardContent className="p-12 text-center">
             <Bell className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-500" />
             <h3 className="text-lg font-medium mb-2">No alerts set up</h3>
-            <p className="text-neutral-500">
-              Job alerts will be available soon. Check back later.
-            </p>
+            <p className="text-neutral-500">Job alerts will be available soon. Check back later.</p>
           </CardContent>
         </Card>
       ) : (
         <div className="space-y-3">
           {alerts.map((alert) => (
-            <Card key={alert.id} className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
+            <Card
+              key={alert.id}
+              className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
+            >
               <CardContent className="p-5">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-start gap-3">
@@ -74,7 +73,12 @@ export default function AlertsClient({ alerts: initialAlerts }) {
                         )}
                       </div>
                       <div className="text-xs text-neutral-500 mt-2">
-                        Created {new Date(alert.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                        Created{" "}
+                        {new Date(alert.created_at).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
                       </div>
                     </div>
                   </div>

@@ -3,104 +3,106 @@
 @tailwind utilities;
 
 @layer base {
-    :root {
-        --radius: 0.5rem;
+  :root {
+    --radius: 0.5rem;
 
-        /* shadcn semantic tokens — warm light theme */
-        --background: 40 100% 98%;       /* #FEFCF3 cayman-warm */
-        --foreground: 0 0% 15%;           /* neutral-800 */
-        --card: 0 0% 100%;               /* white */
-        --card-foreground: 0 0% 15%;     /* neutral-800 */
-        --muted: 40 20% 96%;             /* warm gray */
-        --muted-foreground: 0 0% 45%;    /* neutral-500 */
-        --primary: 201 100% 36%;         /* #0077B6 ocean */
-        --primary-foreground: 0 0% 100%; /* white */
-        --secondary: 0 0% 96%;           /* neutral-100 */
-        --secondary-foreground: 0 0% 25%;/* neutral-700 */
-        --accent: 16 74% 53%;            /* #E76F51 coral */
-        --accent-foreground: 0 0% 100%;  /* white */
-        --destructive: 0 84% 60%;
-        --destructive-foreground: 0 0% 100%;
-        --border: 0 0% 88%;              /* neutral-200 */
-        --input: 0 0% 82%;               /* neutral-300 */
-        --ring: 201 100% 36%;            /* ocean */
-    }
+    /* shadcn semantic tokens — warm light theme */
+    --background: 40 100% 98%; /* #FEFCF3 cayman-warm */
+    --foreground: 0 0% 15%; /* neutral-800 */
+    --card: 0 0% 100%; /* white */
+    --card-foreground: 0 0% 15%; /* neutral-800 */
+    --muted: 40 20% 96%; /* warm gray */
+    --muted-foreground: 0 0% 45%; /* neutral-500 */
+    --primary: 201 100% 36%; /* #0077B6 ocean */
+    --primary-foreground: 0 0% 100%; /* white */
+    --secondary: 0 0% 96%; /* neutral-100 */
+    --secondary-foreground: 0 0% 25%; /* neutral-700 */
+    --accent: 16 74% 53%; /* #E76F51 coral */
+    --accent-foreground: 0 0% 100%; /* white */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 88%; /* neutral-200 */
+    --input: 0 0% 82%; /* neutral-300 */
+    --ring: 201 100% 36%; /* ocean */
+  }
 
-    .dark {
-        --background: 30 10% 8%;             /* #171412 warm charcoal */
-        --foreground: 30 5% 90%;             /* warm off-white */
-        --card: 24 8% 10%;                  /* #1C1917 stone-900 */
-        --card-foreground: 30 5% 90%;
-        --muted: 24 6% 14%;
-        --muted-foreground: 30 4% 55%;
-        --primary: 201 100% 36%;            /* ocean stays */
-        --primary-foreground: 0 0% 100%;
-        --secondary: 24 6% 14%;
-        --secondary-foreground: 30 5% 85%;
-        --accent: 16 74% 53%;              /* coral stays */
-        --accent-foreground: 0 0% 100%;
-        --destructive: 0 84% 60%;
-        --destructive-foreground: 0 0% 100%;
-        --border: 20 6% 18%;               /* warm border */
-        --input: 20 6% 22%;                /* warm input */
-        --ring: 201 100% 36%;
-    }
+  .dark {
+    --background: 30 10% 8%; /* #171412 warm charcoal */
+    --foreground: 30 5% 90%; /* warm off-white */
+    --card: 24 8% 10%; /* #1C1917 stone-900 */
+    --card-foreground: 30 5% 90%;
+    --muted: 24 6% 14%;
+    --muted-foreground: 30 4% 55%;
+    --primary: 201 100% 36%; /* ocean stays */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 24 6% 14%;
+    --secondary-foreground: 30 5% 85%;
+    --accent: 16 74% 53%; /* coral stays */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 20 6% 18%; /* warm border */
+    --input: 20 6% 22%; /* warm input */
+    --ring: 201 100% 36%;
+  }
 
-    body {
-        margin: 0;
-        padding: 0;
-        background-color: #FEFCF3;
-        color: hsl(var(--foreground));
-        transition: background-color 0.2s ease, color 0.2s ease;
-    }
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #fefcf3;
+    color: hsl(var(--foreground));
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
 
-    .dark body {
-        background-color: #171412;
-    }
+  .dark body {
+    background-color: #171412;
+  }
 }
 
 @layer utilities {
-    .line-clamp-1 {
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 1;
-    }
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
 
-    .line-clamp-2 {
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-    }
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
 }
 
 @keyframes dashboard-in {
-    from {
-        opacity: 0;
-        transform: translateY(6px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-dashboard-in {
-    animation: dashboard-in 0.25s ease-out both;
+  animation: dashboard-in 0.25s ease-out both;
 }
 
 @keyframes tab-in {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-tab-in {
-    animation: tab-in 0.25s ease-out both;
+  animation: tab-in 0.25s ease-out both;
 }

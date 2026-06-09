@@ -9,14 +9,13 @@ import {
 } from "@/lib/data";
 
 export async function GET() {
-  const [ciscoRows, aggregates, eduTypes, expTypes, workTypes] =
-    await Promise.all([
-      loadCISCO(),
-      loadAggregates(),
-      loadEducationTypes(),
-      loadExperienceTypes(),
-      loadWorkTypes(),
-    ]);
+  const [ciscoRows, aggregates, eduTypes, expTypes, workTypes] = await Promise.all([
+    loadCISCO(),
+    loadAggregates(),
+    loadEducationTypes(),
+    loadExperienceTypes(),
+    loadWorkTypes(),
+  ]);
 
   const tree = buildCiscoTree(ciscoRows);
 

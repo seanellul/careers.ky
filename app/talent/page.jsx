@@ -6,7 +6,8 @@ import t from "@/lib/theme";
 
 export const metadata = {
   title: "Talent Search — Find Cayman Talent",
-  description: "Search the Cayman talent pool. Find candidates by skills, education, experience, and career interests.",
+  description:
+    "Search the Cayman talent pool. Find candidates by skills, education, experience, and career interests.",
 };
 
 export default async function TalentPage() {
@@ -18,8 +19,8 @@ export default async function TalentPage() {
   ]);
 
   const ciscoUnits = ciscoRows
-    .filter(r => String(r.sCISCO).length === 4)
-    .map(r => ({ code: r.sCISCO, title: r.cTitle }))
+    .filter((r) => String(r.sCISCO).length === 4)
+    .map((r) => ({ code: r.sCISCO, title: r.cTitle }))
     .sort((a, b) => a.title.localeCompare(b.title));
 
   return (

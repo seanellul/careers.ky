@@ -17,8 +17,8 @@ export default async function EmployerTalentPage() {
   ]);
 
   const ciscoUnits = ciscoRows
-    .filter(r => String(r.sCISCO).length === 4)
-    .map(r => ({ code: r.sCISCO, title: r.cTitle }))
+    .filter((r) => String(r.sCISCO).length === 4)
+    .map((r) => ({ code: r.sCISCO, title: r.cTitle }))
     .sort((a, b) => a.title.localeCompare(b.title));
 
   return (

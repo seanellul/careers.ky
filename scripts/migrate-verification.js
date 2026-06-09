@@ -67,7 +67,7 @@ async function migrate() {
     SET verification_status = 'verified', role = 'owner', verified_by = 'legacy'
     WHERE employer_id IS NOT NULL AND verification_status = 'unverified'
   `;
-  console.log(`   Updated ${result?.count ?? 'some'} rows.\n`);
+  console.log(`   Updated ${result?.count ?? "some"} rows.\n`);
 
   console.log("All Employer Verification & Team Management migrations complete!");
 }

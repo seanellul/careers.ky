@@ -41,7 +41,7 @@ export default function ShortlistsClient({ shortlists: initialShortlists }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),
     });
-    setShortlists(shortlists.filter(s => s.id !== id));
+    setShortlists(shortlists.filter((s) => s.id !== id));
   };
 
   return (
@@ -67,29 +67,44 @@ export default function ShortlistsClient({ shortlists: initialShortlists }) {
                 autoFocus
                 onKeyDown={(e) => e.key === "Enter" && handleCreate()}
               />
-              <Button onClick={handleCreate} disabled={creating}>{creating ? "Creating..." : "Create"}</Button>
-              <Button variant="secondary" onClick={() => setShowCreate(false)}>Cancel</Button>
+              <Button onClick={handleCreate} disabled={creating}>
+                {creating ? "Creating..." : "Create"}
+              </Button>
+              <Button variant="secondary" onClick={() => setShowCreate(false)}>
+                Cancel
+              </Button>
             </CardContent>
           </Card>
         )}
 
         {shortlists.length > 0 ? (
           <div className="space-y-3">
-            {shortlists.map(sl => (
-              <Card key={sl.id} className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 hover:border-primary-200 dark:hover:border-primary-500/30 transition">
+            {shortlists.map((sl) => (
+              <Card
+                key={sl.id}
+                className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 hover:border-primary-200 dark:hover:border-primary-500/30 transition"
+              >
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
-                    <Link href={`/employer/shortlists/${sl.id}`} className="flex items-center gap-3 flex-1">
+                    <Link
+                      href={`/employer/shortlists/${sl.id}`}
+                      className="flex items-center gap-3 flex-1"
+                    >
                       <div className="w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 grid place-items-center">
                         <Users className="w-5 h-5 text-primary-500" />
                       </div>
                       <div>
                         <div className="font-medium">{sl.name}</div>
-                        <div className="text-sm text-neutral-500">{sl.candidate_count || 0} candidate{sl.candidate_count !== 1 ? "s" : ""}</div>
+                        <div className="text-sm text-neutral-500">
+                          {sl.candidate_count || 0} candidate{sl.candidate_count !== 1 ? "s" : ""}
+                        </div>
                       </div>
                     </Link>
                     <div className="flex items-center gap-2">
-                      <button onClick={() => handleDelete(sl.id)} className="p-2 rounded-lg hover:bg-red-500/10 text-neutral-500 hover:text-red-400 transition">
+                      <button
+                        onClick={() => handleDelete(sl.id)}
+                        className="p-2 rounded-lg hover:bg-red-500/10 text-neutral-500 hover:text-red-400 transition"
+                      >
                         <Trash2 className="w-4 h-4" />
                       </button>
                       <Link href={`/employer/shortlists/${sl.id}`}>
@@ -106,8 +121,12 @@ export default function ShortlistsClient({ shortlists: initialShortlists }) {
             <CardContent className="p-12 text-center">
               <List className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-500" />
               <h3 className="text-lg font-medium mb-2">No shortlists yet</h3>
-              <p className="text-neutral-500 mb-4">Create a shortlist to save and organize candidates.</p>
-              <Button onClick={() => setShowCreate(true)} className="gap-2"><Plus className="w-4 h-4" /> Create Shortlist</Button>
+              <p className="text-neutral-500 mb-4">
+                Create a shortlist to save and organize candidates.
+              </p>
+              <Button onClick={() => setShowCreate(true)} className="gap-2">
+                <Plus className="w-4 h-4" /> Create Shortlist
+              </Button>
             </CardContent>
           </Card>
         )}

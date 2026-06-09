@@ -1,18 +1,29 @@
 "use client";
 
 import {
-  Building2, UserCheck, Briefcase, Activity,
-  Users, Heart, Send, CheckCircle, Eye,
+  Building2,
+  UserCheck,
+  Briefcase,
+  Activity,
+  Users,
+  Heart,
+  Send,
+  CheckCircle,
+  Eye,
 } from "lucide-react";
 
 function StatCard({ label, value, icon: Icon, accent }) {
   return (
     <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl p-5">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-medium uppercase tracking-wider text-neutral-500">{label}</span>
+        <span className="text-xs font-medium uppercase tracking-wider text-neutral-500">
+          {label}
+        </span>
         <Icon className={`w-4 h-4 ${accent ? "text-primary-500" : "text-neutral-400"}`} />
       </div>
-      <div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">{typeof value === "number" ? value.toLocaleString() : value}</div>
+      <div className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+        {typeof value === "number" ? value.toLocaleString() : value}
+      </div>
     </div>
   );
 }

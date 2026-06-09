@@ -41,7 +41,9 @@ export default function StatsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">Sales Pipeline Statistics</h1>
+      <h1 className="text-3xl font-bold text-neutral-900 dark:text-white">
+        Sales Pipeline Statistics
+      </h1>
 
       {/* Main Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -87,7 +89,9 @@ export default function StatsPage() {
               <div className="text-neutral-500 dark:text-neutral-400 text-xs uppercase font-semibold mb-2">
                 {status.status.replace(/_/g, " ")}
               </div>
-              <div className="text-2xl font-bold text-neutral-900 dark:text-white">{status.count}</div>
+              <div className="text-2xl font-bold text-neutral-900 dark:text-white">
+                {status.count}
+              </div>
               <div className="text-xs text-neutral-500 mt-2">
                 {((status.count / s.total) * 100).toFixed(1)}%
               </div>
@@ -122,7 +126,10 @@ export default function StatsPage() {
             </thead>
             <tbody className="divide-y divide-neutral-200 dark:divide-neutral-700">
               {stats.breakdown.bySegment.map((segment) => (
-                <tr key={segment.segment} className="hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
+                <tr
+                  key={segment.segment}
+                  className="hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                >
                   <td className="px-4 py-3 text-neutral-900 dark:text-white">{segment.segment}</td>
                   <td className="px-4 py-3 text-center font-semibold text-neutral-900 dark:text-white">
                     {segment.count}
@@ -142,7 +149,9 @@ export default function StatsPage() {
 
       {/* Top Leads */}
       <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg p-6">
-        <h2 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">Top 10 Leads</h2>
+        <h2 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
+          Top 10 Leads
+        </h2>
         <div className="space-y-2">
           {stats.topLeads.map((lead, index) => (
             <div
@@ -153,14 +162,18 @@ export default function StatsPage() {
                 <div className="flex items-center gap-3">
                   <div className="text-neutral-400 font-semibold w-6">#{index + 1}</div>
                   <div>
-                    <div className="text-neutral-900 dark:text-white font-medium">{lead.employer_name}</div>
+                    <div className="text-neutral-900 dark:text-white font-medium">
+                      {lead.employer_name}
+                    </div>
                     <div className="text-xs text-neutral-500">{lead.segment}</div>
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-4">
                 <div className="text-right">
-                  <div className="text-2xl font-bold text-cyan-600 dark:text-cyan-400">{lead.score}</div>
+                  <div className="text-2xl font-bold text-cyan-600 dark:text-cyan-400">
+                    {lead.score}
+                  </div>
                   <div className="text-xs text-neutral-500">score</div>
                 </div>
                 <div className="px-3 py-1 bg-neutral-200 dark:bg-neutral-700 rounded text-xs font-medium text-neutral-700 dark:text-neutral-200">

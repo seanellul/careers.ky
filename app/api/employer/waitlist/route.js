@@ -37,7 +37,8 @@ export async function POST(request) {
   const sql = getDb();
 
   // Upsert — if already on waitlist, return success without re-sending
-  const existing = await sql`SELECT id, status FROM employer_waitlist WHERE email = ${email.toLowerCase().trim()}`;
+  const existing =
+    await sql`SELECT id, status FROM employer_waitlist WHERE email = ${email.toLowerCase().trim()}`;
   if (existing.length > 0) {
     return NextResponse.json({ success: true, alreadyJoined: true, status: existing[0].status });
   }
@@ -111,12 +112,20 @@ function waitlistEmailHtml({ firstName, company, baseUrl }) {
         <div style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#15803d;margin-bottom:14px;">What's included in Pro</div>
         <div style="display:flex;flex-direction:column;gap:10px;">
           ${[
-            ["Search Caymanian talent directly", "Filter by skills, education, experience & location"],
+            [
+              "Search Caymanian talent directly",
+              "Filter by skills, education, experience & location",
+            ],
             ["Send direct introductions", "Connect with candidates without a recruiter middleman"],
             ["Automated compliance reports", "Timestamped records for every candidate interaction"],
-            ["Shortlists & saved searches", "Build pipelines and get notified when new talent matches"],
+            [
+              "Shortlists & saved searches",
+              "Build pipelines and get notified when new talent matches",
+            ],
             ["One flat monthly fee", "CI$299/mo — replaces 15–25% per-hire recruiter costs"],
-          ].map(([title, desc]) => `
+          ]
+            .map(
+              ([title, desc]) => `
           <div style="display:flex;align-items:flex-start;gap:12px;">
             <div style="width:20px;height:20px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
               <span style="color:#16a34a;font-size:12px;font-weight:700;">✓</span>
@@ -125,7 +134,9 @@ function waitlistEmailHtml({ firstName, company, baseUrl }) {
               <div style="font-size:14px;font-weight:600;color:#0e0e0e;">${title}</div>
               <div style="font-size:13px;color:#666;margin-top:1px;">${desc}</div>
             </div>
-          </div>`).join("")}
+          </div>`
+            )
+            .join("")}
         </div>
       </div>
 
@@ -150,7 +161,7 @@ function waitlistEmailHtml({ firstName, company, baseUrl }) {
     <div style="border-top:1px solid #f0f0f0;padding:24px 40px;background:#fafaf9;">
       <p style="margin:0;color:#999;font-size:12px;line-height:1.6;">
         You're receiving this because you joined the careers.ky Pro waitlist.
-        Questions? Reply to this email or visit <a href="${baseUrl}" style="color:#0891b2;">${baseUrl.replace("https://","")}</a>.
+        Questions? Reply to this email or visit <a href="${baseUrl}" style="color:#0891b2;">${baseUrl.replace("https://", "")}</a>.
       </p>
     </div>
   </div>

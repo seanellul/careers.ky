@@ -29,9 +29,19 @@ export async function GET(request, { params }) {
 
     // Build CSV
     const headers = [
-      "Candidate #", "Caymanian", "Education", "Experience", "Location",
-      "Match Score", "Status", "Stage", "Initiated By", "Rejection Reason",
-      "Rejection Notes", "Date Contacted", "Date Responded",
+      "Candidate #",
+      "Caymanian",
+      "Education",
+      "Experience",
+      "Location",
+      "Match Score",
+      "Status",
+      "Stage",
+      "Initiated By",
+      "Rejection Reason",
+      "Rejection Notes",
+      "Date Contacted",
+      "Date Responded",
     ];
 
     const rows = report.intros.map((intro, i) => [
@@ -60,7 +70,7 @@ export async function GET(request, { params }) {
 
     const csv = [
       headers.map(escapeCsv).join(","),
-      ...rows.map(row => row.map(escapeCsv).join(",")),
+      ...rows.map((row) => row.map(escapeCsv).join(",")),
     ].join("\n");
 
     return new Response(csv, {

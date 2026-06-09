@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
-import { upsertCandidate, updateCandidateInterests, updateCandidateSkills, getCandidateById } from "@/lib/data";
+import {
+  upsertCandidate,
+  updateCandidateInterests,
+  updateCandidateSkills,
+  getCandidateById,
+} from "@/lib/data";
 
 export async function PUT(request) {
   const session = await getSession();

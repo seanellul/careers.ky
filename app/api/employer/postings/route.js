@@ -14,9 +14,7 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
 
-    const filtered = status === "active"
-      ? postings.filter(p => p.isActive)
-      : postings;
+    const filtered = status === "active" ? postings.filter((p) => p.isActive) : postings;
 
     return NextResponse.json({ postings: filtered });
   } catch (error) {

@@ -12,9 +12,7 @@ export default function AdminVerificationsClient({ initialRequests }) {
   const [domainInputs, setDomainInputs] = useState({});
   const [notesInputs, setNotesInputs] = useState({});
 
-  const filtered = filter === "all"
-    ? requests
-    : requests.filter((r) => r.status === filter);
+  const filtered = filter === "all" ? requests : requests.filter((r) => r.status === filter);
 
   const handleAction = async (id, action) => {
     setProcessing(id);
@@ -35,7 +33,9 @@ export default function AdminVerificationsClient({ initialRequests }) {
 
       if (res.ok) {
         setRequests((prev) =>
-          prev.map((r) => (r.id === id ? { ...r, status: action === "approve" ? "approved" : "rejected" } : r))
+          prev.map((r) =>
+            r.id === id ? { ...r, status: action === "approve" ? "approved" : "rejected" } : r
+          )
         );
       }
     } finally {
@@ -45,12 +45,17 @@ export default function AdminVerificationsClient({ initialRequests }) {
 
   const statusBadge = (status) => {
     const styles = {
-      pending: "bg-amber-50 dark:bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-300 dark:border-amber-500/30",
-      approved: "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-300 dark:border-emerald-500/30",
-      rejected: "bg-red-50 dark:bg-red-500/15 text-red-500 dark:text-red-400 border-red-300 dark:border-red-500/30",
+      pending:
+        "bg-amber-50 dark:bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-300 dark:border-amber-500/30",
+      approved:
+        "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-300 dark:border-emerald-500/30",
+      rejected:
+        "bg-red-50 dark:bg-red-500/15 text-red-500 dark:text-red-400 border-red-300 dark:border-red-500/30",
     };
     return (
-      <span className={`text-xs px-2 py-0.5 rounded-full border ${styles[status] || "bg-neutral-100 dark:bg-neutral-800 text-neutral-500 border-neutral-200 dark:border-neutral-700"}`}>
+      <span
+        className={`text-xs px-2 py-0.5 rounded-full border ${styles[status] || "bg-neutral-100 dark:bg-neutral-800 text-neutral-500 border-neutral-200 dark:border-neutral-700"}`}
+      >
         {status}
       </span>
     );
@@ -70,7 +75,9 @@ export default function AdminVerificationsClient({ initialRequests }) {
             key={f}
             onClick={() => setFilter(f)}
             className={`px-3 py-1.5 rounded-lg text-sm transition ${
-              filter === f ? "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border border-primary-200 dark:border-primary-500/30" : "text-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+              filter === f
+                ? "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border border-primary-200 dark:border-primary-500/30"
+                : "text-neutral-500 hover:bg-neutral-50 dark:hover:bg-neutral-800"
             }`}
           >
             {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -112,15 +119,27 @@ export default function AdminVerificationsClient({ initialRequests }) {
               </div>
 
               <div className="flex items-center gap-4 text-xs text-neutral-500">
-                <span>Email domain: <span className="text-neutral-600 dark:text-neutral-400">{req.email_domain || "N/A"}</span></span>
-                <span>Company domain: <span className="text-neutral-600 dark:text-neutral-400">{req.employer_domain || "Not set"}</span></span>
+                <span>
+                  Email domain:{" "}
+                  <span className="text-neutral-600 dark:text-neutral-400">
+                    {req.email_domain || "N/A"}
+                  </span>
+                </span>
+                <span>
+                  Company domain:{" "}
+                  <span className="text-neutral-600 dark:text-neutral-400">
+                    {req.employer_domain || "Not set"}
+                  </span>
+                </span>
                 <span>{new Date(req.created_at).toLocaleDateString()}</span>
               </div>
 
               {req.status === "pending" && (
                 <div className="flex items-end gap-3 pt-1">
                   <div className="flex-1">
-                    <label className="text-xs text-neutral-500 mb-1 block">Set company domain (optional)</label>
+                    <label className="text-xs text-neutral-500 mb-1 block">
+                      Set company domain (optional)
+                    </label>
                     <Input
                       value={domainInputs[req.id] || ""}
                       onChange={(e) => setDomainInputs((p) => ({ ...p, [req.id]: e.target.value }))}
@@ -129,7 +148,9 @@ export default function AdminVerificationsClient({ initialRequests }) {
                     />
                   </div>
                   <div className="flex-1">
-                    <label className="text-xs text-neutral-500 mb-1 block">Rejection notes (optional)</label>
+                    <label className="text-xs text-neutral-500 mb-1 block">
+                      Rejection notes (optional)
+                    </label>
                     <Input
                       value={notesInputs[req.id] || ""}
                       onChange={(e) => setNotesInputs((p) => ({ ...p, [req.id]: e.target.value }))}
@@ -143,7 +164,11 @@ export default function AdminVerificationsClient({ initialRequests }) {
                     disabled={processing === req.id}
                     className="bg-emerald-600 hover:bg-emerald-700 gap-1"
                   >
-                    {processing === req.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
+                    {processing === req.id ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <Check className="w-3 h-3" />
+                    )}
                     Approve
                   </Button>
                   <Button
@@ -153,7 +178,11 @@ export default function AdminVerificationsClient({ initialRequests }) {
                     disabled={processing === req.id}
                     className="gap-1"
                   >
-                    {processing === req.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <X className="w-3 h-3" />}
+                    {processing === req.id ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <X className="w-3 h-3" />
+                    )}
                     Reject
                   </Button>
                 </div>

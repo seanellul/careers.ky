@@ -37,7 +37,7 @@ export default function AdminPitchesClient({ initialEmployers, initialTotal }) {
 
   function toggleSort(field) {
     if (sortField === field) {
-      setSortDir(d => d === "desc" ? "asc" : "desc");
+      setSortDir((d) => (d === "desc" ? "asc" : "desc"));
     } else {
       setSortField(field);
       setSortDir("desc");
@@ -72,14 +72,23 @@ export default function AdminPitchesClient({ initialEmployers, initialTotal }) {
             <thead>
               <tr className="border-b border-neutral-200 dark:border-neutral-700">
                 <th className="text-left px-4 py-3 text-neutral-500 font-medium">Employer</th>
-                <th className="text-left px-4 py-3 text-neutral-500 font-medium cursor-pointer" onClick={() => toggleSort("job_count")}>
+                <th
+                  className="text-left px-4 py-3 text-neutral-500 font-medium cursor-pointer"
+                  onClick={() => toggleSort("job_count")}
+                >
                   Jobs {sortField === "job_count" && (sortDir === "desc" ? "↓" : "↑")}
                 </th>
-                <th className="text-left px-4 py-3 text-neutral-500 font-medium cursor-pointer" onClick={() => toggleSort("active_jobs")}>
+                <th
+                  className="text-left px-4 py-3 text-neutral-500 font-medium cursor-pointer"
+                  onClick={() => toggleSort("active_jobs")}
+                >
                   Active {sortField === "active_jobs" && (sortDir === "desc" ? "↓" : "↑")}
                 </th>
                 <th className="text-left px-4 py-3 text-neutral-500 font-medium">Industry</th>
-                <th className="text-left px-4 py-3 text-neutral-500 font-medium cursor-pointer" onClick={() => toggleSort("view_count")}>
+                <th
+                  className="text-left px-4 py-3 text-neutral-500 font-medium cursor-pointer"
+                  onClick={() => toggleSort("view_count")}
+                >
                   Views {sortField === "view_count" && (sortDir === "desc" ? "↓" : "↑")}
                 </th>
                 <th className="text-left px-4 py-3 text-neutral-500 font-medium">Outreach</th>
@@ -88,16 +97,29 @@ export default function AdminPitchesClient({ initialEmployers, initialTotal }) {
             </thead>
             <tbody>
               {sorted.map((emp) => (
-                <tr key={emp.id} className="border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800">
+                <tr
+                  key={emp.id}
+                  className="border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                >
                   <td className="px-4 py-3">
                     <div className="font-medium text-neutral-900 dark:text-white">{emp.name}</div>
-                    {emp.claimed && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-green-500/15 text-green-400 border border-green-500/20">claimed</span>}
+                    {emp.claimed && (
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-green-500/15 text-green-400 border border-green-500/20">
+                        claimed
+                      </span>
+                    )}
                   </td>
-                  <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">{Number(emp.job_count)}</td>
-                  <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">{Number(emp.active_jobs)}</td>
+                  <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">
+                    {Number(emp.job_count)}
+                  </td>
+                  <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">
+                    {Number(emp.active_jobs)}
+                  </td>
                   <td className="px-4 py-3 text-neutral-500 text-xs">{emp.industry || "—"}</td>
                   <td className="px-4 py-3">
-                    <span className="text-neutral-600 dark:text-neutral-400">{Number(emp.view_count)}</span>
+                    <span className="text-neutral-600 dark:text-neutral-400">
+                      {Number(emp.view_count)}
+                    </span>
                     {emp.last_viewed && (
                       <span className="text-neutral-600 text-xs ml-1">
                         ({new Date(emp.last_viewed).toLocaleDateString()})
@@ -105,7 +127,9 @@ export default function AdminPitchesClient({ initialEmployers, initialTotal }) {
                     )}
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`text-xs ${statusColors[emp.outreach_status] || "text-neutral-500"}`}>
+                    <span
+                      className={`text-xs ${statusColors[emp.outreach_status] || "text-neutral-500"}`}
+                    >
                       {(emp.outreach_status || "not_contacted").replace(/_/g, " ")}
                     </span>
                   </td>
@@ -116,7 +140,11 @@ export default function AdminPitchesClient({ initialEmployers, initialTotal }) {
                         className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition"
                         title="Copy pitch link"
                       >
-                        {copied === emp.slug ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
+                        {copied === emp.slug ? (
+                          <Check className="w-3.5 h-3.5 text-green-400" />
+                        ) : (
+                          <Copy className="w-3.5 h-3.5" />
+                        )}
                       </button>
                       <a
                         href={`/pitch/${emp.slug}`}

@@ -14,10 +14,14 @@ export default function ProfileError({ error, reset }) {
           <CardContent className="p-8 text-center">
             <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
             <h1 className="text-xl font-semibold mb-2">Profile error</h1>
-            <p className="text-neutral-500 mb-6">We couldn't load your profile. Please try again.</p>
+            <p className="text-neutral-500 mb-6">
+              We couldn't load your profile. Please try again.
+            </p>
             <div className="flex gap-3 justify-center">
               <Button onClick={() => reset()}>Try Again</Button>
-              <Button variant="secondary" onClick={() => window.location.href = "/"}>Go Home</Button>
+              <Button variant="secondary" onClick={() => (window.location.href = "/")}>
+                Go Home
+              </Button>
             </div>
           </CardContent>
         </Card>

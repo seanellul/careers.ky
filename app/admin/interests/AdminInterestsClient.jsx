@@ -9,10 +9,11 @@ export default function AdminInterestsClient({ interests }) {
   const filtered = useMemo(() => {
     if (!search) return interests;
     const q = search.toLowerCase();
-    return interests.filter(i =>
-      (i.candidate_name || "").toLowerCase().includes(q) ||
-      (i.employer_name || "").toLowerCase().includes(q) ||
-      (i.job_title || "").toLowerCase().includes(q)
+    return interests.filter(
+      (i) =>
+        (i.candidate_name || "").toLowerCase().includes(q) ||
+        (i.employer_name || "").toLowerCase().includes(q) ||
+        (i.job_title || "").toLowerCase().includes(q)
     );
   }, [interests, search]);
 
@@ -44,7 +45,10 @@ export default function AdminInterestsClient({ interests }) {
 
       <div className="space-y-4">
         {grouped.map((group) => (
-          <div key={group.name} className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl overflow-hidden">
+          <div
+            key={group.name}
+            className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl overflow-hidden"
+          >
             <div className="px-4 py-3 border-b border-neutral-200 dark:border-neutral-700 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="font-medium text-neutral-900 dark:text-white">{group.name}</span>
@@ -65,18 +69,33 @@ export default function AdminInterestsClient({ interests }) {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-neutral-200 dark:border-neutral-700">
-                  <th className="text-left px-4 py-2 text-neutral-500 font-medium text-xs">Candidate</th>
-                  <th className="text-left px-4 py-2 text-neutral-500 font-medium text-xs">Email</th>
-                  <th className="text-left px-4 py-2 text-neutral-500 font-medium text-xs">Caymanian</th>
-                  <th className="text-left px-4 py-2 text-neutral-500 font-medium text-xs">Job Title</th>
+                  <th className="text-left px-4 py-2 text-neutral-500 font-medium text-xs">
+                    Candidate
+                  </th>
+                  <th className="text-left px-4 py-2 text-neutral-500 font-medium text-xs">
+                    Email
+                  </th>
+                  <th className="text-left px-4 py-2 text-neutral-500 font-medium text-xs">
+                    Caymanian
+                  </th>
+                  <th className="text-left px-4 py-2 text-neutral-500 font-medium text-xs">
+                    Job Title
+                  </th>
                   <th className="text-left px-4 py-2 text-neutral-500 font-medium text-xs">Date</th>
-                  <th className="text-left px-4 py-2 text-neutral-500 font-medium text-xs">Notified</th>
+                  <th className="text-left px-4 py-2 text-neutral-500 font-medium text-xs">
+                    Notified
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {group.items.map((item) => (
-                  <tr key={item.id} className="border-b border-neutral-100 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800">
-                    <td className="px-4 py-2 text-neutral-900 dark:text-white">{item.candidate_name || "—"}</td>
+                  <tr
+                    key={item.id}
+                    className="border-b border-neutral-100 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                  >
+                    <td className="px-4 py-2 text-neutral-900 dark:text-white">
+                      {item.candidate_name || "—"}
+                    </td>
                     <td className="px-4 py-2 text-neutral-500">{item.candidate_email}</td>
                     <td className="px-4 py-2">
                       {item.is_caymanian ? (
@@ -85,7 +104,9 @@ export default function AdminInterestsClient({ interests }) {
                         <span className="text-neutral-500 text-xs">No</span>
                       )}
                     </td>
-                    <td className="px-4 py-2 text-neutral-600 dark:text-neutral-400">{item.job_title || "—"}</td>
+                    <td className="px-4 py-2 text-neutral-600 dark:text-neutral-400">
+                      {item.job_title || "—"}
+                    </td>
                     <td className="px-4 py-2 text-neutral-500 text-xs">
                       {new Date(item.created_at).toLocaleDateString()}
                     </td>

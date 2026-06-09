@@ -18,14 +18,13 @@ export const metadata = {
 };
 
 export default async function CareerTracksPage() {
-  const [ciscoRows, aggregates, workTypes, eduTypes, expTypes] =
-    await Promise.all([
-      getCachedCisco(),
-      getCachedAggregates(),
-      getCachedWorkTypes(),
-      getCachedEducationTypes(),
-      getCachedExperienceTypes(),
-    ]);
+  const [ciscoRows, aggregates, workTypes, eduTypes, expTypes] = await Promise.all([
+    getCachedCisco(),
+    getCachedAggregates(),
+    getCachedWorkTypes(),
+    getCachedEducationTypes(),
+    getCachedExperienceTypes(),
+  ]);
 
   const tree = buildCiscoTree(ciscoRows);
 

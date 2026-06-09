@@ -4,9 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  FileText, Download, Eye, Users, CheckCircle, Briefcase, ArrowLeft,
-} from "lucide-react";
+import { FileText, Download, Eye, Users, CheckCircle, Briefcase, ArrowLeft } from "lucide-react";
 
 export default function ReportsClient({ postings, employerName }) {
   return (
@@ -36,30 +34,57 @@ export default function ReportsClient({ postings, employerName }) {
       ) : (
         <div className="space-y-3">
           {postings.map((p) => (
-            <Card key={p.cJobId} className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 hover:border-primary-200 dark:hover:border-primary-500/30 transition">
+            <Card
+              key={p.cJobId}
+              className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 hover:border-primary-200 dark:hover:border-primary-500/30 transition"
+            >
               <CardContent className="p-5">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="font-medium text-lg">{p.cTitle}</span>
-                      <Badge className={p.isActive
-                        ? "bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-300/30"
-                        : "bg-neutral-100 dark:bg-neutral-500/20 text-neutral-600 dark:text-neutral-500 border-neutral-300 dark:border-neutral-400/30"
-                      }>
+                      <Badge
+                        className={
+                          p.isActive
+                            ? "bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-300/30"
+                            : "bg-neutral-100 dark:bg-neutral-500/20 text-neutral-600 dark:text-neutral-500 border-neutral-300 dark:border-neutral-400/30"
+                        }
+                      >
                         {p.isActive ? "Active" : "Closed"}
                       </Badge>
                     </div>
                     <div className="text-sm text-neutral-500 mb-2">
                       WORC ID: {p.cJobId}
-                      {p.createdDate && <> &middot; Posted {new Date(p.createdDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</>}
-                      {p.endDate && <> &middot; Closes {new Date(p.endDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</>}
+                      {p.createdDate && (
+                        <>
+                          {" "}
+                          &middot; Posted{" "}
+                          {new Date(p.createdDate).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </>
+                      )}
+                      {p.endDate && (
+                        <>
+                          {" "}
+                          &middot; Closes{" "}
+                          {new Date(p.endDate).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </>
+                      )}
                     </div>
                     <div className="flex items-center gap-4 text-sm">
                       <span className="flex items-center gap-1 text-neutral-600 dark:text-neutral-400">
                         <Users className="w-3.5 h-3.5 text-primary-500" /> {p.introCount} contacted
                       </span>
                       <span className="flex items-center gap-1 text-neutral-600 dark:text-neutral-400">
-                        <CheckCircle className="w-3.5 h-3.5 text-emerald-300" /> {p.respondedCount} responded
+                        <CheckCircle className="w-3.5 h-3.5 text-emerald-300" /> {p.respondedCount}{" "}
+                        responded
                       </span>
                       <span className="flex items-center gap-1 text-neutral-600 dark:text-neutral-400">
                         <Briefcase className="w-3.5 h-3.5 text-purple-300" /> {p.hiredCount} hired

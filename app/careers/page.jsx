@@ -37,8 +37,10 @@ export default async function CareersPage() {
 
   const ciscoSubMajors = Object.fromEntries(
     ciscoRows
-      .filter(r => String(r.sCISCO).length === 4 && r.sCISCO.endsWith("00") && !r.sCISCO.endsWith("000"))
-      .map(r => [String(r.sCISCO).substring(0, 2), r.cTitle])
+      .filter(
+        (r) => String(r.sCISCO).length === 4 && r.sCISCO.endsWith("00") && !r.sCISCO.endsWith("000")
+      )
+      .map((r) => [String(r.sCISCO).substring(0, 2), r.cTitle])
   );
 
   const jobs = postings.map((job) => ({

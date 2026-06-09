@@ -40,19 +40,34 @@ export async function GET(request) {
     // For compound names like "Software Development", we use the qualifier
     // word(s) — the part that makes it specific (e.g. "software").
     const genericWords = new Set([
-      "and", "the", "for", "with", "management", "skills", "development",
-      "engineering", "service", "services", "support", "administration",
-      "general", "assistant", "officer", "specialist", "coordinator",
+      "and",
+      "the",
+      "for",
+      "with",
+      "management",
+      "skills",
+      "development",
+      "engineering",
+      "service",
+      "services",
+      "support",
+      "administration",
+      "general",
+      "assistant",
+      "officer",
+      "specialist",
+      "coordinator",
     ]);
 
     const titleGroups = [];
     for (const { name } of skillRows) {
-      const words = name.split(/[\s\/&]+/)
-        .map(w => w.toLowerCase().replace(/[^a-z]/g, ""))
-        .filter(w => w.length >= 3);
+      const words = name
+        .split(/[\s\/&]+/)
+        .map((w) => w.toLowerCase().replace(/[^a-z]/g, ""))
+        .filter((w) => w.length >= 3);
 
       // Use only the specific/qualifier words (filter out generic suffixes)
-      const specific = words.filter(w => !genericWords.has(w));
+      const specific = words.filter((w) => !genericWords.has(w));
       // If all words are generic, use the full name as-is
       const group = specific.length > 0 ? specific : words;
       if (group.length > 0) titleGroups.push(group);

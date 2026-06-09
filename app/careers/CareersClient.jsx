@@ -2,7 +2,13 @@
 
 import { useSearchParams } from "next/navigation";
 import {
-  useState, useRef, useCallback, useLayoutEffect, useEffect, useMemo, startTransition,
+  useState,
+  useRef,
+  useCallback,
+  useLayoutEffect,
+  useEffect,
+  useMemo,
+  startTransition,
 } from "react";
 import gsap from "gsap";
 import LiveSearchClient from "@/app/jobs/LiveSearchClient";
@@ -65,7 +71,12 @@ export default function CareersClient({
   const indicatorRef = useRef(null);
   const isFirstRender = useRef(true);
 
-  const setTabRef = useCallback((key) => (el) => { tabRefs.current[key] = el; }, []);
+  const setTabRef = useCallback(
+    (key) => (el) => {
+      tabRefs.current[key] = el;
+    },
+    []
+  );
 
   // Position the sliding indicator
   useLayoutEffect(() => {
@@ -129,7 +140,8 @@ export default function CareersClient({
     if (!statsRef.current) return;
     const cards = statsRef.current.querySelectorAll("[data-stat-card]");
     if (!cards.length) return;
-    gsap.fromTo(cards,
+    gsap.fromTo(
+      cards,
       { opacity: 0, y: 20, scale: 0.95 },
       { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.1, ease: "power3.out" }
     );
@@ -147,7 +159,10 @@ export default function CareersClient({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 md:pt-12">
         {/* Macro stats bar */}
         <div ref={statsRef} className="grid grid-cols-3 gap-3 mb-6">
-          <div data-stat-card className="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-4 py-3 flex items-center gap-3">
+          <div
+            data-stat-card
+            className="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-4 py-3 flex items-center gap-3"
+          >
             <div className="h-9 w-9 rounded-lg bg-primary-50 dark:bg-primary-500/15 grid place-items-center shrink-0">
               <Briefcase className="w-4 h-4 text-primary-500" />
             </div>
@@ -155,10 +170,15 @@ export default function CareersClient({
               <div className="text-xl font-semibold">
                 <AnimatedStat value={totalJobs} />
               </div>
-              <div className="text-[11px] text-neutral-500 uppercase tracking-wider">Active Jobs</div>
+              <div className="text-[11px] text-neutral-500 uppercase tracking-wider">
+                Active Jobs
+              </div>
             </div>
           </div>
-          <div data-stat-card className="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-4 py-3 flex items-center gap-3">
+          <div
+            data-stat-card
+            className="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-4 py-3 flex items-center gap-3"
+          >
             <div className="h-9 w-9 rounded-lg bg-primary-50 dark:bg-primary-500/15 grid place-items-center shrink-0">
               <Building2 className="w-4 h-4 text-primary-500" />
             </div>
@@ -169,7 +189,10 @@ export default function CareersClient({
               <div className="text-[11px] text-neutral-500 uppercase tracking-wider">Employers</div>
             </div>
           </div>
-          <div data-stat-card className="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-4 py-3 flex items-center gap-3">
+          <div
+            data-stat-card
+            className="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-4 py-3 flex items-center gap-3"
+          >
             <div className="h-9 w-9 rounded-lg bg-primary-50 dark:bg-primary-500/15 grid place-items-center shrink-0">
               <Building2 className="w-4 h-4 text-primary-500" />
             </div>
@@ -177,7 +200,9 @@ export default function CareersClient({
               <div className="text-xl font-semibold">
                 <AnimatedStat value={hiringEmployers} />
               </div>
-              <div className="text-[11px] text-neutral-500 uppercase tracking-wider">Hiring Now</div>
+              <div className="text-[11px] text-neutral-500 uppercase tracking-wider">
+                Hiring Now
+              </div>
             </div>
           </div>
         </div>

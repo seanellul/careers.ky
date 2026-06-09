@@ -7,10 +7,14 @@ function StatCard({ label, value, icon: Icon, accent }) {
   return (
     <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl p-5">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-medium uppercase tracking-wider text-neutral-500">{label}</span>
+        <span className="text-xs font-medium uppercase tracking-wider text-neutral-500">
+          {label}
+        </span>
         <Icon className={`w-4 h-4 ${accent ? "text-primary-500" : "text-neutral-600"}`} />
       </div>
-      <div className="text-2xl font-bold text-neutral-900 dark:text-white">{typeof value === "number" ? value.toLocaleString() : value}</div>
+      <div className="text-2xl font-bold text-neutral-900 dark:text-white">
+        {typeof value === "number" ? value.toLocaleString() : value}
+      </div>
     </div>
   );
 }
@@ -21,11 +25,12 @@ export default function AdminCandidatesClient({ candidates, stats }) {
   const filtered = useMemo(() => {
     if (!search) return candidates;
     const q = search.toLowerCase();
-    return candidates.filter(c =>
-      (c.name || "").toLowerCase().includes(q) ||
-      (c.email || "").toLowerCase().includes(q) ||
-      (c.headline || "").toLowerCase().includes(q) ||
-      (c.skills || []).some(s => s && s.toLowerCase().includes(q))
+    return candidates.filter(
+      (c) =>
+        (c.name || "").toLowerCase().includes(q) ||
+        (c.email || "").toLowerCase().includes(q) ||
+        (c.headline || "").toLowerCase().includes(q) ||
+        (c.skills || []).some((s) => s && s.toLowerCase().includes(q))
     );
   }, [candidates, search]);
 
@@ -42,7 +47,7 @@ export default function AdminCandidatesClient({ candidates, stats }) {
       <h1 className="text-2xl font-bold mb-6">Candidates</h1>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
-        {statCards.map(card => (
+        {statCards.map((card) => (
           <StatCard key={card.label} {...card} />
         ))}
       </div>
@@ -83,22 +88,36 @@ export default function AdminCandidatesClient({ candidates, stats }) {
                 const extraCount = skills.length - 3;
 
                 return (
-                  <tr key={c.id} className="border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800">
-                    <td className="px-4 py-3 text-neutral-900 dark:text-white font-medium">{c.name || "—"}</td>
+                  <tr
+                    key={c.id}
+                    className="border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                  >
+                    <td className="px-4 py-3 text-neutral-900 dark:text-white font-medium">
+                      {c.name || "—"}
+                    </td>
                     <td className="px-4 py-3 text-neutral-500">{c.email}</td>
                     <td className="px-4 py-3">
                       {c.is_caymanian ? (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/15 text-green-400 border border-green-500/20">Yes</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/15 text-green-400 border border-green-500/20">
+                          Yes
+                        </span>
                       ) : (
                         <span className="text-xs text-neutral-500">No</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-neutral-500 text-xs">{c.education_label || "—"}</td>
-                    <td className="px-4 py-3 text-neutral-500 text-xs">{c.experience_label || "—"}</td>
+                    <td className="px-4 py-3 text-neutral-500 text-xs">
+                      {c.education_label || "—"}
+                    </td>
+                    <td className="px-4 py-3 text-neutral-500 text-xs">
+                      {c.experience_label || "—"}
+                    </td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1">
-                        {shownSkills.map(s => (
-                          <span key={s} className="text-[11px] px-1.5 py-0.5 rounded bg-white dark:bg-neutral-800 shadow-sm text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700">
+                        {shownSkills.map((s) => (
+                          <span
+                            key={s}
+                            className="text-[11px] px-1.5 py-0.5 rounded bg-white dark:bg-neutral-800 shadow-sm text-neutral-600 dark:text-neutral-400 border border-neutral-200 dark:border-neutral-700"
+                          >
                             {s}
                           </span>
                         ))}
@@ -120,8 +139,12 @@ export default function AdminCandidatesClient({ candidates, stats }) {
                         <span className="text-neutral-500 text-xs">No</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">{Number(c.interest_count)}</td>
-                    <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">{Number(c.intro_count)}</td>
+                    <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">
+                      {Number(c.interest_count)}
+                    </td>
+                    <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">
+                      {Number(c.intro_count)}
+                    </td>
                     <td className="px-4 py-3 text-neutral-500 text-xs">
                       {new Date(c.created_at).toISOString().slice(0, 10)}
                     </td>

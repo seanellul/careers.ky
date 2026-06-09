@@ -58,8 +58,7 @@ export default function Navigation() {
     navItems.push({ href: "/employer/dashboard", label: "Dashboard" });
   }
 
-  const initial =
-    session?.candidateName?.[0] || session?.employerName?.[0] || "U";
+  const initial = session?.candidateName?.[0] || session?.employerName?.[0] || "U";
 
   const isNavActive = (href) => {
     if (href === "/") return pathname === "/";
@@ -83,7 +82,10 @@ export default function Navigation() {
         <nav className="hidden md:flex items-center gap-6 text-sm text-neutral-500 dark:text-neutral-400">
           {navItems.map((item) =>
             isNavActive(item.href) ? (
-              <span key={item.href} className="text-primary-600 font-medium flex items-center gap-1.5">
+              <span
+                key={item.href}
+                className="text-primary-600 font-medium flex items-center gap-1.5"
+              >
                 {item.label}
                 {item.badge > 0 && (
                   <span className="min-w-[18px] h-[18px] px-1 bg-primary-500 rounded-full text-[10px] grid place-items-center font-semibold text-white">
@@ -126,7 +128,10 @@ export default function Navigation() {
 
           {!loading && session && (
             <div className="flex items-center gap-3">
-              <Link href="/notifications" className="relative p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition text-neutral-600 dark:text-neutral-400">
+              <Link
+                href="/notifications"
+                className="relative p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition text-neutral-600 dark:text-neutral-400"
+              >
                 <Bell className="w-4 h-4" />
                 {unreadCount > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-accent-500 dark:bg-accent-600 rounded-full text-[10px] grid place-items-center font-semibold text-white ring-2 ring-white dark:ring-[#171412]">
@@ -191,11 +196,7 @@ export default function Navigation() {
           className="md:hidden p-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition text-neutral-600 dark:text-neutral-400"
           aria-label="Toggle menu"
         >
-          {mobileMenuOpen ? (
-            <X className="w-5 h-5" />
-          ) : (
-            <Menu className="w-5 h-5" />
-          )}
+          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
 
@@ -235,18 +236,33 @@ export default function Navigation() {
             {!loading && session && (
               <>
                 {isEmployer ? (
-                  <Link href="/employer/profile" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100">
+                  <Link
+                    href="/employer/profile"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-4 py-3 rounded-lg bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                  >
                     Company Profile
                   </Link>
                 ) : (
-                  <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100">
+                  <Link
+                    href="/profile"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-4 py-3 rounded-lg bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                  >
                     My Profile
                   </Link>
                 )}
-                <Link href="/notifications" onClick={() => setMobileMenuOpen(false)} className="px-4 py-3 rounded-lg bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100">
+                <Link
+                  href="/notifications"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-4 py-3 rounded-lg bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100"
+                >
                   Notifications
                 </Link>
-                <button onClick={handleLogout} className="px-4 py-3 rounded-lg bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition text-red-500 text-left">
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-3 rounded-lg bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-100 dark:hover:bg-neutral-700 transition text-red-500 text-left"
+                >
                   Sign Out
                 </button>
               </>

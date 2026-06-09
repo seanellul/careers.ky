@@ -55,7 +55,13 @@ export default async function JobDetailPage({ params }) {
     const employer = p.Employer;
     if (!employer) return;
     if (!employerMap.has(employer)) {
-      employerMap.set(employer, { name: employer, totalPostings: 0, activePostings: 0, isActiveHiring: false, recentPosting: null });
+      employerMap.set(employer, {
+        name: employer,
+        totalPostings: 0,
+        activePostings: 0,
+        isActiveHiring: false,
+        recentPosting: null,
+      });
     }
     const emp = employerMap.get(employer);
     emp.totalPostings++;

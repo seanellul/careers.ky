@@ -26,17 +26,29 @@ export default async function JoinTeamPage({ searchParams }) {
   `;
 
   if (!invitations.length) {
-    return <ErrorState title="Invitation Not Found" message="This invitation link is invalid or has already been used." />;
+    return (
+      <ErrorState
+        title="Invitation Not Found"
+        message="This invitation link is invalid or has already been used."
+      />
+    );
   }
 
   const invitation = invitations[0];
 
   if (invitation.accepted_at) {
-    return <ErrorState title="Already Accepted" message="This invitation has already been accepted." />;
+    return (
+      <ErrorState title="Already Accepted" message="This invitation has already been accepted." />
+    );
   }
 
   if (new Date(invitation.expires_at) < new Date()) {
-    return <ErrorState title="Invitation Expired" message="This invitation has expired. Please ask your team to send a new one." />;
+    return (
+      <ErrorState
+        title="Invitation Expired"
+        message="This invitation has expired. Please ask your team to send a new one."
+      />
+    );
   }
 
   // Check if user is signed in as an employer
@@ -54,7 +66,9 @@ export default async function JoinTeamPage({ searchParams }) {
           </div>
           <div>
             <h2 className="text-xl font-semibold">Sign In Required</h2>
-            <p className="text-neutral-500 text-sm">You&apos;ve been invited to join {invitation.employer_name}</p>
+            <p className="text-neutral-500 text-sm">
+              You&apos;ve been invited to join {invitation.employer_name}
+            </p>
           </div>
         </div>
         <p className="text-neutral-600 dark:text-neutral-400 text-sm mb-4">

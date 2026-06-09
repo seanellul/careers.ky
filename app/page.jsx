@@ -50,8 +50,7 @@ export default async function HomePage({ searchParams: searchParamsPromise }) {
       }
     };
     countJobs(major);
-    const finalAvgSalary =
-      salaryCount > 0 ? Math.round(avgSalary / salaryCount) : 0;
+    const finalAvgSalary = salaryCount > 0 ? Math.round(avgSalary / salaryCount) : 0;
 
     return {
       id: major.id,

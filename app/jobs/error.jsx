@@ -14,10 +14,15 @@ export default function JobsError({ error, reset }) {
           <CardContent className="p-8 text-center">
             <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
             <h1 className="text-xl font-semibold mb-2">Failed to load jobs</h1>
-            <p className="text-neutral-500 mb-6">We couldn't load job listings right now. The WORC data source may be temporarily unavailable.</p>
+            <p className="text-neutral-500 mb-6">
+              We couldn't load job listings right now. The WORC data source may be temporarily
+              unavailable.
+            </p>
             <div className="flex gap-3 justify-center">
               <Button onClick={() => reset()}>Try Again</Button>
-              <Button variant="secondary" onClick={() => window.location.href = "/"}>Go Home</Button>
+              <Button variant="secondary" onClick={() => (window.location.href = "/")}>
+                Go Home
+              </Button>
             </div>
           </CardContent>
         </Card>

@@ -13,9 +13,11 @@ export async function generateMetadata({ params }) {
   const job = await getJobPostingById(jobId);
   if (!job) return { title: "Job Not Found" };
 
-  const salary = job.salaryShort || (job.fMinSalary && job.fMaxSalary
-    ? `${job.Currency || "KYD"} ${job.fMinSalary.toLocaleString()} - ${job.fMaxSalary.toLocaleString()}`
-    : "");
+  const salary =
+    job.salaryShort ||
+    (job.fMinSalary && job.fMaxSalary
+      ? `${job.Currency || "KYD"} ${job.fMinSalary.toLocaleString()} - ${job.fMaxSalary.toLocaleString()}`
+      : "");
 
   return {
     title: `${job.cTitle} at ${job.Employer || "Employer"} — careers.ky`,

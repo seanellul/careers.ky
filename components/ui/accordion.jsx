@@ -1,24 +1,24 @@
-import * as React from "react"
-import { ChevronDown } from "lucide-react"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import { ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-const AccordionContext = React.createContext({})
-const AccordionItemContext = React.createContext(null)
+const AccordionContext = React.createContext({});
+const AccordionItemContext = React.createContext(null);
 
 const Accordion = React.forwardRef(({ type, collapsible, className, children, ...props }, ref) => {
-  const [openItems, setOpenItems] = React.useState([])
+  const [openItems, setOpenItems] = React.useState([]);
 
   const toggleItem = (value) => {
     if (type === "single") {
-      setOpenItems(openItems.includes(value) ? (collapsible ? [] : openItems) : [value])
+      setOpenItems(openItems.includes(value) ? (collapsible ? [] : openItems) : [value]);
     } else {
       setOpenItems(
         openItems.includes(value)
           ? openItems.filter((item) => item !== value)
           : [...openItems, value]
-      )
+      );
     }
-  }
+  };
 
   return (
     <AccordionContext.Provider value={{ openItems, toggleItem }}>
@@ -26,28 +26,33 @@ const Accordion = React.forwardRef(({ type, collapsible, className, children, ..
         {children}
       </div>
     </AccordionContext.Provider>
-  )
-})
-Accordion.displayName = "Accordion"
+  );
+});
+Accordion.displayName = "Accordion";
 
 const AccordionItem = React.forwardRef(({ className, value, children, ...props }, ref) => (
   <AccordionItemContext.Provider value={value}>
-    <div ref={ref} data-value={value} className={cn("border-b border-neutral-200", className)} {...props}>
+    <div
+      ref={ref}
+      data-value={value}
+      className={cn("border-b border-neutral-200", className)}
+      {...props}
+    >
       {children}
     </div>
   </AccordionItemContext.Provider>
-))
-AccordionItem.displayName = "AccordionItem"
+));
+AccordionItem.displayName = "AccordionItem";
 
 const AccordionTrigger = React.forwardRef(({ className, children, ...props }, ref) => {
-  const { openItems, toggleItem } = React.useContext(AccordionContext)
-  const value = React.useContext(AccordionItemContext)
-  
-  const handleClick = () => {
-    if (value) toggleItem(value)
-  }
+  const { openItems, toggleItem } = React.useContext(AccordionContext);
+  const value = React.useContext(AccordionItemContext);
 
-  const isOpen = value && openItems.includes(value)
+  const handleClick = () => {
+    if (value) toggleItem(value);
+  };
+
+  const isOpen = value && openItems.includes(value);
 
   return (
     <button
@@ -63,14 +68,14 @@ const AccordionTrigger = React.forwardRef(({ className, children, ...props }, re
       {children}
       <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
     </button>
-  )
-})
-AccordionTrigger.displayName = "AccordionTrigger"
+  );
+});
+AccordionTrigger.displayName = "AccordionTrigger";
 
 const AccordionContent = React.forwardRef(({ className, children, ...props }, ref) => {
-  const { openItems } = React.useContext(AccordionContext)
-  const value = React.useContext(AccordionItemContext)
-  const isOpen = value && openItems.includes(value)
+  const { openItems } = React.useContext(AccordionContext);
+  const value = React.useContext(AccordionItemContext);
+  const isOpen = value && openItems.includes(value);
 
   return (
     <div
@@ -83,9 +88,8 @@ const AccordionContent = React.forwardRef(({ className, children, ...props }, re
     >
       <div className={cn("pb-4 pt-0", className)}>{children}</div>
     </div>
-  )
-})
-AccordionContent.displayName = "AccordionContent"
+  );
+});
+AccordionContent.displayName = "AccordionContent";
 
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent }
-
+export { Accordion, AccordionItem, AccordionTrigger, AccordionContent };

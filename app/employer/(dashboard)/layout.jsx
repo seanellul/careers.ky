@@ -27,21 +27,14 @@ export default async function DashboardLayout({ children }) {
 
   return (
     <div className={t.page}>
-      <div
-        id="bg-gradient"
-        aria-hidden
-        className={t.pageGradient}
-        style={t.pageGradientStyle}
-      />
+      <div id="bg-gradient" aria-hidden className={t.pageGradient} style={t.pageGradientStyle} />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex">
           <DashboardSidebar employerSlug={employerSlug} accountRole={accountRole} />
           <main className="flex-1 min-w-0 py-8 md:py-12">
             <VerificationBanner verificationStatus={verificationStatus} />
-            <DashboardTransition>
-              {children}
-            </DashboardTransition>
+            <DashboardTransition>{children}</DashboardTransition>
           </main>
         </div>
       </div>

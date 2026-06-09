@@ -21,7 +21,10 @@ export async function PATCH(request) {
 
   const { requestId, action, domain, notes } = await request.json();
   if (!requestId || !["approve", "reject"].includes(action)) {
-    return NextResponse.json({ error: "requestId and action (approve/reject) required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "requestId and action (approve/reject) required" },
+      { status: 400 }
+    );
   }
 
   const adminEmail = session.candidateEmail || session.employerEmail;

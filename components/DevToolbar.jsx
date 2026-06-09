@@ -56,7 +56,11 @@ export default function DevToolbar() {
     }
   };
 
-  const currentRole = session?.employerAccountId ? "employer" : session?.candidateId ? "candidate" : "none";
+  const currentRole = session?.employerAccountId
+    ? "employer"
+    : session?.candidateId
+      ? "candidate"
+      : "none";
 
   if (minimized) {
     return (
@@ -74,12 +78,24 @@ export default function DevToolbar() {
     <div className="fixed bottom-4 right-4 z-[9999] bg-white dark:bg-neutral-900 border border-orange-500/50 rounded-xl shadow-2xl p-3 text-xs text-neutral-700 dark:text-neutral-300 space-y-2 w-64 max-w-[calc(100vw-2rem)]">
       <div className="flex items-center justify-between">
         <span className="font-bold text-orange-500">DEV TOOLBAR</span>
-        <button onClick={() => setMinimized(true)} className="text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 text-sm leading-none">&minus;</button>
+        <button
+          onClick={() => setMinimized(true)}
+          className="text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 text-sm leading-none"
+        >
+          &minus;
+        </button>
       </div>
 
       <div className="text-neutral-500">
-        Current: <span className={`font-semibold ${currentRole === "employer" ? "text-primary-500" : currentRole === "candidate" ? "text-emerald-600 dark:text-emerald-400" : "text-red-500"}`}>
-          {currentRole === "employer" ? "Employer" : currentRole === "candidate" ? "Candidate" : "Not signed in"}
+        Current:{" "}
+        <span
+          className={`font-semibold ${currentRole === "employer" ? "text-primary-500" : currentRole === "candidate" ? "text-emerald-600 dark:text-emerald-400" : "text-red-500"}`}
+        >
+          {currentRole === "employer"
+            ? "Employer"
+            : currentRole === "candidate"
+              ? "Candidate"
+              : "Not signed in"}
         </span>
       </div>
 

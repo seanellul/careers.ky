@@ -28,9 +28,18 @@ export async function PUT(request) {
   try {
     const body = await request.json();
     const {
-      website, description, logoUrl, coverUrl, tagline,
-      companySize, yearFounded, headquarters, industry,
-      socialLinks, benefits, profileSections,
+      website,
+      description,
+      logoUrl,
+      coverUrl,
+      tagline,
+      companySize,
+      yearFounded,
+      headquarters,
+      industry,
+      socialLinks,
+      benefits,
+      profileSections,
     } = body;
     const sql = getDb();
 
@@ -55,15 +64,15 @@ export async function PUT(request) {
 
     await sql`
       UPDATE employers SET
-        website = COALESCE(${website !== undefined ? (website || null) : null}, website),
-        description = COALESCE(${description !== undefined ? (description || null) : null}, description),
-        logo_url = COALESCE(${logoUrl !== undefined ? (logoUrl || null) : null}, logo_url),
-        cover_url = ${coverUrl !== undefined ? (coverUrl || null) : sql`cover_url`},
-        tagline = ${tagline !== undefined ? (tagline || null) : sql`tagline`},
-        company_size = ${companySize !== undefined ? (companySize || null) : sql`company_size`},
-        year_founded = ${yearFounded !== undefined ? (yearFounded || null) : sql`year_founded`},
-        headquarters = ${headquarters !== undefined ? (headquarters || null) : sql`headquarters`},
-        industry = ${industry !== undefined ? (industry || null) : sql`industry`},
+        website = COALESCE(${website !== undefined ? website || null : null}, website),
+        description = COALESCE(${description !== undefined ? description || null : null}, description),
+        logo_url = COALESCE(${logoUrl !== undefined ? logoUrl || null : null}, logo_url),
+        cover_url = ${coverUrl !== undefined ? coverUrl || null : sql`cover_url`},
+        tagline = ${tagline !== undefined ? tagline || null : sql`tagline`},
+        company_size = ${companySize !== undefined ? companySize || null : sql`company_size`},
+        year_founded = ${yearFounded !== undefined ? yearFounded || null : sql`year_founded`},
+        headquarters = ${headquarters !== undefined ? headquarters || null : sql`headquarters`},
+        industry = ${industry !== undefined ? industry || null : sql`industry`},
         social_links = ${socialLinks !== undefined ? JSON.stringify(socialLinks || {}) : sql`social_links`},
         benefits = ${benefits !== undefined ? JSON.stringify(benefits || []) : sql`benefits`},
         profile_sections = ${profileSections !== undefined ? JSON.stringify(profileSections || {}) : sql`profile_sections`}

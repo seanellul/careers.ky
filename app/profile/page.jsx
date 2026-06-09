@@ -1,7 +1,17 @@
 export const dynamic = "force-dynamic";
 
 import { getSession } from "@/lib/auth";
-import { getCandidateById, getCandidateInterests, getCandidateSkills, getNotifications, getUnreadCount, getIntroductionsForCandidate, loadEducationTypes, loadExperienceTypes, loadLocationTypes } from "@/lib/data";
+import {
+  getCandidateById,
+  getCandidateInterests,
+  getCandidateSkills,
+  getNotifications,
+  getUnreadCount,
+  getIntroductionsForCandidate,
+  loadEducationTypes,
+  loadExperienceTypes,
+  loadLocationTypes,
+} from "@/lib/data";
 import { redirect } from "next/navigation";
 import ProfileClient from "./ProfileClient";
 
@@ -14,7 +24,17 @@ export default async function ProfilePage() {
   const session = await getSession();
   if (!session?.candidateId) redirect("/");
 
-  const [candidate, interests, skills, notifications, unreadCount, introductions, eduTypes, expTypes, locTypes] = await Promise.all([
+  const [
+    candidate,
+    interests,
+    skills,
+    notifications,
+    unreadCount,
+    introductions,
+    eduTypes,
+    expTypes,
+    locTypes,
+  ] = await Promise.all([
     getCandidateById(session.candidateId),
     getCandidateInterests(session.candidateId),
     getCandidateSkills(session.candidateId),
@@ -28,7 +48,7 @@ export default async function ProfilePage() {
 
   if (!candidate) redirect("/");
 
-  const pendingIntroCount = introductions.filter(i => i.status === "pending").length;
+  const pendingIntroCount = introductions.filter((i) => i.status === "pending").length;
 
   return (
     <ProfileClient

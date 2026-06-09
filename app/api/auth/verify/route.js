@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { verifyMagicLink, createSession } from "@/lib/auth";
-import { getCandidateByEmail, upsertCandidate, getEmployerAccountByEmail, upsertEmployerAccount } from "@/lib/data";
+import {
+  getCandidateByEmail,
+  upsertCandidate,
+  getEmployerAccountByEmail,
+  upsertEmployerAccount,
+} from "@/lib/data";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function GET(request) {

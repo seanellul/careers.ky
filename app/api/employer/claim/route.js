@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { getDb } from "@/lib/db";
-import { extractDomain, domainsMatch, getCompanyDomain, sendVerificationNotificationToTeam } from "@/lib/verification";
+import {
+  extractDomain,
+  domainsMatch,
+  getCompanyDomain,
+  sendVerificationNotificationToTeam,
+} from "@/lib/verification";
 import { rateLimit, rateLimitResponse } from "@/lib/rate-limit";
 
 export async function POST(request) {
@@ -23,14 +28,16 @@ export async function POST(request) {
     const sql = getDb();
 
     // Fetch employer with domain info
-    const employers = await sql`SELECT id, name, domain, website FROM employers WHERE id = ${employerId}`;
+    const employers =
+      await sql`SELECT id, name, domain, website FROM employers WHERE id = ${employerId}`;
     if (!employers.length) {
       return NextResponse.json({ error: "Employer not found" }, { status: 404 });
     }
     const employer = employers[0];
 
     // Fetch the claiming account's email
-    const accounts = await sql`SELECT id, email, name FROM employer_accounts WHERE id = ${session.employerAccountId}`;
+    const accounts =
+      await sql`SELECT id, email, name FROM employer_accounts WHERE id = ${session.employerAccountId}`;
     if (!accounts.length) {
       return NextResponse.json({ error: "Account not found" }, { status: 404 });
     }

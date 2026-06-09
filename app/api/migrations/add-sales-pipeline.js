@@ -7,9 +7,7 @@ export async function migrate() {
 
   try {
     // Check if migration already ran
-    const result = await sql(
-      "SELECT 1 FROM pg_tables WHERE tablename = 'migrations' LIMIT 1"
-    );
+    const result = await sql("SELECT 1 FROM pg_tables WHERE tablename = 'migrations' LIMIT 1");
 
     if (result.length === 0) {
       // Create migrations tracking table
@@ -23,10 +21,7 @@ export async function migrate() {
     }
 
     // Check if this specific migration has run
-    const migrationRecord = await sql(
-      "SELECT 1 FROM migrations WHERE name = $1",
-      [MIGRATION_NAME]
-    );
+    const migrationRecord = await sql("SELECT 1 FROM migrations WHERE name = $1", [MIGRATION_NAME]);
 
     if (migrationRecord.length > 0) {
       console.log(`Migration ${MIGRATION_NAME} already applied`);

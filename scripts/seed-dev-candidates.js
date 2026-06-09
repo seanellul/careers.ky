@@ -1,16 +1,59 @@
 import { neon } from "@neondatabase/serverless";
 
 const FIRST_NAMES = [
-  "Alicia", "Marcus", "Tanya", "Devon", "Keisha", "Jordan", "Renee", "Dwayne",
-  "Natasha", "Andre", "Simone", "Kareem", "Bianca", "Trevor", "Camille", "Rashid",
-  "Monique", "Adrian", "Sasha", "Darren", "Tamara", "Corey", "Nicole", "Jamal",
-  "Gabrielle", "Wayne", "Crystal", "Terrence", "Latoya", "Ryan",
+  "Alicia",
+  "Marcus",
+  "Tanya",
+  "Devon",
+  "Keisha",
+  "Jordan",
+  "Renee",
+  "Dwayne",
+  "Natasha",
+  "Andre",
+  "Simone",
+  "Kareem",
+  "Bianca",
+  "Trevor",
+  "Camille",
+  "Rashid",
+  "Monique",
+  "Adrian",
+  "Sasha",
+  "Darren",
+  "Tamara",
+  "Corey",
+  "Nicole",
+  "Jamal",
+  "Gabrielle",
+  "Wayne",
+  "Crystal",
+  "Terrence",
+  "Latoya",
+  "Ryan",
 ];
 
 const LAST_NAMES = [
-  "Ebanks", "Bodden", "McLaughlin", "Whittaker", "Rankine", "Wood", "Panton",
-  "Bush", "Tibbetts", "Scott", "Frederick", "Jackson", "Thompson", "Rivers",
-  "Williams", "Hurlston", "Conolly", "Watler", "Solomon", "Levy",
+  "Ebanks",
+  "Bodden",
+  "McLaughlin",
+  "Whittaker",
+  "Rankine",
+  "Wood",
+  "Panton",
+  "Bush",
+  "Tibbetts",
+  "Scott",
+  "Frederick",
+  "Jackson",
+  "Thompson",
+  "Rivers",
+  "Williams",
+  "Hurlston",
+  "Conolly",
+  "Watler",
+  "Solomon",
+  "Levy",
 ];
 
 const BIOS = [
@@ -36,7 +79,8 @@ async function seed() {
   console.log("Seeding dev candidates...\n");
 
   // Get available CISCO codes and skills
-  const ciscos = await sql`SELECT cisco_code FROM cisco_units WHERE LENGTH(cisco_code) = 4 ORDER BY RANDOM() LIMIT 40`;
+  const ciscos =
+    await sql`SELECT cisco_code FROM cisco_units WHERE LENGTH(cisco_code) = 4 ORDER BY RANDOM() LIMIT 40`;
   const skills = await sql`SELECT id FROM skills ORDER BY RANDOM() LIMIT 30`;
 
   const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -57,7 +101,7 @@ async function seed() {
     const locCode = String(Math.floor(Math.random() * 10));
     const availability = pick(["actively_looking", "actively_looking", "open_to_offers"]);
     const bio = pick(BIOS);
-    const salaryMin = (30000 + Math.floor(Math.random() * 40000));
+    const salaryMin = 30000 + Math.floor(Math.random() * 40000);
     const salaryMax = salaryMin + 10000 + Math.floor(Math.random() * 30000);
 
     // Upsert candidate
@@ -90,7 +134,9 @@ async function seed() {
       await sql`INSERT INTO candidate_skills (candidate_id, skill_id) VALUES (${candidateId}, ${s.id}) ON CONFLICT DO NOTHING`;
     }
 
-    console.log(`  ${i + 1}. ${first} ${last} (${isCaymanian ? "Caymanian" : "Non-Caymanian"}) — ${email}`);
+    console.log(
+      `  ${i + 1}. ${first} ${last} (${isCaymanian ? "Caymanian" : "Non-Caymanian"}) — ${email}`
+    );
   }
 
   console.log(`\nSeeded ${COUNT} dev candidates. All discoverable.`);

@@ -22,10 +22,12 @@ export async function GET(request) {
   const nonce = crypto.randomBytes(16).toString("hex");
 
   // State encodes the account type + CSRF nonce
-  const state = Buffer.from(JSON.stringify({
-    type,
-    nonce,
-  })).toString("base64url");
+  const state = Buffer.from(
+    JSON.stringify({
+      type,
+      nonce,
+    })
+  ).toString("base64url");
 
   // Store nonce in httpOnly cookie for validation on callback
   const cookieStore = await cookies();

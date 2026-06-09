@@ -2,12 +2,25 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 
-const VALID_STAGES = ["outreach", "responded", "interviewing", "offered", "hired", "rejected", "archived"];
+const VALID_STAGES = [
+  "outreach",
+  "responded",
+  "interviewing",
+  "offered",
+  "hired",
+  "rejected",
+  "archived",
+];
 
 const VALID_REJECTION_REASONS = [
-  "position_filled", "qualifications_mismatch", "salary_mismatch",
-  "candidate_unresponsive", "candidate_withdrew", "insufficient_experience",
-  "location_mismatch", "other",
+  "position_filled",
+  "qualifications_mismatch",
+  "salary_mismatch",
+  "candidate_unresponsive",
+  "candidate_withdrew",
+  "insufficient_experience",
+  "location_mismatch",
+  "other",
 ];
 
 export async function PUT(request, { params }) {

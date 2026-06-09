@@ -39,12 +39,19 @@ export default function ProfileCompletenessCard({ score, missing }) {
         {/* Missing items */}
         <div className="flex flex-wrap gap-2">
           {items.map((item, i) => (
-            <Link key={i} href="/profile" className="text-xs px-3 py-1.5 rounded-lg bg-neutral-50 border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition text-neutral-600 hover:text-primary-700">
+            <Link
+              key={i}
+              href="/profile"
+              className="text-xs px-3 py-1.5 rounded-lg bg-neutral-50 border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition text-neutral-600 hover:text-primary-700"
+            >
               + {item}
             </Link>
           ))}
           {missing.length > 4 && (
-            <Link href="/profile" className="text-xs px-3 py-1.5 rounded-lg bg-neutral-50 border border-neutral-200 hover:border-primary-300 transition text-neutral-500 hover:text-primary-700">
+            <Link
+              href="/profile"
+              className="text-xs px-3 py-1.5 rounded-lg bg-neutral-50 border border-neutral-200 hover:border-primary-300 transition text-neutral-500 hover:text-primary-700"
+            >
               +{missing.length - 4} more
             </Link>
           )}

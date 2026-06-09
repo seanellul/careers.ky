@@ -5,7 +5,12 @@ import { Users2, UserPlus, Trash2, Shield, Loader2, Mail, Clock } from "lucide-r
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export default function TeamClient({ members: initialMembers, invitations: initialInvitations, currentAccountId, currentRole }) {
+export default function TeamClient({
+  members: initialMembers,
+  invitations: initialInvitations,
+  currentAccountId,
+  currentRole,
+}) {
   const [members, setMembers] = useState(initialMembers);
   const [invitations, setInvitations] = useState(initialInvitations);
   const [inviteEmail, setInviteEmail] = useState("");
@@ -38,7 +43,8 @@ export default function TeamClient({ members: initialMembers, invitations: initi
   };
 
   const handleRemove = async (memberId) => {
-    if (!confirm("Remove this team member? They will lose access to the employer dashboard.")) return;
+    if (!confirm("Remove this team member? They will lose access to the employer dashboard."))
+      return;
     setProcessing(memberId);
     try {
       const res = await fetch("/api/employer/team", {
@@ -73,8 +79,10 @@ export default function TeamClient({ members: initialMembers, invitations: initi
   const roleBadge = (role) => {
     const styles = {
       owner: "bg-amber-50 text-amber-600 border-amber-300",
-      admin: "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30",
-      member: "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700",
+      admin:
+        "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30",
+      member:
+        "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-neutral-700",
     };
     return (
       <span className={`text-xs px-2 py-0.5 rounded-full border ${styles[role] || styles.member}`}>
@@ -121,28 +129,34 @@ export default function TeamClient({ members: initialMembers, invitations: initi
               <p className="text-sm text-neutral-500 truncate">{member.email}</p>
             </div>
 
-            {currentRole === "owner" && member.id !== currentAccountId && member.role !== "owner" && (
-              <div className="flex items-center gap-2 shrink-0">
-                <select
-                  value={member.role}
-                  onChange={(e) => handleRoleChange(member.id, e.target.value)}
-                  disabled={processing === member.id}
-                  className="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-lg px-2 py-1 text-sm text-neutral-700 dark:text-neutral-300"
-                >
-                  <option value="admin">Admin</option>
-                  <option value="member">Member</option>
-                </select>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => handleRemove(member.id)}
-                  disabled={processing === member.id}
-                  className="text-red-500 hover:text-red-600 hover:bg-red-50"
-                >
-                  {processing === member.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-                </Button>
-              </div>
-            )}
+            {currentRole === "owner" &&
+              member.id !== currentAccountId &&
+              member.role !== "owner" && (
+                <div className="flex items-center gap-2 shrink-0">
+                  <select
+                    value={member.role}
+                    onChange={(e) => handleRoleChange(member.id, e.target.value)}
+                    disabled={processing === member.id}
+                    className="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-lg px-2 py-1 text-sm text-neutral-700 dark:text-neutral-300"
+                  >
+                    <option value="admin">Admin</option>
+                    <option value="member">Member</option>
+                  </select>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleRemove(member.id)}
+                    disabled={processing === member.id}
+                    className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                  >
+                    {processing === member.id ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="w-4 h-4" />
+                    )}
+                  </Button>
+                </div>
+              )}
           </div>
         ))}
       </div>
@@ -206,7 +220,11 @@ export default function TeamClient({ members: initialMembers, invitations: initi
             <option value="admin">Admin</option>
           </select>
           <Button type="submit" disabled={inviting} className="gap-2">
-            {inviting ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
+            {inviting ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <UserPlus className="w-4 h-4" />
+            )}
             Invite
           </Button>
         </form>

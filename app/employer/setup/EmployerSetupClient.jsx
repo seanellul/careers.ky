@@ -25,16 +25,25 @@ export default function EmployerSetupClient() {
 
   // Search employers
   useEffect(() => {
-    if (!searchQuery.trim()) { setResults([]); return; }
+    if (!searchQuery.trim()) {
+      setResults([]);
+      return;
+    }
     const ctrl = new AbortController();
     setSearching(true);
     const timer = setTimeout(() => {
       fetch(`/api/employer/search?q=${encodeURIComponent(searchQuery)}`, { signal: ctrl.signal })
-        .then(r => r.json())
-        .then(d => { setResults(d.employers || []); setSearching(false); })
+        .then((r) => r.json())
+        .then((d) => {
+          setResults(d.employers || []);
+          setSearching(false);
+        })
         .catch(() => setSearching(false));
     }, 300);
-    return () => { clearTimeout(timer); ctrl.abort(); };
+    return () => {
+      clearTimeout(timer);
+      ctrl.abort();
+    };
   }, [searchQuery]);
 
   const handleClaim = async () => {
@@ -83,7 +92,9 @@ export default function EmployerSetupClient() {
             <Building2 className="w-8 h-8 text-primary-500" />
           </div>
           <h1 className="text-3xl font-semibold tracking-tight mb-2">Employer Setup</h1>
-          <p className="text-neutral-500">Link your account to your company to start using the talent pool.</p>
+          <p className="text-neutral-500">
+            Link your account to your company to start using the talent pool.
+          </p>
         </div>
 
         {/* Step indicator */}
@@ -96,8 +107,14 @@ export default function EmployerSetupClient() {
             return (
               <div key={label} className="flex items-center gap-2">
                 {i > 0 && <ChevronRight className="w-4 h-4 text-neutral-500" />}
-                <div className={`flex items-center gap-2 ${isActive ? "text-primary-500" : "text-neutral-500"}`}>
-                  <div className={`w-8 h-8 rounded-full grid place-items-center text-sm font-semibold ${isActive ? "bg-primary-50 dark:bg-primary-500/15 border border-primary-200 dark:border-primary-500/30" : "bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700"}`}>{num}</div>
+                <div
+                  className={`flex items-center gap-2 ${isActive ? "text-primary-500" : "text-neutral-500"}`}
+                >
+                  <div
+                    className={`w-8 h-8 rounded-full grid place-items-center text-sm font-semibold ${isActive ? "bg-primary-50 dark:bg-primary-500/15 border border-primary-200 dark:border-primary-500/30" : "bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700"}`}
+                  >
+                    {num}
+                  </div>
                   <span className="text-sm font-medium hidden sm:inline">{label}</span>
                 </div>
               </div>
@@ -109,13 +126,18 @@ export default function EmployerSetupClient() {
           <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700">
             <CardContent className="p-6 space-y-4">
               <h2 className="text-xl font-semibold">Find your company</h2>
-              <p className="text-neutral-500 text-sm">Search for your company from our database of Cayman employers.</p>
+              <p className="text-neutral-500 text-sm">
+                Search for your company from our database of Cayman employers.
+              </p>
 
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
                 <Input
                   value={searchQuery}
-                  onChange={(e) => { setSearchQuery(e.target.value); setSelectedEmployer(null); }}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setSelectedEmployer(null);
+                  }}
                   placeholder="Search company name..."
                   className="pl-10 bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
                   autoFocus
@@ -142,9 +164,13 @@ export default function EmployerSetupClient() {
                         </div>
                         <div>
                           <div className="font-medium">{emp.name}</div>
-                          {emp.claimed && <span className="text-xs text-yellow-600">Already claimed</span>}
+                          {emp.claimed && (
+                            <span className="text-xs text-yellow-600">Already claimed</span>
+                          )}
                         </div>
-                        {selectedEmployer?.id === emp.id && <CheckCircle className="w-5 h-5 text-primary-500 ml-auto" />}
+                        {selectedEmployer?.id === emp.id && (
+                          <CheckCircle className="w-5 h-5 text-primary-500 ml-auto" />
+                        )}
                       </div>
                     </button>
                   ))}
@@ -152,10 +178,16 @@ export default function EmployerSetupClient() {
               )}
 
               {searchQuery && !searching && results.length === 0 && (
-                <p className="text-sm text-neutral-500">No companies found. Try a different search term.</p>
+                <p className="text-sm text-neutral-500">
+                  No companies found. Try a different search term.
+                </p>
               )}
 
-              <Button onClick={handleClaim} disabled={!selectedEmployer || claiming} className="w-full gap-2">
+              <Button
+                onClick={handleClaim}
+                disabled={!selectedEmployer || claiming}
+                className="w-full gap-2"
+              >
                 {claiming ? "Linking..." : "Link My Account"} <ChevronRight className="w-4 h-4" />
               </Button>
             </CardContent>
@@ -169,19 +201,40 @@ export default function EmployerSetupClient() {
                 <CheckCircle className="w-6 h-6 text-emerald-600" />
                 <h2 className="text-xl font-semibold">Linked to {selectedEmployer?.name}</h2>
               </div>
-              <p className="text-neutral-500 text-sm">Optionally add more details about your company. You can always update these later.</p>
+              <p className="text-neutral-500 text-sm">
+                Optionally add more details about your company. You can always update these later.
+              </p>
 
               <div>
-                <label className="text-sm font-medium mb-1 block flex items-center gap-1"><Globe className="w-3 h-3" /> Website</label>
-                <Input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://example.com" className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700" />
+                <label className="text-sm font-medium mb-1 block flex items-center gap-1">
+                  <Globe className="w-3 h-3" /> Website
+                </label>
+                <Input
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                  placeholder="https://example.com"
+                  className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
+                />
               </div>
               <div>
-                <label className="text-sm font-medium mb-1 block flex items-center gap-1"><FileText className="w-3 h-3" /> Description</label>
-                <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} placeholder="Brief description of your company..." className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300" />
+                <label className="text-sm font-medium mb-1 block flex items-center gap-1">
+                  <FileText className="w-3 h-3" /> Description
+                </label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  rows={3}
+                  placeholder="Brief description of your company..."
+                  className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
+                />
               </div>
 
               <div className="flex gap-3">
-                <Button variant="secondary" onClick={() => router.push("/employer/dashboard")} className="flex-1">
+                <Button
+                  variant="secondary"
+                  onClick={() => router.push("/employer/dashboard")}
+                  className="flex-1"
+                >
                   Skip for Now
                 </Button>
                 <Button onClick={handleFinish} className="flex-1 gap-2">
@@ -201,17 +254,24 @@ export default function EmployerSetupClient() {
                 </div>
                 <div>
                   <h2 className="text-xl font-semibold">Verification Pending</h2>
-                  <p className="text-neutral-500 text-sm">We&apos;re verifying your connection to {selectedEmployer?.name}</p>
+                  <p className="text-neutral-500 text-sm">
+                    We&apos;re verifying your connection to {selectedEmployer?.name}
+                  </p>
                 </div>
               </div>
 
               <p className="text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed">
-                Our team reviews new employer accounts and will be in touch shortly — usually within 24 hours.
+                Our team reviews new employer accounts and will be in touch shortly — usually within
+                24 hours.
               </p>
 
               <div className="bg-primary-50 dark:bg-primary-500/15 border border-primary-200 dark:border-primary-500/30 rounded-xl p-4">
                 <p className="text-primary-700 dark:text-primary-300 text-sm">
-                  <strong>Tip:</strong> Sign in with your <span className="font-mono">@{selectedEmployer?.name?.toLowerCase().replace(/\s+/g, "")}.com</span> email for instant verification.
+                  <strong>Tip:</strong> Sign in with your{" "}
+                  <span className="font-mono">
+                    @{selectedEmployer?.name?.toLowerCase().replace(/\s+/g, "")}.com
+                  </span>{" "}
+                  email for instant verification.
                 </p>
               </div>
 
@@ -222,7 +282,6 @@ export default function EmployerSetupClient() {
           </Card>
         )}
       </div>
-
     </div>
   );
 }

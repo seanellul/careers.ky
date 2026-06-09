@@ -46,7 +46,10 @@ export async function DELETE(request) {
 
   const role = session.employerRole;
   if (role !== "owner" && role !== "admin") {
-    return NextResponse.json({ error: "Only owners and admins can remove members" }, { status: 403 });
+    return NextResponse.json(
+      { error: "Only owners and admins can remove members" },
+      { status: 403 }
+    );
   }
 
   const { memberId } = await request.json();
@@ -61,7 +64,8 @@ export async function DELETE(request) {
 
   // Can't remove an owner
   const sql = getDb();
-  const target = await sql`SELECT role FROM employer_accounts WHERE id = ${memberId} AND employer_id = ${session.employerId}`;
+  const target =
+    await sql`SELECT role FROM employer_accounts WHERE id = ${memberId} AND employer_id = ${session.employerId}`;
   if (!target.length) {
     return NextResponse.json({ error: "Member not found" }, { status: 404 });
   }

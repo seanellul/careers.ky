@@ -12,7 +12,8 @@ export async function PATCH(request, { params }) {
 
   const { status } = await request.json().catch(() => ({}));
   const allowed = ["pending", "approved", "rejected"];
-  if (!allowed.includes(status)) return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+  if (!allowed.includes(status))
+    return NextResponse.json({ error: "Invalid status" }, { status: 400 });
 
   const sql = getDb();
   await sql`UPDATE employer_waitlist SET status = ${status} WHERE id = ${id}`;

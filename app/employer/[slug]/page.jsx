@@ -1,6 +1,12 @@
 export const dynamic = "force-dynamic";
 
-import { getEmployerProfile, loadWorkTypes, loadEducationTypes, loadExperienceTypes, loadLocationTypes } from "@/lib/data";
+import {
+  getEmployerProfile,
+  loadWorkTypes,
+  loadEducationTypes,
+  loadExperienceTypes,
+  loadLocationTypes,
+} from "@/lib/data";
 import { resolvePerks, groupPerksByCategory } from "@/lib/perks";
 import { notFound } from "next/navigation";
 import EmployerProfileClient from "./EmployerProfileClient";
@@ -11,13 +17,20 @@ export async function generateMetadata({ params }) {
   if (!profile) return { title: "Employer Not Found" };
 
   const { employer, stats } = profile;
-  const descParts = [`${employer.name} has posted ${stats.totalPostings} jobs in the Cayman Islands.`];
+  const descParts = [
+    `${employer.name} has posted ${stats.totalPostings} jobs in the Cayman Islands.`,
+  ];
   if (stats.activePostings > 0) descParts.push(`${stats.activePostings} currently active.`);
   if (employer.tagline) descParts.unshift(employer.tagline);
 
   const resolvedPerks = resolvePerks(employer.benefits);
   if (resolvedPerks.length > 0) {
-    descParts.push(`Benefits: ${resolvedPerks.slice(0, 4).map((p) => p.label).join(", ")}.`);
+    descParts.push(
+      `Benefits: ${resolvedPerks
+        .slice(0, 4)
+        .map((p) => p.label)
+        .join(", ")}.`
+    );
   }
 
   return {
@@ -25,7 +38,9 @@ export async function generateMetadata({ params }) {
     description: descParts.join(" "),
     openGraph: {
       title: `${employer.name} — Hiring in Cayman | careers.ky`,
-      description: employer.tagline || `${stats.totalPostings} job postings, ${stats.activePostings} active. Average salary CI$ ${Math.round(stats.avgSalary).toLocaleString()}.`,
+      description:
+        employer.tagline ||
+        `${stats.totalPostings} job postings, ${stats.activePostings} active. Average salary CI$ ${Math.round(stats.avgSalary).toLocaleString()}.`,
       ...(employer.cover_url && { images: [{ url: employer.cover_url }] }),
     },
   };

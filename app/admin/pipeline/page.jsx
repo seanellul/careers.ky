@@ -3,14 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  ChevronRight,
-  Download,
-  Filter,
-  Loader,
-  Search,
-  TrendingUp,
-} from "lucide-react";
+import { ChevronRight, Download, Filter, Loader, Search, TrendingUp } from "lucide-react";
 
 const STATUS_COLORS = {
   not_contacted: "bg-slate-600 text-slate-100",
@@ -40,19 +33,13 @@ export default function PipelinePage() {
   const [stats, setStats] = useState(null);
 
   // Filter state
-  const [scoreMin, setScoreMin] = useState(
-    parseInt(searchParams.get("score_min")) || 0
-  );
-  const [scoreMax, setScoreMax] = useState(
-    parseInt(searchParams.get("score_max")) || 100
-  );
+  const [scoreMin, setScoreMin] = useState(parseInt(searchParams.get("score_min")) || 0);
+  const [scoreMax, setScoreMax] = useState(parseInt(searchParams.get("score_max")) || 100);
   const [segment, setSegment] = useState(searchParams.get("segment") || "");
   const [status, setStatus] = useState(searchParams.get("status") || "");
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [sortBy, setSortBy] = useState(searchParams.get("sort_by") || "score");
-  const [sortOrder, setSortOrder] = useState(
-    searchParams.get("sort_order") || "DESC"
-  );
+  const [sortOrder, setSortOrder] = useState(searchParams.get("sort_order") || "DESC");
   const [offset, setOffset] = useState(0);
 
   const [segments, setSegments] = useState([]);
@@ -122,11 +109,7 @@ export default function PipelinePage() {
 
   function handleStatusChange(recordId, newStatus) {
     // Optimistic update
-    setRecords(
-      records.map((r) =>
-        r.id === recordId ? { ...r, status: newStatus } : r
-      )
-    );
+    setRecords(records.map((r) => (r.id === recordId ? { ...r, status: newStatus } : r)));
 
     // API call
     fetch(`/api/admin/pipeline/${recordId}`, {
@@ -166,9 +149,7 @@ export default function PipelinePage() {
             <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
               {stats.hot_leads}
             </div>
-            <div className="text-xs text-neutral-500 mt-2">
-              of {stats.total} total
-            </div>
+            <div className="text-xs text-neutral-500 mt-2">of {stats.total} total</div>
           </div>
 
           <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg p-4">
@@ -190,9 +171,7 @@ export default function PipelinePage() {
             <div className="text-3xl font-bold text-yellow-600 dark:text-yellow-400">
               {stats.demo_scheduled}
             </div>
-            <div className="text-xs text-neutral-500 mt-2">
-              next stage leads
-            </div>
+            <div className="text-xs text-neutral-500 mt-2">next stage leads</div>
           </div>
 
           <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg p-4">
@@ -213,9 +192,7 @@ export default function PipelinePage() {
               {stats.paying}
             </div>
             <div className="text-xs text-neutral-500 mt-2">
-              {stats.total > 0
-                ? `${Math.round((stats.paying / stats.total) * 100)}%`
-                : "0%"}{" "}
+              {stats.total > 0 ? `${Math.round((stats.paying / stats.total) * 100)}%` : "0%"}{" "}
               conversion
             </div>
           </div>
@@ -358,19 +335,12 @@ export default function PipelinePage() {
                   <button
                     onClick={() => {
                       setSortBy("score");
-                      setSortOrder(
-                        sortBy === "score" && sortOrder === "DESC"
-                          ? "ASC"
-                          : "DESC"
-                      );
+                      setSortOrder(sortBy === "score" && sortOrder === "DESC" ? "ASC" : "DESC");
                       setOffset(0);
                     }}
                     className="hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
-                    Score{" "}
-                    {sortBy === "score" && (
-                      <span>{sortOrder === "DESC" ? "↓" : "↑"}</span>
-                    )}
+                    Score {sortBy === "score" && <span>{sortOrder === "DESC" ? "↓" : "↑"}</span>}
                   </button>
                 </th>
                 <th className="px-4 py-3 text-left font-semibold text-neutral-600 dark:text-neutral-300">
@@ -384,18 +354,14 @@ export default function PipelinePage() {
                     onClick={() => {
                       setSortBy("last_contacted");
                       setSortOrder(
-                        sortBy === "last_contacted" && sortOrder === "DESC"
-                          ? "ASC"
-                          : "DESC"
+                        sortBy === "last_contacted" && sortOrder === "DESC" ? "ASC" : "DESC"
                       );
                       setOffset(0);
                     }}
                     className="hover:text-neutral-900 dark:hover:text-white transition-colors"
                   >
                     Last Contacted{" "}
-                    {sortBy === "last_contacted" && (
-                      <span>{sortOrder === "DESC" ? "↓" : "↑"}</span>
-                    )}
+                    {sortBy === "last_contacted" && <span>{sortOrder === "DESC" ? "↓" : "↑"}</span>}
                   </button>
                 </th>
                 <th className="px-4 py-3 text-right font-semibold text-neutral-600 dark:text-neutral-300">
@@ -418,7 +384,10 @@ export default function PipelinePage() {
                 </tr>
               ) : (
                 records.map((record) => (
-                  <tr key={record.id} className="hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
+                  <tr
+                    key={record.id}
+                    className="hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors"
+                  >
                     <td className="px-4 py-3">
                       <Link
                         href={`/admin/pipeline/${record.id}`}
@@ -426,9 +395,7 @@ export default function PipelinePage() {
                       >
                         {record.employer_name}
                       </Link>
-                      <div className="text-xs text-neutral-500 mt-1">
-                        {record.industry}
-                      </div>
+                      <div className="text-xs text-neutral-500 mt-1">{record.industry}</div>
                     </td>
                     <td className="px-4 py-3 text-center">
                       <div className="flex items-center justify-center gap-2">
@@ -444,9 +411,7 @@ export default function PipelinePage() {
                     <td className="px-4 py-3">
                       <select
                         value={record.status}
-                        onChange={(e) =>
-                          handleStatusChange(record.id, e.target.value)
-                        }
+                        onChange={(e) => handleStatusChange(record.id, e.target.value)}
                         className={`px-3 py-1 rounded text-sm font-medium border-0 cursor-pointer ${
                           STATUS_COLORS[record.status]
                         }`}

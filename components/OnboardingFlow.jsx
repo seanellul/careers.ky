@@ -32,8 +32,11 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
   useEffect(() => {
     if (!open) return;
     fetch("/api/auth/session")
-      .then(r => r.json())
-      .then(d => { setAuthSession(d.authenticated ? d : null); setAuthChecked(true); })
+      .then((r) => r.json())
+      .then((d) => {
+        setAuthSession(d.authenticated ? d : null);
+        setAuthChecked(true);
+      })
       .catch(() => setAuthChecked(true));
   }, [open]);
 
@@ -102,7 +105,16 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
     try {
       localStorage.setItem(
         "ck_onboarding",
-        JSON.stringify({ persona, pickedMajor, pickedUnit, query, education, experience, everEmployed, selectedTitle })
+        JSON.stringify({
+          persona,
+          pickedMajor,
+          pickedUnit,
+          query,
+          education,
+          experience,
+          everEmployed,
+          selectedTitle,
+        })
       );
     } catch {}
   };
@@ -164,9 +176,7 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
   if (!open) return null;
 
   const majors = tree.children || [];
-  const majorChildren = pickedMajor
-    ? majors.find((m) => m.id === pickedMajor)?.children || []
-    : [];
+  const majorChildren = pickedMajor ? majors.find((m) => m.id === pickedMajor)?.children || [] : [];
 
   const sequence = (() => {
     if (persona === "employed") {
@@ -235,12 +245,7 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
   return (
     <div className={t.page}>
-      <div
-        id="bg-gradient"
-        aria-hidden
-        className={t.pageGradient}
-        style={t.pageGradientStyle}
-      />
+      <div id="bg-gradient" aria-hidden className={t.pageGradient} style={t.pageGradientStyle} />
 
       <header className={t.nav}>
         <div className={t.navInner}>
@@ -282,13 +287,25 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
             {currentStepId === "persona" && (
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">Where are you right now?</h3>
-                <p className="text-neutral-500 mb-4">Pick a starting point to tune recommendations.</p>
+                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">
+                  Where are you right now?
+                </h3>
+                <p className="text-neutral-500 mb-4">
+                  Pick a starting point to tune recommendations.
+                </p>
                 <div className="grid sm:grid-cols-3 gap-3">
                   {[
-                    { id: "unemployed", title: "Unemployed", desc: "Explore broadly across industries" },
+                    {
+                      id: "unemployed",
+                      title: "Unemployed",
+                      desc: "Explore broadly across industries",
+                    },
                     { id: "student", title: "Student", desc: "See study paths and future roles" },
-                    { id: "employed", title: "Employed", desc: "Focus on adjacent roles in your field" },
+                    {
+                      id: "employed",
+                      title: "Employed",
+                      desc: "Focus on adjacent roles in your field",
+                    },
                   ].map((o) => (
                     <Card
                       key={o.id}
@@ -301,7 +318,9 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
                       className={`cursor-pointer border ${persona === o.id ? "border-primary-500 bg-primary-50 dark:bg-primary-500/15" : "border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800"}`}
                     >
                       <CardContent className="p-4">
-                        <div className="font-medium mb-1 text-neutral-900 dark:text-neutral-100">{o.title}</div>
+                        <div className="font-medium mb-1 text-neutral-900 dark:text-neutral-100">
+                          {o.title}
+                        </div>
                         <p className="text-sm text-neutral-500">{o.desc}</p>
                       </CardContent>
                     </Card>
@@ -317,7 +336,9 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
             {currentStepId === "education" && (
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">Your highest education</h3>
+                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">
+                  Your highest education
+                </h3>
                 <p className="text-neutral-500 mb-4">Pick the closest match.</p>
                 <div className="grid sm:grid-cols-2 gap-2">
                   {Array.from(eduTypes.entries()).map(([k, v]) => (
@@ -343,7 +364,9 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
             {currentStepId === "experience" && (
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">Your experience level</h3>
+                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">
+                  Your experience level
+                </h3>
                 <p className="text-neutral-500 mb-4">For your current or most recent role.</p>
                 <div className="grid sm:grid-cols-2 gap-2">
                   {Array.from(expTypes.entries()).map(([k, v]) => (
@@ -369,12 +392,20 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
             {currentStepId === "ever" && (
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">Have you been employed before?</h3>
+                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">
+                  Have you been employed before?
+                </h3>
                 <div className="flex gap-3">
-                  <Button variant={everEmployed === true ? "default" : "secondary"} onClick={() => setEverEmployed(true)}>
+                  <Button
+                    variant={everEmployed === true ? "default" : "secondary"}
+                    onClick={() => setEverEmployed(true)}
+                  >
                     Yes
                   </Button>
-                  <Button variant={everEmployed === false ? "default" : "secondary"} onClick={() => setEverEmployed(false)}>
+                  <Button
+                    variant={everEmployed === false ? "default" : "secondary"}
+                    onClick={() => setEverEmployed(false)}
+                  >
                     No
                   </Button>
                 </div>
@@ -389,16 +420,20 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
               </div>
             )}
 
-            {(currentStepId === "search" || currentStepId === "currentJob" || currentStepId === "lastJob") && (
+            {(currentStepId === "search" ||
+              currentStepId === "currentJob" ||
+              currentStepId === "lastJob") && (
               <div>
                 <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">
                   {currentStepId === "currentJob"
                     ? "Search your current job"
                     : currentStepId === "lastJob"
-                    ? "Search your last main job"
-                    : "Search related job titles"}
+                      ? "Search your last main job"
+                      : "Search related job titles"}
                 </h3>
-                <p className="text-neutral-500 mb-4">Start typing; we'll suggest titles and link them to CISCO.</p>
+                <p className="text-neutral-500 mb-4">
+                  Start typing; we'll suggest titles and link them to CISCO.
+                </p>
                 <div className="relative mb-4">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
                   <Input
@@ -419,7 +454,9 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
                       }}
                       className={`text-left rounded-xl px-3 py-2 border ${selectedTitle?.label === s.label ? "border-accent-500 bg-accent-50" : "border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800"}`}
                     >
-                      <div className="font-medium text-neutral-900 dark:text-neutral-100">{s.label}</div>
+                      <div className="font-medium text-neutral-900 dark:text-neutral-100">
+                        {s.label}
+                      </div>
                       <div className="text-xs text-neutral-500">{s.ciscoUnit?.title}</div>
                     </button>
                   ))}
@@ -428,8 +465,12 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
                   <Card className="bg-primary-50 dark:bg-primary-500/15 border-primary-200 dark:border-primary-500/30 mt-4">
                     <CardContent className="p-4">
                       <div className="text-sm text-neutral-500">Matched CISCO</div>
-                      <div className="font-medium text-neutral-900 dark:text-neutral-100">{selectedTitle.ciscoUnit.title}</div>
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-line">{selectedTitle.ciscoUnit.description}</p>
+                      <div className="font-medium text-neutral-900 dark:text-neutral-100">
+                        {selectedTitle.ciscoUnit.title}
+                      </div>
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-line">
+                        {selectedTitle.ciscoUnit.description}
+                      </p>
                     </CardContent>
                   </Card>
                 )}
@@ -446,7 +487,9 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
             {currentStepId === "tax" && (
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">Choose a field</h3>
+                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">
+                  Choose a field
+                </h3>
                 <p className="text-neutral-500 mb-4">Drill into the CISCO taxonomy.</p>
                 <div className="grid md:grid-cols-12 gap-4">
                   <div className="md:col-span-5 space-y-2 max-h-[240px] md:max-h-[360px] overflow-auto pr-2">
@@ -475,8 +518,12 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
                             className={`cursor-pointer border ${pickedUnit?.id === u.id ? "border-accent-500 bg-accent-50" : "border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800"}`}
                           >
                             <CardContent className="p-4">
-                              <div className="font-medium mb-1 text-neutral-900 dark:text-neutral-100">{u.title}</div>
-                              <p className="text-xs text-neutral-500 line-clamp-3">{u.description}</p>
+                              <div className="font-medium mb-1 text-neutral-900 dark:text-neutral-100">
+                                {u.title}
+                              </div>
+                              <p className="text-xs text-neutral-500 line-clamp-3">
+                                {u.description}
+                              </p>
                             </CardContent>
                           </Card>
                         ))}
@@ -496,28 +543,58 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
 
             {currentStepId === "insights" && (
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">Your match</h3>
+                <h3 className="text-xl font-semibold mb-2 text-neutral-900 dark:text-neutral-100">
+                  Your match
+                </h3>
                 <p className="text-neutral-500 mb-4">Review details, then see live jobs.</p>
                 <div className="grid md:grid-cols-2 gap-4">
                   <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700">
                     <CardContent className="p-4 space-y-2">
                       <div className="text-sm text-neutral-500">CISCO unit</div>
-                      <div className="font-medium text-lg text-neutral-900 dark:text-neutral-100">{pickedUnit?.title || "—"}</div>
-                      <p className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-line">{pickedUnit?.description}</p>
+                      <div className="font-medium text-lg text-neutral-900 dark:text-neutral-100">
+                        {pickedUnit?.title || "—"}
+                      </div>
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400 whitespace-pre-line">
+                        {pickedUnit?.description}
+                      </p>
                     </CardContent>
                   </Card>
                   <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700">
                     <CardContent className="p-4">
-                      <div className="text-sm text-neutral-500 mb-2">Historic opportunity snapshot</div>
+                      <div className="text-sm text-neutral-500 mb-2">
+                        Historic opportunity snapshot
+                      </div>
                       {pickedUnit && agg.get(String(pickedUnit.id)) ? (
                         <div className="space-y-1 text-sm text-neutral-700 dark:text-neutral-300">
-                          <div><Badge className="bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 mr-2">Posts</Badge>{agg.get(String(pickedUnit.id)).count}</div>
-                          <div><Badge className="bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 mr-2">Min</Badge>CI$ {Math.round(agg.get(String(pickedUnit.id)).min).toLocaleString()}</div>
-                          <div><Badge className="bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 mr-2">Mean</Badge>CI$ {Math.round(agg.get(String(pickedUnit.id)).mean).toLocaleString()}</div>
-                          <div><Badge className="bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 mr-2">Max</Badge>CI$ {Math.round(agg.get(String(pickedUnit.id)).max).toLocaleString()}</div>
+                          <div>
+                            <Badge className="bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 mr-2">
+                              Posts
+                            </Badge>
+                            {agg.get(String(pickedUnit.id)).count}
+                          </div>
+                          <div>
+                            <Badge className="bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 mr-2">
+                              Min
+                            </Badge>
+                            CI$ {Math.round(agg.get(String(pickedUnit.id)).min).toLocaleString()}
+                          </div>
+                          <div>
+                            <Badge className="bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 mr-2">
+                              Mean
+                            </Badge>
+                            CI$ {Math.round(agg.get(String(pickedUnit.id)).mean).toLocaleString()}
+                          </div>
+                          <div>
+                            <Badge className="bg-neutral-100 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 mr-2">
+                              Max
+                            </Badge>
+                            CI$ {Math.round(agg.get(String(pickedUnit.id)).max).toLocaleString()}
+                          </div>
                         </div>
                       ) : (
-                        <div className="text-neutral-500 text-sm">No historic data for this unit.</div>
+                        <div className="text-neutral-500 text-sm">
+                          No historic data for this unit.
+                        </div>
                       )}
                     </CardContent>
                   </Card>
@@ -526,15 +603,37 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
                 {/* Auth prompt for unauthenticated users */}
                 {authChecked && !authSession && (
                   <div className="mt-4 p-4 rounded-xl bg-gradient-to-r from-primary-50 to-emerald-50 border border-primary-200 dark:border-primary-500/30">
-                    <div className="text-sm font-medium mb-1 text-neutral-900 dark:text-neutral-100">Save your interests and get matched?</div>
-                    <p className="text-xs text-neutral-500 mb-3">Sign in free to create your profile and get introduced to employers looking for {pickedUnit?.title || "your skills"}.</p>
+                    <div className="text-sm font-medium mb-1 text-neutral-900 dark:text-neutral-100">
+                      Save your interests and get matched?
+                    </div>
+                    <p className="text-xs text-neutral-500 mb-3">
+                      Sign in free to create your profile and get introduced to employers looking
+                      for {pickedUnit?.title || "your skills"}.
+                    </p>
                     <div className="flex flex-col sm:flex-row gap-2">
                       <a
                         href="/api/auth/google?type=candidate"
                         onClick={saveState}
                         className="flex items-center justify-center gap-2 px-4 py-2 min-h-[40px] rounded-lg bg-neutral-900 text-white text-xs font-medium hover:bg-neutral-800 transition flex-1"
                       >
-                        <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                        <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
+                          <path
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
+                            fill="#4285F4"
+                          />
+                          <path
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                            fill="#34A853"
+                          />
+                          <path
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                            fill="#FBBC05"
+                          />
+                          <path
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                            fill="#EA4335"
+                          />
+                        </svg>
                         Sign in with Google
                       </a>
                       <a
@@ -543,7 +642,13 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
                         className="flex items-center justify-center gap-2 px-4 py-2 min-h-[40px] rounded-lg text-white text-xs font-medium hover:opacity-90 transition flex-1"
                         style={{ backgroundColor: "#0A66C2" }}
                       >
-                        <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        <svg
+                          className="w-4 h-4 flex-shrink-0"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
+                          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                        </svg>
                         Sign in with LinkedIn
                       </a>
                     </div>
@@ -556,7 +661,11 @@ export default function OnboardingFlow({ open, onClose, onComplete }) {
                   </Button>
                   <div className="flex gap-2">
                     {pickedUnit && (
-                      <Button variant="secondary" onClick={() => navigateToCareerTracksWithUnit(pickedUnit)} className="gap-2">
+                      <Button
+                        variant="secondary"
+                        onClick={() => navigateToCareerTracksWithUnit(pickedUnit)}
+                        className="gap-2"
+                      >
                         Explore fields
                       </Button>
                     )}

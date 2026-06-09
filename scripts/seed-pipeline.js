@@ -3,8 +3,7 @@ import path from "path";
 import { getDb } from "../lib/db.js";
 import { migrate } from "../app/api/migrations/add-sales-pipeline.js";
 
-const CSV_PATH =
-  "/home/node/.openclaw/workspace/careers-ky/content/sales-pipeline-500-scored.csv";
+const CSV_PATH = "/home/node/.openclaw/workspace/careers-ky/content/sales-pipeline-500-scored.csv";
 
 function slugify(name) {
   return name
@@ -27,13 +26,9 @@ async function seedPipeline() {
     console.log("✓ Migration complete\n");
 
     // Check if data already seeded
-    const existingCount = await sql(
-      "SELECT COUNT(*) as count FROM sales_pipeline"
-    );
+    const existingCount = await sql("SELECT COUNT(*) as count FROM sales_pipeline");
     if (existingCount[0].count > 0) {
-      console.log(
-        `⏭️  Pipeline already seeded (${existingCount[0].count} records). Skipping...\n`
-      );
+      console.log(`⏭️  Pipeline already seeded (${existingCount[0].count} records). Skipping...\n`);
       return { success: true, skipped: true, count: existingCount[0].count };
     }
 

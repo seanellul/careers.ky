@@ -17,7 +17,9 @@ export default function EmployerError({ error, reset }) {
             <p className="text-neutral-500 mb-6">We couldn't load this employer profile.</p>
             <div className="flex gap-3 justify-center">
               <Button onClick={() => reset()}>Try Again</Button>
-              <Button variant="secondary" onClick={() => window.location.href = "/employers"}>Browse Employers</Button>
+              <Button variant="secondary" onClick={() => (window.location.href = "/employers")}>
+                Browse Employers
+              </Button>
             </div>
           </CardContent>
         </Card>

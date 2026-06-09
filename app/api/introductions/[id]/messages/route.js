@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { getDb } from "@/lib/db";
-import { getIntroductionById, getIntroductionMessages, createIntroductionMessage, createNotification } from "@/lib/data";
+import {
+  getIntroductionById,
+  getIntroductionMessages,
+  createIntroductionMessage,
+  createNotification,
+} from "@/lib/data";
 
 export async function GET(request, { params }) {
   const session = await getSession();
@@ -16,7 +21,10 @@ export async function GET(request, { params }) {
   }
 
   // Verify caller is either side of the intro
-  if (intro.candidate_id !== session.candidateId && intro.employer_account_id !== session.employerAccountId) {
+  if (
+    intro.candidate_id !== session.candidateId &&
+    intro.employer_account_id !== session.employerAccountId
+  ) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -44,7 +52,10 @@ export async function POST(request, { params }) {
   }
 
   if (intro.status !== "accepted") {
-    return NextResponse.json({ error: "Introduction must be accepted to send messages" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Introduction must be accepted to send messages" },
+      { status: 400 }
+    );
   }
 
   try {
@@ -63,9 +74,21 @@ export async function POST(request, { params }) {
 
     // Notify the other party
     if (isEmployer) {
-      await createNotification("candidate", intro.candidate_id, "New Message", "An employer sent you a message.", "/introductions");
+      await createNotification(
+        "candidate",
+        intro.candidate_id,
+        "New Message",
+        "An employer sent you a message.",
+        "/introductions"
+      );
     } else {
-      await createNotification("employer_account", intro.employer_account_id, "New Message", "A candidate sent you a message.", "/employer/dashboard");
+      await createNotification(
+        "employer_account",
+        intro.employer_account_id,
+        "New Message",
+        "A candidate sent you a message.",
+        "/employer/dashboard"
+      );
     }
 
     // Log activity

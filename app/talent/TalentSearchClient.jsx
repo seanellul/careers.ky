@@ -7,9 +7,27 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
-  Search, Users, BookOpen, Clock, MapPin, Shield, Filter,
-  Send, Eye, ChevronRight, ChevronDown, ChevronLeft, Briefcase, Star, CheckCircle, X,
-  Target, TrendingUp, Plus, List, Save,
+  Search,
+  Users,
+  BookOpen,
+  Clock,
+  MapPin,
+  Shield,
+  Filter,
+  Send,
+  Eye,
+  ChevronRight,
+  ChevronDown,
+  ChevronLeft,
+  Briefcase,
+  Star,
+  CheckCircle,
+  X,
+  Target,
+  TrendingUp,
+  Plus,
+  List,
+  Save,
 } from "lucide-react";
 import EmployerWaitlistForm from "@/components/EmployerWaitlistForm";
 
@@ -19,23 +37,36 @@ const AVAILABILITY_LABELS = {
   not_looking: "Not Looking",
 };
 const AVAILABILITY_COLORS = {
-  actively_looking: "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/30",
-  open_to_offers: "bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30",
-  not_looking: "bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-600",
+  actively_looking:
+    "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/30",
+  open_to_offers:
+    "bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30",
+  not_looking:
+    "bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-600",
 };
 
 const STATUS_COLORS = {
-  pending: "bg-yellow-50 dark:bg-yellow-500/15 text-yellow-700 dark:text-yellow-300 border-yellow-300 dark:border-yellow-500/30",
-  accepted: "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/30",
-  declined: "bg-red-50 dark:bg-red-500/15 text-red-600 dark:text-red-300 border-red-300 dark:border-red-500/30",
+  pending:
+    "bg-yellow-50 dark:bg-yellow-500/15 text-yellow-700 dark:text-yellow-300 border-yellow-300 dark:border-yellow-500/30",
+  accepted:
+    "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/30",
+  declined:
+    "bg-red-50 dark:bg-red-500/15 text-red-600 dark:text-red-300 border-red-300 dark:border-red-500/30",
 };
 
 function ScoreBadge({ score }) {
   const pct = Math.round(score);
-  let colorClass = "bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-600";
-  if (pct >= 75) colorClass = "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/30";
-  else if (pct >= 50) colorClass = "bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30";
-  else if (pct >= 25) colorClass = "bg-yellow-50 dark:bg-yellow-500/15 text-yellow-700 dark:text-yellow-300 border-yellow-300 dark:border-yellow-500/30";
+  let colorClass =
+    "bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-600";
+  if (pct >= 75)
+    colorClass =
+      "bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/30";
+  else if (pct >= 50)
+    colorClass =
+      "bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30";
+  else if (pct >= 25)
+    colorClass =
+      "bg-yellow-50 dark:bg-yellow-500/15 text-yellow-700 dark:text-yellow-300 border-yellow-300 dark:border-yellow-500/30";
 
   return (
     <Badge className={`${colorClass} text-sm font-semibold`}>
@@ -59,14 +90,22 @@ function ScoreBreakdown({ scores }) {
     <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-neutral-500">
       {items.map((item) => (
         <span key={item.label}>
-          {item.label}: <span className={item.score > 0 ? "text-neutral-700 dark:text-neutral-300" : ""}>{item.score}/{item.max}</span>
+          {item.label}:{" "}
+          <span className={item.score > 0 ? "text-neutral-700 dark:text-neutral-300" : ""}>
+            {item.score}/{item.max}
+          </span>
         </span>
       ))}
     </div>
   );
 }
 
-export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, locTypes: ltObj, ciscoUnits }) {
+export default function TalentSearchClient({
+  eduTypes: etObj,
+  expTypes: exObj,
+  locTypes: ltObj,
+  ciscoUnits,
+}) {
   const eduTypes = useMemo(() => new Map(Object.entries(etObj)), [etObj]);
   const expTypes = useMemo(() => new Map(Object.entries(exObj)), [exObj]);
   const locTypes = useMemo(() => new Map(Object.entries(ltObj)), [ltObj]);
@@ -130,26 +169,40 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
   const jobDropdownRef = useRef(null);
 
   useEffect(() => {
-    fetch("/api/auth/session").then(r => r.json()).then(d => {
-      setSession(d.authenticated ? d : null);
-      setLoading(false);
-    });
+    fetch("/api/auth/session")
+      .then((r) => r.json())
+      .then((d) => {
+        setSession(d.authenticated ? d : null);
+        setLoading(false);
+      });
   }, []);
 
   // Load employer data
   useEffect(() => {
     if (!session?.employerAccountId) return;
-    fetch("/api/introductions").then(r => r.json()).then(d => setIntroductions(d.introductions || [])).catch(() => {});
-    fetch("/api/employer/shortlists").then(r => r.json()).then(d => setShortlists(d.shortlists || [])).catch(() => {});
-    fetch("/api/employer/templates").then(r => r.json()).then(d => setTemplates(d.templates || [])).catch(() => {});
-    fetch("/api/employer/postings?status=active").then(r => r.json()).then(d => setEmployerPostings(d.postings || [])).catch(() => {});
+    fetch("/api/introductions")
+      .then((r) => r.json())
+      .then((d) => setIntroductions(d.introductions || []))
+      .catch(() => {});
+    fetch("/api/employer/shortlists")
+      .then((r) => r.json())
+      .then((d) => setShortlists(d.shortlists || []))
+      .catch(() => {});
+    fetch("/api/employer/templates")
+      .then((r) => r.json())
+      .then((d) => setTemplates(d.templates || []))
+      .catch(() => {});
+    fetch("/api/employer/postings?status=active")
+      .then((r) => r.json())
+      .then((d) => setEmployerPostings(d.postings || []))
+      .catch(() => {});
   }, [session]);
 
   // Pre-select job from URL param
   useEffect(() => {
     if (!employerPostings.length) return;
     const jobId = searchParamsHook.get("jobId");
-    if (jobId && employerPostings.some(p => p.cJobId === jobId)) {
+    if (jobId && employerPostings.some((p) => p.cJobId === jobId)) {
       setSelectedJobId(jobId);
     }
   }, [employerPostings, searchParamsHook]);
@@ -162,8 +215,8 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
       setSearching(true);
       setHasSearched(true);
       fetch(`/api/talent/match-to-job?jobId=${jobId}`)
-        .then(r => r.json())
-        .then(d => {
+        .then((r) => r.json())
+        .then((d) => {
           setResults(d.candidates || []);
           setTotal(d.total || 0);
           setPage(d.page || 1);
@@ -187,13 +240,16 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
 
   // Skill search suggestions
   useEffect(() => {
-    if (!skillSearch.trim()) { setSkillSuggestions([]); return; }
+    if (!skillSearch.trim()) {
+      setSkillSuggestions([]);
+      return;
+    }
     const ctrl = new AbortController();
     fetch(`/api/skills/search?q=${encodeURIComponent(skillSearch)}`, { signal: ctrl.signal })
-      .then(r => r.json())
-      .then(d => {
-        const existing = new Set(selectedSkills.map(s => s.id));
-        setSkillSuggestions((d.skills || []).filter(s => !existing.has(s.id)));
+      .then((r) => r.json())
+      .then((d) => {
+        const existing = new Set(selectedSkills.map((s) => s.id));
+        setSkillSuggestions((d.skills || []).filter((s) => !existing.has(s.id)));
       })
       .catch(() => {});
     return () => ctrl.abort();
@@ -201,14 +257,16 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
 
   const filteredCisco = useMemo(() => {
     if (!ciscoSearch) return ciscoUnits.slice(0, 50);
-    return ciscoUnits.filter(c => c.title.toLowerCase().includes(ciscoSearch.toLowerCase())).slice(0, 50);
+    return ciscoUnits
+      .filter((c) => c.title.toLowerCase().includes(ciscoSearch.toLowerCase()))
+      .slice(0, 50);
   }, [ciscoUnits, ciscoSearch]);
 
   const filteredPostings = useMemo(() => {
     if (!jobSearch.trim()) return employerPostings;
     const q = jobSearch.toLowerCase();
-    return employerPostings.filter(p =>
-      p.cTitle.toLowerCase().includes(q) || p.cJobId.toLowerCase().includes(q)
+    return employerPostings.filter(
+      (p) => p.cTitle.toLowerCase().includes(q) || p.cJobId.toLowerCase().includes(q)
     );
   }, [employerPostings, jobSearch]);
 
@@ -221,8 +279,8 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
       setSearching(true);
       setHasSearched(true);
       fetch(`/api/talent/match-to-job?jobId=${jobId}`)
-        .then(r => r.json())
-        .then(d => {
+        .then((r) => r.json())
+        .then((d) => {
           setResults(d.candidates || []);
           setTotal(d.total || 0);
           setPage(d.page || 1);
@@ -248,7 +306,8 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
       if (locationCode) params.set("locationCode", locationCode);
       if (availability) params.set("availability", availability);
       if (isCaymanian) params.set("isCaymanian", "true");
-      if (selectedSkills.length > 0) params.set("skillIds", selectedSkills.map(s => s.id).join(","));
+      if (selectedSkills.length > 0)
+        params.set("skillIds", selectedSkills.map((s) => s.id).join(","));
       params.set("page", String(searchPage));
       params.set("pageSize", String(pageSize));
 
@@ -340,7 +399,7 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
     if (selectedCandidates.size === results.length) {
       setSelectedCandidates(new Set());
     } else {
-      setSelectedCandidates(new Set(results.map(c => c.id)));
+      setSelectedCandidates(new Set(results.map((c) => c.id)));
     }
   };
 
@@ -348,516 +407,740 @@ export default function TalentSearchClient({ eduTypes: etObj, expTypes: exObj, l
 
   return (
     <>
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-4">
-            Cayman <span className="text-primary-500">Talent Pool</span>
-          </h1>
-          <p className="text-neutral-600 dark:text-neutral-500 text-lg max-w-3xl">
-            Search for local talent by career interests, skills, education, and experience. Candidates are ranked by match quality.
-          </p>
-        </div>
+      <div className="mb-8">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-4">
+          Cayman <span className="text-primary-500">Talent Pool</span>
+        </h1>
+        <p className="text-neutral-600 dark:text-neutral-500 text-lg max-w-3xl">
+          Search for local talent by career interests, skills, education, and experience. Candidates
+          are ranked by match quality.
+        </p>
+      </div>
 
-        {/* Employer Gate — show waitlist form for non-employer visitors */}
-        {!session?.employerAccountId && (
-          <EmployerWaitlistForm
-            prefillEmail={session?.email || ""}
-            prefillName={session?.name || ""}
-          />
-        )}
+      {/* Employer Gate — show waitlist form for non-employer visitors */}
+      {!session?.employerAccountId && (
+        <EmployerWaitlistForm
+          prefillEmail={session?.email || ""}
+          prefillName={session?.name || ""}
+        />
+      )}
 
-        {/* Search Filters */}
-        {session?.employerAccountId && (
-          <>
-            <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-8">
-              <CardContent className="p-5 space-y-0">
-                {/* Job Selector — searchable dropdown */}
-                {employerPostings.length > 0 && (
-                  <div className="relative" ref={jobDropdownRef}>
-                    <label className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-2 block">Recruiting for</label>
-                    <button
-                      onClick={() => setJobDropdownOpen(!jobDropdownOpen)}
-                      className="w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 transition text-left"
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-500/15 grid place-items-center shrink-0">
-                          {selectedJobId ? <Briefcase className="w-4 h-4 text-primary-500" /> : <Search className="w-4 h-4 text-primary-500" />}
+      {/* Search Filters */}
+      {session?.employerAccountId && (
+        <>
+          <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-8">
+            <CardContent className="p-5 space-y-0">
+              {/* Job Selector — searchable dropdown */}
+              {employerPostings.length > 0 && (
+                <div className="relative" ref={jobDropdownRef}>
+                  <label className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-2 block">
+                    Recruiting for
+                  </label>
+                  <button
+                    onClick={() => setJobDropdownOpen(!jobDropdownOpen)}
+                    className="w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 transition text-left"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-500/15 grid place-items-center shrink-0">
+                        {selectedJobId ? (
+                          <Briefcase className="w-4 h-4 text-primary-500" />
+                        ) : (
+                          <Search className="w-4 h-4 text-primary-500" />
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-sm font-medium text-neutral-900 dark:text-neutral-100 truncate">
+                          {selectedJobId
+                            ? employerPostings.find((p) => p.cJobId === selectedJobId)?.cTitle ||
+                              selectedJobId
+                            : "General Search"}
                         </div>
-                        <div className="min-w-0">
-                          <div className="text-sm font-medium text-neutral-900 dark:text-neutral-100 truncate">
-                            {selectedJobId
-                              ? employerPostings.find(p => p.cJobId === selectedJobId)?.cTitle || selectedJobId
-                              : "General Search"}
-                          </div>
-                          <div className="text-xs text-neutral-500">
-                            {selectedJobId ? selectedJobId : "No specific job — search all talent"}
-                          </div>
+                        <div className="text-xs text-neutral-500">
+                          {selectedJobId ? selectedJobId : "No specific job — search all talent"}
                         </div>
                       </div>
-                      <ChevronDown className={`w-4 h-4 text-neutral-500 shrink-0 transition-transform ${jobDropdownOpen ? "rotate-180" : ""}`} />
-                    </button>
+                    </div>
+                    <ChevronDown
+                      className={`w-4 h-4 text-neutral-500 shrink-0 transition-transform ${jobDropdownOpen ? "rotate-180" : ""}`}
+                    />
+                  </button>
 
-                    {jobDropdownOpen && (
-                      <div className="absolute z-30 left-0 right-0 mt-2 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 shadow-2xl overflow-hidden">
-                        <div className="p-2 border-b border-neutral-200 dark:border-neutral-700">
-                          <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-500" />
-                            <input
-                              type="text"
-                              value={jobSearch}
-                              onChange={(e) => setJobSearch(e.target.value)}
-                              placeholder="Search postings..."
-                              className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-lg pl-9 pr-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 placeholder:text-neutral-600 focus:outline-none focus:border-primary-300 dark:focus:border-primary-500/40"
-                              autoFocus
-                            />
-                          </div>
+                  {jobDropdownOpen && (
+                    <div className="absolute z-30 left-0 right-0 mt-2 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 shadow-2xl overflow-hidden">
+                      <div className="p-2 border-b border-neutral-200 dark:border-neutral-700">
+                        <div className="relative">
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-500" />
+                          <input
+                            type="text"
+                            value={jobSearch}
+                            onChange={(e) => setJobSearch(e.target.value)}
+                            placeholder="Search postings..."
+                            className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-lg pl-9 pr-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 placeholder:text-neutral-600 focus:outline-none focus:border-primary-300 dark:focus:border-primary-500/40"
+                            autoFocus
+                          />
                         </div>
-                        <div className="max-h-64 overflow-y-auto py-1">
+                      </div>
+                      <div className="max-h-64 overflow-y-auto py-1">
+                        <button
+                          onClick={() => handleSelectJob("")}
+                          className={`w-full text-left px-3 py-2.5 flex items-center gap-3 text-sm transition ${
+                            selectedJobId === ""
+                              ? "bg-primary-50 dark:bg-primary-500/15 text-primary-600 dark:text-primary-300"
+                              : "hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-500"
+                          }`}
+                        >
+                          <Search className="w-3.5 h-3.5 shrink-0 text-neutral-500" />
+                          <span>General Search</span>
+                        </button>
+                        {filteredPostings.map((p) => (
                           <button
-                            onClick={() => handleSelectJob("")}
+                            key={p.cJobId}
+                            onClick={() => handleSelectJob(p.cJobId)}
                             className={`w-full text-left px-3 py-2.5 flex items-center gap-3 text-sm transition ${
-                              selectedJobId === "" ? "bg-primary-50 dark:bg-primary-500/15 text-primary-600 dark:text-primary-300" : "hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-500"
+                              selectedJobId === p.cJobId
+                                ? "bg-primary-50 dark:bg-primary-500/15 text-primary-600 dark:text-primary-300"
+                                : "hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-500"
                             }`}
                           >
-                            <Search className="w-3.5 h-3.5 shrink-0 text-neutral-500" />
-                            <span>General Search</span>
+                            <Briefcase className="w-3.5 h-3.5 shrink-0 text-neutral-500" />
+                            <span className="truncate">{p.cTitle}</span>
+                            <span className="text-xs text-neutral-600 font-mono ml-auto shrink-0">
+                              {p.cJobId}
+                            </span>
                           </button>
-                          {filteredPostings.map(p => (
-                            <button
-                              key={p.cJobId}
-                              onClick={() => handleSelectJob(p.cJobId)}
-                              className={`w-full text-left px-3 py-2.5 flex items-center gap-3 text-sm transition ${
-                                selectedJobId === p.cJobId ? "bg-primary-50 dark:bg-primary-500/15 text-primary-600 dark:text-primary-300" : "hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-500"
-                              }`}
-                            >
-                              <Briefcase className="w-3.5 h-3.5 shrink-0 text-neutral-500" />
-                              <span className="truncate">{p.cTitle}</span>
-                              <span className="text-xs text-neutral-600 font-mono ml-auto shrink-0">{p.cJobId}</span>
-                            </button>
-                          ))}
-                          {filteredPostings.length === 0 && (
-                            <div className="px-3 py-4 text-sm text-neutral-500 text-center">No postings match "{jobSearch}"</div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Divider + Refine toggle */}
-                <div className="pt-4">
-                  <button
-                    onClick={() => setShowFilters(!showFilters)}
-                    className="flex items-center gap-2 text-xs font-medium text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-500 transition uppercase tracking-wider"
-                  >
-                    <Filter className="w-3.5 h-3.5" /> Refine Filters
-                    <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showFilters ? "rotate-180" : ""}`} />
-                  </button>
-                </div>
-
-                {showFilters && (
-                  <div className="pt-4 space-y-5">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      <div>
-                        <label className="text-sm font-medium mb-2 block text-neutral-500">Career Interest (CISCO)</label>
-                        <Input value={ciscoSearch} onChange={(e) => setCiscoSearch(e.target.value)} placeholder="Search occupations..." className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-2" />
-                        <select value={ciscoCode} onChange={(e) => setCiscoCode(e.target.value)} className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300" size={4}>
-                          <option value="">Any occupation</option>
-                          {filteredCisco.map(c => <option key={c.code} value={c.code}>{c.title} ({c.code})</option>)}
-                        </select>
-                      </div>
-                      <div className="space-y-4">
-                        <div>
-                          <label className="text-sm font-medium mb-2 block text-neutral-500">Education</label>
-                          <select value={educationCode} onChange={(e) => setEducationCode(e.target.value)} className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300">
-                            <option value="">Any education</option>
-                            {Array.from(eduTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                          </select>
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium mb-2 block text-neutral-500">Experience</label>
-                          <select value={experienceCode} onChange={(e) => setExperienceCode(e.target.value)} className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300">
-                            <option value="">Any experience</option>
-                            {Array.from(expTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                          </select>
-                        </div>
-                      </div>
-                      <div className="space-y-4">
-                        <div>
-                          <label className="text-sm font-medium mb-2 block text-neutral-500">Location</label>
-                          <select value={locationCode} onChange={(e) => setLocationCode(e.target.value)} className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300">
-                            <option value="">Any location</option>
-                            {Array.from(locTypes.entries()).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
-                          </select>
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium mb-2 block text-neutral-500">Availability</label>
-                          <select value={availability} onChange={(e) => setAvailability(e.target.value)} className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300">
-                            <option value="">Any availability</option>
-                            <option value="actively_looking">Actively Looking</option>
-                            <option value="open_to_offers">Open to Offers</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Skills Filter */}
-                    <div>
-                      <label className="text-sm font-medium mb-2 block text-neutral-500">Skills</label>
-                      <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
-                        <Input
-                          value={skillSearch}
-                          onChange={(e) => setSkillSearch(e.target.value)}
-                          placeholder="Search skills to filter by..."
-                          className="pl-10 bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
-                        />
-                      </div>
-                      {skillSuggestions.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {skillSuggestions.slice(0, 10).map((s) => (
-                            <button key={s.id} onClick={() => { setSelectedSkills([...selectedSkills, s]); setSkillSearch(""); }}>
-                              <Badge className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-500 hover:border-purple-300/40 cursor-pointer">
-                                <Plus className="w-3 h-3 mr-1" /> {s.name}
-                              </Badge>
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                      {selectedSkills.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {selectedSkills.map((s) => (
-                            <div key={s.id} className="flex items-center gap-1">
-                              <Badge className="bg-purple-500/20 text-purple-300 border-purple-300/30">{s.name}</Badge>
-                              <button onClick={() => setSelectedSkills(selectedSkills.filter(sk => sk.id !== s.id))} className="text-neutral-500 hover:text-red-400">
-                                <X className="w-3 h-3" />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" checked={isCaymanian} onChange={(e) => setIsCaymanian(e.target.checked)} className="rounded" />
-                        <span className="text-sm flex items-center gap-1"><Shield className="w-3 h-3 text-primary-500" /> Caymanian Only</span>
-                      </label>
-                    </div>
-
-                    <Button onClick={() => handleSearch(1)} disabled={searching} className="gap-2 w-full sm:w-auto">
-                      <Search className="w-4 h-4" /> {searching ? "Searching..." : "Search Talent"}
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Loading Skeleton */}
-            {searching && (
-              <div className="space-y-4">
-                {[1, 2, 3].map((i) => (
-                  <Card key={i} className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 animate-pulse">
-                    <CardContent className="p-6">
-                      <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-neutral-800" />
-                        <div className="flex-1 space-y-3">
-                          <div className="h-4 bg-neutral-100 dark:bg-neutral-800 rounded w-1/4" />
-                          <div className="h-3 bg-neutral-100 dark:bg-neutral-800 rounded w-1/2" />
-                          <div className="flex gap-2">
-                            <div className="h-5 bg-neutral-100 dark:bg-neutral-800 rounded w-16" />
-                            <div className="h-5 bg-neutral-100 dark:bg-neutral-800 rounded w-20" />
+                        ))}
+                        {filteredPostings.length === 0 && (
+                          <div className="px-3 py-4 text-sm text-neutral-500 text-center">
+                            No postings match "{jobSearch}"
                           </div>
-                        </div>
+                        )}
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-
-            {/* Bulk Actions Bar */}
-            {!searching && results.length > 0 && selectedCandidates.size > 0 && (
-              <div className="mb-4 p-3 rounded-xl bg-primary-50 dark:bg-primary-500/15 border border-primary-200 dark:border-primary-500/30 flex items-center justify-between">
-                <span className="text-sm text-primary-500">{selectedCandidates.size} selected</span>
-                <div className="flex gap-2">
-                  <Button size="sm" variant="secondary" onClick={() => setShowBulkIntro(true)} className="gap-1">
-                    <Send className="w-3 h-3" /> Send Intros
-                  </Button>
-                  <Button size="sm" variant="secondary" onClick={() => setSelectedCandidates(new Set())}>
-                    Clear
-                  </Button>
+                    </div>
+                  )}
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Bulk Intro Modal */}
-            {showBulkIntro && (
-              <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowBulkIntro(false)}>
-                <Card className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700 max-w-md w-full" onClick={(e) => e.stopPropagation()}>
-                  <CardContent className="p-6 space-y-4">
-                    <h3 className="text-lg font-semibold">Send Bulk Introductions</h3>
-                    <p className="text-sm text-neutral-500">Sending to {selectedCandidates.size} candidate{selectedCandidates.size !== 1 ? "s" : ""}</p>
-                    {templates.length > 0 && (
+              {/* Divider + Refine toggle */}
+              <div className="pt-4">
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="flex items-center gap-2 text-xs font-medium text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-500 transition uppercase tracking-wider"
+                >
+                  <Filter className="w-3.5 h-3.5" /> Refine Filters
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 transition-transform ${showFilters ? "rotate-180" : ""}`}
+                  />
+                </button>
+              </div>
+
+              {showFilters && (
+                <div className="pt-4 space-y-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div>
+                      <label className="text-sm font-medium mb-2 block text-neutral-500">
+                        Career Interest (CISCO)
+                      </label>
+                      <Input
+                        value={ciscoSearch}
+                        onChange={(e) => setCiscoSearch(e.target.value)}
+                        placeholder="Search occupations..."
+                        className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-2"
+                      />
+                      <select
+                        value={ciscoCode}
+                        onChange={(e) => setCiscoCode(e.target.value)}
+                        className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
+                        size={4}
+                      >
+                        <option value="">Any occupation</option>
+                        {filteredCisco.map((c) => (
+                          <option key={c.code} value={c.code}>
+                            {c.title} ({c.code})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="space-y-4">
                       <div>
-                        <label className="text-sm font-medium mb-1 block">Use Template</label>
+                        <label className="text-sm font-medium mb-2 block text-neutral-500">
+                          Education
+                        </label>
                         <select
-                          onChange={(e) => { const t = templates.find(t => t.id === Number(e.target.value)); if (t) setBulkMessage(t.message); }}
+                          value={educationCode}
+                          onChange={(e) => setEducationCode(e.target.value)}
                           className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
                         >
-                          <option value="">Select a template...</option>
-                          {templates.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+                          <option value="">Any education</option>
+                          {Array.from(eduTypes.entries()).map(([k, v]) => (
+                            <option key={k} value={k}>
+                              {v}
+                            </option>
+                          ))}
                         </select>
                       </div>
+                      <div>
+                        <label className="text-sm font-medium mb-2 block text-neutral-500">
+                          Experience
+                        </label>
+                        <select
+                          value={experienceCode}
+                          onChange={(e) => setExperienceCode(e.target.value)}
+                          className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
+                        >
+                          <option value="">Any experience</option>
+                          {Array.from(expTypes.entries()).map(([k, v]) => (
+                            <option key={k} value={k}>
+                              {v}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium mb-2 block text-neutral-500">
+                          Location
+                        </label>
+                        <select
+                          value={locationCode}
+                          onChange={(e) => setLocationCode(e.target.value)}
+                          className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
+                        >
+                          <option value="">Any location</option>
+                          {Array.from(locTypes.entries()).map(([k, v]) => (
+                            <option key={k} value={k}>
+                              {v}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium mb-2 block text-neutral-500">
+                          Availability
+                        </label>
+                        <select
+                          value={availability}
+                          onChange={(e) => setAvailability(e.target.value)}
+                          className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
+                        >
+                          <option value="">Any availability</option>
+                          <option value="actively_looking">Actively Looking</option>
+                          <option value="open_to_offers">Open to Offers</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Skills Filter */}
+                  <div>
+                    <label className="text-sm font-medium mb-2 block text-neutral-500">
+                      Skills
+                    </label>
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+                      <Input
+                        value={skillSearch}
+                        onChange={(e) => setSkillSearch(e.target.value)}
+                        placeholder="Search skills to filter by..."
+                        className="pl-10 bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
+                      />
+                    </div>
+                    {skillSuggestions.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {skillSuggestions.slice(0, 10).map((s) => (
+                          <button
+                            key={s.id}
+                            onClick={() => {
+                              setSelectedSkills([...selectedSkills, s]);
+                              setSkillSearch("");
+                            }}
+                          >
+                            <Badge className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-500 hover:border-purple-300/40 cursor-pointer">
+                              <Plus className="w-3 h-3 mr-1" /> {s.name}
+                            </Badge>
+                          </button>
+                        ))}
+                      </div>
                     )}
-                    <textarea
-                      value={bulkMessage}
-                      onChange={(e) => setBulkMessage(e.target.value)}
-                      rows={4}
-                      placeholder="Your message to these candidates..."
-                      className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
-                    />
-                    <div className="flex gap-2 justify-end">
-                      <Button variant="secondary" onClick={() => setShowBulkIntro(false)}>Cancel</Button>
-                      <Button onClick={handleBulkIntro} disabled={sendingBulk} className="gap-2">
-                        <Send className="w-3 h-3" /> {sendingBulk ? "Sending..." : "Send All"}
-                      </Button>
+                    {selectedSkills.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {selectedSkills.map((s) => (
+                          <div key={s.id} className="flex items-center gap-1">
+                            <Badge className="bg-purple-500/20 text-purple-300 border-purple-300/30">
+                              {s.name}
+                            </Badge>
+                            <button
+                              onClick={() =>
+                                setSelectedSkills(selectedSkills.filter((sk) => sk.id !== s.id))
+                              }
+                              className="text-neutral-500 hover:text-red-400"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={isCaymanian}
+                        onChange={(e) => setIsCaymanian(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm flex items-center gap-1">
+                        <Shield className="w-3 h-3 text-primary-500" /> Caymanian Only
+                      </span>
+                    </label>
+                  </div>
+
+                  <Button
+                    onClick={() => handleSearch(1)}
+                    disabled={searching}
+                    className="gap-2 w-full sm:w-auto"
+                  >
+                    <Search className="w-4 h-4" /> {searching ? "Searching..." : "Search Talent"}
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Loading Skeleton */}
+          {searching && (
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <Card
+                  key={i}
+                  className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 animate-pulse"
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-neutral-800" />
+                      <div className="flex-1 space-y-3">
+                        <div className="h-4 bg-neutral-100 dark:bg-neutral-800 rounded w-1/4" />
+                        <div className="h-3 bg-neutral-100 dark:bg-neutral-800 rounded w-1/2" />
+                        <div className="flex gap-2">
+                          <div className="h-5 bg-neutral-100 dark:bg-neutral-800 rounded w-16" />
+                          <div className="h-5 bg-neutral-100 dark:bg-neutral-800 rounded w-20" />
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
+              ))}
+            </div>
+          )}
+
+          {/* Bulk Actions Bar */}
+          {!searching && results.length > 0 && selectedCandidates.size > 0 && (
+            <div className="mb-4 p-3 rounded-xl bg-primary-50 dark:bg-primary-500/15 border border-primary-200 dark:border-primary-500/30 flex items-center justify-between">
+              <span className="text-sm text-primary-500">{selectedCandidates.size} selected</span>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => setShowBulkIntro(true)}
+                  className="gap-1"
+                >
+                  <Send className="w-3 h-3" /> Send Intros
+                </Button>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => setSelectedCandidates(new Set())}
+                >
+                  Clear
+                </Button>
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Results */}
-            {!searching && hasSearched && results.length > 0 && (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between text-sm text-neutral-600 dark:text-neutral-500 mb-2">
-                  <div className="flex items-center gap-3">
-                    <span>{total} candidate{total !== 1 ? "s" : ""} found</span>
-                    <button onClick={selectAll} className="text-xs text-primary-500 hover:underline">
-                      {selectedCandidates.size === results.length ? "Deselect all" : "Select all"}
-                    </button>
+          {/* Bulk Intro Modal */}
+          {showBulkIntro && (
+            <div
+              className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+              onClick={() => setShowBulkIntro(false)}
+            >
+              <Card
+                className="bg-white dark:bg-neutral-900 border-neutral-200 dark:border-neutral-700 max-w-md w-full"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <CardContent className="p-6 space-y-4">
+                  <h3 className="text-lg font-semibold">Send Bulk Introductions</h3>
+                  <p className="text-sm text-neutral-500">
+                    Sending to {selectedCandidates.size} candidate
+                    {selectedCandidates.size !== 1 ? "s" : ""}
+                  </p>
+                  {templates.length > 0 && (
+                    <div>
+                      <label className="text-sm font-medium mb-1 block">Use Template</label>
+                      <select
+                        onChange={(e) => {
+                          const t = templates.find((t) => t.id === Number(e.target.value));
+                          if (t) setBulkMessage(t.message);
+                        }}
+                        className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
+                      >
+                        <option value="">Select a template...</option>
+                        {templates.map((t) => (
+                          <option key={t.id} value={t.id}>
+                            {t.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                  <textarea
+                    value={bulkMessage}
+                    onChange={(e) => setBulkMessage(e.target.value)}
+                    rows={4}
+                    placeholder="Your message to these candidates..."
+                    className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
+                  />
+                  <div className="flex gap-2 justify-end">
+                    <Button variant="secondary" onClick={() => setShowBulkIntro(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleBulkIntro} disabled={sendingBulk} className="gap-2">
+                      <Send className="w-3 h-3" /> {sendingBulk ? "Sending..." : "Send All"}
+                    </Button>
                   </div>
-                  <span className="flex items-center gap-1"><TrendingUp className="w-3 h-3" /> Ranked by match score</span>
-                </div>
-                {results.map((c, i) => (
-                  <Card key={c.id} className={`bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 hover:border-primary-200 dark:hover:border-primary-500/30 transition ${selectedCandidates.has(c.id) ? "ring-1 ring-primary-300 dark:ring-primary-500/40" : ""}`}>
-                    <CardContent className="p-6">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex items-start gap-3 flex-1">
-                          <label className="mt-1 cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={selectedCandidates.has(c.id)}
-                              onChange={() => toggleCandidate(c.id)}
-                              className="rounded"
-                            />
-                          </label>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-3">
-                              <div className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-neutral-800 grid place-items-center"><Users className="w-5 h-5 text-neutral-500" /></div>
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-medium">Candidate #{(page - 1) * pageSize + i + 1}</span>
-                                  {c.scores && <ScoreBadge score={c.scores.total} />}
-                                </div>
-                                <div className="flex gap-2">
-                                  <Badge className={AVAILABILITY_COLORS[c.availability] || ""}>{AVAILABILITY_LABELS[c.availability] || c.availability}</Badge>
-                                  {c.is_caymanian && <Badge className="bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30"><Shield className="w-3 h-3 mr-1" /> Caymanian</Badge>}
-                                </div>
-                              </div>
-                            </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
-                            {/* Score Breakdown */}
-                            {c.scores && c.scores.total > 0 && (
-                              <div className="mb-3">
-                                <button
-                                  onClick={() => setExpandedScore(expandedScore === c.id ? null : c.id)}
-                                  className="text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-600 dark:hover:text-neutral-500 flex items-center gap-1"
-                                >
-                                  {expandedScore === c.id ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
-                                  Match breakdown
-                                </button>
-                                {expandedScore === c.id && (
-                                  <div className="mt-2 p-2 rounded-lg bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700">
-                                    <ScoreBreakdown scores={c.scores} />
-                                  </div>
+          {/* Results */}
+          {!searching && hasSearched && results.length > 0 && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between text-sm text-neutral-600 dark:text-neutral-500 mb-2">
+                <div className="flex items-center gap-3">
+                  <span>
+                    {total} candidate{total !== 1 ? "s" : ""} found
+                  </span>
+                  <button onClick={selectAll} className="text-xs text-primary-500 hover:underline">
+                    {selectedCandidates.size === results.length ? "Deselect all" : "Select all"}
+                  </button>
+                </div>
+                <span className="flex items-center gap-1">
+                  <TrendingUp className="w-3 h-3" /> Ranked by match score
+                </span>
+              </div>
+              {results.map((c, i) => (
+                <Card
+                  key={c.id}
+                  className={`bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 hover:border-primary-200 dark:hover:border-primary-500/30 transition ${selectedCandidates.has(c.id) ? "ring-1 ring-primary-300 dark:ring-primary-500/40" : ""}`}
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start gap-3 flex-1">
+                        <label className="mt-1 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={selectedCandidates.has(c.id)}
+                            onChange={() => toggleCandidate(c.id)}
+                            className="rounded"
+                          />
+                        </label>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="w-10 h-10 rounded-full bg-neutral-100 dark:bg-neutral-800 grid place-items-center">
+                              <Users className="w-5 h-5 text-neutral-500" />
+                            </div>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <span className="font-medium">
+                                  Candidate #{(page - 1) * pageSize + i + 1}
+                                </span>
+                                {c.scores && <ScoreBadge score={c.scores.total} />}
+                              </div>
+                              <div className="flex gap-2">
+                                <Badge className={AVAILABILITY_COLORS[c.availability] || ""}>
+                                  {AVAILABILITY_LABELS[c.availability] || c.availability}
+                                </Badge>
+                                {c.is_caymanian && (
+                                  <Badge className="bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30">
+                                    <Shield className="w-3 h-3 mr-1" /> Caymanian
+                                  </Badge>
                                 )}
                               </div>
-                            )}
-
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-3 text-sm">
-                              <div className="flex items-center gap-1"><BookOpen className="w-3 h-3 text-purple-300" /> {eduTypes.get(c.education_code) || "Not specified"}</div>
-                              <div className="flex items-center gap-1"><Clock className="w-3 h-3 text-orange-300" /> {expTypes.get(c.experience_code) || "Not specified"}</div>
-                              <div className="flex items-center gap-1"><MapPin className="w-3 h-3 text-pink-300" /> {locTypes.get(c.location_code) || "Not specified"}</div>
                             </div>
-                            {c.interests?.length > 0 && (
-                              <div className="flex flex-wrap gap-1 mb-2">
-                                {c.interests.map((int) => (
-                                  <Badge key={int.cisco_code} className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-500 text-xs">{int.title || int.cisco_code}</Badge>
-                                ))}
-                              </div>
-                            )}
-                            {c.skills?.length > 0 && (
-                              <div className="flex flex-wrap gap-1">
-                                {c.skills.map((s) => (
-                                  <Badge key={s.id} className="bg-purple-500/10 text-purple-300 border-purple-300/20 text-xs">{s.name}</Badge>
-                                ))}
-                              </div>
-                            )}
                           </div>
-                        </div>
-                        <div className="shrink-0 flex flex-col gap-2">
-                          {introSent.has(c.id) ? (
-                            <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-300/30"><CheckCircle className="w-3 h-3 mr-1" /> Sent</Badge>
-                          ) : expandedIntro === c.id ? null : (
-                            <Button onClick={() => { setExpandedIntro(c.id); setIntroMessage(""); }} variant="secondary" size="sm" className="gap-2">
-                              <Send className="w-3 h-3" /> Intro
-                            </Button>
-                          )}
-                          {shortlists.length > 0 && (
-                            <div className="relative">
-                              <Button
-                                variant="secondary"
-                                size="sm"
-                                className="gap-1"
-                                onClick={() => setShowShortlistDropdown(showShortlistDropdown === c.id ? null : c.id)}
+
+                          {/* Score Breakdown */}
+                          {c.scores && c.scores.total > 0 && (
+                            <div className="mb-3">
+                              <button
+                                onClick={() =>
+                                  setExpandedScore(expandedScore === c.id ? null : c.id)
+                                }
+                                className="text-xs text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-600 dark:hover:text-neutral-500 flex items-center gap-1"
                               >
-                                <List className="w-3 h-3" /> Save
-                              </Button>
-                              {showShortlistDropdown === c.id && (
-                                <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-xl overflow-hidden z-20">
-                                  {shortlists.map(sl => (
-                                    <button
-                                      key={sl.id}
-                                      onClick={() => handleAddToShortlist(sl.id, c.id)}
-                                      className="w-full text-left px-3 py-2 text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800 transition"
-                                    >
-                                      {sl.name}
-                                    </button>
-                                  ))}
+                                {expandedScore === c.id ? (
+                                  <ChevronDown className="w-3 h-3" />
+                                ) : (
+                                  <ChevronRight className="w-3 h-3" />
+                                )}
+                                Match breakdown
+                              </button>
+                              {expandedScore === c.id && (
+                                <div className="mt-2 p-2 rounded-lg bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700">
+                                  <ScoreBreakdown scores={c.scores} />
                                 </div>
                               )}
                             </div>
                           )}
+
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-3 text-sm">
+                            <div className="flex items-center gap-1">
+                              <BookOpen className="w-3 h-3 text-purple-300" />{" "}
+                              {eduTypes.get(c.education_code) || "Not specified"}
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Clock className="w-3 h-3 text-orange-300" />{" "}
+                              {expTypes.get(c.experience_code) || "Not specified"}
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <MapPin className="w-3 h-3 text-pink-300" />{" "}
+                              {locTypes.get(c.location_code) || "Not specified"}
+                            </div>
+                          </div>
+                          {c.interests?.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mb-2">
+                              {c.interests.map((int) => (
+                                <Badge
+                                  key={int.cisco_code}
+                                  className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-500 text-xs"
+                                >
+                                  {int.title || int.cisco_code}
+                                </Badge>
+                              ))}
+                            </div>
+                          )}
+                          {c.skills?.length > 0 && (
+                            <div className="flex flex-wrap gap-1">
+                              {c.skills.map((s) => (
+                                <Badge
+                                  key={s.id}
+                                  className="bg-purple-500/10 text-purple-300 border-purple-300/20 text-xs"
+                                >
+                                  {s.name}
+                                </Badge>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       </div>
-
-                      {/* Inline Intro Form */}
-                      {expandedIntro === c.id && !introSent.has(c.id) && (
-                        <div className="mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-700 space-y-3">
-                          <div className="text-sm font-medium">Send an introduction request</div>
-                          {templates.length > 0 && (
-                            <select
-                              onChange={(e) => { const t = templates.find(t => t.id === Number(e.target.value)); if (t) setIntroMessage(t.message); }}
-                              className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
+                      <div className="shrink-0 flex flex-col gap-2">
+                        {introSent.has(c.id) ? (
+                          <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-300/30">
+                            <CheckCircle className="w-3 h-3 mr-1" /> Sent
+                          </Badge>
+                        ) : expandedIntro === c.id ? null : (
+                          <Button
+                            onClick={() => {
+                              setExpandedIntro(c.id);
+                              setIntroMessage("");
+                            }}
+                            variant="secondary"
+                            size="sm"
+                            className="gap-2"
+                          >
+                            <Send className="w-3 h-3" /> Intro
+                          </Button>
+                        )}
+                        {shortlists.length > 0 && (
+                          <div className="relative">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              className="gap-1"
+                              onClick={() =>
+                                setShowShortlistDropdown(
+                                  showShortlistDropdown === c.id ? null : c.id
+                                )
+                              }
                             >
-                              <option value="">Use a template...</option>
-                              {templates.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-                            </select>
-                          )}
-                          <textarea
-                            value={introMessage}
-                            onChange={(e) => setIntroMessage(e.target.value)}
-                            rows={3}
-                            placeholder="Introduce yourself and explain why you'd like to connect..."
-                            className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-primary-300 dark:focus:border-primary-500/40"
-                            autoFocus
-                          />
-                          <div className="flex gap-2 justify-end">
-                            <Button variant="secondary" size="sm" onClick={() => setExpandedIntro(null)}>Cancel</Button>
-                            <Button size="sm" onClick={() => handleSendIntroduction(c.id, c.scores)} disabled={sendingIntro} className="gap-2">
-                              <Send className="w-3 h-3" /> {sendingIntro ? "Sending..." : "Send"}
+                              <List className="w-3 h-3" /> Save
                             </Button>
-                          </div>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
-
-                {/* Pagination */}
-                {totalPages > 1 && (
-                  <div className="flex items-center justify-center gap-2 pt-4">
-                    <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => handlePageChange(page - 1)}>
-                      <ChevronLeft className="w-4 h-4" />
-                    </Button>
-                    <span className="text-sm text-neutral-500">
-                      Page {page} of {totalPages}
-                    </span>
-                    <Button variant="secondary" size="sm" disabled={page >= totalPages} onClick={() => handlePageChange(page + 1)}>
-                      <ChevronRight className="w-4 h-4" />
-                    </Button>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {!searching && hasSearched && results.length === 0 && (
-              <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
-                <CardContent className="p-12 text-center">
-                  <Users className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-500" />
-                  <h3 className="text-lg font-medium mb-2">No candidates found</h3>
-                  <p className="text-neutral-500">Try broadening your search filters.</p>
-                </CardContent>
-              </Card>
-            )}
-
-            {!searching && !hasSearched && (
-              <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
-                <CardContent className="p-12 text-center">
-                  <Users className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-500" />
-                  <h3 className="text-lg font-medium mb-2">
-                    {selectedJobId ? "Ready to find matches" : "Select a role or search broadly"}
-                  </h3>
-                  <p className="text-neutral-500">
-                    {selectedJobId
-                      ? `Hit "Search Talent" to find candidates matching your selected role.`
-                      : "Pick a job posting above to find matched candidates, or run a general search."}
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* My Introductions */}
-            {introductions.length > 0 && (
-              <div className="mt-8">
-                <button
-                  onClick={() => setShowIntroductions(!showIntroductions)}
-                  className="flex items-center gap-2 text-lg font-semibold mb-4 hover:text-primary-500 transition"
-                >
-                  <Send className="w-5 h-5" />
-                  My Introductions ({introductions.length})
-                  <ChevronDown className={`w-4 h-4 transition-transform ${showIntroductions ? "rotate-180" : ""}`} />
-                </button>
-
-                {showIntroductions && (
-                  <div className="space-y-3">
-                    {introductions.map((intro) => (
-                      <Card key={intro.id} className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <div className="font-medium text-sm">Candidate</div>
-                              <div className="text-xs text-neutral-500">
-                                Sent {new Date(intro.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                            {showShortlistDropdown === c.id && (
+                              <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-xl overflow-hidden z-20">
+                                {shortlists.map((sl) => (
+                                  <button
+                                    key={sl.id}
+                                    onClick={() => handleAddToShortlist(sl.id, c.id)}
+                                    className="w-full text-left px-3 py-2 text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800 transition"
+                                  >
+                                    {sl.name}
+                                  </button>
+                                ))}
                               </div>
-                            </div>
-                            <Badge className={STATUS_COLORS[intro.status] || STATUS_COLORS.pending}>
-                              {intro.status || "pending"}
-                            </Badge>
+                            )}
                           </div>
-                          {intro.message && (
-                            <div className="mt-2 text-xs text-neutral-500 line-clamp-2">{intro.message}</div>
-                          )}
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </>
-        )}
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Inline Intro Form */}
+                    {expandedIntro === c.id && !introSent.has(c.id) && (
+                      <div className="mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-700 space-y-3">
+                        <div className="text-sm font-medium">Send an introduction request</div>
+                        {templates.length > 0 && (
+                          <select
+                            onChange={(e) => {
+                              const t = templates.find((t) => t.id === Number(e.target.value));
+                              if (t) setIntroMessage(t.message);
+                            }}
+                            className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
+                          >
+                            <option value="">Use a template...</option>
+                            {templates.map((t) => (
+                              <option key={t.id} value={t.id}>
+                                {t.name}
+                              </option>
+                            ))}
+                          </select>
+                        )}
+                        <textarea
+                          value={introMessage}
+                          onChange={(e) => setIntroMessage(e.target.value)}
+                          rows={3}
+                          placeholder="Introduce yourself and explain why you'd like to connect..."
+                          className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:border-primary-300 dark:focus:border-primary-500/40"
+                          autoFocus
+                        />
+                        <div className="flex gap-2 justify-end">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={() => setExpandedIntro(null)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={() => handleSendIntroduction(c.id, c.scores)}
+                            disabled={sendingIntro}
+                            className="gap-2"
+                          >
+                            <Send className="w-3 h-3" /> {sendingIntro ? "Sending..." : "Send"}
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-2 pt-4">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    disabled={page <= 1}
+                    onClick={() => handlePageChange(page - 1)}
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                  <span className="text-sm text-neutral-500">
+                    Page {page} of {totalPages}
+                  </span>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    disabled={page >= totalPages}
+                    onClick={() => handlePageChange(page + 1)}
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {!searching && hasSearched && results.length === 0 && (
+            <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
+              <CardContent className="p-12 text-center">
+                <Users className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-500" />
+                <h3 className="text-lg font-medium mb-2">No candidates found</h3>
+                <p className="text-neutral-500">Try broadening your search filters.</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {!searching && !hasSearched && (
+            <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
+              <CardContent className="p-12 text-center">
+                <Users className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-500" />
+                <h3 className="text-lg font-medium mb-2">
+                  {selectedJobId ? "Ready to find matches" : "Select a role or search broadly"}
+                </h3>
+                <p className="text-neutral-500">
+                  {selectedJobId
+                    ? `Hit "Search Talent" to find candidates matching your selected role.`
+                    : "Pick a job posting above to find matched candidates, or run a general search."}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* My Introductions */}
+          {introductions.length > 0 && (
+            <div className="mt-8">
+              <button
+                onClick={() => setShowIntroductions(!showIntroductions)}
+                className="flex items-center gap-2 text-lg font-semibold mb-4 hover:text-primary-500 transition"
+              >
+                <Send className="w-5 h-5" />
+                My Introductions ({introductions.length})
+                <ChevronDown
+                  className={`w-4 h-4 transition-transform ${showIntroductions ? "rotate-180" : ""}`}
+                />
+              </button>
+
+              {showIntroductions && (
+                <div className="space-y-3">
+                  {introductions.map((intro) => (
+                    <Card
+                      key={intro.id}
+                      className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
+                    >
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="font-medium text-sm">Candidate</div>
+                            <div className="text-xs text-neutral-500">
+                              Sent{" "}
+                              {new Date(intro.created_at).toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              })}
+                            </div>
+                          </div>
+                          <Badge className={STATUS_COLORS[intro.status] || STATUS_COLORS.pending}>
+                            {intro.status || "pending"}
+                          </Badge>
+                        </div>
+                        {intro.message && (
+                          <div className="mt-2 text-xs text-neutral-500 line-clamp-2">
+                            {intro.message}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </>
+      )}
     </>
   );
 }

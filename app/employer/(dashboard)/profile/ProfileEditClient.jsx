@@ -6,8 +6,23 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
-  Building2, Globe, Image, Type, Users, Calendar, MapPin, Briefcase,
-  Linkedin, Twitter, Instagram, Save, Eye, EyeOff, Plus, X, Check,
+  Building2,
+  Globe,
+  Image,
+  Type,
+  Users,
+  Calendar,
+  MapPin,
+  Briefcase,
+  Linkedin,
+  Twitter,
+  Instagram,
+  Save,
+  Eye,
+  EyeOff,
+  Plus,
+  X,
+  Check,
 } from "lucide-react";
 import { PREDEFINED_PERKS, PERK_CATEGORIES } from "@/lib/perks";
 
@@ -52,9 +67,7 @@ export default function ProfileEditClient({ employer }) {
   const [selectedPerks, setSelectedPerks] = useState(
     new Set(storedBenefits.filter((b) => b.id !== "custom").map((b) => b.id))
   );
-  const [customPerks, setCustomPerks] = useState(
-    storedBenefits.filter((b) => b.id === "custom")
-  );
+  const [customPerks, setCustomPerks] = useState(storedBenefits.filter((b) => b.id === "custom"));
   const [newCustomLabel, setNewCustomLabel] = useState("");
   const [newCustomCategory, setNewCustomCategory] = useState("office");
 
@@ -92,10 +105,7 @@ export default function ProfileEditClient({ employer }) {
     setSaving(true);
     setSaved(false);
     try {
-      const benefits = [
-        ...[...selectedPerks].map((id) => ({ id })),
-        ...customPerks,
-      ];
+      const benefits = [...[...selectedPerks].map((id) => ({ id })), ...customPerks];
 
       const res = await fetch("/api/employer/profile", {
         method: "PUT",
@@ -110,7 +120,11 @@ export default function ProfileEditClient({ employer }) {
           industry: industry || null,
           website: website || null,
           description: description || null,
-          socialLinks: { linkedin: linkedin || null, twitter: twitter || null, instagram: instagram || null },
+          socialLinks: {
+            linkedin: linkedin || null,
+            twitter: twitter || null,
+            instagram: instagram || null,
+          },
           benefits,
           profileSections: sectionVisibility,
         }),
@@ -125,36 +139,77 @@ export default function ProfileEditClient({ employer }) {
     }
   };
 
-  const inputCls = "bg-white dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400 dark:placeholder:text-neutral-500";
+  const inputCls =
+    "bg-white dark:bg-neutral-800 border-neutral-300 dark:border-neutral-700 text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400 dark:placeholder:text-neutral-500";
 
   return (
     <div className="space-y-8 max-w-3xl">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">Edit Profile</h1>
-          <p className="text-neutral-500 text-sm mt-1">Customize how your company appears on careers.ky</p>
+          <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+            Edit Profile
+          </h1>
+          <p className="text-neutral-500 text-sm mt-1">
+            Customize how your company appears on careers.ky
+          </p>
         </div>
         <Button onClick={handleSave} disabled={saving} className="gap-2">
-          {saved ? <><Check className="w-4 h-4" /> Saved</> : saving ? "Saving..." : <><Save className="w-4 h-4" /> Save Changes</>}
+          {saved ? (
+            <>
+              <Check className="w-4 h-4" /> Saved
+            </>
+          ) : saving ? (
+            "Saving..."
+          ) : (
+            <>
+              <Save className="w-4 h-4" /> Save Changes
+            </>
+          )}
         </Button>
       </div>
 
       {/* Branding */}
       <Card>
         <CardContent className="p-6 space-y-4">
-          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100"><Image className="w-5 h-5 text-primary-500" /> Branding</h2>
+          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100">
+            <Image className="w-5 h-5 text-primary-500" /> Branding
+          </h2>
           <div>
-            <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Logo URL</label>
-            <Input value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} placeholder="https://example.com/logo.png" className={inputCls} />
+            <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">
+              Logo URL
+            </label>
+            <Input
+              value={logoUrl}
+              onChange={(e) => setLogoUrl(e.target.value)}
+              placeholder="https://example.com/logo.png"
+              className={inputCls}
+            />
           </div>
           <div>
-            <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Cover Image URL</label>
-            <Input value={coverUrl} onChange={(e) => setCoverUrl(e.target.value)} placeholder="https://example.com/cover.jpg" className={inputCls} />
-            <p className="text-xs text-neutral-500 mt-1">Recommended: 1200x400px. Shown at the top of your public profile.</p>
+            <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">
+              Cover Image URL
+            </label>
+            <Input
+              value={coverUrl}
+              onChange={(e) => setCoverUrl(e.target.value)}
+              placeholder="https://example.com/cover.jpg"
+              className={inputCls}
+            />
+            <p className="text-xs text-neutral-500 mt-1">
+              Recommended: 1200x400px. Shown at the top of your public profile.
+            </p>
           </div>
           <div>
-            <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Tagline</label>
-            <Input value={tagline} onChange={(e) => setTagline(e.target.value)} placeholder="Your company motto or one-liner" maxLength={200} className={inputCls} />
+            <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">
+              Tagline
+            </label>
+            <Input
+              value={tagline}
+              onChange={(e) => setTagline(e.target.value)}
+              placeholder="Your company motto or one-liner"
+              maxLength={200}
+              className={inputCls}
+            />
             <p className="text-xs text-neutral-500 mt-1">{tagline.length}/200 characters</p>
           </div>
         </CardContent>
@@ -163,27 +218,61 @@ export default function ProfileEditClient({ employer }) {
       {/* Company Details */}
       <Card>
         <CardContent className="p-6 space-y-4">
-          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100"><Building2 className="w-5 h-5 text-primary-500" /> Company Details</h2>
+          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100">
+            <Building2 className="w-5 h-5 text-primary-500" /> Company Details
+          </h2>
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Company Size</label>
-              <select value={companySize} onChange={(e) => setCompanySize(e.target.value)} className={`w-full rounded-xl px-3 py-2 text-sm ${inputCls} border`}>
+              <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">
+                Company Size
+              </label>
+              <select
+                value={companySize}
+                onChange={(e) => setCompanySize(e.target.value)}
+                className={`w-full rounded-xl px-3 py-2 text-sm ${inputCls} border`}
+              >
                 {SIZE_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Year Founded</label>
-              <Input type="number" value={yearFounded} onChange={(e) => setYearFounded(e.target.value)} placeholder="2010" min={1800} max={new Date().getFullYear()} className={inputCls} />
+              <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">
+                Year Founded
+              </label>
+              <Input
+                type="number"
+                value={yearFounded}
+                onChange={(e) => setYearFounded(e.target.value)}
+                placeholder="2010"
+                min={1800}
+                max={new Date().getFullYear()}
+                className={inputCls}
+              />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Headquarters</label>
-              <Input value={headquarters} onChange={(e) => setHeadquarters(e.target.value)} placeholder="George Town, Grand Cayman" className={inputCls} />
+              <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">
+                Headquarters
+              </label>
+              <Input
+                value={headquarters}
+                onChange={(e) => setHeadquarters(e.target.value)}
+                placeholder="George Town, Grand Cayman"
+                className={inputCls}
+              />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Industry</label>
-              <Input value={industry} onChange={(e) => setIndustry(e.target.value)} placeholder="Financial Services" className={inputCls} />
+              <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">
+                Industry
+              </label>
+              <Input
+                value={industry}
+                onChange={(e) => setIndustry(e.target.value)}
+                placeholder="Financial Services"
+                className={inputCls}
+              />
             </div>
           </div>
         </CardContent>
@@ -192,23 +281,53 @@ export default function ProfileEditClient({ employer }) {
       {/* Online Presence */}
       <Card>
         <CardContent className="p-6 space-y-4">
-          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100"><Globe className="w-5 h-5 text-primary-500" /> Online Presence</h2>
+          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100">
+            <Globe className="w-5 h-5 text-primary-500" /> Online Presence
+          </h2>
           <div>
-            <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Website</label>
-            <Input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://yourcompany.com" className={inputCls} />
+            <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">
+              Website
+            </label>
+            <Input
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              placeholder="https://yourcompany.com"
+              className={inputCls}
+            />
           </div>
           <div className="grid sm:grid-cols-3 gap-4">
             <div>
-              <label className="text-sm font-medium mb-1 flex items-center gap-1 text-neutral-700 dark:text-neutral-300"><Linkedin className="w-3 h-3" /> LinkedIn</label>
-              <Input value={linkedin} onChange={(e) => setLinkedin(e.target.value)} placeholder="https://linkedin.com/company/..." className={inputCls} />
+              <label className="text-sm font-medium mb-1 flex items-center gap-1 text-neutral-700 dark:text-neutral-300">
+                <Linkedin className="w-3 h-3" /> LinkedIn
+              </label>
+              <Input
+                value={linkedin}
+                onChange={(e) => setLinkedin(e.target.value)}
+                placeholder="https://linkedin.com/company/..."
+                className={inputCls}
+              />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 flex items-center gap-1 text-neutral-700 dark:text-neutral-300"><Twitter className="w-3 h-3" /> Twitter / X</label>
-              <Input value={twitter} onChange={(e) => setTwitter(e.target.value)} placeholder="https://x.com/..." className={inputCls} />
+              <label className="text-sm font-medium mb-1 flex items-center gap-1 text-neutral-700 dark:text-neutral-300">
+                <Twitter className="w-3 h-3" /> Twitter / X
+              </label>
+              <Input
+                value={twitter}
+                onChange={(e) => setTwitter(e.target.value)}
+                placeholder="https://x.com/..."
+                className={inputCls}
+              />
             </div>
             <div>
-              <label className="text-sm font-medium mb-1 flex items-center gap-1 text-neutral-700 dark:text-neutral-300"><Instagram className="w-3 h-3" /> Instagram</label>
-              <Input value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="https://instagram.com/..." className={inputCls} />
+              <label className="text-sm font-medium mb-1 flex items-center gap-1 text-neutral-700 dark:text-neutral-300">
+                <Instagram className="w-3 h-3" /> Instagram
+              </label>
+              <Input
+                value={instagram}
+                onChange={(e) => setInstagram(e.target.value)}
+                placeholder="https://instagram.com/..."
+                className={inputCls}
+              />
             </div>
           </div>
         </CardContent>
@@ -217,9 +336,13 @@ export default function ProfileEditClient({ employer }) {
       {/* About */}
       <Card>
         <CardContent className="p-6 space-y-4">
-          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100"><Type className="w-5 h-5 text-primary-500" /> About</h2>
+          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100">
+            <Type className="w-5 h-5 text-primary-500" /> About
+          </h2>
           <div>
-            <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">Company Description</label>
+            <label className="text-sm font-medium mb-1 block text-neutral-700 dark:text-neutral-300">
+              Company Description
+            </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -234,14 +357,20 @@ export default function ProfileEditClient({ employer }) {
       {/* Benefits & Perks */}
       <Card>
         <CardContent className="p-6 space-y-6">
-          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100"><Briefcase className="w-5 h-5 text-primary-500" /> Benefits & Perks</h2>
-          <p className="text-sm text-neutral-500">Select the benefits your company offers. These will be displayed on your public profile.</p>
+          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100">
+            <Briefcase className="w-5 h-5 text-primary-500" /> Benefits & Perks
+          </h2>
+          <p className="text-sm text-neutral-500">
+            Select the benefits your company offers. These will be displayed on your public profile.
+          </p>
 
           {PERK_CATEGORIES.map((cat) => {
             const perks = PREDEFINED_PERKS.filter((p) => p.category === cat.id);
             return (
               <div key={cat.id}>
-                <h3 className="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-2">{cat.label}</h3>
+                <h3 className="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-2">
+                  {cat.label}
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {perks.map((perk) => (
                     <button
@@ -264,11 +393,16 @@ export default function ProfileEditClient({ employer }) {
 
           {/* Custom perks */}
           <div>
-            <h3 className="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-2">Custom Benefits</h3>
+            <h3 className="text-sm font-medium text-neutral-600 dark:text-neutral-400 mb-2">
+              Custom Benefits
+            </h3>
             {customPerks.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-3">
                 {customPerks.map((cp, i) => (
-                  <Badge key={i} className="bg-purple-50 dark:bg-purple-500/15 text-purple-600 dark:text-purple-300 border-purple-200 dark:border-purple-500/30 gap-1">
+                  <Badge
+                    key={i}
+                    className="bg-purple-50 dark:bg-purple-500/15 text-purple-600 dark:text-purple-300 border-purple-200 dark:border-purple-500/30 gap-1"
+                  >
                     {cp.label}
                     <button onClick={() => removeCustomPerk(i)} className="ml-1 hover:text-red-500">
                       <X className="w-3 h-3" />
@@ -293,10 +427,17 @@ export default function ProfileEditClient({ employer }) {
                 className={`rounded-xl px-3 py-2 text-sm ${inputCls} border`}
               >
                 {PERK_CATEGORIES.map((cat) => (
-                  <option key={cat.id} value={cat.id}>{cat.label}</option>
+                  <option key={cat.id} value={cat.id}>
+                    {cat.label}
+                  </option>
                 ))}
               </select>
-              <Button variant="secondary" onClick={addCustomPerk} disabled={!newCustomLabel.trim()} className="gap-1">
+              <Button
+                variant="secondary"
+                onClick={addCustomPerk}
+                disabled={!newCustomLabel.trim()}
+                className="gap-1"
+              >
                 <Plus className="w-4 h-4" /> Add
               </Button>
             </div>
@@ -307,29 +448,50 @@ export default function ProfileEditClient({ employer }) {
       {/* Section Visibility */}
       <Card>
         <CardContent className="p-6 space-y-4">
-          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100"><Eye className="w-5 h-5 text-primary-500" /> Section Visibility</h2>
-          <p className="text-sm text-neutral-500">Control which sections appear on your public profile page.</p>
+          <h2 className="text-lg font-semibold flex items-center gap-2 text-neutral-900 dark:text-neutral-100">
+            <Eye className="w-5 h-5 text-primary-500" /> Section Visibility
+          </h2>
+          <p className="text-sm text-neutral-500">
+            Control which sections appear on your public profile page.
+          </p>
           <div className="space-y-3">
             {[
               { key: "about", label: "About", desc: "Company description and details" },
-              { key: "benefits", label: "Benefits & Perks", desc: "Your company benefits and perks" },
+              {
+                key: "benefits",
+                label: "Benefits & Perks",
+                desc: "Your company benefits and perks",
+              },
               { key: "jobs", label: "Open Positions", desc: "Active job postings" },
-              { key: "insights", label: "Hiring Insights", desc: "Salary ranges, top roles, hiring patterns" },
+              {
+                key: "insights",
+                label: "Hiring Insights",
+                desc: "Salary ranges, top roles, hiring patterns",
+              },
             ].map((section) => (
-              <div key={section.key} className="flex items-center justify-between p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+              <div
+                key={section.key}
+                className="flex items-center justify-between p-3 rounded-xl bg-neutral-50 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
+              >
                 <div>
-                  <div className="text-sm font-medium text-neutral-900 dark:text-neutral-100">{section.label}</div>
+                  <div className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                    {section.label}
+                  </div>
                   <div className="text-xs text-neutral-500">{section.desc}</div>
                 </div>
                 <button
                   onClick={() => toggleSection(section.key)}
                   className={`relative w-11 h-6 rounded-full transition-colors ${
-                    sectionVisibility[section.key] ? "bg-primary-500" : "bg-neutral-300 dark:bg-neutral-600"
+                    sectionVisibility[section.key]
+                      ? "bg-primary-500"
+                      : "bg-neutral-300 dark:bg-neutral-600"
                   }`}
                 >
-                  <div className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${
-                    sectionVisibility[section.key] ? "translate-x-5" : ""
-                  }`} />
+                  <div
+                    className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${
+                      sectionVisibility[section.key] ? "translate-x-5" : ""
+                    }`}
+                  />
                 </button>
               </div>
             ))}
@@ -340,7 +502,17 @@ export default function ProfileEditClient({ employer }) {
       {/* Save button (bottom) */}
       <div className="flex justify-end pb-8">
         <Button onClick={handleSave} disabled={saving} className="gap-2">
-          {saved ? <><Check className="w-4 h-4" /> Saved</> : saving ? "Saving..." : <><Save className="w-4 h-4" /> Save Changes</>}
+          {saved ? (
+            <>
+              <Check className="w-4 h-4" /> Saved
+            </>
+          ) : saving ? (
+            "Saving..."
+          ) : (
+            <>
+              <Save className="w-4 h-4" /> Save Changes
+            </>
+          )}
         </Button>
       </div>
     </div>

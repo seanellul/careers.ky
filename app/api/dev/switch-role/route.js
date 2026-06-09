@@ -19,15 +19,18 @@ export async function POST(request) {
 
   if (role === "employer") {
     const rows = await sql`SELECT id FROM employer_accounts ORDER BY id LIMIT 1`;
-    if (!rows.length) return NextResponse.json({ error: "No employer accounts exist" }, { status: 400 });
+    if (!rows.length)
+      return NextResponse.json({ error: "No employer accounts exist" }, { status: 400 });
     employerAccountId = rows[0].id;
   } else {
     // Use a dev candidate (not the real user)
-    const rows = await sql`SELECT id FROM candidates WHERE email LIKE 'dev-candidate-%' ORDER BY id LIMIT 1`;
+    const rows =
+      await sql`SELECT id FROM candidates WHERE email LIKE 'dev-candidate-%' ORDER BY id LIMIT 1`;
     if (!rows.length) {
       // Fallback to any candidate
       const fallback = await sql`SELECT id FROM candidates ORDER BY id LIMIT 1`;
-      if (!fallback.length) return NextResponse.json({ error: "No candidates exist" }, { status: 400 });
+      if (!fallback.length)
+        return NextResponse.json({ error: "No candidates exist" }, { status: 400 });
       candidateId = fallback[0].id;
     } else {
       candidateId = rows[0].id;

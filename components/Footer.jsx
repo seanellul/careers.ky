@@ -18,25 +18,55 @@ export default function Footer() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 sm:gap-x-12 gap-y-4 sm:gap-y-2">
             <div>
-              <div className="text-xs uppercase tracking-wide text-neutral-400 dark:text-neutral-500 mb-2">For Job Seekers</div>
+              <div className="text-xs uppercase tracking-wide text-neutral-400 dark:text-neutral-500 mb-2">
+                For Job Seekers
+              </div>
               <div className="flex flex-col gap-2">
-                <Link href="/careers?tab=career-tracks" className="hover:text-neutral-900 dark:hover:text-neutral-100">Career Tracks</Link>
-                <Link href="/careers?tab=jobs" className="hover:text-neutral-900 dark:hover:text-neutral-100">Live Search</Link>
-                <Link href="/profile/setup" className="hover:text-neutral-900 dark:hover:text-neutral-100">Create Profile</Link>
+                <Link
+                  href="/careers?tab=career-tracks"
+                  className="hover:text-neutral-900 dark:hover:text-neutral-100"
+                >
+                  Career Tracks
+                </Link>
+                <Link
+                  href="/careers?tab=jobs"
+                  className="hover:text-neutral-900 dark:hover:text-neutral-100"
+                >
+                  Live Search
+                </Link>
+                <Link
+                  href="/profile/setup"
+                  className="hover:text-neutral-900 dark:hover:text-neutral-100"
+                >
+                  Create Profile
+                </Link>
               </div>
             </div>
             <div>
-              <div className="text-xs uppercase tracking-wide text-neutral-400 dark:text-neutral-500 mb-2">For Employers</div>
+              <div className="text-xs uppercase tracking-wide text-neutral-400 dark:text-neutral-500 mb-2">
+                For Employers
+              </div>
               <div className="flex flex-col gap-2">
-                <Link href="/employers" className="hover:text-neutral-900 dark:hover:text-neutral-100">Employer Directory</Link>
-                <Link href="/talent" className="hover:text-neutral-900 dark:hover:text-neutral-100">Search Talent</Link>
+                <Link
+                  href="/employers"
+                  className="hover:text-neutral-900 dark:hover:text-neutral-100"
+                >
+                  Employer Directory
+                </Link>
+                <Link href="/talent" className="hover:text-neutral-900 dark:hover:text-neutral-100">
+                  Search Talent
+                </Link>
               </div>
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
-            <Link href="/about" className="hover:text-neutral-900 dark:hover:text-neutral-100">About</Link>
-            <a href="#faq" className="hover:text-neutral-900 dark:hover:text-neutral-100">FAQ</a>
+            <Link href="/about" className="hover:text-neutral-900 dark:hover:text-neutral-100">
+              About
+            </Link>
+            <a href="#faq" className="hover:text-neutral-900 dark:hover:text-neutral-100">
+              FAQ
+            </a>
           </div>
         </div>
         <div className="mt-6 pt-6 border-t border-neutral-200 dark:border-neutral-800 text-xs text-center md:text-left">
@@ -46,24 +76,49 @@ export default function Footer() {
         </div>
         <div className="mt-4 pt-4 border-t border-neutral-200 dark:border-neutral-800 text-xs text-center text-neutral-400 dark:text-neutral-500">
           Built by{" "}
-          <a href="https://seanellul.com" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
+          <a
+            href="https://seanellul.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+          >
             Sean Ellul
           </a>
           <span className="mx-2">·</span>
           Also:{" "}
-          <a href="https://legislation.ky" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
+          <a
+            href="https://legislation.ky"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+          >
             Legislation.ky
           </a>
           <span className="mx-1">|</span>
-          <a href="https://constitution.ky" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
+          <a
+            href="https://constitution.ky"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+          >
             Constitution.ky
           </a>
           <span className="mx-1">|</span>
-          <a href="https://cheap.ky" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
+          <a
+            href="https://cheap.ky"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+          >
             Cheap.ky
           </a>
           <span className="mx-1">|</span>
-          <a href="https://caybooks.com" target="_blank" rel="noopener noreferrer" className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors">
+          <a
+            href="https://caybooks.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+          >
             CayBooks
           </a>
         </div>

@@ -17,9 +17,15 @@ function parseCSV(text) {
   let row = [];
   let inQuotes = false;
 
-  const pushCell = () => { row.push(cell); cell = ""; };
+  const pushCell = () => {
+    row.push(cell);
+    cell = "";
+  };
   const pushRow = () => {
-    if (row.length === 1 && row[0] === "") { row = []; return; }
+    if (row.length === 1 && row[0] === "") {
+      row = [];
+      return;
+    }
     rows.push(row);
     row = [];
   };
@@ -28,17 +34,30 @@ function parseCSV(text) {
     const ch = text[i++];
     if (inQuotes) {
       if (ch === '"') {
-        if (text[i] === '"') { cell += '"'; i++; }
-        else { inQuotes = false; }
+        if (text[i] === '"') {
+          cell += '"';
+          i++;
+        } else {
+          inQuotes = false;
+        }
       } else {
         cell += ch;
       }
     } else {
-      if (ch === '"') { inQuotes = true; }
-      else if (ch === ',') { pushCell(); }
-      else if (ch === '\n') { pushCell(); pushRow(); }
-      else if (ch === '\r') { pushCell(); pushRow(); if (text[i] === '\n') i++; }
-      else { cell += ch; }
+      if (ch === '"') {
+        inQuotes = true;
+      } else if (ch === ",") {
+        pushCell();
+      } else if (ch === "\n") {
+        pushCell();
+        pushRow();
+      } else if (ch === "\r") {
+        pushCell();
+        pushRow();
+        if (text[i] === "\n") i++;
+      } else {
+        cell += ch;
+      }
     }
   }
   pushCell();
@@ -46,7 +65,7 @@ function parseCSV(text) {
 
   if (!rows.length) return { headers: [], rows: [] };
   const headerRow = rows[0];
-  for (let h of headerRow) headers.push(String(h || '').trim());
+  for (let h of headerRow) headers.push(String(h || "").trim());
   const out = [];
   for (let r = 1; r < rows.length; r++) {
     const record = {};
@@ -70,7 +89,20 @@ function parseDateDMY(dateStr) {
   const match = dateStr.match(/^(\d{1,2})-([A-Za-z]{3})-(\d{2})$/);
   if (match) {
     const [_, day, monthStr, year] = match;
-    const monthMap = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 };
+    const monthMap = {
+      jan: 0,
+      feb: 1,
+      mar: 2,
+      apr: 3,
+      may: 4,
+      jun: 5,
+      jul: 6,
+      aug: 7,
+      sep: 8,
+      oct: 9,
+      nov: 10,
+      dec: 11,
+    };
     const month = monthMap[monthStr.toLowerCase()];
     if (month === undefined) return null;
     return new Date(2000 + parseInt(year), month, parseInt(day));

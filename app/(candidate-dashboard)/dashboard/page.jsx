@@ -23,17 +23,25 @@ export default async function CandidateDashboardPage() {
   const session = await getSession();
   if (!session?.candidateId) redirect("/");
 
-  const [candidate, interests, skills, introductions, jobInterests, alerts, notifications, unreadCount] =
-    await Promise.all([
-      getCandidateById(session.candidateId),
-      getCandidateInterests(session.candidateId),
-      getCandidateSkills(session.candidateId),
-      getIntroductionsForCandidate(session.candidateId),
-      getJobInterestsForCandidate(session.candidateId),
-      getMatchAlerts(session.candidateId),
-      getNotifications("candidate", session.candidateId, 5),
-      getUnreadCount("candidate", session.candidateId),
-    ]);
+  const [
+    candidate,
+    interests,
+    skills,
+    introductions,
+    jobInterests,
+    alerts,
+    notifications,
+    unreadCount,
+  ] = await Promise.all([
+    getCandidateById(session.candidateId),
+    getCandidateInterests(session.candidateId),
+    getCandidateSkills(session.candidateId),
+    getIntroductionsForCandidate(session.candidateId),
+    getJobInterestsForCandidate(session.candidateId),
+    getMatchAlerts(session.candidateId),
+    getNotifications("candidate", session.candidateId, 5),
+    getUnreadCount("candidate", session.candidateId),
+  ]);
 
   if (!candidate) redirect("/");
 

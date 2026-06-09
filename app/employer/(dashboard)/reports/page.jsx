@@ -29,10 +29,14 @@ export default async function ReportsPage() {
 
   const countMap = {};
   for (const row of introCounts) {
-    countMap[row.job_id] = { total: Number(row.total), responded: Number(row.responded), hired: Number(row.hired) };
+    countMap[row.job_id] = {
+      total: Number(row.total),
+      responded: Number(row.responded),
+      hired: Number(row.hired),
+    };
   }
 
-  const postingsWithCounts = postings.map(p => ({
+  const postingsWithCounts = postings.map((p) => ({
     ...p,
     introCount: countMap[p.cJobId]?.total || 0,
     respondedCount: countMap[p.cJobId]?.responded || 0,

@@ -11,9 +11,7 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
 
   const skillIdsParam = searchParams.get("skillIds");
-  const skillIds = skillIdsParam
-    ? skillIdsParam.split(",").map(Number).filter(Boolean)
-    : [];
+  const skillIds = skillIdsParam ? skillIdsParam.split(",").map(Number).filter(Boolean) : [];
 
   const params = {
     ciscoCode: searchParams.get("ciscoCode") || undefined,

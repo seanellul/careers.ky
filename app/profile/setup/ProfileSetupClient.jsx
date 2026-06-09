@@ -8,7 +8,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
-  ChevronRight, ChevronLeft, User, Shield, Eye, Star, Search, X, CheckCircle2, Sparkles,
+  ChevronRight,
+  ChevronLeft,
+  User,
+  Shield,
+  Eye,
+  Star,
+  Search,
+  X,
+  CheckCircle2,
+  Sparkles,
 } from "lucide-react";
 import t from "@/lib/theme";
 
@@ -33,16 +42,22 @@ export default function ProfileSetupClient({ candidate }) {
 
   // Search interests
   useEffect(() => {
-    if (!interestQuery.trim()) { setInterestSuggestions([]); return; }
+    if (!interestQuery.trim()) {
+      setInterestSuggestions([]);
+      return;
+    }
     const ctrl = new AbortController();
     fetch(`/api/search?q=${encodeURIComponent(interestQuery)}&limit=8`, { signal: ctrl.signal })
-      .then(r => r.json())
-      .then(d => {
-        const seen = new Set(selectedInterests.map(i => i.ciscoCode));
+      .then((r) => r.json())
+      .then((d) => {
+        const seen = new Set(selectedInterests.map((i) => i.ciscoCode));
         const unique = [];
-        for (const s of (d.suggestions || [])) {
+        for (const s of d.suggestions || []) {
           const code = s.ciscoUnit?.id;
-          if (code && !seen.has(code)) { seen.add(code); unique.push(s); }
+          if (code && !seen.has(code)) {
+            seen.add(code);
+            unique.push(s);
+          }
         }
         setInterestSuggestions(unique);
       })
@@ -52,9 +67,12 @@ export default function ProfileSetupClient({ candidate }) {
 
   const addInterest = (suggestion) => {
     const code = suggestion.ciscoUnit?.id;
-    if (!code || selectedInterests.some(i => i.ciscoCode === code)) return;
+    if (!code || selectedInterests.some((i) => i.ciscoCode === code)) return;
     if (selectedInterests.length >= 3) return;
-    setSelectedInterests([...selectedInterests, { ciscoCode: code, title: suggestion.ciscoUnit.title }]);
+    setSelectedInterests([
+      ...selectedInterests,
+      { ciscoCode: code, title: suggestion.ciscoUnit.title },
+    ]);
     setInterestQuery("");
     setInterestSuggestions([]);
   };
@@ -83,7 +101,7 @@ export default function ProfileSetupClient({ candidate }) {
           isCaymanian: form.isCaymanian,
           headline: form.headline,
           isDiscoverable: form.isDiscoverable,
-          ciscoCodes: selectedInterests.map(i => i.ciscoCode),
+          ciscoCodes: selectedInterests.map((i) => i.ciscoCode),
         }),
       });
       if (res.ok) {
@@ -92,7 +110,9 @@ export default function ProfileSetupClient({ candidate }) {
           is_discoverable: form.isDiscoverable,
           interests_count: selectedInterests.length,
         });
-        try { localStorage.removeItem("ck_onboarding"); } catch {}
+        try {
+          localStorage.removeItem("ck_onboarding");
+        } catch {}
         // Check for stored redirect from auth flow
         try {
           const redirect = localStorage.getItem("ck_auth_redirect");
@@ -112,21 +132,34 @@ export default function ProfileSetupClient({ candidate }) {
 
   return (
     <div className={`${t.page} w-full`}>
-      <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={t.pageGradientStyle} />
+      <div
+        id="bg-gradient"
+        aria-hidden
+        className="fixed inset-0 -z-10 bg-[length:200%_200%]"
+        style={t.pageGradientStyle}
+      />
 
       <div className="mx-auto max-w-xl px-4 sm:px-6 py-12">
         {/* Progress */}
         <div className="flex items-center gap-2 mb-8">
           {STEPS.map((s, i) => (
             <div key={s} className="flex items-center gap-2 flex-1">
-              <div className={`w-8 h-8 rounded-full grid place-items-center text-sm font-medium flex-shrink-0 ${i <= step ? "bg-primary-50 dark:bg-primary-500/150 text-white" : "bg-neutral-100 dark:bg-neutral-800 text-neutral-500"}`}>
+              <div
+                className={`w-8 h-8 rounded-full grid place-items-center text-sm font-medium flex-shrink-0 ${i <= step ? "bg-primary-50 dark:bg-primary-500/150 text-white" : "bg-neutral-100 dark:bg-neutral-800 text-neutral-500"}`}
+              >
                 {i < step ? <CheckCircle2 className="w-4 h-4" /> : i + 1}
               </div>
-              {i < STEPS.length - 1 && <div className={`h-px flex-1 ${i < step ? "bg-primary-50 dark:bg-primary-500/150" : "bg-neutral-100 dark:bg-neutral-800"}`} />}
+              {i < STEPS.length - 1 && (
+                <div
+                  className={`h-px flex-1 ${i < step ? "bg-primary-50 dark:bg-primary-500/150" : "bg-neutral-100 dark:bg-neutral-800"}`}
+                />
+              )}
             </div>
           ))}
         </div>
-        <div className="text-xs text-neutral-500 mb-6">Step {step + 1} of {STEPS.length} — {STEPS[step]}</div>
+        <div className="text-xs text-neutral-500 mb-6">
+          Step {step + 1} of {STEPS.length} — {STEPS[step]}
+        </div>
 
         {/* Step 0: About You */}
         {step === 0 && (
@@ -139,7 +172,9 @@ export default function ProfileSetupClient({ candidate }) {
                 <h2 className="text-2xl font-semibold">About You</h2>
               </div>
               <div>
-                <label className="text-sm font-medium mb-2 block">Full Name <span className="text-red-500">*</span></label>
+                <label className="text-sm font-medium mb-2 block">
+                  Full Name <span className="text-red-500">*</span>
+                </label>
                 <Input
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -149,7 +184,9 @@ export default function ProfileSetupClient({ candidate }) {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium mb-2 block">Headline <span className="text-neutral-500 font-normal">(optional)</span></label>
+                <label className="text-sm font-medium mb-2 block">
+                  Headline <span className="text-neutral-500 font-normal">(optional)</span>
+                </label>
                 <Input
                   value={form.headline}
                   onChange={(e) => setForm({ ...form, headline: e.target.value.slice(0, 200) })}
@@ -157,7 +194,9 @@ export default function ProfileSetupClient({ candidate }) {
                   className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
                   maxLength={200}
                 />
-                <div className="text-xs text-neutral-500 mt-1">A short tagline visible on your profile</div>
+                <div className="text-xs text-neutral-500 mt-1">
+                  A short tagline visible on your profile
+                </div>
               </div>
               <label className="flex items-center gap-3 p-4 rounded-xl bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 cursor-pointer hover:border-primary-200 dark:hover:border-primary-500/30 transition">
                 <input
@@ -167,11 +206,19 @@ export default function ProfileSetupClient({ candidate }) {
                   className="rounded w-4 h-4 flex-shrink-0"
                 />
                 <div>
-                  <div className="flex items-center gap-2 font-medium"><Shield className="w-4 h-4 text-primary-500" /> I am Caymanian</div>
-                  <div className="text-xs text-neutral-500 mt-1">Helps employers meet local hiring requirements</div>
+                  <div className="flex items-center gap-2 font-medium">
+                    <Shield className="w-4 h-4 text-primary-500" /> I am Caymanian
+                  </div>
+                  <div className="text-xs text-neutral-500 mt-1">
+                    Helps employers meet local hiring requirements
+                  </div>
                 </div>
               </label>
-              <Button onClick={() => setStep(1)} disabled={!form.name.trim()} className="gap-2 w-full">
+              <Button
+                onClick={() => setStep(1)}
+                disabled={!form.name.trim()}
+                className="gap-2 w-full"
+              >
                 Continue <ChevronRight className="w-4 h-4" />
               </Button>
             </CardContent>
@@ -220,13 +267,22 @@ export default function ProfileSetupClient({ candidate }) {
 
               {selectedInterests.length > 0 && (
                 <div>
-                  <div className="text-sm text-neutral-500 mb-2">Selected ({selectedInterests.length}/3)</div>
+                  <div className="text-sm text-neutral-500 mb-2">
+                    Selected ({selectedInterests.length}/3)
+                  </div>
                   <div className="flex flex-wrap gap-2">
-                    {selectedInterests.map(i => (
-                      <Badge key={i.ciscoCode} className="bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30 pr-1 flex items-center gap-1 py-1">
+                    {selectedInterests.map((i) => (
+                      <Badge
+                        key={i.ciscoCode}
+                        className="bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30 pr-1 flex items-center gap-1 py-1"
+                      >
                         {i.title}
                         <button
-                          onClick={() => setSelectedInterests(selectedInterests.filter(x => x.ciscoCode !== i.ciscoCode))}
+                          onClick={() =>
+                            setSelectedInterests(
+                              selectedInterests.filter((x) => x.ciscoCode !== i.ciscoCode)
+                            )
+                          }
                           className="ml-1 hover:text-red-500 p-0.5"
                         >
                           <X className="w-3 h-3" />
@@ -260,7 +316,8 @@ export default function ProfileSetupClient({ candidate }) {
                 <h2 className="text-2xl font-semibold mb-2">You're all set!</h2>
                 <p className="text-neutral-600 dark:text-neutral-400 text-sm max-w-sm mx-auto">
                   Your profile is ready. Employers can now find you when searching for local talent.
-                  You can add more details — education, experience, skills — from your dashboard anytime.
+                  You can add more details — education, experience, skills — from your dashboard
+                  anytime.
                 </p>
               </div>
 
@@ -268,8 +325,11 @@ export default function ProfileSetupClient({ candidate }) {
                 <div className="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl p-4 text-left">
                   <div className="text-sm text-neutral-500 mb-2">Your career interests</div>
                   <div className="flex flex-wrap gap-2">
-                    {selectedInterests.map(i => (
-                      <Badge key={i.ciscoCode} className="bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30">
+                    {selectedInterests.map((i) => (
+                      <Badge
+                        key={i.ciscoCode}
+                        className="bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30"
+                      >
                         {i.title}
                       </Badge>
                     ))}
@@ -285,8 +345,13 @@ export default function ProfileSetupClient({ candidate }) {
                   className="rounded w-4 h-4 mt-0.5 flex-shrink-0"
                 />
                 <div>
-                  <div className="flex items-center gap-2 font-medium text-emerald-600"><Eye className="w-4 h-4" /> Make me discoverable</div>
-                  <div className="text-xs text-neutral-500 mt-1">Employers can find your anonymised profile and request an introduction. Your name and contact details stay hidden until you accept.</div>
+                  <div className="flex items-center gap-2 font-medium text-emerald-600">
+                    <Eye className="w-4 h-4" /> Make me discoverable
+                  </div>
+                  <div className="text-xs text-neutral-500 mt-1">
+                    Employers can find your anonymised profile and request an introduction. Your
+                    name and contact details stay hidden until you accept.
+                  </div>
                 </div>
               </label>
 
@@ -294,7 +359,11 @@ export default function ProfileSetupClient({ candidate }) {
                 <Button variant="secondary" onClick={() => setStep(1)} className="gap-2">
                   <ChevronLeft className="w-4 h-4" /> Back
                 </Button>
-                <Button onClick={handleSave} disabled={saving || !form.name.trim()} className="gap-2 flex-1">
+                <Button
+                  onClick={handleSave}
+                  disabled={saving || !form.name.trim()}
+                  className="gap-2 flex-1"
+                >
                   {saving ? "Saving..." : "Go to Dashboard"}
                 </Button>
               </div>

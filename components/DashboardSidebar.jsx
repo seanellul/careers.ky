@@ -4,8 +4,17 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, Building2, Users, List, FileText, MessageSquare,
-  BarChart3, ExternalLink, Menu, X, Users2,
+  LayoutDashboard,
+  Building2,
+  Users,
+  List,
+  FileText,
+  MessageSquare,
+  BarChart3,
+  ExternalLink,
+  Menu,
+  X,
+  Users2,
 } from "lucide-react";
 
 export default function DashboardSidebar({ employerSlug, accountRole }) {
@@ -18,7 +27,7 @@ export default function DashboardSidebar({ employerSlug, accountRole }) {
     { href: "/employer/talent", label: "Talent Search", icon: Users },
     { href: "/employer/shortlists", label: "Shortlists", icon: List },
     { href: "/employer/reports", label: "Reports", icon: FileText },
-    ...((accountRole === "owner" || accountRole === "admin")
+    ...(accountRole === "owner" || accountRole === "admin"
       ? [{ href: "/employer/team", label: "Team", icon: Users2 }]
       : []),
     { href: null, label: "Messaging", icon: MessageSquare, comingSoon: true },
@@ -103,11 +112,19 @@ export default function DashboardSidebar({ employerSlug, accountRole }) {
       {/* Mobile overlay */}
       {mobileOpen && (
         <div className="md:hidden fixed inset-0 z-40">
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setMobileOpen(false)}
+          />
           <div className="absolute left-0 top-0 bottom-0 w-56 sm:w-64 bg-white dark:bg-neutral-900 border-r border-neutral-200 dark:border-neutral-700 p-4 overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">Navigation</span>
-              <button onClick={() => setMobileOpen(false)} className="p-1 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800">
+              <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                Navigation
+              </span>
+              <button
+                onClick={() => setMobileOpen(false)}
+                className="p-1 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800"
+              >
                 <X className="w-4 h-4 text-neutral-400" />
               </button>
             </div>
@@ -118,9 +135,7 @@ export default function DashboardSidebar({ employerSlug, accountRole }) {
 
       {/* Desktop sidebar */}
       <aside className="hidden md:block w-60 shrink-0">
-        <div className="sticky top-20 py-6 pr-6">
-          {navContent}
-        </div>
+        <div className="sticky top-20 py-6 pr-6">{navContent}</div>
       </aside>
     </>
   );

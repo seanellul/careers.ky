@@ -11,7 +11,10 @@ export async function POST(request) {
 
   const role = session.employerRole;
   if (role !== "owner" && role !== "admin") {
-    return NextResponse.json({ error: "Only owners and admins can invite members" }, { status: 403 });
+    return NextResponse.json(
+      { error: "Only owners and admins can invite members" },
+      { status: 403 }
+    );
   }
 
   const { email, role: inviteRole } = await request.json();
@@ -38,7 +41,10 @@ export async function POST(request) {
       AND accepted_at IS NULL AND expires_at > NOW()
   `;
   if (pendingInvite.length) {
-    return NextResponse.json({ error: "An invitation is already pending for this email" }, { status: 400 });
+    return NextResponse.json(
+      { error: "An invitation is already pending for this email" },
+      { status: 400 }
+    );
   }
 
   // Create invitation

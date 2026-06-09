@@ -17,90 +17,178 @@ export default function EmployerListClient({ employers, embedded = false }) {
   const pageSize = 24;
 
   const filtered = useMemo(() => {
-    let result = employers.filter(e => {
+    let result = employers.filter((e) => {
       if (q && !e.name.toLowerCase().includes(q.toLowerCase())) return false;
       if (showActive && Number(e.active_postings) === 0) return false;
       return true;
     });
     if (sortBy === "alpha") result = [...result].sort((a, b) => a.name.localeCompare(b.name));
-    else if (sortBy === "salary") result = [...result].sort((a, b) => Number(b.avg_salary || 0) - Number(a.avg_salary || 0));
-    else result = [...result].sort((a, b) => Number(b.active_postings || 0) - Number(a.active_postings || 0));
+    else if (sortBy === "salary")
+      result = [...result].sort((a, b) => Number(b.avg_salary || 0) - Number(a.avg_salary || 0));
+    else
+      result = [...result].sort(
+        (a, b) => Number(b.active_postings || 0) - Number(a.active_postings || 0)
+      );
     return result;
   }, [employers, q, showActive, sortBy]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const view = filtered.slice((page - 1) * pageSize, page * pageSize);
 
-  const totalActive = employers.filter(e => Number(e.active_postings) > 0).length;
+  const totalActive = employers.filter((e) => Number(e.active_postings) > 0).length;
 
   const content = (
     <div className={embedded ? "" : "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 md:py-12"}>
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-4">
-            Cayman <span className="text-primary-500">Employers</span>
-          </h1>
-          <p className="text-neutral-600 dark:text-neutral-400 text-lg max-w-3xl">
-            Browse {employers.length} employers across the Cayman Islands. {totalActive} are currently hiring.
-          </p>
-        </div>
+      <div className="mb-8">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight mb-4">
+          Cayman <span className="text-primary-500">Employers</span>
+        </h1>
+        <p className="text-neutral-600 dark:text-neutral-400 text-lg max-w-3xl">
+          Browse {employers.length} employers across the Cayman Islands. {totalActive} are currently
+          hiring.
+        </p>
+      </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-          <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-primary-50 dark:bg-primary-500/15 grid place-items-center"><Building2 className="w-5 h-5 text-primary-500" /></div><div><div className="text-2xl md:text-3xl font-semibold">{employers.length}</div><div className="text-xs md:text-sm text-neutral-500">Total Employers</div></div></div></CardContent></Card>
-          <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-primary-50 dark:bg-primary-500/15 grid place-items-center"><TrendingUp className="w-5 h-5 text-primary-500" /></div><div><div className="text-2xl md:text-3xl font-semibold">{totalActive}</div><div className="text-xs md:text-sm text-neutral-500">Currently Hiring</div></div></div></CardContent></Card>
-          <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 col-span-2 md:col-span-1"><CardContent className="p-4 md:p-6"><div className="flex items-center gap-3"><div className="h-10 w-10 rounded-xl bg-primary-50 dark:bg-primary-500/15 grid place-items-center"><DollarSign className="w-5 h-5 text-primary-500" /></div><div><div className="text-2xl md:text-3xl font-semibold">{employers.reduce((a, e) => a + Number(e.total_postings), 0).toLocaleString()}</div><div className="text-xs md:text-sm text-neutral-500">Total Postings</div></div></div></CardContent></Card>
-        </div>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+        <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
+          <CardContent className="p-4 md:p-6">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-primary-50 dark:bg-primary-500/15 grid place-items-center">
+                <Building2 className="w-5 h-5 text-primary-500" />
+              </div>
+              <div>
+                <div className="text-2xl md:text-3xl font-semibold">{employers.length}</div>
+                <div className="text-xs md:text-sm text-neutral-500">Total Employers</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
+          <CardContent className="p-4 md:p-6">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-primary-50 dark:bg-primary-500/15 grid place-items-center">
+                <TrendingUp className="w-5 h-5 text-primary-500" />
+              </div>
+              <div>
+                <div className="text-2xl md:text-3xl font-semibold">{totalActive}</div>
+                <div className="text-xs md:text-sm text-neutral-500">Currently Hiring</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 col-span-2 md:col-span-1">
+          <CardContent className="p-4 md:p-6">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-primary-50 dark:bg-primary-500/15 grid place-items-center">
+                <DollarSign className="w-5 h-5 text-primary-500" />
+              </div>
+              <div>
+                <div className="text-2xl md:text-3xl font-semibold">
+                  {employers.reduce((a, e) => a + Number(e.total_postings), 0).toLocaleString()}
+                </div>
+                <div className="text-xs md:text-sm text-neutral-500">Total Postings</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 mb-8">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
-            <Input value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} placeholder="Search employers..." className="pl-10 bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 h-12 text-base" />
-          </div>
-          <select value={sortBy} onChange={(e) => { setSortBy(e.target.value); setPage(1); }} className="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 h-12 min-h-[44px]">
-            <option value="active">Most Active</option>
-            <option value="alpha">Alphabetical</option>
-            <option value="salary">Highest Avg Salary</option>
-          </select>
-          <Button variant={showActive ? "default" : "secondary"} onClick={() => { setShowActive(!showActive); setPage(1); }} className="gap-2 h-12">
-            <TrendingUp className="w-4 h-4" /> {showActive ? "Show All" : "Currently Hiring"}
+      <div className="flex flex-col sm:flex-row gap-3 mb-8">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+          <Input
+            value={q}
+            onChange={(e) => {
+              setQ(e.target.value);
+              setPage(1);
+            }}
+            placeholder="Search employers..."
+            className="pl-10 bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 h-12 text-base"
+          />
+        </div>
+        <select
+          value={sortBy}
+          onChange={(e) => {
+            setSortBy(e.target.value);
+            setPage(1);
+          }}
+          className="bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 h-12 min-h-[44px]"
+        >
+          <option value="active">Most Active</option>
+          <option value="alpha">Alphabetical</option>
+          <option value="salary">Highest Avg Salary</option>
+        </select>
+        <Button
+          variant={showActive ? "default" : "secondary"}
+          onClick={() => {
+            setShowActive(!showActive);
+            setPage(1);
+          }}
+          className="gap-2 h-12"
+        >
+          <TrendingUp className="w-4 h-4" /> {showActive ? "Show All" : "Currently Hiring"}
+        </Button>
+      </div>
+
+      <div className="mb-4 text-sm text-neutral-600 dark:text-neutral-400">
+        Showing {Math.min((page - 1) * pageSize + 1, filtered.length)}–
+        {Math.min(page * pageSize, filtered.length)} of {filtered.length} employers
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+        {view.map((e) => (
+          <Link key={e.slug} href={`/employer/${e.slug}`}>
+            <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 hover:border-primary-300 transition h-full cursor-pointer">
+              <CardContent className="p-5 h-full flex flex-col">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-lg bg-neutral-100 dark:bg-neutral-800 grid place-items-center shrink-0">
+                    <Building2 className="w-5 h-5 text-neutral-500" />
+                  </div>
+                  <h3 className="font-medium leading-tight line-clamp-2">{e.name}</h3>
+                </div>
+                <div className="space-y-1 text-sm text-neutral-500 mb-3">
+                  <div>{Number(e.total_postings)} total postings</div>
+                  {Number(e.active_postings) > 0 && (
+                    <div className="text-primary-500">{Number(e.active_postings)} active now</div>
+                  )}
+                  {Number(e.avg_salary) > 0 && (
+                    <div>Avg: CI$ {Math.round(Number(e.avg_salary)).toLocaleString()}</div>
+                  )}
+                </div>
+                <div className="mt-auto flex gap-1">
+                  {Number(e.active_postings) > 0 && (
+                    <Badge className="bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30 text-xs">
+                      Hiring
+                    </Badge>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
+      </div>
+
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="text-sm text-neutral-600 dark:text-neutral-400">
+          Page {page} of {totalPages}
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant="secondary"
+            disabled={page === 1}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="secondary"
+            disabled={page === totalPages}
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+          >
+            Next
           </Button>
         </div>
-
-        <div className="mb-4 text-sm text-neutral-600 dark:text-neutral-400">
-          Showing {Math.min((page - 1) * pageSize + 1, filtered.length)}–{Math.min(page * pageSize, filtered.length)} of {filtered.length} employers
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
-          {view.map((e) => (
-            <Link key={e.slug} href={`/employer/${e.slug}`}>
-              <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 hover:border-primary-300 transition h-full cursor-pointer">
-                <CardContent className="p-5 h-full flex flex-col">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-lg bg-neutral-100 dark:bg-neutral-800 grid place-items-center shrink-0">
-                      <Building2 className="w-5 h-5 text-neutral-500" />
-                    </div>
-                    <h3 className="font-medium leading-tight line-clamp-2">{e.name}</h3>
-                  </div>
-                  <div className="space-y-1 text-sm text-neutral-500 mb-3">
-                    <div>{Number(e.total_postings)} total postings</div>
-                    {Number(e.active_postings) > 0 && <div className="text-primary-500">{Number(e.active_postings)} active now</div>}
-                    {Number(e.avg_salary) > 0 && <div>Avg: CI$ {Math.round(Number(e.avg_salary)).toLocaleString()}</div>}
-                  </div>
-                  <div className="mt-auto flex gap-1">
-                    {Number(e.active_postings) > 0 && <Badge className="bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30 text-xs">Hiring</Badge>}
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
-
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-sm text-neutral-600 dark:text-neutral-400">Page {page} of {totalPages}</div>
-          <div className="flex gap-2">
-            <Button variant="secondary" disabled={page === 1} onClick={() => setPage(p => Math.max(1, p - 1))}>Previous</Button>
-            <Button variant="secondary" disabled={page === totalPages} onClick={() => setPage(p => Math.min(totalPages, p + 1))}>Next</Button>
-          </div>
-        </div>
+      </div>
     </div>
   );
 
@@ -108,7 +196,12 @@ export default function EmployerListClient({ employers, embedded = false }) {
 
   return (
     <div className={`${t.page} w-full`}>
-      <div id="bg-gradient" aria-hidden className="fixed inset-0 -z-10 bg-[length:200%_200%]" style={t.pageGradientStyle} />
+      <div
+        id="bg-gradient"
+        aria-hidden
+        className="fixed inset-0 -z-10 bg-[length:200%_200%]"
+        style={t.pageGradientStyle}
+      />
       {content}
     </div>
   );

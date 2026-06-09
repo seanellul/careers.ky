@@ -62,11 +62,7 @@ export async function GET(req) {
           return "";
         }
         const strValue = String(value).replace(/"/g, '""');
-        if (
-          strValue.includes(",") ||
-          strValue.includes('"') ||
-          strValue.includes("\n")
-        ) {
+        if (strValue.includes(",") || strValue.includes('"') || strValue.includes("\n")) {
           return `"${strValue}"`;
         }
         return strValue;

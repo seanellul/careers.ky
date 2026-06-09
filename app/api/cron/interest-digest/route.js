@@ -40,7 +40,9 @@ export async function GET(request) {
     const employerSections = Object.entries(byEmployer)
       .sort((a, b) => b[1].length - a[1].length)
       .map(([employer, rows]) => {
-        const candidateRows = rows.map(r => `
+        const candidateRows = rows
+          .map(
+            (r) => `
           <tr>
             <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">${r.candidate_name || "Anonymous"}</td>
             <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">${r.candidate_email}</td>
@@ -49,7 +51,9 @@ export async function GET(request) {
             <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">${r.message || "--"}</td>
             <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">${new Date(r.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</td>
           </tr>
-        `).join("");
+        `
+          )
+          .join("");
 
         return `
           <div style="margin-bottom: 32px;">
@@ -70,7 +74,8 @@ export async function GET(request) {
             </table>
           </div>
         `;
-      }).join("");
+      })
+      .join("");
 
     const html = `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px;">
@@ -98,7 +103,10 @@ export async function GET(request) {
     const adminEmail = process.env.ADMIN_EMAIL;
     if (!adminEmail) {
       console.error("[Interest Digest] ADMIN_EMAIL not set, skipping send.");
-      return NextResponse.json({ success: false, error: "ADMIN_EMAIL not configured" }, { status: 500 });
+      return NextResponse.json(
+        { success: false, error: "ADMIN_EMAIL not configured" },
+        { status: 500 }
+      );
     }
 
     const { Resend } = await import("resend");
@@ -112,10 +120,12 @@ export async function GET(request) {
     });
 
     // 5. Mark as notified
-    const ids = interests.map(i => i.id);
+    const ids = interests.map((i) => i.id);
     await sql`UPDATE job_interests SET notified_at = NOW() WHERE id = ANY(${ids})`;
 
-    console.log(`[Interest Digest] Sent digest: ${interests.length} interests across ${employerCount} employers.`);
+    console.log(
+      `[Interest Digest] Sent digest: ${interests.length} interests across ${employerCount} employers.`
+    );
 
     return NextResponse.json({
       success: true,

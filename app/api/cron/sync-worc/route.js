@@ -127,7 +127,9 @@ export async function GET(request) {
     revalidateTag("jobs");
     revalidateTag("employers");
 
-    console.log(`[WORC Sync] Complete. Synced: ${count}, Stale: ${staleResult.length}, Alerts: ${alertsProcessed}, EmployerAlerts: ${employerAlertsProcessed}`);
+    console.log(
+      `[WORC Sync] Complete. Synced: ${count}, Stale: ${staleResult.length}, Alerts: ${alertsProcessed}, EmployerAlerts: ${employerAlertsProcessed}`
+    );
 
     return NextResponse.json({
       success: true,
@@ -139,9 +141,6 @@ export async function GET(request) {
     });
   } catch (error) {
     console.error("[WORC Sync] Fatal error:", error.message);
-    return NextResponse.json(
-      { error: "Sync failed", message: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Sync failed", message: error.message }, { status: 500 });
   }
 }

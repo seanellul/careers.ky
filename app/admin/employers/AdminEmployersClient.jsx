@@ -7,10 +7,14 @@ function StatCard({ label, value, icon: Icon, accent }) {
   return (
     <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl p-5">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-medium uppercase tracking-wider text-neutral-500">{label}</span>
+        <span className="text-xs font-medium uppercase tracking-wider text-neutral-500">
+          {label}
+        </span>
         <Icon className={`w-4 h-4 ${accent ? "text-primary-500" : "text-neutral-600"}`} />
       </div>
-      <div className="text-2xl font-bold text-neutral-900 dark:text-white">{typeof value === "number" ? value.toLocaleString() : value}</div>
+      <div className="text-2xl font-bold text-neutral-900 dark:text-white">
+        {typeof value === "number" ? value.toLocaleString() : value}
+      </div>
     </div>
   );
 }
@@ -23,10 +27,11 @@ export default function AdminEmployersClient({ employers, stats }) {
   const filtered = useMemo(() => {
     if (!search) return employers;
     const q = search.toLowerCase();
-    return employers.filter(e =>
-      (e.name || "").toLowerCase().includes(q) ||
-      (e.admin_emails || []).some(email => email && email.toLowerCase().includes(q)) ||
-      (e.industry || "").toLowerCase().includes(q)
+    return employers.filter(
+      (e) =>
+        (e.name || "").toLowerCase().includes(q) ||
+        (e.admin_emails || []).some((email) => email && email.toLowerCase().includes(q)) ||
+        (e.industry || "").toLowerCase().includes(q)
     );
   }, [employers, search]);
 
@@ -40,7 +45,7 @@ export default function AdminEmployersClient({ employers, stats }) {
 
   function toggleSort(field) {
     if (sortField === field) {
-      setSortDir(d => d === "desc" ? "asc" : "desc");
+      setSortDir((d) => (d === "desc" ? "asc" : "desc"));
     } else {
       setSortField(field);
       setSortDir("desc");
@@ -62,7 +67,7 @@ export default function AdminEmployersClient({ employers, stats }) {
       <h1 className="text-2xl font-bold mb-6">Employers</h1>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-        {statCards.map(card => (
+        {statCards.map((card) => (
           <StatCard key={card.label} {...card} />
         ))}
       </div>
@@ -86,16 +91,28 @@ export default function AdminEmployersClient({ employers, stats }) {
                 <th className="text-left px-4 py-3 text-neutral-500 font-medium">Company</th>
                 <th className="text-left px-4 py-3 text-neutral-500 font-medium">Admin Email(s)</th>
                 <th className="text-left px-4 py-3 text-neutral-500 font-medium">Industry</th>
-                <th className="text-left px-4 py-3 text-neutral-500 font-medium cursor-pointer" onClick={() => toggleSort("job_count")}>
+                <th
+                  className="text-left px-4 py-3 text-neutral-500 font-medium cursor-pointer"
+                  onClick={() => toggleSort("job_count")}
+                >
                   Jobs{sortIndicator("job_count")}
                 </th>
-                <th className="text-left px-4 py-3 text-neutral-500 font-medium cursor-pointer" onClick={() => toggleSort("active_jobs")}>
+                <th
+                  className="text-left px-4 py-3 text-neutral-500 font-medium cursor-pointer"
+                  onClick={() => toggleSort("active_jobs")}
+                >
                   Active{sortIndicator("active_jobs")}
                 </th>
-                <th className="text-left px-4 py-3 text-neutral-500 font-medium cursor-pointer" onClick={() => toggleSort("interest_count")}>
+                <th
+                  className="text-left px-4 py-3 text-neutral-500 font-medium cursor-pointer"
+                  onClick={() => toggleSort("interest_count")}
+                >
                   Interests{sortIndicator("interest_count")}
                 </th>
-                <th className="text-left px-4 py-3 text-neutral-500 font-medium cursor-pointer" onClick={() => toggleSort("intro_count")}>
+                <th
+                  className="text-left px-4 py-3 text-neutral-500 font-medium cursor-pointer"
+                  onClick={() => toggleSort("intro_count")}
+                >
                   Intros{sortIndicator("intro_count")}
                 </th>
                 <th className="text-left px-4 py-3 text-neutral-500 font-medium">Created</th>
@@ -105,7 +122,10 @@ export default function AdminEmployersClient({ employers, stats }) {
               {sorted.map((e) => {
                 const emails = (e.admin_emails || []).filter(Boolean);
                 return (
-                  <tr key={e.id} className="border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800">
+                  <tr
+                    key={e.id}
+                    className="border-b border-neutral-200 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800"
+                  >
                     <td className="px-4 py-3">
                       <div className="font-medium text-neutral-900 dark:text-white">{e.name}</div>
                       {e.claimed && (
@@ -116,16 +136,26 @@ export default function AdminEmployersClient({ employers, stats }) {
                     </td>
                     <td className="px-4 py-3">
                       {emails.length > 0 ? (
-                        <span className="text-neutral-600 dark:text-neutral-500 text-xs">{emails.join(", ")}</span>
+                        <span className="text-neutral-600 dark:text-neutral-500 text-xs">
+                          {emails.join(", ")}
+                        </span>
                       ) : (
                         <span className="text-neutral-600 text-xs">No account</span>
                       )}
                     </td>
                     <td className="px-4 py-3 text-neutral-500 text-xs">{e.industry || "—"}</td>
-                    <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">{Number(e.job_count)}</td>
-                    <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">{Number(e.active_jobs)}</td>
-                    <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">{Number(e.interest_count)}</td>
-                    <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">{Number(e.intro_count)}</td>
+                    <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">
+                      {Number(e.job_count)}
+                    </td>
+                    <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">
+                      {Number(e.active_jobs)}
+                    </td>
+                    <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">
+                      {Number(e.interest_count)}
+                    </td>
+                    <td className="px-4 py-3 text-neutral-600 dark:text-neutral-400">
+                      {Number(e.intro_count)}
+                    </td>
                     <td className="px-4 py-3 text-neutral-500 text-xs">
                       {new Date(e.created_at).toISOString().slice(0, 10)}
                     </td>

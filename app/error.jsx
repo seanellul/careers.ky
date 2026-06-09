@@ -17,21 +17,18 @@ export default function Error({ error, reset }) {
               <AlertTriangle className="w-8 h-8 text-red-500" />
             </div>
             <h1 className="text-2xl font-semibold mb-2">Something went wrong</h1>
-            <p className="text-neutral-500 mb-6">
-              An unexpected error occurred. Please try again.
-            </p>
+            <p className="text-neutral-500 mb-6">An unexpected error occurred. Please try again.</p>
             <div className="flex gap-3 justify-center">
               <Button onClick={() => reset()} className="gap-2">
                 Try Again
               </Button>
-              <Button variant="secondary" onClick={() => window.location.href = "/"}>
+              <Button variant="secondary" onClick={() => (window.location.href = "/")}>
                 Go Home
               </Button>
             </div>
           </CardContent>
         </Card>
       </div>
-
     </div>
   );
 }

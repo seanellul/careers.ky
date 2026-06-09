@@ -22,7 +22,9 @@ export default function JobInterestsClient({ jobInterests }) {
           <CardContent className="p-12 text-center">
             <HeartHandshake className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-500" />
             <h3 className="text-lg font-medium mb-2">No job interests yet</h3>
-            <p className="text-neutral-500 mb-4">When you express interest in jobs, they&apos;ll appear here.</p>
+            <p className="text-neutral-500 mb-4">
+              When you express interest in jobs, they&apos;ll appear here.
+            </p>
             <Link href="/careers" className="text-primary-500 hover:underline">
               Browse Jobs
             </Link>
@@ -31,7 +33,10 @@ export default function JobInterestsClient({ jobInterests }) {
       ) : (
         <div className="space-y-3">
           {jobInterests.map((ji) => (
-            <Card key={ji.id} className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
+            <Card
+              key={ji.id}
+              className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
+            >
               <CardContent className="p-5">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-lg bg-purple-500/15 grid place-items-center shrink-0">
@@ -57,10 +62,17 @@ export default function JobInterestsClient({ jobInterests }) {
                     )}
                     <div className="flex items-center gap-3 mt-3 text-xs text-neutral-500">
                       <span>
-                        {new Date(ji.created_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                        {new Date(ji.created_at).toLocaleDateString("en-US", {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
                       </span>
                       {ji.job_id && (
-                        <Link href={`/jobs/${ji.job_id}`} className="text-primary-500 hover:underline flex items-center gap-1">
+                        <Link
+                          href={`/jobs/${ji.job_id}`}
+                          className="text-primary-500 hover:underline flex items-center gap-1"
+                        >
                           View Job <ExternalLink className="w-3 h-3" />
                         </Link>
                       )}
