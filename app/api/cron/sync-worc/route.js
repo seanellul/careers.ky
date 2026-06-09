@@ -94,6 +94,14 @@ export async function GET(request) {
         WHERE employer IS NOT NULL AND TRIM(employer) != ''
         ON CONFLICT (slug) DO NOTHING
       `;
+      // Link newly synced postings to their employer row
+      await sql`
+        UPDATE job_postings jp
+        SET employer_id = e.id
+        FROM employers e
+        WHERE jp.employer_id IS NULL
+          AND LOWER(TRIM(jp.employer)) = LOWER(e.name)
+      `;
     } catch (e) {
       console.error("Employer upsert error (non-fatal):", e.message);
     }

@@ -78,6 +78,25 @@ async function sync() {
     AND status = 'Active'
   `;
   console.log("Stale jobs marked as closed");
+
+  // Ensure employer rows exist and link new postings to them
+  await sql`
+    INSERT INTO employers (slug, name)
+    SELECT DISTINCT
+      LOWER(REGEXP_REPLACE(REGEXP_REPLACE(TRIM(employer), '[^a-zA-Z0-9\\s-]', '', 'g'), '\\s+', '-', 'g')),
+      TRIM(employer)
+    FROM job_postings
+    WHERE employer IS NOT NULL AND TRIM(employer) != ''
+    ON CONFLICT (slug) DO NOTHING
+  `;
+  await sql`
+    UPDATE job_postings jp
+    SET employer_id = e.id
+    FROM employers e
+    WHERE jp.employer_id IS NULL
+      AND LOWER(TRIM(jp.employer)) = LOWER(e.name)
+  `;
+  console.log("Employers linked");
 }
 
 sync().catch((err) => {

@@ -12,16 +12,11 @@ export async function GET(request, { params }) {
   const { jobId } = await params;
 
   try {
-    // Verify job belongs to this employer (name match)
+    // Verify job belongs to this employer
     const sql = getDb();
-    const employers = await sql`SELECT name FROM employers WHERE id = ${session.employerId}`;
-    if (!employers.length) {
-      return NextResponse.json({ error: "Employer not found" }, { status: 404 });
-    }
-
     const jobs = await sql`
       SELECT job_id FROM job_postings
-      WHERE job_id = ${jobId} AND LOWER(TRIM(employer)) = LOWER(${employers[0].name})
+      WHERE job_id = ${jobId} AND employer_id = ${session.employerId}
     `;
     if (!jobs.length) {
       return NextResponse.json({ error: "Job not found or not yours" }, { status: 404 });
