@@ -4,7 +4,7 @@ import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const dataDir = join(__dirname, "..", "_src_old", "data");
+const dataDir = join(__dirname, "data");
 
 // Simple CSV parser (matches the one in lib/csv.js)
 function parseCSV(text) {
