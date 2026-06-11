@@ -87,6 +87,21 @@ export default function AuthModal({ open, onClose, type = "candidate" }) {
             </svg>
             Continue with LinkedIn
           </a>
+          <a
+            href={`/api/auth/microsoft?type=${loginType}`}
+            onClick={() =>
+              posthog.capture("auth_method_chosen", { method: "microsoft", auth_type: loginType })
+            }
+            className="flex items-center justify-center gap-2 px-4 py-3 min-h-[48px] rounded-xl text-sm font-medium border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-100 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition"
+          >
+            <svg className="w-5 h-5" viewBox="0 0 24 24">
+              <rect x="1" y="1" width="10" height="10" fill="#F25022" />
+              <rect x="13" y="1" width="10" height="10" fill="#7FBA00" />
+              <rect x="1" y="13" width="10" height="10" fill="#00A4EF" />
+              <rect x="13" y="13" width="10" height="10" fill="#FFB900" />
+            </svg>
+            Continue with Microsoft
+          </a>
         </div>
 
         <p className="text-xs text-neutral-400 text-center mt-4">

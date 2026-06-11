@@ -221,6 +221,11 @@ export default function AdminVerificationsClient({
                     {statusBadge(req.status)}
                   </div>
                   <p className="text-sm text-neutral-500">{req.account_email}</p>
+                  {req.work_email && (
+                    <p className="text-xs text-emerald-600">
+                      Work email verified: {req.work_email}
+                    </p>
+                  )}
                 </div>
                 <div className="text-right shrink-0">
                   <p className="font-medium text-sm">{req.employer_name}</p>
