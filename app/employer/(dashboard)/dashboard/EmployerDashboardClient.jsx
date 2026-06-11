@@ -43,6 +43,7 @@ const STATUS_COLORS = {
 const STAGE_LABELS = {
   outreach: "Outreach",
   responded: "Responded",
+  shortlisted: "Shortlisted",
   interviewing: "Interviewing",
   offered: "Offered",
   hired: "Hired",
@@ -55,6 +56,8 @@ const STAGE_COLORS = {
     "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-700",
   responded:
     "bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30",
+  shortlisted:
+    "bg-purple-50 dark:bg-purple-500/15 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-500/30",
   interviewing:
     "bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30",
   offered:

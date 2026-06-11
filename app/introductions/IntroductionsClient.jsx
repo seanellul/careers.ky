@@ -34,6 +34,16 @@ const STATUS_ICONS = {
   declined: XCircle,
 };
 
+// Pipeline progress shown to candidates once an introduction is accepted.
+// outreach/responded are pre-pipeline; archived is employer housekeeping.
+const CANDIDATE_STAGE_LABELS = {
+  shortlisted: { label: "Shortlisted", cls: "bg-primary-50 text-primary-500 border-primary-200" },
+  interviewing: { label: "Interviewing", cls: "bg-purple-50 text-purple-600 border-purple-200" },
+  offered: { label: "Offer received", cls: "bg-amber-50 text-amber-600 border-amber-200" },
+  hired: { label: "Hired", cls: "bg-emerald-50 text-emerald-600 border-emerald-200" },
+  rejected: { label: "Closed", cls: "bg-neutral-100 text-neutral-500 border-neutral-200" },
+};
+
 function MessageThread({ introId }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -348,6 +358,11 @@ export default function IntroductionsClient({ introductions: initialIntros, embe
                           <StatusIcon className="w-3 h-3 mr-1" />
                           {intro.status}
                         </Badge>
+                        {intro.status === "accepted" && CANDIDATE_STAGE_LABELS[intro.stage] && (
+                          <Badge className={CANDIDATE_STAGE_LABELS[intro.stage].cls}>
+                            {CANDIDATE_STAGE_LABELS[intro.stage].label}
+                          </Badge>
+                        )}
                       </div>
                     </div>
 

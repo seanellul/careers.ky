@@ -19,6 +19,7 @@ import {
 const STAGE_LABELS = {
   outreach: "Outreach",
   responded: "Responded",
+  shortlisted: "Shortlisted",
   interviewing: "Interviewing",
   offered: "Offered",
   hired: "Hired",
