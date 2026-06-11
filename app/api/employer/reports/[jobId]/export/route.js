@@ -2,11 +2,25 @@ import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
 import { getComplianceReportData } from "@/lib/data";
 import { getDb } from "@/lib/db";
+import { getEmployerTier, hasFeature } from "@/lib/entitlements";
 
 export async function GET(request, { params }) {
   const session = await getSession();
   if (!session?.employerAccountId || !session.employerId) {
     return NextResponse.json({ error: "Employer access required" }, { status: 401 });
+  }
+
+  // Full audit-trail export is a paid feature (D3); the free tier keeps
+  // the on-screen report and the roll-up summary.
+  const tier = await getEmployerTier(session.employerId);
+  if (!hasFeature(tier, "audit_export")) {
+    return NextResponse.json(
+      {
+        error: "Audit-trail export is available on paid plans",
+        upgrade: true,
+      },
+      { status: 403 }
+    );
   }
 
   const { jobId } = await params;

@@ -21,6 +21,22 @@ function StatCard({ label, value, icon: Icon, accent }) {
 
 export default function AdminEmployersClient({ employers, stats }) {
   const [search, setSearch] = useState("");
+  const [tierOverrides, setTierOverrides] = useState({});
+  const [tierSaving, setTierSaving] = useState(null);
+
+  const updateTier = async (employerId, tier) => {
+    setTierSaving(employerId);
+    try {
+      const res = await fetch("/api/admin/employers/tier", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ employerId, tier }),
+      });
+      if (res.ok) setTierOverrides((p) => ({ ...p, [employerId]: tier }));
+    } finally {
+      setTierSaving(null);
+    }
+  };
   const [sortField, setSortField] = useState("job_count");
   const [sortDir, setSortDir] = useState("desc");
 
@@ -128,11 +144,24 @@ export default function AdminEmployersClient({ employers, stats }) {
                   >
                     <td className="px-4 py-3">
                       <div className="font-medium text-neutral-900 dark:text-white">{e.name}</div>
-                      {e.claimed && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-green-500/15 text-green-400 border border-green-500/20">
-                          claimed
-                        </span>
-                      )}
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        {e.claimed && (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-green-500/15 text-green-400 border border-green-500/20">
+                            claimed
+                          </span>
+                        )}
+                        <select
+                          value={tierOverrides[e.id] ?? e.tier ?? "free"}
+                          onChange={(ev) => updateTier(e.id, ev.target.value)}
+                          disabled={tierSaving === e.id}
+                          className="text-[10px] px-1 py-0.5 rounded border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300"
+                        >
+                          <option value="free">free</option>
+                          <option value="pro">pro</option>
+                          <option value="enterprise">enterprise</option>
+                          <option value="government">government</option>
+                        </select>
+                      </div>
                     </td>
                     <td className="px-4 py-3">
                       {emails.length > 0 ? (
