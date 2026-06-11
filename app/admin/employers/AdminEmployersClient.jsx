@@ -25,12 +25,21 @@ export default function AdminEmployersClient({ employers, stats }) {
   const [tierSaving, setTierSaving] = useState(null);
 
   const updateTier = async (employerId, tier) => {
+    // B2B case-by-case pricing: capture the commercial context with the change
+    let notes = null;
+    if (tier !== "free") {
+      notes = window.prompt(
+        "Contract notes for this tier change (value, term, contact) — optional:",
+        ""
+      );
+      if (notes === null) return; // cancelled
+    }
     setTierSaving(employerId);
     try {
       const res = await fetch("/api/admin/employers/tier", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ employerId, tier }),
+        body: JSON.stringify({ employerId, tier, notes: notes || null }),
       });
       if (res.ok) setTierOverrides((p) => ({ ...p, [employerId]: tier }));
     } finally {
