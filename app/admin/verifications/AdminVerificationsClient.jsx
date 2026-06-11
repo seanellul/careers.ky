@@ -1,12 +1,35 @@
 "use client";
 
 import { useState } from "react";
-import { ShieldCheck, Check, X, Clock, Loader2 } from "lucide-react";
+import { ShieldCheck, BadgeCheck, Check, X, Clock, Loader2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { STATUS_LABELS } from "@/lib/candidate-status";
 
-export default function AdminVerificationsClient({ initialRequests }) {
+export default function AdminVerificationsClient({
+  initialRequests,
+  initialCandidateDocuments = [],
+}) {
   const [requests, setRequests] = useState(initialRequests);
+  const [candidateDocs, setCandidateDocs] = useState(initialCandidateDocuments);
+  const [docProcessing, setDocProcessing] = useState(null);
+  const [docNotes, setDocNotes] = useState({});
+
+  const handleDocReview = async (id, action) => {
+    setDocProcessing(id);
+    try {
+      const res = await fetch("/api/admin/verifications/documents", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ documentId: id, action, notes: docNotes[id] || null }),
+      });
+      if (res.ok) {
+        setCandidateDocs((prev) => prev.filter((d) => d.id !== id));
+      }
+    } finally {
+      setDocProcessing(null);
+    }
+  };
   const [filter, setFilter] = useState("pending");
   const [processing, setProcessing] = useState(null);
   const [domainInputs, setDomainInputs] = useState({});
@@ -63,7 +86,96 @@ export default function AdminVerificationsClient({ initialRequests }) {
 
   return (
     <div className="space-y-6">
+      {/* Candidate status documents */}
       <div className="flex items-center gap-3">
+        <BadgeCheck className="w-6 h-6 text-primary-500" />
+        <h1 className="text-2xl font-semibold">Candidate Status Documents</h1>
+        {candidateDocs.length > 0 && (
+          <span className="text-sm text-neutral-500">({candidateDocs.length} pending)</span>
+        )}
+      </div>
+
+      {candidateDocs.length === 0 ? (
+        <div className="text-center py-8 text-neutral-500 text-sm">
+          No candidate documents awaiting review.
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {candidateDocs.map((doc) => (
+            <div
+              key={doc.id}
+              className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl p-4 space-y-3"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="space-y-1 min-w-0">
+                  <span className="font-medium">{doc.candidate_name || "Unnamed candidate"}</span>
+                  <p className="text-sm text-neutral-500">{doc.candidate_email}</p>
+                  <p className="text-xs text-neutral-500">
+                    Declared status:{" "}
+                    <span className="text-neutral-600 dark:text-neutral-400">
+                      {STATUS_LABELS[doc.candidate_status] || "Not declared"}
+                    </span>
+                  </p>
+                </div>
+                <div className="text-right shrink-0 text-xs text-neutral-500">
+                  <p>{doc.filename}</p>
+                  <p>{new Date(doc.created_at).toLocaleDateString()}</p>
+                  <a
+                    href={`/api/admin/verifications/documents/${doc.id}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 text-primary-500 hover:underline mt-1"
+                  >
+                    View document <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+              </div>
+              <div className="flex items-end gap-3 pt-1">
+                <div className="flex-1">
+                  <label className="text-xs text-neutral-500 mb-1 block">
+                    Rejection notes (optional)
+                  </label>
+                  <Input
+                    value={docNotes[doc.id] || ""}
+                    onChange={(e) => setDocNotes((p) => ({ ...p, [doc.id]: e.target.value }))}
+                    placeholder="e.g. document unreadable, wrong document type..."
+                    className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 h-8 text-sm"
+                  />
+                </div>
+                <Button
+                  size="sm"
+                  onClick={() => handleDocReview(doc.id, "approve")}
+                  disabled={docProcessing === doc.id}
+                  className="bg-emerald-600 hover:bg-emerald-700 gap-1"
+                >
+                  {docProcessing === doc.id ? (
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                  ) : (
+                    <Check className="w-3 h-3" />
+                  )}
+                  Approve &amp; verify
+                </Button>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={() => handleDocReview(doc.id, "reject")}
+                  disabled={docProcessing === doc.id}
+                  className="gap-1"
+                >
+                  {docProcessing === doc.id ? (
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                  ) : (
+                    <X className="w-3 h-3" />
+                  )}
+                  Reject
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="flex items-center gap-3 pt-4">
         <ShieldCheck className="w-6 h-6 text-primary-500" />
         <h1 className="text-2xl font-semibold">Employer Verifications</h1>
       </div>

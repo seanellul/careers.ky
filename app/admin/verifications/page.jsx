@@ -1,4 +1,5 @@
 import { getVerificationRequests } from "@/lib/data";
+import { getPendingCandidateDocuments } from "@/lib/documents";
 import AdminVerificationsClient from "./AdminVerificationsClient";
 
 export const metadata = { title: "Verification Queue — Admin" };
@@ -7,6 +8,14 @@ export const metadata = { title: "Verification Queue — Admin" };
 export const dynamic = "force-dynamic";
 
 export default async function AdminVerificationsPage() {
-  const requests = await getVerificationRequests();
-  return <AdminVerificationsClient initialRequests={requests} />;
+  const [requests, candidateDocuments] = await Promise.all([
+    getVerificationRequests(),
+    getPendingCandidateDocuments(),
+  ]);
+  return (
+    <AdminVerificationsClient
+      initialRequests={requests}
+      initialCandidateDocuments={candidateDocuments}
+    />
+  );
 }

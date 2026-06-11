@@ -9,6 +9,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { STATUS_BADGES } from "@/lib/candidate-status";
+import VerificationCard from "@/components/VerificationCard";
 import {
   User,
   BookOpen,
@@ -537,6 +538,11 @@ export default function ProfileClient({
               )}
             </div>
           </div>
+        </div>
+
+        {/* Status verification */}
+        <div className="mb-6">
+          <VerificationCard statusVerified={candidate.status_verified} />
         </div>
 
         {/* Profile Strength */}
