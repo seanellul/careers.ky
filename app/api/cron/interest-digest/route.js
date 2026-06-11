@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
+import { runWeeklyBriefing } from "@/lib/newsletter";
 
 export async function GET(request) {
   const authHeader = request.headers.get("authorization");
@@ -8,6 +9,14 @@ export async function GET(request) {
   }
 
   const sql = getDb();
+
+  // Weekly Briefing rides this daily cron (Mondays only, self-guarded) —
+  // runs before the digest's early returns so it always gets its chance.
+  try {
+    await runWeeklyBriefing();
+  } catch (briefErr) {
+    console.error("[Briefing] Non-fatal error:", briefErr.message);
+  }
 
   try {
     // 1. Get un-notified interests grouped by employer

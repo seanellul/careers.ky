@@ -1,10 +1,15 @@
 import Link from "next/link";
 import Logo from "@/components/Logo";
 
+import NewsletterSignup from "@/components/NewsletterSignup";
+
 export default function Footer() {
   return (
     <footer className="pt-12 pb-16 border-t border-neutral-200 dark:border-neutral-800">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-sm text-neutral-500 dark:text-neutral-400">
+        <div className="mb-8">
+          <NewsletterSignup />
+        </div>
         <div className="flex flex-col md:flex-row items-start justify-between gap-6 md:gap-8">
           <div className="flex items-center gap-3">
             <div className="h-8 w-8">
