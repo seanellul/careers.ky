@@ -30,7 +30,7 @@ export default function ProfileSetupClient({ candidate }) {
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     name: candidate.name || "",
-    isCaymanian: candidate.is_caymanian || false,
+    status: candidate.status || (candidate.is_caymanian ? "caymanian" : ""),
     headline: candidate.headline || "",
     isDiscoverable: true,
   });
@@ -98,7 +98,7 @@ export default function ProfileSetupClient({ candidate }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: form.name,
-          isCaymanian: form.isCaymanian,
+          status: form.status || null,
           headline: form.headline,
           isDiscoverable: form.isDiscoverable,
           ciscoCodes: selectedInterests.map((i) => i.ciscoCode),
@@ -106,7 +106,7 @@ export default function ProfileSetupClient({ candidate }) {
       });
       if (res.ok) {
         posthog.capture("sign_up_completed", {
-          is_caymanian: form.isCaymanian,
+          status: form.status || "undeclared",
           is_discoverable: form.isDiscoverable,
           interests_count: selectedInterests.length,
         });
@@ -198,22 +198,43 @@ export default function ProfileSetupClient({ candidate }) {
                   A short tagline visible on your profile
                 </div>
               </div>
-              <label className="flex items-center gap-3 p-4 rounded-xl bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 cursor-pointer hover:border-primary-200 dark:hover:border-primary-500/30 transition">
-                <input
-                  type="checkbox"
-                  checked={form.isCaymanian}
-                  onChange={(e) => setForm({ ...form, isCaymanian: e.target.checked })}
-                  className="rounded w-4 h-4 flex-shrink-0"
-                />
-                <div>
-                  <div className="flex items-center gap-2 font-medium">
-                    <Shield className="w-4 h-4 text-primary-500" /> I am Caymanian
-                  </div>
-                  <div className="text-xs text-neutral-500 mt-1">
-                    Helps employers meet local hiring requirements
-                  </div>
+              <div className="p-4 rounded-xl bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700">
+                <div className="flex items-center gap-2 font-medium mb-1">
+                  <Shield className="w-4 h-4 text-primary-500" /> Your status in Cayman
                 </div>
-              </label>
+                <div className="text-xs text-neutral-500 mb-3">
+                  Caymanian candidates are always ranked first in employer searches. This helps
+                  employers meet local hiring requirements.
+                </div>
+                <div className="grid gap-2">
+                  {[
+                    ["caymanian", "Caymanian"],
+                    ["pr", "Permanent Resident"],
+                    ["rerc", "RERC holder"],
+                    ["dependant", "Dependant permit"],
+                    ["overseas", "Overseas / work permit required"],
+                  ].map(([value, label]) => (
+                    <label
+                      key={value}
+                      className={`flex items-center gap-3 px-3 py-2 rounded-lg border cursor-pointer transition ${
+                        form.status === value
+                          ? "border-primary-400 bg-primary-50 dark:bg-primary-500/10"
+                          : "border-neutral-200 dark:border-neutral-700 hover:border-primary-200 dark:hover:border-primary-500/30"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="candidate-status"
+                        value={value}
+                        checked={form.status === value}
+                        onChange={() => setForm({ ...form, status: value })}
+                        className="w-4 h-4 flex-shrink-0"
+                      />
+                      <span className="text-sm">{label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
               <Button
                 onClick={() => setStep(1)}
                 disabled={!form.name.trim()}

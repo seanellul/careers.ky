@@ -6,6 +6,7 @@ import {
   updateCandidateSkills,
   getCandidateById,
 } from "@/lib/data";
+import { isValidStatus } from "@/lib/candidate-status";
 
 export async function PUT(request) {
   const session = await getSession();
@@ -15,8 +16,12 @@ export async function PUT(request) {
 
   try {
     const data = await request.json();
+    if (data.status != null && !isValidStatus(data.status)) {
+      return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+    }
     const candidate = await upsertCandidate(session.candidateEmail, {
       name: data.name,
+      status: data.status || null,
       isCaymanian: data.isCaymanian,
       educationCode: data.educationCode,
       experienceCode: data.experienceCode,

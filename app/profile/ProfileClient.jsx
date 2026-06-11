@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { STATUS_BADGES } from "@/lib/candidate-status";
 import {
   User,
   BookOpen,
@@ -127,7 +128,7 @@ export default function ProfileClient({
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     name: candidate.name || "",
-    isCaymanian: candidate.is_caymanian || false,
+    status: candidate.status || (candidate.is_caymanian ? "caymanian" : ""),
     availability: candidate.availability || "actively_looking",
     isDiscoverable: candidate.is_discoverable || false,
     bio: candidate.bio || "",
@@ -170,6 +171,7 @@ export default function ProfileClient({
   const availOption = AVAILABILITY_OPTIONS.find(
     (o) => o.value === (editing ? form.availability : candidate.availability)
   );
+  const statusKey = candidate.status || (candidate.is_caymanian ? "caymanian" : null);
 
   // Search interests
   useEffect(() => {
@@ -260,6 +262,7 @@ export default function ProfileClient({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
+          status: form.status || null,
           salaryMin: form.salaryMin ? Number(form.salaryMin) : null,
           yearsOfExperience: form.yearsOfExperience ? Number(form.yearsOfExperience) : null,
           ciscoCodes: editInterests.map((i) => i.ciscoCode),
@@ -452,14 +455,23 @@ export default function ProfileClient({
                       </div>
                     </div>
                   </div>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={form.isCaymanian}
-                      onChange={(e) => setForm({ ...form, isCaymanian: e.target.checked })}
-                      className="rounded"
-                    />
-                    <span className="text-sm">I am Caymanian</span>
+                  <label className="block">
+                    <span className="text-sm font-medium">Status in Cayman</span>
+                    <select
+                      value={form.status}
+                      onChange={(e) => setForm({ ...form, status: e.target.value })}
+                      className="mt-1 block w-full rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 px-3 py-2 text-sm"
+                    >
+                      <option value="">Not declared</option>
+                      <option value="caymanian">Caymanian</option>
+                      <option value="pr">Permanent Resident</option>
+                      <option value="rerc">RERC holder</option>
+                      <option value="dependant">Dependant permit</option>
+                      <option value="overseas">Overseas / work permit required</option>
+                    </select>
+                    <span className="text-xs text-neutral-500 mt-1 block">
+                      Caymanian candidates are always ranked first in employer searches
+                    </span>
                   </label>
                 </div>
               ) : (
@@ -482,9 +494,15 @@ export default function ProfileClient({
                       <Badge className={availOption?.color}>
                         {availOption?.label || "Not set"}
                       </Badge>
-                      {candidate.is_caymanian && (
-                        <Badge className="bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30">
-                          <Shield className="w-3 h-3 mr-1" /> Caymanian
+                      {statusKey && (
+                        <Badge
+                          className={
+                            statusKey === "caymanian"
+                              ? "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30"
+                              : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border-neutral-200 dark:border-neutral-700"
+                          }
+                        >
+                          <Shield className="w-3 h-3 mr-1" /> {STATUS_BADGES[statusKey]}
                         </Badge>
                       )}
                     </div>
@@ -605,9 +623,15 @@ export default function ProfileClient({
                         <Badge className={availOption?.color}>
                           {availOption?.label || "Not set"}
                         </Badge>
-                        {candidate.is_caymanian && (
-                          <Badge className="bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30">
-                            <Shield className="w-3 h-3 mr-1" /> Caymanian
+                        {statusKey && (
+                          <Badge
+                            className={
+                              statusKey === "caymanian"
+                                ? "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30"
+                                : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border-neutral-200 dark:border-neutral-700"
+                            }
+                          >
+                            <Shield className="w-3 h-3 mr-1" /> {STATUS_BADGES[statusKey]}
                           </Badge>
                         )}
                       </div>
