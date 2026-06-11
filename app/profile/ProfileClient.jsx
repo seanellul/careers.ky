@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { STATUS_BADGES } from "@/lib/candidate-status";
 import VerificationCard from "@/components/VerificationCard";
+import BlockedEmployersCard from "@/components/BlockedEmployersCard";
 import {
   User,
   BookOpen,
@@ -131,7 +132,7 @@ export default function ProfileClient({
     name: candidate.name || "",
     status: candidate.status || (candidate.is_caymanian ? "caymanian" : ""),
     availability: candidate.availability || "actively_looking",
-    isDiscoverable: candidate.is_discoverable || false,
+    profileType: candidate.profile_type || (candidate.is_discoverable ? "open" : "closed"),
     bio: candidate.bio || "",
     educationCode: candidate.education_code || "",
     experienceCode: candidate.experience_code || "",
@@ -274,7 +275,7 @@ export default function ProfileClient({
         posthog.capture("profile_updated", {
           skills_count: editSkills.length,
           interests_count: editInterests.length,
-          is_discoverable: form.isDiscoverable,
+          profile_type: form.profileType,
         });
         setEditing(false);
         router.refresh();
@@ -540,9 +541,10 @@ export default function ProfileClient({
           </div>
         </div>
 
-        {/* Status verification */}
-        <div className="mb-6">
+        {/* Status verification + privacy */}
+        <div className="mb-6 grid gap-4 md:grid-cols-2">
           <VerificationCard statusVerified={candidate.status_verified} />
+          <BlockedEmployersCard />
         </div>
 
         {/* Profile Strength */}
@@ -1121,33 +1123,43 @@ export default function ProfileClient({
                         ))}
                       </select>
                     </div>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={form.isDiscoverable}
-                        onChange={(e) => setForm({ ...form, isDiscoverable: e.target.checked })}
-                        className="rounded"
-                      />
-                      <span className="text-sm">Visible to employers</span>
-                    </label>
+                    <div>
+                      <label className="text-xs text-neutral-500 mb-1 block">Profile type</label>
+                      <select
+                        value={form.profileType}
+                        onChange={(e) => setForm({ ...form, profileType: e.target.value })}
+                        className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 h-10 text-sm text-neutral-700 dark:text-neutral-300"
+                      >
+                        <option value="open">Open — visible to all employers</option>
+                        <option value="selective">
+                          Selective — visible except blocked companies
+                        </option>
+                        <option value="closed">Closed — alerts only, hidden from searches</option>
+                      </select>
+                    </div>
                     <p className="text-xs text-neutral-500">
-                      When discoverable, employers can see an anonymized version of your profile and
-                      request an introduction.
+                      Employers see an anonymized version of your profile and request an
+                      introduction. Companies on your block list can never see you, on any plan.
                     </p>
                   </div>
                 ) : (
                   <div className="space-y-3">
                     <Badge className={availOption?.color}>{availOption?.label || "Not set"}</Badge>
                     <div className="flex items-center gap-2 text-sm">
-                      {candidate.is_discoverable ? (
+                      {(candidate.profile_type ||
+                        (candidate.is_discoverable ? "open" : "closed")) !== "closed" ? (
                         <>
                           <Eye className="w-4 h-4 text-emerald-600" />
-                          <span className="text-emerald-600">Visible to employers</span>
+                          <span className="text-emerald-600">
+                            {candidate.profile_type === "selective"
+                              ? "Selective — visible except blocked companies"
+                              : "Open — visible to employers"}
+                          </span>
                         </>
                       ) : (
                         <>
                           <EyeOff className="w-4 h-4 text-neutral-500" />
-                          <span className="text-neutral-500">Hidden from employers</span>
+                          <span className="text-neutral-500">Closed — hidden from searches</span>
                         </>
                       )}
                     </div>

@@ -32,7 +32,7 @@ export default function ProfileSetupClient({ candidate }) {
     name: candidate.name || "",
     status: candidate.status || (candidate.is_caymanian ? "caymanian" : ""),
     headline: candidate.headline || "",
-    isDiscoverable: true,
+    profileType: "open",
   });
 
   // CISCO interests
@@ -100,14 +100,14 @@ export default function ProfileSetupClient({ candidate }) {
           name: form.name,
           status: form.status || null,
           headline: form.headline,
-          isDiscoverable: form.isDiscoverable,
+          profileType: form.profileType,
           ciscoCodes: selectedInterests.map((i) => i.ciscoCode),
         }),
       });
       if (res.ok) {
         posthog.capture("sign_up_completed", {
           status: form.status || "undeclared",
-          is_discoverable: form.isDiscoverable,
+          profile_type: form.profileType,
           interests_count: selectedInterests.length,
         });
         try {
@@ -358,23 +358,54 @@ export default function ProfileSetupClient({ candidate }) {
                 </div>
               )}
 
-              <label className="flex items-start gap-3 p-4 rounded-xl bg-emerald-50 border border-emerald-200 cursor-pointer hover:border-emerald-300 transition text-left">
-                <input
-                  type="checkbox"
-                  checked={form.isDiscoverable}
-                  onChange={(e) => setForm({ ...form, isDiscoverable: e.target.checked })}
-                  className="rounded w-4 h-4 mt-0.5 flex-shrink-0"
-                />
-                <div>
-                  <div className="flex items-center gap-2 font-medium text-emerald-600">
-                    <Eye className="w-4 h-4" /> Make me discoverable
-                  </div>
-                  <div className="text-xs text-neutral-500 mt-1">
-                    Employers can find your anonymised profile and request an introduction. Your
-                    name and contact details stay hidden until you accept.
-                  </div>
+              <div className="text-left space-y-2">
+                <div className="font-medium text-sm">Choose your profile type</div>
+                <div className="text-xs text-neutral-500 mb-1">
+                  Cayman is a small community — you control exactly who can find you. Change this
+                  any time from your profile.
                 </div>
-              </label>
+                {[
+                  {
+                    value: "open",
+                    label: "Open",
+                    desc: "Visible to all registered employers. Best for active job seekers — note your current employer could find you.",
+                  },
+                  {
+                    value: "selective",
+                    label: "Selective",
+                    desc: "Searchable, but you can block specific companies (like your current employer) who will never see your profile.",
+                  },
+                  {
+                    value: "closed",
+                    label: "Closed / Alerts only",
+                    desc: "Hidden from all employer searches. You get job alerts and decide what to apply for.",
+                  },
+                ].map((opt) => (
+                  <label
+                    key={opt.value}
+                    className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition ${
+                      form.profileType === opt.value
+                        ? "border-emerald-400 bg-emerald-50 dark:bg-emerald-500/10"
+                        : "border-neutral-200 dark:border-neutral-700 hover:border-emerald-300"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="profile-type"
+                      value={opt.value}
+                      checked={form.profileType === opt.value}
+                      onChange={() => setForm({ ...form, profileType: opt.value })}
+                      className="w-4 h-4 mt-0.5 flex-shrink-0"
+                    />
+                    <div>
+                      <div className="flex items-center gap-2 font-medium text-sm">
+                        <Eye className="w-4 h-4 text-emerald-600" /> {opt.label}
+                      </div>
+                      <div className="text-xs text-neutral-500 mt-0.5">{opt.desc}</div>
+                    </div>
+                  </label>
+                ))}
+              </div>
 
               <div className="flex gap-3">
                 <Button variant="secondary" onClick={() => setStep(1)} className="gap-2">

@@ -23,6 +23,7 @@ export async function GET(request) {
     isCaymanian: searchParams.get("isCaymanian") === "true" || undefined,
     page: parseInt(searchParams.get("page") || "1", 10),
     pageSize: Math.min(parseInt(searchParams.get("pageSize") || "20", 10), 50),
+    employerId: session.employerId || null,
   };
 
   try {

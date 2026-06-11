@@ -15,7 +15,7 @@ export async function GET(request) {
   }
 
   try {
-    const result = await matchCandidatesToJob(jobId);
+    const result = await matchCandidatesToJob(jobId, session.employerId || null);
     if (!result) {
       return NextResponse.json({ error: "Job not found" }, { status: 404 });
     }

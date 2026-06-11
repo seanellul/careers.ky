@@ -4,9 +4,12 @@ import {
   upsertCandidate,
   updateCandidateInterests,
   updateCandidateSkills,
+  updateBlockedEmployers,
   getCandidateById,
 } from "@/lib/data";
 import { isValidStatus } from "@/lib/candidate-status";
+
+const PROFILE_TYPES = ["open", "selective", "closed"];
 
 export async function PUT(request) {
   const session = await getSession();
@@ -19,9 +22,13 @@ export async function PUT(request) {
     if (data.status != null && !isValidStatus(data.status)) {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
+    if (data.profileType != null && !PROFILE_TYPES.includes(data.profileType)) {
+      return NextResponse.json({ error: "Invalid profile type" }, { status: 400 });
+    }
     const candidate = await upsertCandidate(session.candidateEmail, {
       name: data.name,
       status: data.status || null,
+      profileType: data.profileType || null,
       isCaymanian: data.isCaymanian,
       educationCode: data.educationCode,
       experienceCode: data.experienceCode,
@@ -43,6 +50,11 @@ export async function PUT(request) {
 
     if (data.ciscoCodes) {
       await updateCandidateInterests(candidate.id, data.ciscoCodes);
+    }
+
+    if (Array.isArray(data.blockedEmployerIds)) {
+      const ids = data.blockedEmployerIds.map(Number).filter(Number.isInteger);
+      await updateBlockedEmployers(candidate.id, ids);
     }
 
     if (data.skillIds) {
