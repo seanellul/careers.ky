@@ -16,6 +16,9 @@ export default function EmployerSetupClient() {
   const [searching, setSearching] = useState(false);
   const [selectedEmployer, setSelectedEmployer] = useState(null);
   const [claiming, setClaiming] = useState(false);
+  const [declaration, setDeclaration] = useState("");
+  const [agencyBlocked, setAgencyBlocked] = useState(false);
+  const [claimError, setClaimError] = useState("");
   const [verificationStatus, setVerificationStatus] = useState(null);
 
   // Optional profile fields
@@ -48,21 +51,26 @@ export default function EmployerSetupClient() {
 
   const handleClaim = async () => {
     if (!selectedEmployer) return;
+    setClaimError("");
     setClaiming(true);
     try {
       const res = await fetch("/api/employer/claim", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ employerId: selectedEmployer.id }),
+        body: JSON.stringify({ employerId: selectedEmployer.id, declaration }),
       });
+      const data = await res.json();
       if (res.ok) {
-        const data = await res.json();
         setVerificationStatus(data.verificationStatus);
         if (data.verificationStatus === "verified") {
           setStep(2);
         } else {
           setStep(3); // Pending verification
         }
+      } else if (data.agencyBlocked) {
+        setAgencyBlocked(true);
+      } else {
+        setClaimError(data.error || "Could not claim this company");
       }
     } finally {
       setClaiming(false);
@@ -81,6 +89,23 @@ export default function EmployerSetupClient() {
   };
 
   const stepLabels = ["Select Company", "Verification", "Company Details"];
+
+  if (agencyBlocked) {
+    return (
+      <div className={t.page}>
+        <div className="mx-auto max-w-xl px-4 py-20 text-center">
+          <h1 className="text-2xl font-semibold mb-3">careers.ky is direct-hire only</h1>
+          <p className="text-neutral-500 text-sm mb-2">
+            Our platform connects Caymanian candidates and employers directly — recruitment agencies
+            cannot register accounts or post roles on behalf of clients.
+          </p>
+          <p className="text-neutral-500 text-sm">
+            If you believe this is a mistake, contact us at hello@careers.ky.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={t.page}>
@@ -183,9 +208,39 @@ export default function EmployerSetupClient() {
                 </p>
               )}
 
+              <div className="space-y-2 pt-2">
+                <p className="text-xs font-medium text-neutral-500">
+                  careers.ky is a direct-hiring platform — recruitment agencies cannot register.
+                </p>
+                <label className="flex items-start gap-2 cursor-pointer text-sm">
+                  <input
+                    type="radio"
+                    name="agency-declaration"
+                    checked={declaration === "direct_employer"}
+                    onChange={() => setDeclaration("direct_employer")}
+                    className="mt-0.5"
+                  />
+                  <span>
+                    We are a <strong>direct employer</strong> hiring for our own organisation
+                  </span>
+                </label>
+                <label className="flex items-start gap-2 cursor-pointer text-sm">
+                  <input
+                    type="radio"
+                    name="agency-declaration"
+                    checked={declaration === "agency"}
+                    onChange={() => setDeclaration("agency")}
+                    className="mt-0.5"
+                  />
+                  <span>We are a recruitment agency hiring on behalf of clients</span>
+                </label>
+              </div>
+
+              {claimError && <p className="text-sm text-red-500">{claimError}</p>}
+
               <Button
                 onClick={handleClaim}
-                disabled={!selectedEmployer || claiming}
+                disabled={!selectedEmployer || !declaration || claiming}
                 className="w-full gap-2"
               >
                 {claiming ? "Linking..." : "Link My Account"} <ChevronRight className="w-4 h-4" />

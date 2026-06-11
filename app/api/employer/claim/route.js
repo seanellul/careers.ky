@@ -20,12 +20,53 @@ export async function POST(request) {
   if (check.limited) return rateLimitResponse(3600);
 
   try {
-    const { employerId } = await request.json();
+    const { employerId, declaration } = await request.json();
     if (!employerId) {
       return NextResponse.json({ error: "Employer ID required" }, { status: 400 });
     }
 
     const sql = getDb();
+
+    // Platform rule 2: recruitment agencies cannot register. The
+    // declaration is required and recorded; agencies get a hard stop.
+    if (declaration !== "direct_employer") {
+      await sql`
+        UPDATE employer_accounts SET agency_declaration = ${declaration === "agency" ? "agency" : null}
+        WHERE id = ${session.employerAccountId}
+      `;
+      return NextResponse.json(
+        {
+          error:
+            declaration === "agency"
+              ? "careers.ky connects employers and candidates directly — recruitment agencies cannot register or post roles."
+              : "Please confirm your organisation is a direct employer.",
+          agencyBlocked: declaration === "agency",
+        },
+        { status: 403 }
+      );
+    }
+
+    // Blacklist check (emails and domains rejected as agencies by admin)
+    const accountEmailRows =
+      await sql`SELECT email FROM employer_accounts WHERE id = ${session.employerAccountId}`;
+    const accountEmail = accountEmailRows[0]?.email?.toLowerCase() || "";
+    const accountDomain = accountEmail.split("@")[1] || "";
+    const blacklisted = await sql`
+      SELECT id FROM agency_blacklist
+      WHERE LOWER(email) = ${accountEmail} OR (domain IS NOT NULL AND LOWER(domain) = ${accountDomain})
+      LIMIT 1
+    `;
+    if (blacklisted.length > 0) {
+      return NextResponse.json(
+        { error: "This account cannot register as an employer on careers.ky." },
+        { status: 403 }
+      );
+    }
+
+    await sql`
+      UPDATE employer_accounts SET agency_declaration = 'direct_employer'
+      WHERE id = ${session.employerAccountId}
+    `;
 
     // Fetch employer with domain info
     const employers =

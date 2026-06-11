@@ -34,6 +34,7 @@ export default function AdminVerificationsClient({
   const [processing, setProcessing] = useState(null);
   const [domainInputs, setDomainInputs] = useState({});
   const [notesInputs, setNotesInputs] = useState({});
+  const [agencyFlags, setAgencyFlags] = useState({});
 
   const filtered = filter === "all" ? requests : requests.filter((r) => r.status === filter);
 
@@ -46,6 +47,9 @@ export default function AdminVerificationsClient({
       }
       if (action === "reject" && notesInputs[id]) {
         body.notes = notesInputs[id];
+      }
+      if (action === "reject" && agencyFlags[id]) {
+        body.blacklistAgency = true;
       }
 
       const res = await fetch("/api/admin/verifications", {
@@ -275,6 +279,17 @@ export default function AdminVerificationsClient({
                       className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 h-8 text-sm"
                     />
                   </div>
+                  <label className="flex items-center gap-1.5 text-xs text-neutral-500 cursor-pointer whitespace-nowrap pb-2">
+                    <input
+                      type="checkbox"
+                      checked={!!agencyFlags[req.id]}
+                      onChange={(e) =>
+                        setAgencyFlags((p) => ({ ...p, [req.id]: e.target.checked }))
+                      }
+                      className="rounded"
+                    />
+                    Agency (blacklist)
+                  </label>
                   <Button
                     size="sm"
                     onClick={() => handleAction(req.id, "approve")}
