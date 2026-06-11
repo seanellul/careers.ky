@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Briefcase,
+  KanbanSquare,
   LayoutDashboard,
   Building2,
   Users,
@@ -27,6 +28,7 @@ export default function DashboardSidebar({ employerSlug, accountRole }) {
     { href: "/employer/profile", label: "Profile", icon: Building2 },
     { href: "/employer/talent", label: "Talent Search", icon: Users },
     { href: "/employer/jobs", label: "Job Postings", icon: Briefcase },
+    { href: "/employer/pipeline", label: "Pipeline", icon: KanbanSquare },
     { href: "/employer/shortlists", label: "Shortlists", icon: List },
     { href: "/employer/reports", label: "Reports", icon: FileText },
     ...(accountRole === "owner" || accountRole === "admin"
