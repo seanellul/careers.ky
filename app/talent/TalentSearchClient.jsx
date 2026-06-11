@@ -30,6 +30,7 @@ import {
   Save,
 } from "lucide-react";
 import EmployerWaitlistForm from "@/components/EmployerWaitlistForm";
+import { STATUS_BADGES } from "@/lib/candidate-status";
 
 const AVAILABILITY_LABELS = {
   actively_looking: "Actively Looking",
@@ -142,6 +143,7 @@ export default function TalentSearchClient({
   const [availability, setAvailability] = useState("");
   const [ciscoSearch, setCiscoSearch] = useState("");
   const [isCaymanian, setIsCaymanian] = useState(false);
+  const [immediateStart, setImmediateStart] = useState(false);
 
   // Skill filter
   const [skillSearch, setSkillSearch] = useState("");
@@ -306,6 +308,7 @@ export default function TalentSearchClient({
       if (locationCode) params.set("locationCode", locationCode);
       if (availability) params.set("availability", availability);
       if (isCaymanian) params.set("isCaymanian", "true");
+      if (immediateStart) params.set("immediateStart", "true");
       if (selectedSkills.length > 0)
         params.set("skillIds", selectedSkills.map((s) => s.id).join(","));
       params.set("page", String(searchPage));
@@ -695,6 +698,15 @@ export default function TalentSearchClient({
                         <Shield className="w-3 h-3 text-primary-500" /> Caymanian Only
                       </span>
                     </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={immediateStart}
+                        onChange={(e) => setImmediateStart(e.target.checked)}
+                        className="rounded"
+                      />
+                      <span className="text-sm">Immediate start</span>
+                    </label>
                   </div>
 
                   <Button
@@ -862,11 +874,25 @@ export default function TalentSearchClient({
                                 <Badge className={AVAILABILITY_COLORS[c.availability] || ""}>
                                   {AVAILABILITY_LABELS[c.availability] || c.availability}
                                 </Badge>
-                                {c.is_caymanian && (
-                                  <Badge className="bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30">
-                                    <Shield className="w-3 h-3 mr-1" /> Caymanian
+                                {(c.status || (c.is_caymanian ? "caymanian" : null)) && (
+                                  <Badge
+                                    className={
+                                      (c.status || "caymanian") === "caymanian"
+                                        ? "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30"
+                                        : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border-neutral-200 dark:border-neutral-700"
+                                    }
+                                  >
+                                    <Shield className="w-3 h-3 mr-1" />
+                                    {STATUS_BADGES[c.status || "caymanian"]}
+                                    {c.status_verified ? " ✓" : ""}
                                   </Badge>
                                 )}
+                                {c.notice_period &&
+                                  ["immediate", "1_week"].includes(c.notice_period) && (
+                                    <Badge className="bg-emerald-50 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30">
+                                      Immediate start
+                                    </Badge>
+                                  )}
                               </div>
                             </div>
                           </div>

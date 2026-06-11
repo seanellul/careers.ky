@@ -138,6 +138,9 @@ export default function ProfileClient({
     experienceCode: candidate.experience_code || "",
     locationCode: candidate.location_code || "",
     salaryMin: candidate.salary_min || "",
+    salaryTarget: candidate.salary_target || "",
+    salaryNegotiable: candidate.salary_negotiable || false,
+    noticePeriod: candidate.notice_period || "",
     workTypePreferences: candidate.work_type_preferences || [],
     linkedinUrl: candidate.linkedin_url || "",
     resumeSummary: candidate.resume_summary || "",
@@ -266,6 +269,8 @@ export default function ProfileClient({
           ...form,
           status: form.status || null,
           salaryMin: form.salaryMin ? Number(form.salaryMin) : null,
+          salaryTarget: form.salaryTarget ? Number(form.salaryTarget) : null,
+          noticePeriod: form.noticePeriod || null,
           yearsOfExperience: form.yearsOfExperience ? Number(form.yearsOfExperience) : null,
           ciscoCodes: editInterests.map((i) => i.ciscoCode),
           skillIds: editSkills.map((s) => s.id),
@@ -1185,6 +1190,46 @@ export default function ProfileClient({
                         placeholder="e.g. 60000"
                         className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
                       />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-neutral-500 mb-1 block">
+                        Target salary (CI$/yr)
+                      </label>
+                      <Input
+                        type="number"
+                        value={form.salaryTarget}
+                        onChange={(e) => setForm({ ...form, salaryTarget: e.target.value })}
+                        placeholder="e.g. 75000"
+                        className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
+                      />
+                      <label className="flex items-center gap-2 cursor-pointer mt-2">
+                        <input
+                          type="checkbox"
+                          checked={form.salaryNegotiable}
+                          onChange={(e) => setForm({ ...form, salaryNegotiable: e.target.checked })}
+                          className="rounded"
+                        />
+                        <span className="text-sm">Negotiable</span>
+                      </label>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-neutral-500 mb-1 block">
+                        Notice period
+                      </label>
+                      <select
+                        value={form.noticePeriod}
+                        onChange={(e) => setForm({ ...form, noticePeriod: e.target.value })}
+                        className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 h-10 text-sm text-neutral-700 dark:text-neutral-300"
+                      >
+                        <option value="">Not set</option>
+                        <option value="immediate">Immediate</option>
+                        <option value="1_week">1 week</option>
+                        <option value="2_weeks">2 weeks</option>
+                        <option value="1_month">1 month</option>
+                        <option value="2_months">2 months</option>
+                        <option value="3_months">3 months</option>
+                        <option value="3_plus_months">3+ months</option>
+                      </select>
                     </div>
                     <div>
                       <label className="text-xs font-medium text-neutral-500 mb-2 block">
