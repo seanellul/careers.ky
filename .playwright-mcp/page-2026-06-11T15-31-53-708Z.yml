@@ -1,0 +1,516 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "careers.ky logo careers.ky" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "careers.ky logo" [ref=e6]
+        - generic [ref=e7]: careers.ky
+      - navigation [ref=e8]:
+        - generic [ref=e9]: Home
+        - link "Careers" [ref=e10] [cursor=pointer]:
+          - /url: /careers
+        - link "About" [ref=e11] [cursor=pointer]:
+          - /url: /about
+        - button "Toggle dark mode" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+  - generic [ref=e15]:
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]: A Caymanian-First Careers Platform
+        - heading "A Caymanian-First Careers Platform." [level=1] [ref=e22]
+        - paragraph [ref=e23]: Making hiring talent visible, accessible and fair.
+        - generic [ref=e24]:
+          - paragraph [ref=e25]: "For candidates: Every Caymanian deserves a fair shot at every role. Create your profile free. Get matched. Get hired."
+          - paragraph [ref=e26]: "For employers: Find Caymanian talent directly. Direct connections with your community. Save money. One platform. One monthly fee."
+        - generic [ref=e27]:
+          - button "Create Your Free Profile" [ref=e28] [cursor=pointer]:
+            - img [ref=e29]
+            - text: Create Your Free Profile
+          - link "Browse Jobs" [ref=e32] [cursor=pointer]:
+            - /url: /careers
+            - button "Browse Jobs" [ref=e33]:
+              - img [ref=e34]
+              - text: Browse Jobs
+      - generic [ref=e39]:
+        - generic [ref=e40]: Market Snapshot
+        - generic [ref=e41]:
+          - generic [ref=e42]:
+            - generic [ref=e43]: "1865"
+            - generic [ref=e44]: Active Jobs
+          - generic [ref=e45]:
+            - generic [ref=e46]: 49+
+            - generic [ref=e47]: Industries
+          - generic [ref=e48]:
+            - generic [ref=e49]: 3,800
+            - generic [ref=e50]: Employers
+        - generic [ref=e52]:
+          - button "Candidates Create Your Profile Get seen by every employer on the island" [ref=e53] [cursor=pointer]:
+            - generic [ref=e54]:
+              - img [ref=e55]
+              - generic [ref=e58]: Candidates
+            - generic [ref=e59]: Create Your Profile
+            - paragraph [ref=e60]: Get seen by every employer on the island
+          - link "Explore Career Tracks Industry insights & salary ranges" [ref=e61] [cursor=pointer]:
+            - /url: /careers?tab=career-tracks
+            - generic [ref=e62]:
+              - img [ref=e63]
+              - generic [ref=e66]: Explore
+            - generic [ref=e67]: Career Tracks
+            - paragraph [ref=e68]: Industry insights & salary ranges
+          - link "Search Live Job Search Browse & filter active postings" [ref=e69] [cursor=pointer]:
+            - /url: /careers
+            - generic [ref=e70]:
+              - img [ref=e71]
+              - generic [ref=e74]: Search
+            - generic [ref=e75]: Live Job Search
+            - paragraph [ref=e76]: Browse & filter active postings
+          - link "Employer Search Local Talent Find Caymanian candidates directly" [ref=e77] [cursor=pointer]:
+            - /url: /talent
+            - generic [ref=e78]:
+              - img [ref=e79]
+              - generic [ref=e84]: Employer
+            - generic [ref=e85]: Search Local Talent
+            - paragraph [ref=e86]: Find Caymanian candidates directly
+    - generic [ref=e89]:
+      - generic [ref=e90]:
+        - generic [ref=e91]:
+          - heading "Explore career tracks" [level=3] [ref=e92]
+          - paragraph [ref=e93]: Browse by industry category with live market data
+        - link "View all" [ref=e94] [cursor=pointer]:
+          - /url: /careers?tab=career-tracks
+          - button "View all" [ref=e95]:
+            - text: View all
+            - img [ref=e96]
+      - generic [ref=e98]:
+        - link "1 Managers 5 specializations Active Jobs 1760 Avg. Salary CI$ 90,459" [ref=e99] [cursor=pointer]:
+          - /url: /careers?tab=career-tracks
+          - generic [ref=e101]:
+            - generic [ref=e102]:
+              - generic [ref=e103]: "1"
+              - img [ref=e104]
+            - generic [ref=e106]: Managers
+            - paragraph [ref=e107]: 5 specializations
+            - generic [ref=e108]:
+              - generic [ref=e109]:
+                - generic [ref=e110]: Active Jobs
+                - generic [ref=e111]: "1760"
+              - generic [ref=e112]:
+                - generic [ref=e113]: Avg. Salary
+                - generic [ref=e114]: CI$ 90,459
+        - link "2 Professionals 7 specializations Active Jobs 2881 Avg. Salary CI$ 83,187" [ref=e115] [cursor=pointer]:
+          - /url: /careers?tab=career-tracks
+          - generic [ref=e117]:
+            - generic [ref=e118]:
+              - generic [ref=e119]: "2"
+              - img [ref=e120]
+            - generic [ref=e122]: Professionals
+            - paragraph [ref=e123]: 7 specializations
+            - generic [ref=e124]:
+              - generic [ref=e125]:
+                - generic [ref=e126]: Active Jobs
+                - generic [ref=e127]: "2881"
+              - generic [ref=e128]:
+                - generic [ref=e129]: Avg. Salary
+                - generic [ref=e130]: CI$ 83,187
+        - link "3 Technicians and Associate Professionals 6 specializations Active Jobs 2367 Avg. Salary CI$ 49,606" [ref=e131] [cursor=pointer]:
+          - /url: /careers?tab=career-tracks
+          - generic [ref=e133]:
+            - generic [ref=e134]:
+              - generic [ref=e135]: "3"
+              - img [ref=e136]
+            - generic [ref=e138]: Technicians and Associate Professionals
+            - paragraph [ref=e139]: 6 specializations
+            - generic [ref=e140]:
+              - generic [ref=e141]:
+                - generic [ref=e142]: Active Jobs
+                - generic [ref=e143]: "2367"
+              - generic [ref=e144]:
+                - generic [ref=e145]: Avg. Salary
+                - generic [ref=e146]: CI$ 49,606
+        - link "4 Clerical Support Workers 5 specializations Active Jobs 898 Avg. Salary CI$ 28,723" [ref=e147] [cursor=pointer]:
+          - /url: /careers?tab=career-tracks
+          - generic [ref=e149]:
+            - generic [ref=e150]:
+              - generic [ref=e151]: "4"
+              - img [ref=e152]
+            - generic [ref=e154]: Clerical Support Workers
+            - paragraph [ref=e155]: 5 specializations
+            - generic [ref=e156]:
+              - generic [ref=e157]:
+                - generic [ref=e158]: Active Jobs
+                - generic [ref=e159]: "898"
+              - generic [ref=e160]:
+                - generic [ref=e161]: Avg. Salary
+                - generic [ref=e162]: CI$ 28,723
+        - link "5 Service and Sales Workers 5 specializations Active Jobs 4313 Avg. Salary CI$ 22,312" [ref=e163] [cursor=pointer]:
+          - /url: /careers?tab=career-tracks
+          - generic [ref=e165]:
+            - generic [ref=e166]:
+              - generic [ref=e167]: "5"
+              - img [ref=e168]
+            - generic [ref=e170]: Service and Sales Workers
+            - paragraph [ref=e171]: 5 specializations
+            - generic [ref=e172]:
+              - generic [ref=e173]:
+                - generic [ref=e174]: Active Jobs
+                - generic [ref=e175]: "4313"
+              - generic [ref=e176]:
+                - generic [ref=e177]: Avg. Salary
+                - generic [ref=e178]: CI$ 22,312
+        - link "6 Skilled Agricultural, Forestry and Fishery Workers 4 specializations Active Jobs 218 Avg. Salary CI$ 22,334" [ref=e179] [cursor=pointer]:
+          - /url: /careers?tab=career-tracks
+          - generic [ref=e181]:
+            - generic [ref=e182]:
+              - generic [ref=e183]: "6"
+              - img [ref=e184]
+            - generic [ref=e186]: Skilled Agricultural, Forestry and Fishery Workers
+            - paragraph [ref=e187]: 4 specializations
+            - generic [ref=e188]:
+              - generic [ref=e189]:
+                - generic [ref=e190]: Active Jobs
+                - generic [ref=e191]: "218"
+              - generic [ref=e192]:
+                - generic [ref=e193]: Avg. Salary
+                - generic [ref=e194]: CI$ 22,334
+        - link "7 Craft and Related Trades Workers 6 specializations Active Jobs 4493 Avg. Salary CI$ 30,109" [ref=e195] [cursor=pointer]:
+          - /url: /careers?tab=career-tracks
+          - generic [ref=e197]:
+            - generic [ref=e198]:
+              - generic [ref=e199]: "7"
+              - img [ref=e200]
+            - generic [ref=e202]: Craft and Related Trades Workers
+            - paragraph [ref=e203]: 6 specializations
+            - generic [ref=e204]:
+              - generic [ref=e205]:
+                - generic [ref=e206]: Active Jobs
+                - generic [ref=e207]: "4493"
+              - generic [ref=e208]:
+                - generic [ref=e209]: Avg. Salary
+                - generic [ref=e210]: CI$ 30,109
+        - link "8 Plant and Machine Operators, and Assemblers 4 specializations Active Jobs 705 Avg. Salary CI$ 27,109" [ref=e211] [cursor=pointer]:
+          - /url: /careers?tab=career-tracks
+          - generic [ref=e213]:
+            - generic [ref=e214]:
+              - generic [ref=e215]: "8"
+              - img [ref=e216]
+            - generic [ref=e218]: Plant and Machine Operators, and Assemblers
+            - paragraph [ref=e219]: 4 specializations
+            - generic [ref=e220]:
+              - generic [ref=e221]:
+                - generic [ref=e222]: Active Jobs
+                - generic [ref=e223]: "705"
+              - generic [ref=e224]:
+                - generic [ref=e225]: Avg. Salary
+                - generic [ref=e226]: CI$ 27,109
+      - generic [ref=e227]:
+        - generic [ref=e228]:
+          - img [ref=e229]
+          - heading "Work on what you love." [level=4] [ref=e231]
+        - generic [ref=e233]:
+          - link "Live posting Tiler ROBERT CAMERON T/A SOL... KYD$1,400 Bi-Weekly · Full-time" [ref=e234] [cursor=pointer]:
+            - /url: /jobs/Y3E7N7
+            - generic [ref=e235]: Live posting
+            - generic [ref=e236]: Tiler
+            - generic [ref=e237]: ROBERT CAMERON T/A SOL...
+            - generic [ref=e238]: KYD$1,400 Bi-Weekly · Full-time
+          - link "Live posting Scuba Instructor Indepth Watersports Ltd KYD$23,989.68 - KYD$28,803.06 Per Annum · Full-time" [ref=e239] [cursor=pointer]:
+            - /url: /jobs/S4A8H4
+            - generic [ref=e240]: Live posting
+            - generic [ref=e241]: Scuba Instructor
+            - generic [ref=e242]: Indepth Watersports Ltd
+            - generic [ref=e243]: KYD$23,989.68 - KYD$28,803.06 Per Annum · Full-time
+          - link "Live posting Food & Beverage Manager PB EMPLOYEE CO LTD USD$68,000 - USD$78,000 Per Annum · Full-time" [ref=e244] [cursor=pointer]:
+            - /url: /jobs/X8J2F2
+            - generic [ref=e245]: Live posting
+            - generic [ref=e246]: Food & Beverage Manager
+            - generic [ref=e247]: PB EMPLOYEE CO LTD
+            - generic [ref=e248]: USD$68,000 - USD$78,000 Per Annum · Full-time
+          - link "Live posting Kids Camp Manager PB EMPLOYEE CO LTD USD$62,000 - USD$68,000 Per Annum · Full-time" [ref=e249] [cursor=pointer]:
+            - /url: /jobs/W5M2Y2
+            - generic [ref=e250]: Live posting
+            - generic [ref=e251]: Kids Camp Manager
+            - generic [ref=e252]: PB EMPLOYEE CO LTD
+            - generic [ref=e253]: USD$62,000 - USD$68,000 Per Annum · Full-time
+          - link "Live posting Gardener/ Landscaper A... JB Plus Gardening Serv... KYD$20,475 - KYD$21,060 Per Annum · Full-time" [ref=e254] [cursor=pointer]:
+            - /url: /jobs/F7C5T6
+            - generic [ref=e255]: Live posting
+            - generic [ref=e256]: Gardener/ Landscaper A...
+            - generic [ref=e257]: JB Plus Gardening Serv...
+            - generic [ref=e258]: KYD$20,475 - KYD$21,060 Per Annum · Full-time
+          - link "Live posting Legal Consultant (Inve... Harneys (Harney Westwo... USD$125,000 - USD$175,000 Per Annum · Full-time" [ref=e259] [cursor=pointer]:
+            - /url: /jobs/Y2G8V2
+            - generic [ref=e260]: Live posting
+            - generic [ref=e261]: Legal Consultant (Inve...
+            - generic [ref=e262]: Harneys (Harney Westwo...
+            - generic [ref=e263]: USD$125,000 - USD$175,000 Per Annum · Full-time
+          - link "Live posting Legal Consultant (Inve... Harneys (Harney Westwo... USD$125,000 - USD$175,000 Per Annum · Full-time" [ref=e264] [cursor=pointer]:
+            - /url: /jobs/V3F4V6
+            - generic [ref=e265]: Live posting
+            - generic [ref=e266]: Legal Consultant (Inve...
+            - generic [ref=e267]: Harneys (Harney Westwo...
+            - generic [ref=e268]: USD$125,000 - USD$175,000 Per Annum · Full-time
+          - link "Live posting Full-Time Tour Bus Driver ISLAND LUXE CONCIERGE ... USD$9 Per Hour · Full-time" [ref=e269] [cursor=pointer]:
+            - /url: /jobs/E2B8W5
+            - generic [ref=e270]: Live posting
+            - generic [ref=e271]: Full-Time Tour Bus Driver
+            - generic [ref=e272]: ISLAND LUXE CONCIERGE ...
+            - generic [ref=e273]: USD$9 Per Hour · Full-time
+          - link "Live posting Tiler ROBERT CAMERON T/A SOL... KYD$1,400 Bi-Weekly · Full-time" [ref=e274] [cursor=pointer]:
+            - /url: /jobs/Y3E7N7
+            - generic [ref=e275]: Live posting
+            - generic [ref=e276]: Tiler
+            - generic [ref=e277]: ROBERT CAMERON T/A SOL...
+            - generic [ref=e278]: KYD$1,400 Bi-Weekly · Full-time
+          - link "Live posting Scuba Instructor Indepth Watersports Ltd KYD$23,989.68 - KYD$28,803.06 Per Annum · Full-time" [ref=e279] [cursor=pointer]:
+            - /url: /jobs/S4A8H4
+            - generic [ref=e280]: Live posting
+            - generic [ref=e281]: Scuba Instructor
+            - generic [ref=e282]: Indepth Watersports Ltd
+            - generic [ref=e283]: KYD$23,989.68 - KYD$28,803.06 Per Annum · Full-time
+          - link "Live posting Food & Beverage Manager PB EMPLOYEE CO LTD USD$68,000 - USD$78,000 Per Annum · Full-time" [ref=e284] [cursor=pointer]:
+            - /url: /jobs/X8J2F2
+            - generic [ref=e285]: Live posting
+            - generic [ref=e286]: Food & Beverage Manager
+            - generic [ref=e287]: PB EMPLOYEE CO LTD
+            - generic [ref=e288]: USD$68,000 - USD$78,000 Per Annum · Full-time
+          - link "Live posting Kids Camp Manager PB EMPLOYEE CO LTD USD$62,000 - USD$68,000 Per Annum · Full-time" [ref=e289] [cursor=pointer]:
+            - /url: /jobs/W5M2Y2
+            - generic [ref=e290]: Live posting
+            - generic [ref=e291]: Kids Camp Manager
+            - generic [ref=e292]: PB EMPLOYEE CO LTD
+            - generic [ref=e293]: USD$62,000 - USD$68,000 Per Annum · Full-time
+          - link "Live posting Gardener/ Landscaper A... JB Plus Gardening Serv... KYD$20,475 - KYD$21,060 Per Annum · Full-time" [ref=e294] [cursor=pointer]:
+            - /url: /jobs/F7C5T6
+            - generic [ref=e295]: Live posting
+            - generic [ref=e296]: Gardener/ Landscaper A...
+            - generic [ref=e297]: JB Plus Gardening Serv...
+            - generic [ref=e298]: KYD$20,475 - KYD$21,060 Per Annum · Full-time
+          - link "Live posting Legal Consultant (Inve... Harneys (Harney Westwo... USD$125,000 - USD$175,000 Per Annum · Full-time" [ref=e299] [cursor=pointer]:
+            - /url: /jobs/Y2G8V2
+            - generic [ref=e300]: Live posting
+            - generic [ref=e301]: Legal Consultant (Inve...
+            - generic [ref=e302]: Harneys (Harney Westwo...
+            - generic [ref=e303]: USD$125,000 - USD$175,000 Per Annum · Full-time
+          - link "Live posting Legal Consultant (Inve... Harneys (Harney Westwo... USD$125,000 - USD$175,000 Per Annum · Full-time" [ref=e304] [cursor=pointer]:
+            - /url: /jobs/V3F4V6
+            - generic [ref=e305]: Live posting
+            - generic [ref=e306]: Legal Consultant (Inve...
+            - generic [ref=e307]: Harneys (Harney Westwo...
+            - generic [ref=e308]: USD$125,000 - USD$175,000 Per Annum · Full-time
+          - link "Live posting Full-Time Tour Bus Driver ISLAND LUXE CONCIERGE ... USD$9 Per Hour · Full-time" [ref=e309] [cursor=pointer]:
+            - /url: /jobs/E2B8W5
+            - generic [ref=e310]: Live posting
+            - generic [ref=e311]: Full-Time Tour Bus Driver
+            - generic [ref=e312]: ISLAND LUXE CONCIERGE ...
+            - generic [ref=e313]: USD$9 Per Hour · Full-time
+    - generic [ref=e316]:
+      - generic [ref=e317]:
+        - generic [ref=e318]:
+          - img [ref=e319]
+          - generic [ref=e322]: For Candidates
+        - heading "Connect with your community. Get the right role." [level=3] [ref=e323]
+        - paragraph [ref=e324]: You shouldn't need connections to get a fair shot. Create a profile free. Get seen by 3,800+ employers on the island. Get introduced directly — no recruiter middleman.
+        - generic [ref=e325]:
+          - generic [ref=e326]:
+            - img [ref=e327]
+            - generic [ref=e330]: Free forever. Create your profile, get matched, get introduced. No cost to you.
+          - generic [ref=e331]:
+            - img [ref=e332]
+            - generic [ref=e335]: Get seen by every employer. Not just the ones using one recruiter. Everyone.
+          - generic [ref=e336]:
+            - img [ref=e337]
+            - generic [ref=e340]: Direct introductions. Employers contact you directly. Build real relationships.
+        - button "Create Your Free Profile" [ref=e341] [cursor=pointer]:
+          - img [ref=e342]
+          - text: Create Your Free Profile
+          - img [ref=e345]
+      - generic [ref=e347]:
+        - generic [ref=e348]:
+          - img [ref=e349]
+          - generic [ref=e353]: For Employers
+        - heading "Hire Caymanian talent. Direct connections with your community." [level=3] [ref=e354]
+        - paragraph [ref=e355]: Stop paying 15-25% per hire. Search Caymanian talent directly. Send introductions. Build relationships. Hire faster. Stay compliant. One monthly fee.
+        - generic [ref=e356]:
+          - generic [ref=e357]:
+            - img [ref=e358]
+            - generic [ref=e361]: Save money. $299/month replaces 15-25% per-hire fees. Hiring 10 people/year? Save CI$90-150K.
+          - generic [ref=e362]:
+            - img [ref=e363]
+            - generic [ref=e366]: Save time. Search talent by skill, education, experience, location. Direct introductions. No recruiter delays.
+          - generic [ref=e367]:
+            - img [ref=e368]
+            - generic [ref=e371]: Stay compliant. Timestamped records. Structured feedback. One-click reports. Proof you tried.
+        - link "Search Talent" [ref=e372] [cursor=pointer]:
+          - /url: /talent
+          - button "Search Talent" [ref=e373]:
+            - img [ref=e374]
+            - text: Search Talent
+            - img [ref=e379]
+    - generic [ref=e383]:
+      - generic [ref=e384]:
+        - generic [ref=e385]:
+          - img [ref=e386]
+          - text: For Employers
+        - heading "Stop paying 15–25% per hire. CI$299/month replaces your recruiter." [level=2] [ref=e390]:
+          - text: Stop paying 15–25% per hire.
+          - text: CI$299/month replaces your recruiter.
+        - paragraph [ref=e391]: Search Caymanian talent directly. Send introductions. Hire faster. Build relationships. One flat fee — no per-hire commissions.
+        - generic [ref=e392]:
+          - generic [ref=e393]:
+            - generic [ref=e394]: CI$90K+
+            - generic [ref=e395]: saved/year vs recruiters
+          - generic [ref=e396]:
+            - generic [ref=e397]: "1865"
+            - generic [ref=e398]: active postings
+          - generic [ref=e399]:
+            - generic [ref=e400]: Direct
+            - generic [ref=e401]: candidate connections
+        - generic [ref=e402]:
+          - link "Search Caymanian Talent" [ref=e403] [cursor=pointer]:
+            - /url: /talent
+            - button "Search Caymanian Talent" [ref=e404]:
+              - img [ref=e405]
+              - text: Search Caymanian Talent
+          - link "Set Up Employer Account" [ref=e410] [cursor=pointer]:
+            - /url: /employer/setup
+            - button "Set Up Employer Account" [ref=e411]:
+              - img [ref=e412]
+              - text: Set Up Employer Account
+      - generic [ref=e417]:
+        - generic [ref=e418]: Cost comparison
+        - generic [ref=e419]:
+          - generic [ref=e420]:
+            - generic [ref=e421]:
+              - generic [ref=e422]: Traditional Recruiter
+              - generic [ref=e423]: 15–25% of first-year salary
+            - generic [ref=e424]: CI$10–16K/hire
+          - generic [ref=e425]: vs
+          - generic [ref=e426]:
+            - generic [ref=e427]:
+              - generic [ref=e428]: careers.ky Pro
+              - generic [ref=e429]: Unlimited hires, one flat fee
+            - generic [ref=e430]: CI$299/mo
+        - generic [ref=e431]: 10 hires/year = CI$90–150K saved
+    - generic [ref=e435]:
+      - heading "Ready to explore 1865+ active jobs?" [level=3] [ref=e436]:
+        - text: Ready to explore
+        - generic [ref=e437]: 1865+ active jobs
+        - text: "?"
+      - paragraph [ref=e438]: Browse real-time job postings, filter by location, salary, and industry. Find your next opportunity in Cayman.
+      - generic [ref=e439]:
+        - link "Browse All Jobs" [ref=e440] [cursor=pointer]:
+          - /url: /careers
+          - button "Browse All Jobs" [ref=e441]:
+            - img [ref=e442]
+            - text: Browse All Jobs
+        - button "Create Your Free Profile" [ref=e445] [cursor=pointer]:
+          - img [ref=e446]
+          - text: Create Your Free Profile
+    - generic [ref=e450]:
+      - heading "Frequently asked" [level=5] [ref=e451]
+      - generic [ref=e452]:
+        - button "What is careers.ky?" [ref=e454] [cursor=pointer]:
+          - text: What is careers.ky?
+          - img [ref=e455]
+        - button "Is it free for candidates?" [ref=e458] [cursor=pointer]:
+          - text: Is it free for candidates?
+          - img [ref=e459]
+        - button "How do talent profiles work?" [ref=e462] [cursor=pointer]:
+          - text: How do talent profiles work?
+          - img [ref=e463]
+        - button "How do introductions work?" [ref=e466] [cursor=pointer]:
+          - text: How do introductions work?
+          - img [ref=e467]
+        - button "How much does it cost for employers?" [ref=e470] [cursor=pointer]:
+          - text: How much does it cost for employers?
+          - img [ref=e471]
+        - button "Where does the job data come from?" [ref=e474] [cursor=pointer]:
+          - text: Where does the job data come from?
+          - img [ref=e475]
+        - button "How does careers.ky help with compliance?" [ref=e478] [cursor=pointer]:
+          - text: How does careers.ky help with compliance?
+          - img [ref=e479]
+        - button "Who can use this platform?" [ref=e482] [cursor=pointer]:
+          - text: Who can use this platform?
+          - img [ref=e483]
+        - button "What makes this different from a recruiter?" [ref=e486] [cursor=pointer]:
+          - text: What makes this different from a recruiter?
+          - img [ref=e487]
+    - generic [ref=e493]:
+      - generic [ref=e494]:
+        - generic [ref=e495]: For Candidates
+        - generic [ref=e496]: Your talent. Your opportunity. Fair shot.
+        - paragraph [ref=e497]: Create your profile free and let every employer on the island find you. No recruiter. No commission. Just opportunity.
+        - button "Create Profile" [ref=e498] [cursor=pointer]:
+          - img [ref=e499]
+          - text: Create Profile
+          - img [ref=e502]
+      - generic [ref=e504]:
+        - generic [ref=e505]: For Employers
+        - generic [ref=e506]: Find Caymanian talent. Direct connections with your community.
+        - paragraph [ref=e507]: Search local talent directly. Send introductions. One monthly fee replaces 15-25% per-hire recruiter costs.
+        - link "Search Talent" [ref=e508] [cursor=pointer]:
+          - /url: /talent
+          - button "Search Talent" [ref=e509]:
+            - img [ref=e510]
+            - text: Search Talent
+            - img [ref=e515]
+  - contentinfo [ref=e517]:
+    - generic [ref=e518]:
+      - generic [ref=e519]:
+        - generic [ref=e520]:
+          - img "careers.ky logo" [ref=e522]
+          - generic [ref=e523]:
+            - generic [ref=e524]: careers.ky
+            - generic [ref=e525]: A Caymanian-First Careers Platform
+        - generic [ref=e526]:
+          - generic [ref=e527]:
+            - generic [ref=e528]: For Job Seekers
+            - generic [ref=e529]:
+              - link "Career Tracks" [ref=e530] [cursor=pointer]:
+                - /url: /careers?tab=career-tracks
+              - link "Live Search" [ref=e531] [cursor=pointer]:
+                - /url: /careers?tab=jobs
+              - link "Create Profile" [ref=e532] [cursor=pointer]:
+                - /url: /profile/setup
+          - generic [ref=e533]:
+            - generic [ref=e534]: For Employers
+            - generic [ref=e535]:
+              - link "Employer Directory" [ref=e536] [cursor=pointer]:
+                - /url: /employers
+              - link "Search Talent" [ref=e537] [cursor=pointer]:
+                - /url: /talent
+        - generic [ref=e538]:
+          - link "About" [ref=e539] [cursor=pointer]:
+            - /url: /about
+          - link "FAQ" [ref=e540] [cursor=pointer]:
+            - /url: "#faq"
+      - paragraph [ref=e542]: Making hiring talent visible, accessible and fair. Job postings synced daily from WORC.
+      - generic [ref=e543]:
+        - text: Built by
+        - link "Sean Ellul" [ref=e544] [cursor=pointer]:
+          - /url: https://seanellul.com
+        - text: "·Also:"
+        - link "Legislation.ky" [ref=e545] [cursor=pointer]:
+          - /url: https://legislation.ky
+        - text: "|"
+        - link "Constitution.ky" [ref=e546] [cursor=pointer]:
+          - /url: https://constitution.ky
+        - text: "|"
+        - link "Cheap.ky" [ref=e547] [cursor=pointer]:
+          - /url: https://cheap.ky
+        - text: "|"
+        - link "CayBooks" [ref=e548] [cursor=pointer]:
+          - /url: https://caybooks.com
+  - generic [ref=e549]:
+    - generic [ref=e550]:
+      - generic [ref=e551]: DEV TOOLBAR
+      - button "−" [ref=e552] [cursor=pointer]
+    - generic [ref=e553]: "Current: Not signed in"
+    - generic [ref=e554]: "Test without OAuth:"
+    - button "New candidate → profile setup" [ref=e555] [cursor=pointer]
+    - button "Stable dev candidate → dashboard" [ref=e556] [cursor=pointer]
+    - generic [ref=e557]: "Switch existing DB user:"
+    - generic [ref=e558]:
+      - button "Employer" [ref=e559] [cursor=pointer]
+      - button "Candidate" [ref=e560] [cursor=pointer]

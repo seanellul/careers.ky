@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { getSession } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 import { getEmployerPostings } from "@/lib/data";
+import { getComplianceRollup } from "@/lib/compliance";
 import ReportsClient from "./ReportsClient";
 
 export const metadata = {
@@ -16,6 +17,7 @@ export default async function ReportsPage() {
   const employers = await sql`SELECT name FROM employers WHERE id = ${session.employerId}`;
 
   const postings = await getEmployerPostings(session.employerId);
+  const rollup = await getComplianceRollup(session.employerAccountId, session.employerId);
 
   const introCounts = await sql`
     SELECT job_id,
@@ -43,5 +45,11 @@ export default async function ReportsPage() {
     hiredCount: countMap[p.cJobId]?.hired || 0,
   }));
 
-  return <ReportsClient postings={postingsWithCounts} employerName={employers[0]?.name} />;
+  return (
+    <ReportsClient
+      postings={postingsWithCounts}
+      employerName={employers[0]?.name}
+      rollup={rollup}
+    />
+  );
 }

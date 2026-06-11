@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FileText, Download, Eye, Users, CheckCircle, Briefcase, ArrowLeft } from "lucide-react";
+import ComplianceRollupCard from "@/components/ComplianceRollupCard";
 
-export default function ReportsClient({ postings, employerName }) {
+export default function ReportsClient({ postings, employerName, rollup }) {
   return (
     <div>
       <div className="flex items-center gap-3 mb-2">
@@ -22,6 +23,8 @@ export default function ReportsClient({ postings, employerName }) {
       <p className="text-neutral-600 dark:text-neutral-400 mb-8 ml-[52px]">
         Track recruitment efforts per job posting for work permit compliance.
       </p>
+
+      {rollup && <ComplianceRollupCard rollup={rollup} employerName={employerName} />}
 
       {postings.length === 0 ? (
         <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
