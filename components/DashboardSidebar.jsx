@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Briefcase,
   LayoutDashboard,
   Building2,
   Users,
@@ -25,6 +26,7 @@ export default function DashboardSidebar({ employerSlug, accountRole }) {
     { href: "/employer/dashboard", label: "Overview", icon: LayoutDashboard },
     { href: "/employer/profile", label: "Profile", icon: Building2 },
     { href: "/employer/talent", label: "Talent Search", icon: Users },
+    { href: "/employer/jobs", label: "Job Postings", icon: Briefcase },
     { href: "/employer/shortlists", label: "Shortlists", icon: List },
     { href: "/employer/reports", label: "Reports", icon: FileText },
     ...(accountRole === "owner" || accountRole === "admin"

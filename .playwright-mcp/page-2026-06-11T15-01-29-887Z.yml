@@ -1,0 +1,178 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "careers.ky logo careers.ky" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "careers.ky logo" [ref=e6]
+        - generic [ref=e7]: careers.ky
+      - navigation [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "Careers" [ref=e10] [cursor=pointer]:
+          - /url: /careers
+        - link "About" [ref=e11] [cursor=pointer]:
+          - /url: /about
+        - button "Toggle dark mode" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+  - generic [ref=e17]:
+    - complementary [ref=e18]:
+      - navigation [ref=e20]:
+        - generic [ref=e21]: Admin
+        - link "Overview" [ref=e22] [cursor=pointer]:
+          - /url: /admin
+          - img [ref=e23]
+          - generic [ref=e28]: Overview
+        - link "Candidates" [ref=e29] [cursor=pointer]:
+          - /url: /admin/candidates
+          - img [ref=e30]
+          - generic [ref=e35]: Candidates
+        - link "Employers" [ref=e36] [cursor=pointer]:
+          - /url: /admin/employers
+          - img [ref=e37]
+          - generic [ref=e41]: Employers
+        - link "Pitch Decks" [ref=e42] [cursor=pointer]:
+          - /url: /admin/pitches
+          - img [ref=e43]
+          - generic [ref=e46]: Pitch Decks
+        - link "Verifications" [ref=e47] [cursor=pointer]:
+          - /url: /admin/verifications
+          - img [ref=e48]
+          - generic [ref=e51]: Verifications
+        - link "Interests" [ref=e52] [cursor=pointer]:
+          - /url: /admin/interests
+          - img [ref=e53]
+          - generic [ref=e55]: Interests
+        - link "Outreach" [ref=e56] [cursor=pointer]:
+          - /url: /admin/outreach
+          - img [ref=e57]
+          - generic [ref=e60]: Outreach
+        - link "Waitlist" [ref=e61] [cursor=pointer]:
+          - /url: /admin/waitlist
+          - img [ref=e62]
+          - generic [ref=e65]: Waitlist
+    - main [ref=e66]:
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - img [ref=e69]
+          - heading "Candidate Status Documents" [level=1] [ref=e72]
+          - generic [ref=e73]: (1 pending)
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - generic [ref=e77]:
+              - text: Dev Stable
+              - paragraph [ref=e78]: dev-candidate-stable@test.careers.ky
+              - paragraph [ref=e79]: "Declared status: Not declared"
+            - generic [ref=e80]:
+              - paragraph [ref=e81]: test-status-proof.pdf
+              - paragraph [ref=e82]: 11/06/2026
+              - link "View document" [ref=e83] [cursor=pointer]:
+                - /url: /api/admin/verifications/documents/1
+                - text: View document
+                - img [ref=e84]
+          - generic [ref=e88]:
+            - generic [ref=e89]:
+              - generic [ref=e90]: Rejection notes (optional)
+              - textbox "e.g. document unreadable, wrong document type..." [ref=e91]
+            - button "Approve & verify" [ref=e92] [cursor=pointer]:
+              - img [ref=e93]
+              - text: Approve & verify
+            - button "Reject" [ref=e95] [cursor=pointer]:
+              - img [ref=e96]
+              - text: Reject
+        - generic [ref=e99]:
+          - img [ref=e100]
+          - heading "Employer Verifications" [level=1] [ref=e103]
+        - generic [ref=e104]:
+          - button "Pending(1)" [ref=e105] [cursor=pointer]:
+            - text: Pending
+            - generic [ref=e106]: (1)
+          - button "Approved" [ref=e107] [cursor=pointer]
+          - button "Rejected" [ref=e108] [cursor=pointer]
+          - button "All" [ref=e109] [cursor=pointer]
+        - generic [ref=e111]:
+          - generic [ref=e112]:
+            - generic [ref=e113]:
+              - generic [ref=e114]:
+                - generic [ref=e115]: Melissa Comparin, CHRL, MHRM
+                - generic [ref=e116]: pending
+              - paragraph [ref=e117]: melissa.comparin@gmail.com
+            - generic [ref=e118]:
+              - paragraph [ref=e119]: Ogier
+              - paragraph [ref=e120]: ogier.com
+          - generic [ref=e121]:
+            - generic [ref=e122]: "Email domain: gmail.com"
+            - generic [ref=e123]: "Company domain: ogier.com"
+            - generic [ref=e124]: 25/03/2026
+          - generic [ref=e125]:
+            - generic [ref=e126]:
+              - generic [ref=e127]: Set company domain (optional)
+              - textbox "company.com" [ref=e128]
+            - generic [ref=e129]:
+              - generic [ref=e130]: Rejection notes (optional)
+              - textbox "Reason for rejection..." [ref=e131]
+            - button "Approve" [ref=e132] [cursor=pointer]:
+              - img [ref=e133]
+              - text: Approve
+            - button "Reject" [ref=e135] [cursor=pointer]:
+              - img [ref=e136]
+              - text: Reject
+  - contentinfo [ref=e139]:
+    - generic [ref=e140]:
+      - generic [ref=e141]:
+        - generic [ref=e142]:
+          - img "careers.ky logo" [ref=e144]
+          - generic [ref=e145]:
+            - generic [ref=e146]: careers.ky
+            - generic [ref=e147]: A Caymanian-First Careers Platform
+        - generic [ref=e148]:
+          - generic [ref=e149]:
+            - generic [ref=e150]: For Job Seekers
+            - generic [ref=e151]:
+              - link "Career Tracks" [ref=e152] [cursor=pointer]:
+                - /url: /careers?tab=career-tracks
+              - link "Live Search" [ref=e153] [cursor=pointer]:
+                - /url: /careers?tab=jobs
+              - link "Create Profile" [ref=e154] [cursor=pointer]:
+                - /url: /profile/setup
+          - generic [ref=e155]:
+            - generic [ref=e156]: For Employers
+            - generic [ref=e157]:
+              - link "Employer Directory" [ref=e158] [cursor=pointer]:
+                - /url: /employers
+              - link "Search Talent" [ref=e159] [cursor=pointer]:
+                - /url: /talent
+        - generic [ref=e160]:
+          - link "About" [ref=e161] [cursor=pointer]:
+            - /url: /about
+          - link "FAQ" [ref=e162] [cursor=pointer]:
+            - /url: "#faq"
+      - paragraph [ref=e164]: Making hiring talent visible, accessible and fair. Job postings synced daily from WORC.
+      - generic [ref=e165]:
+        - text: Built by
+        - link "Sean Ellul" [ref=e166] [cursor=pointer]:
+          - /url: https://seanellul.com
+        - text: "·Also:"
+        - link "Legislation.ky" [ref=e167] [cursor=pointer]:
+          - /url: https://legislation.ky
+        - text: "|"
+        - link "Constitution.ky" [ref=e168] [cursor=pointer]:
+          - /url: https://constitution.ky
+        - text: "|"
+        - link "Cheap.ky" [ref=e169] [cursor=pointer]:
+          - /url: https://cheap.ky
+        - text: "|"
+        - link "CayBooks" [ref=e170] [cursor=pointer]:
+          - /url: https://caybooks.com
+  - generic [ref=e171]:
+    - generic [ref=e172]:
+      - generic [ref=e173]: DEV TOOLBAR
+      - button "−" [ref=e174] [cursor=pointer]
+    - generic [ref=e175]: "Current: Not signed in"
+    - generic [ref=e176]: "Test without OAuth:"
+    - button "New candidate → profile setup" [ref=e177] [cursor=pointer]
+    - button "Stable dev candidate → dashboard" [ref=e178] [cursor=pointer]
+    - generic [ref=e179]: "Switch existing DB user:"
+    - generic [ref=e180]:
+      - button "Employer" [ref=e181] [cursor=pointer]
+      - button "Candidate" [ref=e182] [cursor=pointer]
+  - alert [ref=e183]

@@ -1,0 +1,120 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "careers.ky logo careers.ky" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "careers.ky logo" [ref=e6]
+        - generic [ref=e7]: careers.ky
+      - navigation [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "Careers" [ref=e10] [cursor=pointer]:
+          - /url: /careers
+        - link "About" [ref=e11] [cursor=pointer]:
+          - /url: /about
+        - button "Toggle dark mode" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+        - link "Sign In" [ref=e15] [cursor=pointer]:
+          - /url: /sign-in
+  - main [ref=e16]:
+    - generic [ref=e17]:
+      - link "Back to home" [ref=e18] [cursor=pointer]:
+        - /url: /
+        - img [ref=e19]
+        - text: Back to home
+      - generic [ref=e21]:
+        - heading "Get discovered by Cayman's top employers" [level=1] [ref=e22]
+        - paragraph [ref=e23]: Sign in to get started — it's free
+      - tablist "Account type" [ref=e24]:
+        - tab "Job seekers Candidates" [selected] [ref=e25] [cursor=pointer]:
+          - img [ref=e26]
+          - generic [ref=e29]:
+            - generic [ref=e30]: Job seekers
+            - generic [ref=e31]: Candidates
+        - tab "Employers Hiring & talent" [ref=e32] [cursor=pointer]:
+          - img [ref=e33]
+          - generic [ref=e37]:
+            - generic [ref=e38]: Employers
+            - generic [ref=e39]: Hiring & talent
+      - list [ref=e40]:
+        - listitem [ref=e41]:
+          - img [ref=e42]
+          - text: Build a profile that employers actively browse
+        - listitem [ref=e45]:
+          - img [ref=e46]
+          - text: Express interest in jobs with one click
+        - listitem [ref=e49]:
+          - img [ref=e50]
+          - text: Get matched to roles that fit your skills
+      - generic [ref=e53]:
+        - link "Continue with Google" [ref=e54] [cursor=pointer]:
+          - /url: /api/auth/google?type=candidate
+          - img [ref=e55]
+          - text: Continue with Google
+        - link "Continue with LinkedIn" [ref=e60] [cursor=pointer]:
+          - /url: /api/auth/linkedin?type=candidate
+          - img [ref=e61]
+          - text: Continue with LinkedIn
+      - paragraph [ref=e63]:
+        - text: We only use your name and email to create your account.
+        - text: We'll never post on your behalf.
+  - contentinfo [ref=e64]:
+    - generic [ref=e65]:
+      - generic [ref=e66]:
+        - generic [ref=e67]:
+          - img "careers.ky logo" [ref=e69]
+          - generic [ref=e70]:
+            - generic [ref=e71]: careers.ky
+            - generic [ref=e72]: A Caymanian-First Careers Platform
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - generic [ref=e75]: For Job Seekers
+            - generic [ref=e76]:
+              - link "Career Tracks" [ref=e77] [cursor=pointer]:
+                - /url: /careers?tab=career-tracks
+              - link "Live Search" [ref=e78] [cursor=pointer]:
+                - /url: /careers?tab=jobs
+              - link "Create Profile" [ref=e79] [cursor=pointer]:
+                - /url: /profile/setup
+          - generic [ref=e80]:
+            - generic [ref=e81]: For Employers
+            - generic [ref=e82]:
+              - link "Employer Directory" [ref=e83] [cursor=pointer]:
+                - /url: /employers
+              - link "Search Talent" [ref=e84] [cursor=pointer]:
+                - /url: /talent
+        - generic [ref=e85]:
+          - link "About" [ref=e86] [cursor=pointer]:
+            - /url: /about
+          - link "FAQ" [ref=e87] [cursor=pointer]:
+            - /url: "#faq"
+      - paragraph [ref=e89]: Making hiring talent visible, accessible and fair. Job postings synced daily from WORC.
+      - generic [ref=e90]:
+        - text: Built by
+        - link "Sean Ellul" [ref=e91] [cursor=pointer]:
+          - /url: https://seanellul.com
+        - text: "·Also:"
+        - link "Legislation.ky" [ref=e92] [cursor=pointer]:
+          - /url: https://legislation.ky
+        - text: "|"
+        - link "Constitution.ky" [ref=e93] [cursor=pointer]:
+          - /url: https://constitution.ky
+        - text: "|"
+        - link "Cheap.ky" [ref=e94] [cursor=pointer]:
+          - /url: https://cheap.ky
+        - text: "|"
+        - link "CayBooks" [ref=e95] [cursor=pointer]:
+          - /url: https://caybooks.com
+  - generic [ref=e96]:
+    - generic [ref=e97]:
+      - generic [ref=e98]: DEV TOOLBAR
+      - button "−" [ref=e99] [cursor=pointer]
+    - generic [ref=e100]: "Current: Not signed in"
+    - generic [ref=e101]: "Test without OAuth:"
+    - button "New candidate → profile setup" [ref=e102] [cursor=pointer]
+    - button "Stable dev candidate → dashboard" [ref=e103] [cursor=pointer]
+    - generic [ref=e104]: "Switch existing DB user:"
+    - generic [ref=e105]:
+      - button "Employer" [ref=e106] [cursor=pointer]
+      - button "Candidate" [ref=e107] [cursor=pointer]
+  - alert [ref=e108]

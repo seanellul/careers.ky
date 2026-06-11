@@ -1,0 +1,191 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "careers.ky logo careers.ky" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "careers.ky logo" [ref=e6]
+        - generic [ref=e7]: careers.ky
+      - navigation [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "Careers" [ref=e10] [cursor=pointer]:
+          - /url: /careers
+        - link "About" [ref=e11] [cursor=pointer]:
+          - /url: /about
+        - button "Toggle dark mode" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+  - generic [ref=e17]:
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - button "Edit Profile" [ref=e21] [cursor=pointer]:
+          - img [ref=e22]
+          - text: Edit Profile
+        - link [ref=e24] [cursor=pointer]:
+          - /url: /notifications
+          - button [ref=e25]:
+            - img [ref=e26]
+        - button [ref=e29] [cursor=pointer]:
+          - img [ref=e30]
+      - generic [ref=e34]:
+        - generic [ref=e35]: D
+        - generic [ref=e36]:
+          - heading "Dev Stable" [level=1] [ref=e37]
+          - generic [ref=e39]: Actively Looking
+    - generic [ref=e40]:
+      - generic [ref=e42]:
+        - generic [ref=e44]:
+          - img [ref=e45]
+          - text: Status verification
+        - paragraph [ref=e48]: Upload proof of your status (Caymanian certificate, PR, RERC or permit scan). Our team reviews it and your profile gets the verified badge with full priority ranking.
+        - button "Upload proof of status" [ref=e49] [cursor=pointer]:
+          - img [ref=e50]
+          - text: Upload proof of status
+      - generic [ref=e55]:
+        - generic [ref=e56]:
+          - img [ref=e57]
+          - text: Blocked companies
+        - paragraph [ref=e61]: Companies you add here can never see your profile in any search, on any plan — for example, your current employer.
+        - textbox "Search companies to block..." [ref=e63]
+    - generic [ref=e65]:
+      - generic [ref=e66]:
+        - heading "Profile Strength" [level=3] [ref=e67]
+        - generic [ref=e68]: 10%
+      - generic [ref=e71]:
+        - generic [ref=e72]: Write a bio
+        - generic [ref=e73]: Set education level
+        - generic [ref=e74]: Set experience level
+        - generic [ref=e75]: Set your location
+        - generic [ref=e76]: Add career interests
+        - generic [ref=e77]: Add skills
+        - generic [ref=e78]: Make profile discoverable
+        - generic [ref=e79]: Add minimum salary expectation
+        - generic [ref=e80]: Set work type preferences
+        - generic [ref=e81]: Add LinkedIn URL
+        - generic [ref=e82]: Add a headline
+        - generic [ref=e83]: Add a profile picture
+        - generic [ref=e84]: Add phone number
+      - button "Preview how employers see you" [ref=e86] [cursor=pointer]:
+        - img [ref=e87]
+        - text: Preview how employers see you
+    - generic [ref=e90]:
+      - generic [ref=e91]:
+        - generic [ref=e93]:
+          - heading "About" [level=2] [ref=e94]
+          - paragraph [ref=e95]: No bio yet. Tell employers about yourself.
+        - generic [ref=e97]:
+          - heading "Professional Details" [level=2] [ref=e98]:
+            - img
+            - text: Professional Details
+          - generic [ref=e100]:
+            - generic [ref=e101]:
+              - img [ref=e102]
+              - generic [ref=e104]: Not set
+            - generic [ref=e105]:
+              - img [ref=e106]
+              - generic [ref=e109]: Not set
+            - generic [ref=e110]:
+              - img [ref=e111]
+              - generic [ref=e114]: Not set
+        - generic [ref=e116]:
+          - heading "Career Interests" [level=2] [ref=e118]:
+            - img
+            - text: Career Interests
+          - paragraph [ref=e119]:
+            - text: No career interests set.
+            - link "Explore Career Tracks" [ref=e120] [cursor=pointer]:
+              - /url: /career-tracks
+        - generic [ref=e122]:
+          - heading "Skills" [level=2] [ref=e124]:
+            - img
+            - text: Skills
+          - paragraph [ref=e125]: No skills added yet. Skills will be suggested based on your career interests.
+      - generic [ref=e126]:
+        - generic [ref=e128]:
+          - heading "Status" [level=3] [ref=e129]
+          - generic [ref=e130]:
+            - generic [ref=e131]: Actively Looking
+            - generic [ref=e132]:
+              - img [ref=e133]
+              - generic [ref=e138]: Closed — hidden from searches
+        - generic [ref=e140]:
+          - heading "Preferences" [level=3] [ref=e141]
+          - generic [ref=e142]:
+            - generic [ref=e143]: No minimum salary set
+            - generic [ref=e144]: No work type preferences set
+        - generic [ref=e146]:
+          - heading "Introductions" [level=3] [ref=e148]:
+            - img [ref=e149]
+            - text: Introductions
+          - link "View all introductions" [ref=e152] [cursor=pointer]:
+            - /url: /introductions
+            - text: View all introductions
+            - img [ref=e153]
+        - generic [ref=e156]:
+          - heading "Job Alerts" [level=3] [ref=e158]:
+            - img [ref=e159]
+            - text: Job Alerts
+          - button "Create Alert" [ref=e162] [cursor=pointer]:
+            - img [ref=e163]
+            - text: Create Alert
+        - generic [ref=e165]:
+          - heading "Notifications" [level=3] [ref=e167]
+          - paragraph [ref=e168]: No notifications yet.
+  - contentinfo [ref=e169]:
+    - generic [ref=e170]:
+      - generic [ref=e171]:
+        - generic [ref=e172]:
+          - img "careers.ky logo" [ref=e174]
+          - generic [ref=e175]:
+            - generic [ref=e176]: careers.ky
+            - generic [ref=e177]: A Caymanian-First Careers Platform
+        - generic [ref=e178]:
+          - generic [ref=e179]:
+            - generic [ref=e180]: For Job Seekers
+            - generic [ref=e181]:
+              - link "Career Tracks" [ref=e182] [cursor=pointer]:
+                - /url: /careers?tab=career-tracks
+              - link "Live Search" [ref=e183] [cursor=pointer]:
+                - /url: /careers?tab=jobs
+              - link "Create Profile" [ref=e184] [cursor=pointer]:
+                - /url: /profile/setup
+          - generic [ref=e185]:
+            - generic [ref=e186]: For Employers
+            - generic [ref=e187]:
+              - link "Employer Directory" [ref=e188] [cursor=pointer]:
+                - /url: /employers
+              - link "Search Talent" [ref=e189] [cursor=pointer]:
+                - /url: /talent
+        - generic [ref=e190]:
+          - link "About" [ref=e191] [cursor=pointer]:
+            - /url: /about
+          - link "FAQ" [ref=e192] [cursor=pointer]:
+            - /url: "#faq"
+      - paragraph [ref=e194]: Making hiring talent visible, accessible and fair. Job postings synced daily from WORC.
+      - generic [ref=e195]:
+        - text: Built by
+        - link "Sean Ellul" [ref=e196] [cursor=pointer]:
+          - /url: https://seanellul.com
+        - text: "·Also:"
+        - link "Legislation.ky" [ref=e197] [cursor=pointer]:
+          - /url: https://legislation.ky
+        - text: "|"
+        - link "Constitution.ky" [ref=e198] [cursor=pointer]:
+          - /url: https://constitution.ky
+        - text: "|"
+        - link "Cheap.ky" [ref=e199] [cursor=pointer]:
+          - /url: https://cheap.ky
+        - text: "|"
+        - link "CayBooks" [ref=e200] [cursor=pointer]:
+          - /url: https://caybooks.com
+  - generic [ref=e201]:
+    - generic [ref=e202]:
+      - generic [ref=e203]: DEV TOOLBAR
+      - button "−" [ref=e204] [cursor=pointer]
+    - generic [ref=e205]: "Current: Not signed in"
+    - generic [ref=e206]: "Test without OAuth:"
+    - button "New candidate → profile setup" [ref=e207] [cursor=pointer]
+    - button "Stable dev candidate → dashboard" [ref=e208] [cursor=pointer]
+    - generic [ref=e209]: "Switch existing DB user:"
+    - generic [ref=e210]:
+      - button "Employer" [ref=e211] [cursor=pointer]
+      - button "Candidate" [ref=e212] [cursor=pointer]

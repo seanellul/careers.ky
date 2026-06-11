@@ -1,0 +1,314 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "careers.ky logo careers.ky" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "careers.ky logo" [ref=e6]
+        - generic [ref=e7]: careers.ky
+      - navigation [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "Careers" [ref=e10] [cursor=pointer]:
+          - /url: /careers
+        - link "About" [ref=e11] [cursor=pointer]:
+          - /url: /about
+        - button "Toggle dark mode" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+  - generic [ref=e18]:
+    - complementary [ref=e19]:
+      - navigation [ref=e21]:
+        - link "Overview" [ref=e22] [cursor=pointer]:
+          - /url: /employer/dashboard
+          - img [ref=e23]
+          - generic [ref=e28]: Overview
+        - link "Profile" [ref=e29] [cursor=pointer]:
+          - /url: /employer/profile
+          - img [ref=e30]
+          - generic [ref=e34]: Profile
+        - link "Talent Search" [ref=e35] [cursor=pointer]:
+          - /url: /employer/talent
+          - img [ref=e36]
+          - generic [ref=e41]: Talent Search
+        - link "Shortlists" [ref=e42] [cursor=pointer]:
+          - /url: /employer/shortlists
+          - img [ref=e43]
+          - generic [ref=e44]: Shortlists
+        - link "Reports" [ref=e45] [cursor=pointer]:
+          - /url: /employer/reports
+          - img [ref=e46]
+          - generic [ref=e49]: Reports
+        - link "Team" [ref=e50] [cursor=pointer]:
+          - /url: /employer/team
+          - img [ref=e51]
+          - generic [ref=e55]: Team
+        - generic [ref=e56]:
+          - img [ref=e57]
+          - generic [ref=e59]: Messaging
+          - generic [ref=e60]: Soon
+        - generic [ref=e61]:
+          - img [ref=e62]
+          - generic [ref=e64]: Analytics
+          - generic [ref=e65]: Soon
+        - link "Public Profile" [ref=e67] [cursor=pointer]:
+          - /url: /employer/ogier
+          - img [ref=e68]
+          - generic [ref=e72]: Public Profile
+    - main [ref=e73]:
+      - generic [ref=e74]:
+        - generic [ref=e75]:
+          - generic [ref=e77]:
+            - img [ref=e79]
+            - generic [ref=e83]:
+              - heading "Ogier" [level=1] [ref=e84]
+              - paragraph [ref=e85]: Welcome back, Sean Ellul
+          - generic [ref=e86]:
+            - link "Public Profile" [ref=e87] [cursor=pointer]:
+              - /url: /employer/ogier
+              - button "Public Profile" [ref=e88]:
+                - img [ref=e89]
+                - text: Public Profile
+            - link "Search Talent" [ref=e93] [cursor=pointer]:
+              - /url: /employer/talent
+              - button "Search Talent" [ref=e94]:
+                - img [ref=e95]
+                - text: Search Talent
+        - generic [ref=e98]:
+          - generic [ref=e101]:
+            - img [ref=e103]
+            - generic [ref=e106]:
+              - generic [ref=e107]: "4"
+              - generic [ref=e108]: Total Intros
+          - generic [ref=e111]:
+            - img [ref=e113]
+            - generic [ref=e116]:
+              - generic [ref=e117]: 0%
+              - generic [ref=e118]: Accept Rate
+          - generic [ref=e121]:
+            - img [ref=e123]
+            - generic [ref=e126]:
+              - generic [ref=e127]: "--"
+              - generic [ref=e128]: Avg Response
+          - generic [ref=e131]:
+            - img [ref=e133]
+            - generic [ref=e136]:
+              - generic [ref=e137]: "4"
+              - generic [ref=e138]: Pending
+          - generic [ref=e141]:
+            - img [ref=e143]
+            - generic [ref=e146]:
+              - generic [ref=e147]: "0"
+              - generic [ref=e148]: This Month
+        - generic [ref=e149]:
+          - generic [ref=e150]:
+            - generic [ref=e152]:
+              - heading "Hiring Pipeline" [level=2] [ref=e153]:
+                - img [ref=e154]
+                - text: Hiring Pipeline
+              - generic [ref=e157]:
+                - generic [ref=e158]: Filter by posting
+                - button "All Postings Showing introductions across all jobs" [ref=e159] [cursor=pointer]:
+                  - generic [ref=e160]:
+                    - img [ref=e162]
+                    - generic [ref=e165]:
+                      - generic [ref=e166]: All Postings
+                      - generic [ref=e167]: Showing introductions across all jobs
+                  - img [ref=e168]
+              - generic [ref=e170]:
+                - button "All (4)" [ref=e171] [cursor=pointer]
+                - button "Outreach (4)" [ref=e172] [cursor=pointer]
+                - button "Responded (0)" [ref=e173] [cursor=pointer]
+                - button "Shortlisted (0)" [ref=e174] [cursor=pointer]
+                - button "Interviewing (0)" [ref=e175] [cursor=pointer]
+                - button "Offered (0)" [ref=e176] [cursor=pointer]
+                - button "Hired (0)" [ref=e177] [cursor=pointer]
+                - button "Rejected (0)" [ref=e178] [cursor=pointer]
+                - button "Archived (0)" [ref=e179] [cursor=pointer]
+              - generic [ref=e180]:
+                - generic [ref=e181]:
+                  - generic [ref=e182]:
+                    - generic [ref=e183]: Candidate
+                    - generic [ref=e184]: Sent Mar 24, 2026
+                  - generic [ref=e185]:
+                    - generic [ref=e186]: pending
+                    - combobox [ref=e187]:
+                      - option "Outreach" [selected]
+                      - option "Responded"
+                      - option "Shortlisted"
+                      - option "Interviewing"
+                      - option "Offered"
+                      - option "Hired"
+                      - option "Rejected"
+                      - option "Archived"
+                    - generic [ref=e188]:
+                      - img [ref=e189]
+                      - text: Associate
+                  - generic [ref=e192]: This is a test
+                - generic [ref=e193]:
+                  - generic [ref=e194]:
+                    - generic [ref=e195]: Candidate
+                    - generic [ref=e196]: Sent Mar 17, 2026
+                  - generic [ref=e197]:
+                    - generic [ref=e198]: pending
+                    - combobox [ref=e199]:
+                      - option "Outreach" [selected]
+                      - option "Responded"
+                      - option "Shortlisted"
+                      - option "Interviewing"
+                      - option "Offered"
+                      - option "Hired"
+                      - option "Rejected"
+                      - option "Archived"
+                    - generic [ref=e200]:
+                      - img [ref=e201]
+                      - text: Head of Client Onboarding - Caribbean
+                  - generic [ref=e204]: "Intro #2"
+                - generic [ref=e205]:
+                  - generic [ref=e206]:
+                    - generic [ref=e207]: Candidate
+                    - generic [ref=e208]: Sent Mar 17, 2026
+                  - generic [ref=e209]:
+                    - generic [ref=e210]: pending
+                    - combobox [ref=e211]:
+                      - option "Outreach" [selected]
+                      - option "Responded"
+                      - option "Shortlisted"
+                      - option "Interviewing"
+                      - option "Offered"
+                      - option "Hired"
+                      - option "Rejected"
+                      - option "Archived"
+                    - generic [ref=e212]:
+                      - img [ref=e213]
+                      - text: Associate
+                  - generic [ref=e216]: Intro 1
+                - generic [ref=e217]:
+                  - generic [ref=e218]:
+                    - generic [ref=e219]: Candidate
+                    - generic [ref=e220]: Sent Mar 16, 2026
+                  - generic [ref=e221]:
+                    - generic [ref=e222]: pending
+                    - combobox [ref=e223]:
+                      - option "Outreach" [selected]
+                      - option "Responded"
+                      - option "Shortlisted"
+                      - option "Interviewing"
+                      - option "Offered"
+                      - option "Hired"
+                      - option "Rejected"
+                      - option "Archived"
+                    - generic [ref=e224]: General
+                  - generic [ref=e225]: Hello
+            - generic [ref=e227]:
+              - heading "Recent Activity" [level=2] [ref=e228]:
+                - img [ref=e229]
+                - text: Recent Activity
+              - generic [ref=e231]:
+                - generic [ref=e234]:
+                  - generic [ref=e235]: Sent introduction
+                  - generic [ref=e236]: Mar 24, 4:33 PM
+                - generic [ref=e239]:
+                  - generic [ref=e240]: Pipeline stage changed
+                  - generic [ref=e241]: Responded → Interviewing
+                  - generic [ref=e242]: Mar 23, 12:01 AM
+                - generic [ref=e245]:
+                  - generic [ref=e246]: Pipeline stage changed
+                  - generic [ref=e247]: Outreach → Responded
+                  - generic [ref=e248]: Mar 23, 12:01 AM
+                - generic [ref=e251]:
+                  - generic [ref=e252]: Sent introduction
+                  - generic [ref=e253]: Mar 20, 7:49 PM
+                - generic [ref=e256]:
+                  - generic [ref=e257]: Pipeline stage changed
+                  - generic [ref=e258]: Responded → Interviewing
+                  - generic [ref=e259]: Mar 20, 7:24 PM
+                - generic [ref=e262]:
+                  - generic [ref=e263]: Candidate interest accepted
+                  - generic [ref=e264]: Mar 17, 6:29 PM
+                - generic [ref=e267]:
+                  - generic [ref=e268]: Message sent
+                  - generic [ref=e269]: Mar 17, 6:28 PM
+                - generic [ref=e272]:
+                  - generic [ref=e273]: Candidate expressed interest
+                  - generic [ref=e274]: Mar 17, 6:28 PM
+                - generic [ref=e277]:
+                  - generic [ref=e278]: Message sent
+                  - generic [ref=e279]: Mar 17, 6:27 PM
+                - generic [ref=e282]:
+                  - generic [ref=e283]: Introduction accepted
+                  - generic [ref=e284]: Mar 17, 4:08 PM
+          - generic [ref=e287]:
+            - heading "Company Profile" [level=3] [ref=e288]
+            - generic [ref=e289]:
+              - generic [ref=e290]:
+                - text: "Name:"
+                - generic [ref=e291]: Ogier
+              - generic [ref=e292]:
+                - text: "Website:"
+                - link "https://ogier.com" [ref=e294] [cursor=pointer]:
+                  - /url: https://ogier.com
+                  - img [ref=e295]
+                  - text: https://ogier.com
+            - link "Edit Profile" [ref=e298] [cursor=pointer]:
+              - /url: /employer/profile
+              - button "Edit Profile" [ref=e299]:
+                - img [ref=e300]
+                - text: Edit Profile
+  - contentinfo [ref=e302]:
+    - generic [ref=e303]:
+      - generic [ref=e304]:
+        - generic [ref=e305]:
+          - img "careers.ky logo" [ref=e307]
+          - generic [ref=e308]:
+            - generic [ref=e309]: careers.ky
+            - generic [ref=e310]: A Caymanian-First Careers Platform
+        - generic [ref=e311]:
+          - generic [ref=e312]:
+            - generic [ref=e313]: For Job Seekers
+            - generic [ref=e314]:
+              - link "Career Tracks" [ref=e315] [cursor=pointer]:
+                - /url: /careers?tab=career-tracks
+              - link "Live Search" [ref=e316] [cursor=pointer]:
+                - /url: /careers?tab=jobs
+              - link "Create Profile" [ref=e317] [cursor=pointer]:
+                - /url: /profile/setup
+          - generic [ref=e318]:
+            - generic [ref=e319]: For Employers
+            - generic [ref=e320]:
+              - link "Employer Directory" [ref=e321] [cursor=pointer]:
+                - /url: /employers
+              - link "Search Talent" [ref=e322] [cursor=pointer]:
+                - /url: /talent
+        - generic [ref=e323]:
+          - link "About" [ref=e324] [cursor=pointer]:
+            - /url: /about
+          - link "FAQ" [ref=e325] [cursor=pointer]:
+            - /url: "#faq"
+      - paragraph [ref=e327]: Making hiring talent visible, accessible and fair. Job postings synced daily from WORC.
+      - generic [ref=e328]:
+        - text: Built by
+        - link "Sean Ellul" [ref=e329] [cursor=pointer]:
+          - /url: https://seanellul.com
+        - text: "·Also:"
+        - link "Legislation.ky" [ref=e330] [cursor=pointer]:
+          - /url: https://legislation.ky
+        - text: "|"
+        - link "Constitution.ky" [ref=e331] [cursor=pointer]:
+          - /url: https://constitution.ky
+        - text: "|"
+        - link "Cheap.ky" [ref=e332] [cursor=pointer]:
+          - /url: https://cheap.ky
+        - text: "|"
+        - link "CayBooks" [ref=e333] [cursor=pointer]:
+          - /url: https://caybooks.com
+  - generic [ref=e334]:
+    - generic [ref=e335]:
+      - generic [ref=e336]: DEV TOOLBAR
+      - button "−" [ref=e337] [cursor=pointer]
+    - generic [ref=e338]: "Current: Not signed in"
+    - generic [ref=e339]: "Test without OAuth:"
+    - button "New candidate → profile setup" [ref=e340] [cursor=pointer]
+    - button "Stable dev candidate → dashboard" [ref=e341] [cursor=pointer]
+    - generic [ref=e342]: "Switch existing DB user:"
+    - generic [ref=e343]:
+      - button "Employer" [ref=e344] [cursor=pointer]
+      - button "Candidate" [ref=e345] [cursor=pointer]

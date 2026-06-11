@@ -79,6 +79,7 @@ export async function GET(request) {
       SET status = 'Closed'
       WHERE synced_at < NOW() - INTERVAL '7 days'
       AND status = 'Active'
+      AND source = 'worc'
       RETURNING job_id
     `;
     console.log(`[WORC Sync] Marked ${staleResult.length} stale jobs as closed`);

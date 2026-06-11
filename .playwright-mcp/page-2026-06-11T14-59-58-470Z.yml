@@ -1,0 +1,130 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "careers.ky logo careers.ky" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "careers.ky logo" [ref=e6]
+        - generic [ref=e7]: careers.ky
+      - navigation [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "Careers" [ref=e10] [cursor=pointer]:
+          - /url: /careers
+        - link "About" [ref=e11] [cursor=pointer]:
+          - /url: /about
+        - button "Toggle dark mode" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+  - generic [ref=e18]:
+    - complementary [ref=e19]:
+      - navigation [ref=e21]:
+        - link "Overview" [ref=e22] [cursor=pointer]:
+          - /url: /employer/dashboard
+          - img [ref=e23]
+          - generic [ref=e28]: Overview
+        - link "Profile" [ref=e29] [cursor=pointer]:
+          - /url: /employer/profile
+          - img [ref=e30]
+          - generic [ref=e34]: Profile
+        - link "Talent Search" [ref=e35] [cursor=pointer]:
+          - /url: /employer/talent
+          - img [ref=e36]
+          - generic [ref=e41]: Talent Search
+        - link "Shortlists" [ref=e42] [cursor=pointer]:
+          - /url: /employer/shortlists
+          - img [ref=e43]
+          - generic [ref=e44]: Shortlists
+        - link "Reports" [ref=e45] [cursor=pointer]:
+          - /url: /employer/reports
+          - img [ref=e46]
+          - generic [ref=e49]: Reports
+        - link "Team" [ref=e50] [cursor=pointer]:
+          - /url: /employer/team
+          - img [ref=e51]
+          - generic [ref=e55]: Team
+        - generic [ref=e56]:
+          - img [ref=e57]
+          - generic [ref=e59]: Messaging
+          - generic [ref=e60]: Soon
+        - generic [ref=e61]:
+          - img [ref=e62]
+          - generic [ref=e64]: Analytics
+          - generic [ref=e65]: Soon
+        - link "Public Profile" [ref=e67] [cursor=pointer]:
+          - /url: /employer/ogier
+          - img [ref=e68]
+          - generic [ref=e72]: Public Profile
+    - main [ref=e73]:
+      - generic [ref=e75]:
+        - generic [ref=e76]:
+          - heading "Shortlists" [level=1] [ref=e77]:
+            - img [ref=e78]
+            - text: Shortlists
+          - button "New Shortlist" [ref=e79] [cursor=pointer]:
+            - img [ref=e80]
+            - text: New Shortlist
+        - generic [ref=e82]:
+          - img [ref=e83]
+          - heading "No shortlists yet" [level=3] [ref=e84]
+          - paragraph [ref=e85]: Create a shortlist to save and organize candidates.
+          - button "Create Shortlist" [ref=e86] [cursor=pointer]:
+            - img [ref=e87]
+            - text: Create Shortlist
+  - contentinfo [ref=e88]:
+    - generic [ref=e89]:
+      - generic [ref=e90]:
+        - generic [ref=e91]:
+          - img "careers.ky logo" [ref=e93]
+          - generic [ref=e94]:
+            - generic [ref=e95]: careers.ky
+            - generic [ref=e96]: A Caymanian-First Careers Platform
+        - generic [ref=e97]:
+          - generic [ref=e98]:
+            - generic [ref=e99]: For Job Seekers
+            - generic [ref=e100]:
+              - link "Career Tracks" [ref=e101] [cursor=pointer]:
+                - /url: /careers?tab=career-tracks
+              - link "Live Search" [ref=e102] [cursor=pointer]:
+                - /url: /careers?tab=jobs
+              - link "Create Profile" [ref=e103] [cursor=pointer]:
+                - /url: /profile/setup
+          - generic [ref=e104]:
+            - generic [ref=e105]: For Employers
+            - generic [ref=e106]:
+              - link "Employer Directory" [ref=e107] [cursor=pointer]:
+                - /url: /employers
+              - link "Search Talent" [ref=e108] [cursor=pointer]:
+                - /url: /talent
+        - generic [ref=e109]:
+          - link "About" [ref=e110] [cursor=pointer]:
+            - /url: /about
+          - link "FAQ" [ref=e111] [cursor=pointer]:
+            - /url: "#faq"
+      - paragraph [ref=e113]: Making hiring talent visible, accessible and fair. Job postings synced daily from WORC.
+      - generic [ref=e114]:
+        - text: Built by
+        - link "Sean Ellul" [ref=e115] [cursor=pointer]:
+          - /url: https://seanellul.com
+        - text: "·Also:"
+        - link "Legislation.ky" [ref=e116] [cursor=pointer]:
+          - /url: https://legislation.ky
+        - text: "|"
+        - link "Constitution.ky" [ref=e117] [cursor=pointer]:
+          - /url: https://constitution.ky
+        - text: "|"
+        - link "Cheap.ky" [ref=e118] [cursor=pointer]:
+          - /url: https://cheap.ky
+        - text: "|"
+        - link "CayBooks" [ref=e119] [cursor=pointer]:
+          - /url: https://caybooks.com
+  - generic [ref=e120]:
+    - generic [ref=e121]:
+      - generic [ref=e122]: DEV TOOLBAR
+      - button "−" [ref=e123] [cursor=pointer]
+    - generic [ref=e124]: "Current: Not signed in"
+    - generic [ref=e125]: "Test without OAuth:"
+    - button "New candidate → profile setup" [ref=e126] [cursor=pointer]
+    - button "Stable dev candidate → dashboard" [ref=e127] [cursor=pointer]
+    - generic [ref=e128]: "Switch existing DB user:"
+    - generic [ref=e129]:
+      - button "Employer" [ref=e130] [cursor=pointer]
+      - button "Candidate" [ref=e131] [cursor=pointer]

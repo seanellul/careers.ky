@@ -76,6 +76,7 @@ async function sync() {
     SET status = 'Closed'
     WHERE synced_at < NOW() - INTERVAL '2 days'
     AND status = 'Active'
+    AND source = 'worc'
   `;
   console.log("Stale jobs marked as closed");
 

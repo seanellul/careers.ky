@@ -695,6 +695,11 @@ export default function LiveSearchClient({
                     >
                       {j.jobTitle || "Untitled role"}
                     </Link>
+                    {j.source === "native" && (
+                      <span className="inline-flex items-center self-start text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-primary-50 dark:bg-primary-500/15 text-primary-500 border border-primary-200 dark:border-primary-500/30 mb-1.5">
+                        Direct apply
+                      </span>
+                    )}
                     <div className="text-sm text-neutral-500 mb-1.5 line-clamp-1">
                       <Link
                         href={`/employer/${encodeURIComponent(

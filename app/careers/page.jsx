@@ -62,6 +62,7 @@ export default async function CareersPage() {
     approvalDate: job.createdDate,
     occupation: job.Occupation || "",
     sOccupation: job.sOccupation || "",
+    source: job.source || "worc",
   }));
 
   return (

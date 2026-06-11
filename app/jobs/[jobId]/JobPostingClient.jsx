@@ -253,9 +253,29 @@ export default function JobPostingClient({
                 Closes in {daysLeft} day{daysLeft !== 1 ? "s" : ""}
               </Badge>
             )}
-            <Badge className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-500">
-              WORC ID: {job.cJobId}
-            </Badge>
+            {job.source === "native" ? (
+              <Badge className="bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30">
+                Posted on careers.ky — direct apply
+              </Badge>
+            ) : (
+              <Badge className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-500">
+                WORC ID: {job.cJobId}
+              </Badge>
+            )}
+            {job.source === "native" && job.publicAt && new Date(job.publicAt) > new Date() && (
+              <Badge className="bg-amber-50 dark:bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-500/30">
+                Early access — Caymanian candidates only until{" "}
+                {new Date(job.publicAt).toLocaleTimeString("en-US", {
+                  hour: "numeric",
+                  minute: "2-digit",
+                })}
+              </Badge>
+            )}
+            {job.district && (
+              <Badge className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-500">
+                {job.district}
+              </Badge>
+            )}
           </div>
 
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight mb-3">
@@ -338,12 +358,14 @@ export default function JobPostingClient({
                   )}
                 </>
               )}
-              {/* WORC link — secondary */}
-              <a href={worcUrl} target="_blank" rel="noreferrer">
-                <Button size="lg" variant="secondary" className="gap-2 text-neutral-500">
-                  <ExternalLink className="w-4 h-4" /> Apply on WORC
-                </Button>
-              </a>
+              {/* WORC link — secondary (WORC-synced jobs only) */}
+              {worcUrl && (
+                <a href={worcUrl} target="_blank" rel="noreferrer">
+                  <Button size="lg" variant="secondary" className="gap-2 text-neutral-500">
+                    <ExternalLink className="w-4 h-4" /> Apply on WORC
+                  </Button>
+                </a>
+              )}
               {/* WhatsApp share */}
               <a
                 href={`https://wa.me/?text=${encodeURIComponent(`${job.cTitle} at ${job.Employer} — ${typeof window !== "undefined" ? window.location.href : ""}`)}`}
@@ -459,6 +481,25 @@ export default function JobPostingClient({
               </Card>
             )}
 
+            {/* Required qualifications (native postings) */}
+            {Array.isArray(job.requiredQualifications) && job.requiredQualifications.length > 0 && (
+              <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
+                <CardContent className="p-4 sm:p-6">
+                  <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5" /> Required Qualifications
+                  </h2>
+                  <ul className="space-y-2">
+                    {job.requiredQualifications.map((q, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm">
+                        <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                        <span>{q}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Requirements Checklist */}
             {requirements.length > 0 && (
               <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
@@ -541,7 +582,7 @@ export default function JobPostingClient({
                           </Link>
                         )}
                         {/* Employer viewing — no Express Interest, show WORC fallback */}
-                        {session?.employerAccountId && (
+                        {session?.employerAccountId && worcUrl && (
                           <a href={worcUrl} target="_blank" rel="noreferrer" className="block">
                             <Button variant="secondary" className="w-full gap-2 text-neutral-500">
                               <ExternalLink className="w-4 h-4" /> View on WORC
@@ -549,7 +590,7 @@ export default function JobPostingClient({
                           </a>
                         )}
                         {/* WORC as subtle secondary link */}
-                        {!session?.employerAccountId && (
+                        {!session?.employerAccountId && worcUrl && (
                           <a
                             href={worcUrl}
                             target="_blank"

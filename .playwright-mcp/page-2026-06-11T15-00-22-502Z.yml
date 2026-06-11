@@ -1,0 +1,156 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "careers.ky logo careers.ky" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "careers.ky logo" [ref=e6]
+        - generic [ref=e7]: careers.ky
+      - navigation [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "Careers" [ref=e10] [cursor=pointer]:
+          - /url: /careers
+        - link "About" [ref=e11] [cursor=pointer]:
+          - /url: /about
+        - button "Toggle dark mode" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+  - generic [ref=e17]:
+    - complementary [ref=e18]:
+      - navigation [ref=e20]:
+        - generic [ref=e21]: Admin
+        - link "Overview" [ref=e22] [cursor=pointer]:
+          - /url: /admin
+          - img [ref=e23]
+          - generic [ref=e28]: Overview
+        - link "Candidates" [ref=e29] [cursor=pointer]:
+          - /url: /admin/candidates
+          - img [ref=e30]
+          - generic [ref=e35]: Candidates
+        - link "Employers" [ref=e36] [cursor=pointer]:
+          - /url: /admin/employers
+          - img [ref=e37]
+          - generic [ref=e41]: Employers
+        - link "Pitch Decks" [ref=e42] [cursor=pointer]:
+          - /url: /admin/pitches
+          - img [ref=e43]
+          - generic [ref=e46]: Pitch Decks
+        - link "Verifications" [ref=e47] [cursor=pointer]:
+          - /url: /admin/verifications
+          - img [ref=e48]
+          - generic [ref=e51]: Verifications
+        - link "Interests" [ref=e52] [cursor=pointer]:
+          - /url: /admin/interests
+          - img [ref=e53]
+          - generic [ref=e55]: Interests
+        - link "Outreach" [ref=e56] [cursor=pointer]:
+          - /url: /admin/outreach
+          - img [ref=e57]
+          - generic [ref=e60]: Outreach
+        - link "Waitlist" [ref=e61] [cursor=pointer]:
+          - /url: /admin/waitlist
+          - img [ref=e62]
+          - generic [ref=e65]: Waitlist
+    - main [ref=e66]:
+      - generic [ref=e67]:
+        - generic [ref=e68]:
+          - generic [ref=e69]:
+            - img [ref=e70]
+            - heading "Filters" [level=3] [ref=e72]
+          - generic [ref=e73]:
+            - generic [ref=e74]:
+              - generic [ref=e75]: Search by name
+              - generic [ref=e76]:
+                - img [ref=e77]
+                - textbox "Employer name..." [ref=e80]
+            - generic [ref=e81]:
+              - generic [ref=e82]: Min Score
+              - spinbutton [ref=e83]: "0"
+            - generic [ref=e84]:
+              - generic [ref=e85]: Max Score
+              - spinbutton [ref=e86]: "100"
+            - generic [ref=e87]:
+              - generic [ref=e88]: Segment
+              - combobox [ref=e89]:
+                - option "All Segments" [selected]
+            - generic [ref=e90]:
+              - generic [ref=e91]: Status
+              - combobox [ref=e92]:
+                - option "All Statuses" [selected]
+            - button "Export CSV" [ref=e94] [cursor=pointer]:
+              - img [ref=e95]
+              - text: Export CSV
+        - table [ref=e100]:
+          - rowgroup [ref=e101]:
+            - row "Employer Score ↓ Segment Status Last Contacted Action" [ref=e102]:
+              - columnheader "Employer" [ref=e103]
+              - columnheader "Score ↓" [ref=e104]:
+                - button "Score ↓" [ref=e105] [cursor=pointer]
+              - columnheader "Segment" [ref=e106]
+              - columnheader "Status" [ref=e107]
+              - columnheader "Last Contacted" [ref=e108]:
+                - button "Last Contacted" [ref=e109] [cursor=pointer]
+              - columnheader "Action" [ref=e110]
+          - rowgroup [ref=e111]:
+            - row [ref=e112]:
+              - cell [ref=e113]:
+                - img [ref=e114]
+  - contentinfo [ref=e123]:
+    - generic [ref=e124]:
+      - generic [ref=e125]:
+        - generic [ref=e126]:
+          - img "careers.ky logo" [ref=e128]
+          - generic [ref=e129]:
+            - generic [ref=e130]: careers.ky
+            - generic [ref=e131]: A Caymanian-First Careers Platform
+        - generic [ref=e132]:
+          - generic [ref=e133]:
+            - generic [ref=e134]: For Job Seekers
+            - generic [ref=e135]:
+              - link "Career Tracks" [ref=e136] [cursor=pointer]:
+                - /url: /careers?tab=career-tracks
+              - link "Live Search" [ref=e137] [cursor=pointer]:
+                - /url: /careers?tab=jobs
+              - link "Create Profile" [ref=e138] [cursor=pointer]:
+                - /url: /profile/setup
+          - generic [ref=e139]:
+            - generic [ref=e140]: For Employers
+            - generic [ref=e141]:
+              - link "Employer Directory" [ref=e142] [cursor=pointer]:
+                - /url: /employers
+              - link "Search Talent" [ref=e143] [cursor=pointer]:
+                - /url: /talent
+        - generic [ref=e144]:
+          - link "About" [ref=e145] [cursor=pointer]:
+            - /url: /about
+          - link "FAQ" [ref=e146] [cursor=pointer]:
+            - /url: "#faq"
+      - paragraph [ref=e148]: Making hiring talent visible, accessible and fair. Job postings synced daily from WORC.
+      - generic [ref=e149]:
+        - text: Built by
+        - link "Sean Ellul" [ref=e150] [cursor=pointer]:
+          - /url: https://seanellul.com
+        - text: "·Also:"
+        - link "Legislation.ky" [ref=e151] [cursor=pointer]:
+          - /url: https://legislation.ky
+        - text: "|"
+        - link "Constitution.ky" [ref=e152] [cursor=pointer]:
+          - /url: https://constitution.ky
+        - text: "|"
+        - link "Cheap.ky" [ref=e153] [cursor=pointer]:
+          - /url: https://cheap.ky
+        - text: "|"
+        - link "CayBooks" [ref=e154] [cursor=pointer]:
+          - /url: https://caybooks.com
+  - generic [ref=e155]:
+    - generic [ref=e156]:
+      - generic [ref=e157]: DEV TOOLBAR
+      - button "−" [ref=e158] [cursor=pointer]
+    - generic [ref=e159]: "Current: Not signed in"
+    - generic [ref=e160]: "Test without OAuth:"
+    - button "New candidate → profile setup" [ref=e161] [cursor=pointer]
+    - button "Stable dev candidate → dashboard" [ref=e162] [cursor=pointer]
+    - generic [ref=e163]: "Switch existing DB user:"
+    - generic [ref=e164]:
+      - button "Employer" [ref=e165] [cursor=pointer]
+      - button "Candidate" [ref=e166] [cursor=pointer]
+  - alert [ref=e167]

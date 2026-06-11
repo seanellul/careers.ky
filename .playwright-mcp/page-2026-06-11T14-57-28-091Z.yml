@@ -1,0 +1,116 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "careers.ky logo careers.ky" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "careers.ky logo" [ref=e6]
+        - generic [ref=e7]: careers.ky
+      - navigation [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "Careers" [ref=e10] [cursor=pointer]:
+          - /url: /careers
+        - link "About" [ref=e11] [cursor=pointer]:
+          - /url: /about
+        - button "Toggle dark mode" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+  - generic [ref=e17]:
+    - generic [ref=e18]:
+      - generic [ref=e20]: "1"
+      - generic [ref=e23]: "2"
+      - generic [ref=e26]: "3"
+    - generic [ref=e27]: Step 1 of 3 — About You
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - img [ref=e32]
+        - heading "About You" [level=2] [ref=e35]
+      - generic [ref=e36]:
+        - generic [ref=e37]: Full Name *
+        - textbox "Your full name" [active] [ref=e38]: Dev Stable
+      - generic [ref=e39]:
+        - generic [ref=e40]: Headline (optional)
+        - textbox "e.g. Experienced accountant seeking opportunities in Cayman" [ref=e41]
+        - generic [ref=e42]: A short tagline visible on your profile
+      - generic [ref=e43]:
+        - generic [ref=e44]:
+          - img [ref=e45]
+          - text: Your status in Cayman
+        - generic [ref=e47]: Caymanian candidates are always ranked first in employer searches. This helps employers meet local hiring requirements.
+        - generic [ref=e48]:
+          - generic [ref=e49] [cursor=pointer]:
+            - radio "Caymanian" [ref=e50]
+            - generic [ref=e51]: Caymanian
+          - generic [ref=e52] [cursor=pointer]:
+            - radio "Permanent Resident" [ref=e53]
+            - generic [ref=e54]: Permanent Resident
+          - generic [ref=e55] [cursor=pointer]:
+            - radio "RERC holder" [ref=e56]
+            - generic [ref=e57]: RERC holder
+          - generic [ref=e58] [cursor=pointer]:
+            - radio "Dependant permit" [ref=e59]
+            - generic [ref=e60]: Dependant permit
+          - generic [ref=e61] [cursor=pointer]:
+            - radio "Overseas / work permit required" [ref=e62]
+            - generic [ref=e63]: Overseas / work permit required
+      - button "Continue" [ref=e64] [cursor=pointer]:
+        - text: Continue
+        - img [ref=e65]
+  - contentinfo [ref=e67]:
+    - generic [ref=e68]:
+      - generic [ref=e69]:
+        - generic [ref=e70]:
+          - img "careers.ky logo" [ref=e72]
+          - generic [ref=e73]:
+            - generic [ref=e74]: careers.ky
+            - generic [ref=e75]: A Caymanian-First Careers Platform
+        - generic [ref=e76]:
+          - generic [ref=e77]:
+            - generic [ref=e78]: For Job Seekers
+            - generic [ref=e79]:
+              - link "Career Tracks" [ref=e80] [cursor=pointer]:
+                - /url: /careers?tab=career-tracks
+              - link "Live Search" [ref=e81] [cursor=pointer]:
+                - /url: /careers?tab=jobs
+              - link "Create Profile" [ref=e82] [cursor=pointer]:
+                - /url: /profile/setup
+          - generic [ref=e83]:
+            - generic [ref=e84]: For Employers
+            - generic [ref=e85]:
+              - link "Employer Directory" [ref=e86] [cursor=pointer]:
+                - /url: /employers
+              - link "Search Talent" [ref=e87] [cursor=pointer]:
+                - /url: /talent
+        - generic [ref=e88]:
+          - link "About" [ref=e89] [cursor=pointer]:
+            - /url: /about
+          - link "FAQ" [ref=e90] [cursor=pointer]:
+            - /url: "#faq"
+      - paragraph [ref=e92]: Making hiring talent visible, accessible and fair. Job postings synced daily from WORC.
+      - generic [ref=e93]:
+        - text: Built by
+        - link "Sean Ellul" [ref=e94] [cursor=pointer]:
+          - /url: https://seanellul.com
+        - text: "·Also:"
+        - link "Legislation.ky" [ref=e95] [cursor=pointer]:
+          - /url: https://legislation.ky
+        - text: "|"
+        - link "Constitution.ky" [ref=e96] [cursor=pointer]:
+          - /url: https://constitution.ky
+        - text: "|"
+        - link "Cheap.ky" [ref=e97] [cursor=pointer]:
+          - /url: https://cheap.ky
+        - text: "|"
+        - link "CayBooks" [ref=e98] [cursor=pointer]:
+          - /url: https://caybooks.com
+  - generic [ref=e99]:
+    - generic [ref=e100]:
+      - generic [ref=e101]: DEV TOOLBAR
+      - button "−" [ref=e102] [cursor=pointer]
+    - generic [ref=e103]: "Current: Not signed in"
+    - generic [ref=e104]: "Test without OAuth:"
+    - button "New candidate → profile setup" [ref=e105] [cursor=pointer]
+    - button "Stable dev candidate → dashboard" [ref=e106] [cursor=pointer]
+    - generic [ref=e107]: "Switch existing DB user:"
+    - generic [ref=e108]:
+      - button "Employer" [ref=e109] [cursor=pointer]
+      - button "Candidate" [ref=e110] [cursor=pointer]
