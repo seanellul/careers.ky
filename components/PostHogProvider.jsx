@@ -45,6 +45,13 @@ export function PostHogPageView() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
+    // Referral capture (MVP #23): remember ?ref for signup attribution
+    const ref = searchParams.get("ref");
+    if (ref) {
+      try {
+        localStorage.setItem("ck_referral", ref.slice(0, 12));
+      } catch {}
+    }
     if (pathname && posthog.__loaded) {
       let url = window.origin + pathname;
       if (searchParams.toString()) {

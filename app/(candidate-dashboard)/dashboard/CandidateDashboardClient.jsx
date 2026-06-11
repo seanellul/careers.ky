@@ -24,6 +24,7 @@ import { calcProfileStrength } from "@/lib/profileStrength";
 import ProfileCompletenessCard from "@/components/ProfileCompletenessCard";
 import NPSSurvey from "@/components/NPSSurvey";
 import SalaryAssessmentCard from "@/components/SalaryAssessmentCard";
+import ReferralCard from "@/components/ReferralCard";
 
 const STATUS_COLORS = {
   pending: "bg-yellow-50 text-yellow-700 border-yellow-300",
@@ -101,6 +102,7 @@ export default function CandidateDashboardClient({
     <div>
       <NPSSurvey role="candidate" />
       <SalaryAssessmentCard />
+      <ReferralCard />
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
         <ProfilePicture url={candidate.profile_picture_url} name={candidate.name} />

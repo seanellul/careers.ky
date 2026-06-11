@@ -109,6 +109,13 @@ export default function ProfileSetupClient({ candidate }) {
           headline: form.headline,
           profileType: form.profileType,
           ciscoCodes: selectedInterests.map((i) => i.ciscoCode),
+          referralCode: (() => {
+            try {
+              return localStorage.getItem("ck_referral") || null;
+            } catch {
+              return null;
+            }
+          })(),
         }),
       });
       if (res.ok) {

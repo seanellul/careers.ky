@@ -60,6 +60,29 @@ export async function PUT(request) {
       await updateBlockedEmployers(candidate.id, ids);
     }
 
+    // Referral attribution (MVP #23): once, at first profile save, never self
+    if (data.referralCode && !candidate.referred_by) {
+      try {
+        const { getDb } = await import("@/lib/db");
+        const sql = getDb();
+        const referrer = await sql`
+          SELECT id FROM candidates WHERE referral_code = ${String(data.referralCode).slice(0, 12)}
+        `;
+        if (referrer.length && referrer[0].id !== candidate.id) {
+          await sql`
+            UPDATE candidates SET referred_by = ${referrer[0].id}
+            WHERE id = ${candidate.id} AND referred_by IS NULL
+          `;
+          const { captureServer, candidateDistinctId } = await import("@/lib/analytics-server");
+          captureServer(candidateDistinctId(referrer[0].id), "referral_attributed", {
+            referred_candidate: candidate.id,
+          });
+        }
+      } catch (refErr) {
+        console.error("Referral attribution error (non-fatal):", refErr.message);
+      }
+    }
+
     if (data.skillIds) {
       await updateCandidateSkills(candidate.id, data.skillIds);
     }
