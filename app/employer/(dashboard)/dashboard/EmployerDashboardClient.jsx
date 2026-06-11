@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import NPSSurvey from "@/components/NPSSurvey";
 import { Input } from "@/components/ui/input";
 import {
   Building2,
@@ -309,6 +310,7 @@ export default function EmployerDashboardClient({
 
   return (
     <>
+      <NPSSurvey role="employer" />
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start justify-between gap-4 mb-8">
         <div>

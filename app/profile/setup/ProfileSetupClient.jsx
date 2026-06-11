@@ -28,6 +28,13 @@ export default function ProfileSetupClient({ candidate }) {
 
   const [step, setStep] = useState(0);
   const [saving, setSaving] = useState(false);
+  // MVP requirement: registration must be completable in 5 minutes —
+  // measure it from day one (LogFrame means-of-verification).
+  const startedAtRef = useRef(null);
+  useEffect(() => {
+    startedAtRef.current = Date.now();
+    posthog.capture("onboarding_started");
+  }, []);
   const [form, setForm] = useState({
     name: candidate.name || "",
     status: candidate.status || (candidate.is_caymanian ? "caymanian" : ""),
@@ -109,6 +116,9 @@ export default function ProfileSetupClient({ candidate }) {
           status: form.status || "undeclared",
           profile_type: form.profileType,
           interests_count: selectedInterests.length,
+          registration_seconds: startedAtRef.current
+            ? Math.round((Date.now() - startedAtRef.current) / 1000)
+            : null,
         });
         try {
           localStorage.removeItem("ck_onboarding");

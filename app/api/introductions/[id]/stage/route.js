@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { getSession } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 import { createNotification } from "@/lib/data";
+import { captureServer, employerDistinctId } from "@/lib/analytics-server";
 
 const VALID_STAGES = [
   "outreach",
@@ -114,6 +115,14 @@ export async function PUT(request, { params }) {
       ${JSON.stringify(details)},
       ${intro[0].candidate_id}, ${id}, ${intro[0].job_id || null})
   `;
+
+  if (stage !== intro[0].stage) {
+    captureServer(employerDistinctId(session.employerAccountId), "stage_changed", {
+      from: intro[0].stage,
+      to: stage,
+      rejection_reason: rejectionReason || null,
+    });
+  }
 
   // Notify the candidate (in-app always; email when configured)
   const notification = stage !== intro[0].stage ? STAGE_NOTIFICATIONS[stage] : null;

@@ -15,6 +15,7 @@ import {
   getJobPostingById,
 } from "@/lib/data";
 import { rateLimit, getClientIp, rateLimitResponse } from "@/lib/rate-limit";
+import { captureServer, candidateDistinctId, employerDistinctId } from "@/lib/analytics-server";
 
 export async function POST(request) {
   const session = await getSession();
@@ -64,6 +65,11 @@ export async function POST(request) {
           VALUES (${employer.employerAccountId}, 'interest_expressed', ${JSON.stringify({ message: !!body.message })}, ${session.candidateId}, ${intro.id}, ${body.jobId})
         `;
 
+        captureServer(candidateDistinctId(session.candidateId), "interest_expressed", {
+          on_platform_employer: true,
+          has_message: !!body.message,
+        });
+
         return NextResponse.json({ success: true, introduction: intro });
       } else {
         // Employer NOT on platform — store as lead gen interest
@@ -81,6 +87,11 @@ export async function POST(request) {
             { status: 409 }
           );
         }
+
+        captureServer(candidateDistinctId(session.candidateId), "interest_expressed", {
+          on_platform_employer: false,
+          has_message: !!body.message,
+        });
 
         return NextResponse.json({ success: true, interest });
       }
@@ -134,6 +145,14 @@ export async function POST(request) {
       }
     }
 
+    if (results.length > 0) {
+      captureServer(employerDistinctId(session.employerAccountId), "introduction_sent", {
+        count: results.length,
+        has_job: !!jobId,
+        has_message: !!message,
+      });
+    }
+
     return NextResponse.json({ success: true, introductions: results });
   } catch (error) {
     console.error("Introduction error:", error);
@@ -172,6 +191,11 @@ export async function PUT(request) {
           VALUES (${session.employerAccountId}, ${accept ? "interest_accepted" : "interest_declined"}, '{}', ${intro.candidate_id}, ${introductionId}, ${intro.job_id || null})
         `;
 
+        captureServer(employerDistinctId(session.employerAccountId), "introduction_responded", {
+          responder: "employer",
+          accepted: !!accept,
+        });
+
         return NextResponse.json({ success: true });
       }
     }
@@ -182,6 +206,11 @@ export async function PUT(request) {
     }
 
     await respondToIntroduction(introductionId, session.candidateId, accept);
+
+    captureServer(candidateDistinctId(session.candidateId), "introduction_responded", {
+      responder: "candidate",
+      accepted: !!accept,
+    });
 
     // Update pipeline stage automatically
     if (accept) {

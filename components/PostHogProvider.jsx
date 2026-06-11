@@ -18,6 +18,23 @@ export default function PostHogProvider({ children }) {
       capture_pageview: false, // We capture manually for SPA nav
       capture_pageleave: true,
     });
+
+    // Identify signed-in users so retention and funnels stitch across
+    // sessions/devices. IDs match lib/analytics-server.js (no PII).
+    fetch("/api/auth/session")
+      .then((r) => r.json())
+      .then((s) => {
+        if (!s?.authenticated || !posthog.__loaded) return;
+        if (s.candidateId) {
+          posthog.identify(`candidate-${s.candidateId}`, { role: "candidate" });
+        } else if (s.employerAccountId) {
+          posthog.identify(`employer-${s.employerAccountId}`, {
+            role: "employer",
+            employer_id: s.employerId || null,
+          });
+        }
+      })
+      .catch(() => {});
   }, []);
 
   return <PHProvider client={posthog}>{children}</PHProvider>;
