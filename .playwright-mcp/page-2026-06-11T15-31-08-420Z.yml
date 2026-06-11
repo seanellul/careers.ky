@@ -1,0 +1,126 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "careers.ky logo careers.ky" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "careers.ky logo" [ref=e6]
+        - generic [ref=e7]: careers.ky
+      - navigation [ref=e8]:
+        - link "Home" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "Careers" [ref=e10] [cursor=pointer]:
+          - /url: /careers
+        - link "About" [ref=e11] [cursor=pointer]:
+          - /url: /about
+        - link "Dashboard" [ref=e111] [cursor=pointer]:
+          - /url: /dashboard
+        - button "Toggle dark mode" [ref=e12] [cursor=pointer]:
+          - img [ref=e13]
+        - generic [ref=e112]:
+          - link [ref=e113] [cursor=pointer]:
+            - /url: /notifications
+            - img [ref=e114]
+          - button "D" [ref=e118] [cursor=pointer]:
+            - generic [ref=e119]: D
+            - img [ref=e120]
+  - generic [ref=e17]:
+    - generic [ref=e18]:
+      - img [ref=e124]
+      - img [ref=e148]
+      - generic [ref=e26]: "3"
+    - generic [ref=e27]: Step 3 of 3 — You're All Set!
+    - generic [ref=e152]:
+      - img [ref=e154]
+      - generic [ref=e157]:
+        - heading "You're all set!" [level=2] [ref=e158]
+        - paragraph [ref=e159]: Your profile is ready. Employers can now find you when searching for local talent. You can add more details — education, experience, skills — from your dashboard anytime.
+      - generic [ref=e160]:
+        - generic [ref=e161]: Choose your profile type
+        - generic [ref=e162]: Cayman is a small community — you control exactly who can find you. Change this any time from your profile.
+        - generic [ref=e163] [cursor=pointer]:
+          - radio "Open Visible to all registered employers. Best for active job seekers — note your current employer could find you." [checked] [ref=e164]
+          - generic [ref=e165]:
+            - generic [ref=e166]:
+              - img [ref=e167]
+              - text: Open
+            - generic [ref=e170]: Visible to all registered employers. Best for active job seekers — note your current employer could find you.
+        - generic [ref=e171] [cursor=pointer]:
+          - radio "Selective Searchable, but you can block specific companies (like your current employer) who will never see your profile." [ref=e172]
+          - generic [ref=e173]:
+            - generic [ref=e174]:
+              - img [ref=e175]
+              - text: Selective
+            - generic [ref=e178]: Searchable, but you can block specific companies (like your current employer) who will never see your profile.
+        - generic [ref=e179] [cursor=pointer]:
+          - radio "Closed / Alerts only Hidden from all employer searches. You get job alerts and decide what to apply for." [ref=e180]
+          - generic [ref=e181]:
+            - generic [ref=e182]:
+              - img [ref=e183]
+              - text: Closed / Alerts only
+            - generic [ref=e186]: Hidden from all employer searches. You get job alerts and decide what to apply for.
+      - generic [ref=e187]:
+        - button "Back" [ref=e188] [cursor=pointer]:
+          - img [ref=e189]
+          - text: Back
+        - button "Go to Dashboard" [ref=e191] [cursor=pointer]
+  - contentinfo [ref=e67]:
+    - generic [ref=e68]:
+      - generic [ref=e69]:
+        - generic [ref=e70]:
+          - img "careers.ky logo" [ref=e72]
+          - generic [ref=e73]:
+            - generic [ref=e74]: careers.ky
+            - generic [ref=e75]: A Caymanian-First Careers Platform
+        - generic [ref=e76]:
+          - generic [ref=e77]:
+            - generic [ref=e78]: For Job Seekers
+            - generic [ref=e79]:
+              - link "Career Tracks" [ref=e80] [cursor=pointer]:
+                - /url: /careers?tab=career-tracks
+              - link "Live Search" [ref=e81] [cursor=pointer]:
+                - /url: /careers?tab=jobs
+              - link "Create Profile" [ref=e82] [cursor=pointer]:
+                - /url: /profile/setup
+          - generic [ref=e83]:
+            - generic [ref=e84]: For Employers
+            - generic [ref=e85]:
+              - link "Employer Directory" [ref=e86] [cursor=pointer]:
+                - /url: /employers
+              - link "Search Talent" [ref=e87] [cursor=pointer]:
+                - /url: /talent
+        - generic [ref=e88]:
+          - link "About" [ref=e89] [cursor=pointer]:
+            - /url: /about
+          - link "FAQ" [ref=e90] [cursor=pointer]:
+            - /url: "#faq"
+      - paragraph [ref=e92]: Making hiring talent visible, accessible and fair. Job postings synced daily from WORC.
+      - generic [ref=e93]:
+        - text: Built by
+        - link "Sean Ellul" [ref=e94] [cursor=pointer]:
+          - /url: https://seanellul.com
+        - text: "·Also:"
+        - link "Legislation.ky" [ref=e95] [cursor=pointer]:
+          - /url: https://legislation.ky
+        - text: "|"
+        - link "Constitution.ky" [ref=e96] [cursor=pointer]:
+          - /url: https://constitution.ky
+        - text: "|"
+        - link "Cheap.ky" [ref=e97] [cursor=pointer]:
+          - /url: https://cheap.ky
+        - text: "|"
+        - link "CayBooks" [ref=e98] [cursor=pointer]:
+          - /url: https://caybooks.com
+  - generic [ref=e99]:
+    - generic [ref=e100]:
+      - generic [ref=e101]: DEV TOOLBAR
+      - button "−" [ref=e102] [cursor=pointer]
+    - generic [ref=e103]: "Current: Candidate"
+    - generic [ref=e122]: Dev Stable
+    - generic [ref=e104]: "Test without OAuth:"
+    - button "New candidate → profile setup" [ref=e105] [cursor=pointer]
+    - button "Stable dev candidate → dashboard" [ref=e106] [cursor=pointer]
+    - generic [ref=e107]: "Switch existing DB user:"
+    - generic [ref=e108]:
+      - button "Employer" [ref=e109] [cursor=pointer]
+      - button "Candidate" [ref=e110] [cursor=pointer]
+  - alert [ref=e123]

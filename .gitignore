@@ -16,6 +16,9 @@ dist-ssr
 .env.local
 .env*.local
 
+# Local walkthroughs / screenshots (generated, not committed)
+walkthroughs/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

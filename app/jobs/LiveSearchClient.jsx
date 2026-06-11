@@ -230,6 +230,30 @@ export default function LiveSearchClient({
     return () => clearTimeout(timer);
   }, [updateURL]);
 
+  // Compact tab labels for the longest CISCO group titles
+  const TAB_LABELS = {
+    21: "Science & Engineering",
+    24: "Business & Finance",
+    25: "IT & Tech",
+    26: "Legal & Culture",
+    32: "Healthcare",
+    33: "Business & Admin",
+    34: "Legal & Social",
+    43: "Clerks & Records",
+    44: "Clerical",
+    51: "Personal Services",
+    53: "Care Workers",
+    91: "Cleaning & Domestic",
+    96: "General Labour",
+  };
+  const tabLabel = (code, fallback) => {
+    if (TAB_LABELS[code]) return TAB_LABELS[code];
+    return (fallback || `Group ${code}`)
+      .replace(/ (and Related)? (Associate )?Professionals$/i, "")
+      .replace(/ Workers$/i, "")
+      .slice(0, 28);
+  };
+
   // Occupation group options (sub-major groups from CISCO codes)
   const occGroupOptions = useMemo(() => {
     const counts = {};
@@ -465,6 +489,39 @@ export default function LiveSearchClient({
           </Button>
         </div>
         <div className="space-y-4">
+          {/* Industry tabs — live counts, no reload (spec 4.1) */}
+          <div className="flex gap-2 overflow-x-auto pb-1 -mb-1 scrollbar-thin">
+            <button
+              onClick={() => {
+                setOccGroup("");
+                setPage(1);
+              }}
+              className={`shrink-0 px-3 py-1.5 rounded-full text-sm border transition ${
+                !occGroup
+                  ? "bg-primary-500 text-white border-primary-500"
+                  : "bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:border-primary-300"
+              }`}
+            >
+              All roles ({allJobs.length})
+            </button>
+            {occGroupOptions.slice(0, 8).map((o) => (
+              <button
+                key={o.code}
+                onClick={() => {
+                  setOccGroup(occGroup === o.code ? "" : o.code);
+                  setPage(1);
+                  posthog.capture("filter_applied", { filter_type: "industry_tab", value: o.code });
+                }}
+                className={`shrink-0 px-3 py-1.5 rounded-full text-sm border transition ${
+                  occGroup === o.code
+                    ? "bg-primary-500 text-white border-primary-500"
+                    : "bg-white dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 hover:border-primary-300"
+                }`}
+              >
+                {tabLabel(o.code, o.label)} ({o.count})
+              </button>
+            ))}
+          </div>
           <div className="flex gap-2">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
