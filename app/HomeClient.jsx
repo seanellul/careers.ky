@@ -319,7 +319,7 @@ export default function HomeClient({
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {careerTracks.map((track) => (
-                <Link key={track.id} href="/careers?tab=career-tracks">
+                <Link key={track.id} href={`/careers?tab=career-tracks&cisco=${track.id}`}>
                   <Card
                     ref={addRevealEl}
                     className="group bg-neutral-50 dark:bg-neutral-800 border-neutral-200 dark:border-neutral-700 hover:border-primary-300 hover:shadow-2xl hover:shadow-primary-200/20 transition cursor-pointer"

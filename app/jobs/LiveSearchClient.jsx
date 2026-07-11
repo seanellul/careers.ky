@@ -141,6 +141,7 @@ export default function LiveSearchClient({
   const initialQ = searchParams.get("q") || "";
   const initialEmployer = searchParams.get("employer") || "";
   const initialCisco = searchParams.get("cisco") || "";
+  const initialGroup = searchParams.get("group") || "";
   const initialLoc = Number(searchParams.get("loc") || 0);
   const initialType = Number(searchParams.get("type") || 0);
   const initialSort = Number(searchParams.get("sort") || 1);
@@ -153,7 +154,7 @@ export default function LiveSearchClient({
   const [showFilters, setShowFilters] = useState(false);
   const [employerFilter, setEmployerFilter] = useState(initialEmployer);
   const [showMyJobs, setShowMyJobs] = useState(false);
-  const [occGroup, setOccGroup] = useState("");
+  const [occGroup, setOccGroup] = useState(initialGroup);
   const pageSize = 12;
 
   // Session for Express Interest
@@ -219,11 +220,12 @@ export default function LiveSearchClient({
     if (sort !== 1) params.set("sort", String(sort));
     if (employerFilter) params.set("employer", employerFilter);
     if (initialCisco) params.set("cisco", initialCisco);
+    if (occGroup) params.set("group", occGroup);
     const str = params.toString();
     if (!embedded) {
       router.replace(str ? `/jobs?${str}` : "/jobs", { scroll: false });
     }
-  }, [q, loc, type, sort, employerFilter, initialCisco, router]);
+  }, [q, loc, type, sort, employerFilter, initialCisco, occGroup, router]);
 
   useEffect(() => {
     const timer = setTimeout(updateURL, 300);
@@ -334,7 +336,15 @@ export default function LiveSearchClient({
     .filter((j) =>
       employerFilter ? j.employerName?.toLowerCase().includes(employerFilter.toLowerCase()) : true
     )
-    .filter((j) => (initialCisco ? j.sOccupation === initialCisco : true))
+    // A cisco param shorter than a 4-digit unit code is a group prefix
+    // (e.g. "1" Managers, "24" Business & Finance) rather than one occupation.
+    .filter((j) =>
+      initialCisco
+        ? initialCisco.length >= 4
+          ? j.sOccupation === initialCisco
+          : j.sOccupation?.startsWith(initialCisco)
+        : true
+    )
     .filter((j) => (occGroup ? j.sOccupation?.startsWith(occGroup) : true))
     .filter((j) => {
       if (skillCiscoCodes.size === 0 && skillTitleGroups.length === 0) return true;

@@ -96,14 +96,48 @@ export default function CareerTracksClient({
     return units;
   }, [tree]);
 
-  const filteredUnits = useMemo(() => {
+  const hasActiveFilters = Boolean(filters.education || filters.experience || filters.workType);
+
+  const { filteredUnits, matchCounts } = useMemo(() => {
+    // Postings matching ALL selected filters at once — presence in each
+    // marginal isn't enough (a 800-post occupation with one Bachelor's posting
+    // must not pass a Bachelor's filter).
+    const countMatches = (stats) => {
+      if (!hasActiveFilters) return stats.count;
+      if (Array.isArray(stats.joint) && stats.joint.length > 0) {
+        let n = 0;
+        for (const r of stats.joint) {
+          if (filters.workType && r.w !== filters.workType) continue;
+          if (filters.education && r.e !== filters.education) continue;
+          if (filters.experience && r.x !== filters.experience) continue;
+          n += r.n;
+        }
+        return n;
+      }
+      // Cached aggregates from before joint data shipped: tightest marginal
+      const dims = [];
+      if (filters.workType) dims.push(stats.dist?.work?.[filters.workType] || 0);
+      if (filters.education) dims.push(stats.dist?.edu?.[filters.education] || 0);
+      if (filters.experience) dims.push(stats.dist?.exp?.[filters.experience] || 0);
+      return dims.length ? Math.min(...dims) : stats.count;
+    };
+
+    const matchCounts = new Map();
+    const selected = Array.from(selectedCiscoCodes);
     let filtered = allUnits.filter((unit) => {
       const stats = aggregates.get(unit.id);
       if (!stats) return false;
-      if (selectedCiscoCodes.size > 0 && !selectedCiscoCodes.has(unit.id)) return false;
-      if (filters.education && !stats.dist?.edu?.[filters.education]) return false;
-      if (filters.experience && !stats.dist?.exp?.[filters.experience]) return false;
-      if (filters.workType && !stats.dist?.work?.[filters.workType]) return false;
+      // Codes shorter than a 4-digit unit (e.g. "1" Managers from the homepage
+      // tiles) select the whole group by prefix.
+      if (
+        selected.length > 0 &&
+        !selected.some((c) => unit.id === c || (c.length < 4 && unit.id.startsWith(c)))
+      ) {
+        return false;
+      }
+      const matches = countMatches(stats);
+      if (matches <= 0) return false;
+      matchCounts.set(unit.id, matches);
       return true;
     });
 
@@ -113,8 +147,8 @@ export default function CareerTracksClient({
       let valueA, valueB;
       switch (sortBy) {
         case "count":
-          valueA = statsA.count;
-          valueB = statsB.count;
+          valueA = matchCounts.get(a.id) ?? statsA.count;
+          valueB = matchCounts.get(b.id) ?? statsB.count;
           break;
         case "min":
           valueA = statsA.min;
@@ -135,8 +169,8 @@ export default function CareerTracksClient({
       return sortOrder === "desc" ? valueB - valueA : valueA - valueB;
     });
 
-    return filtered;
-  }, [allUnits, aggregates, filters, sortBy, sortOrder, selectedCiscoCodes]);
+    return { filteredUnits: filtered, matchCounts };
+  }, [allUnits, aggregates, filters, hasActiveFilters, sortBy, sortOrder, selectedCiscoCodes]);
 
   const PAGE_SIZE = 30;
   const [page, setPage] = useState(1);
@@ -488,7 +522,10 @@ export default function CareerTracksClient({
                     </div>
                     <div className="mb-4">
                       <div className="text-sm font-medium mb-2 flex items-center gap-2">
-                        <Users className="w-4 h-4" /> Market Overview ({stats.count} posts)
+                        <Users className="w-4 h-4" />
+                        {hasActiveFilters
+                          ? `Market Overview (${matchCounts.get(unit.id) ?? 0} matching of ${stats.count} posts)`
+                          : `Market Overview (${stats.count} posts)`}
                       </div>
                       {stats.dist && (
                         <div className="space-y-3">
@@ -541,6 +578,20 @@ export default function CareerTracksClient({
               );
             })}
           </div>
+          {filteredUnits.length === 0 && (
+            <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
+              <CardContent className="p-10 text-center">
+                <div className="font-semibold mb-2">No occupations match all selected filters</div>
+                <p className="text-sm text-neutral-500 mb-4">
+                  No postings in the Cayman market combine these requirements right now. Try
+                  removing one filter to widen the search.
+                </p>
+                <Button variant="secondary" onClick={clearFilters}>
+                  Clear All Filters
+                </Button>
+              </CardContent>
+            </Card>
+          )}
           {hasMore && (
             <div className="flex justify-center mt-8">
               <Button

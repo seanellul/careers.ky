@@ -103,9 +103,10 @@ export default function CareersClient({
     }
   }, [activeTab]);
 
-  // Sync URL passively (no server re-fetch)
+  // Sync URL passively (no server re-fetch). Keep the other params — inbound
+  // links carry filters like ?cisco= that the tab clients read.
   useEffect(() => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(window.location.search);
     params.set("tab", activeTab);
     const url = `/careers?${params.toString()}`;
     window.history.replaceState(null, "", url);
