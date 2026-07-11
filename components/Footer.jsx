@@ -72,6 +72,12 @@ export default function Footer() {
             <a href="#faq" className="hover:text-neutral-900 dark:hover:text-neutral-100">
               FAQ
             </a>
+            <Link href="/privacy" className="hover:text-neutral-900 dark:hover:text-neutral-100">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-neutral-900 dark:hover:text-neutral-100">
+              Terms of Service
+            </Link>
           </div>
         </div>
         <div className="mt-6 pt-6 border-t border-neutral-200 dark:border-neutral-800 text-xs text-center md:text-left">
