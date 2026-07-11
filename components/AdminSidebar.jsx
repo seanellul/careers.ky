@@ -14,6 +14,7 @@ import {
   Menu,
   X,
   ListOrdered,
+  FileText,
 } from "lucide-react";
 
 export default function AdminSidebar() {
@@ -26,6 +27,7 @@ export default function AdminSidebar() {
     { href: "/admin/employers", label: "Employers", icon: Building2 },
     { href: "/admin/pitches", label: "Pitch Decks", icon: Presentation },
     { href: "/admin/verifications", label: "Verifications", icon: ShieldCheck },
+    { href: "/admin/cv-reviews", label: "CV Reviews", icon: FileText },
     { href: "/admin/interests", label: "Interests", icon: Heart },
     { href: "/admin/outreach", label: "Outreach", icon: Send },
     { href: "/admin/waitlist", label: "Waitlist", icon: ListOrdered },

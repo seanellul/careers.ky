@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { STATUS_BADGES } from "@/lib/candidate-status";
 import VerificationCard from "@/components/VerificationCard";
+import CvReviewCard from "@/components/CvReviewCard";
 import BlockedEmployersCard from "@/components/BlockedEmployersCard";
 import DeleteAccountCard from "@/components/DeleteAccountCard";
 import {
@@ -550,6 +551,7 @@ export default function ProfileClient({
         {/* Status verification + privacy */}
         <div className="mb-6 grid gap-4 md:grid-cols-2">
           <VerificationCard statusVerified={candidate.status_verified} />
+          <CvReviewCard />
           <BlockedEmployersCard />
         </div>
 
