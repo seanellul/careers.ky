@@ -14,5 +14,10 @@ export default async function EmployerSetupPage() {
   if (!session?.employerAccountId) redirect("/");
   if (session.employerId) redirect("/employer/dashboard");
 
-  return <EmployerSetupClient />;
+  // Abandoned mid-flow? Let the wizard resume the pending selection.
+  const pendingEmployer = session.pendingEmployerId
+    ? { id: session.pendingEmployerId, name: session.pendingEmployerName }
+    : null;
+
+  return <EmployerSetupClient pendingEmployer={pendingEmployer} />;
 }

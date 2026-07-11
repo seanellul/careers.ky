@@ -104,30 +104,40 @@ export async function POST(request) {
     const isDomainMatch = emailDomain && companyDomain && domainsMatch(emailDomain, companyDomain);
 
     let verificationStatus;
-    let verifiedBy = null;
 
     if (isDomainMatch && !hasVerifiedOwner) {
-      // Auto-verify only if domain matches AND no one else already owns this employer
+      // Domain match is a completed, trustworthy signal — finalize the link
+      // immediately: auto-verify, attach the company, mark it claimed.
       verificationStatus = "verified";
-      verifiedBy = "domain_match";
+      await sql`
+        UPDATE employer_accounts
+        SET employer_id = ${employerId}, role = ${role},
+            pending_employer_id = NULL, pending_claimed_at = NULL,
+            verification_status = 'verified',
+            verified_at = NOW(),
+            verified_by = 'domain_match'
+        WHERE id = ${session.employerAccountId}
+      `;
+      await sql`UPDATE employers SET claimed = TRUE WHERE id = ${employerId}`;
     } else {
-      // Require manual verification if domain doesn't match OR employer already has a verified owner
+      // Two-phase claim: record the selection as pending only. employer_id
+      // (and employers.claimed) is set when the setup wizard completes, so a
+      // half-finished registration never attaches a company to the dashboard.
       verificationStatus = "pending";
-    }
+      await sql`
+        UPDATE employer_accounts
+        SET pending_employer_id = ${employerId}, pending_claimed_at = NOW(),
+            verification_status = 'pending',
+            verified_at = NULL, verified_by = NULL
+        WHERE id = ${session.employerAccountId}
+      `;
 
-    // Link employer account to employer
-    await sql`
-      UPDATE employer_accounts
-      SET employer_id = ${employerId}, role = ${role},
-          verification_status = ${verificationStatus},
-          verified_at = ${isDomainMatch ? new Date() : null},
-          verified_by = ${verifiedBy}
-      WHERE id = ${session.employerAccountId}
-    `;
-    await sql`UPDATE employers SET claimed = TRUE WHERE id = ${employerId}`;
-
-    // If pending, create verification request and notify team
-    if (verificationStatus === "pending") {
+      // Supersede any earlier pending request (user picked a different company)
+      await sql`
+        UPDATE employer_verification_requests
+        SET status = 'superseded', reviewed_by = 'system', reviewed_at = NOW()
+        WHERE employer_account_id = ${session.employerAccountId} AND status = 'pending'
+      `;
       await sql`
         INSERT INTO employer_verification_requests (employer_account_id, employer_id, email_domain, status)
         VALUES (${session.employerAccountId}, ${employerId}, ${emailDomain || account.email.split("@")[1]}, 'pending')

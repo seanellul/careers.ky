@@ -18,6 +18,33 @@ export async function GET(request) {
     console.error("[Briefing] Non-fatal error:", briefErr.message);
   }
 
+  // Expire abandoned two-phase employer claims (pending selections older than
+  // 14 days that never finished the setup wizard). Rides this daily cron the
+  // same way the Weekly Briefing does — no new cron entry.
+  try {
+    const expired = await sql`
+      UPDATE employer_accounts
+      SET pending_employer_id = NULL, pending_claimed_at = NULL,
+          verification_status = 'unverified'
+      WHERE pending_employer_id IS NOT NULL
+        AND employer_id IS NULL
+        AND pending_claimed_at < NOW() - INTERVAL '14 days'
+      RETURNING id
+    `;
+    if (expired.length > 0) {
+      const accountIds = expired.map((r) => r.id);
+      await sql`
+        UPDATE employer_verification_requests
+        SET status = 'expired', reviewed_by = 'system', reviewed_at = NOW(),
+            notes = COALESCE(notes || ' — ', '') || 'Expired: employer setup not completed within 14 days'
+        WHERE employer_account_id = ANY(${accountIds}) AND status = 'pending'
+      `;
+      console.log(`[Pending Claims] Expired ${expired.length} abandoned claim(s).`);
+    }
+  } catch (pendingErr) {
+    console.error("[Pending Claims] Non-fatal cleanup error:", pendingErr.message);
+  }
+
   try {
     // 1. Get un-notified interests grouped by employer
     const interests = await sql`

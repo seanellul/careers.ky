@@ -49,10 +49,18 @@ export async function GET(request) {
           SET status = 'approved', reviewed_by = 'work-email-verification', reviewed_at = NOW()
           WHERE id = ${req.id}
         `;
+        // Work-email domain match is a completed, trustworthy signal — also
+        // promote a pending (two-phase) claim to the real link.
         await sql`
           UPDATE employer_accounts
-          SET verification_status = 'verified', verified_at = NOW(), verified_by = 'work_email_domain_match'
+          SET verification_status = 'verified', verified_at = NOW(), verified_by = 'work_email_domain_match',
+              employer_id = COALESCE(employer_id, pending_employer_id),
+              pending_employer_id = NULL, pending_claimed_at = NULL
           WHERE id = ${accountId}
+        `;
+        await sql`
+          UPDATE employers SET claimed = TRUE
+          WHERE id IN (SELECT employer_id FROM employer_accounts WHERE id = ${accountId} AND employer_id IS NOT NULL)
         `;
         autoApproved = true;
       }

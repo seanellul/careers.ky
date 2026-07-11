@@ -8,13 +8,14 @@ import { Input } from "@/components/ui/input";
 import { Search, Building2, CheckCircle, ChevronRight, Globe, FileText, Clock } from "lucide-react";
 import t from "@/lib/theme";
 
-export default function EmployerSetupClient() {
+export default function EmployerSetupClient({ pendingEmployer = null }) {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState([]);
   const [searching, setSearching] = useState(false);
-  const [selectedEmployer, setSelectedEmployer] = useState(null);
+  const [selectedEmployer, setSelectedEmployer] = useState(pendingEmployer);
+  const [finishing, setFinishing] = useState(false);
   const [claiming, setClaiming] = useState(false);
   const [declaration, setDeclaration] = useState("");
   const [agencyBlocked, setAgencyBlocked] = useState(false);
@@ -88,6 +89,18 @@ export default function EmployerSetupClient() {
     router.push("/employer/dashboard");
   };
 
+  // Wizard completion for pending-verification accounts: promote the
+  // pending selection to the real company link (two-phase claim).
+  const handleFinalize = async () => {
+    setFinishing(true);
+    try {
+      await fetch("/api/employer/claim/finalize", { method: "POST" });
+      router.push("/employer/dashboard");
+    } finally {
+      setFinishing(false);
+    }
+  };
+
   const stepLabels = ["Select Company", "Verification", "Company Details"];
 
   if (agencyBlocked) {
@@ -154,6 +167,28 @@ export default function EmployerSetupClient() {
               <p className="text-neutral-500 text-sm">
                 Search for your company from our database of Cayman employers.
               </p>
+
+              {pendingEmployer && (
+                <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-xl p-4 space-y-2">
+                  <p className="text-sm text-amber-800 dark:text-amber-300">
+                    You previously selected <strong>{pendingEmployer.name}</strong> but didn&apos;t
+                    finish setup. Continue where you left off, or search for a different company
+                    below.
+                  </p>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => {
+                      setSelectedEmployer(pendingEmployer);
+                      setVerificationStatus("pending");
+                      setStep(3);
+                    }}
+                    className="gap-1"
+                  >
+                    Continue with {pendingEmployer.name} <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              )}
 
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
@@ -330,8 +365,9 @@ export default function EmployerSetupClient() {
                 </p>
               </div>
 
-              <Button onClick={() => router.push("/employer/dashboard")} className="w-full gap-2">
-                Continue to Dashboard <ChevronRight className="w-4 h-4" />
+              <Button onClick={handleFinalize} disabled={finishing} className="w-full gap-2">
+                {finishing ? "Finishing..." : "Continue to Dashboard"}{" "}
+                <ChevronRight className="w-4 h-4" />
               </Button>
             </CardContent>
           </Card>
