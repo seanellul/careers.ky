@@ -35,3 +35,6 @@ walkthroughs/
 # Playwright
 test-results/
 playwright-report/
+
+# Internal strategy docs — this repo is public; CEO spec material is confidential
+docs/CEO-SPEC-GAP-ANALYSIS.md
