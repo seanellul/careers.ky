@@ -28,6 +28,8 @@ import {
   Plus,
   List,
   Save,
+  Lock,
+  Globe,
 } from "lucide-react";
 import EmployerWaitlistForm from "@/components/EmployerWaitlistForm";
 import { STATUS_BADGES } from "@/lib/candidate-status";
@@ -44,6 +46,17 @@ const AVAILABILITY_COLORS = {
     "bg-primary-50 dark:bg-primary-500/15 text-primary-700 dark:text-primary-300 border-primary-200 dark:border-primary-500/30",
   not_looking:
     "bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-400 border-neutral-300 dark:border-neutral-600",
+};
+
+// Timeline signal on offshore candidate cards (CEO spec §25)
+const NOTICE_PERIOD_LABELS = {
+  immediate: "Available immediately",
+  "1_week": "1 week notice",
+  "2_weeks": "2 weeks notice",
+  "1_month": "1 month notice",
+  "2_months": "2 months notice",
+  "3_months": "3 months notice",
+  "3_plus_months": "3+ months notice",
 };
 
 const STATUS_COLORS = {
@@ -106,6 +119,9 @@ export default function TalentSearchClient({
   expTypes: exObj,
   locTypes: ltObj,
   ciscoUnits,
+  // true/false when the server page knows the tier (employer dashboard);
+  // undefined on pages that don't — the API's overseasHidden flag fills in.
+  offshoreEntitled,
 }) {
   const eduTypes = useMemo(() => new Map(Object.entries(etObj)), [etObj]);
   const expTypes = useMemo(() => new Map(Object.entries(exObj)), [exObj]);
@@ -120,6 +136,14 @@ export default function TalentSearchClient({
   const [pageSize] = useState(20);
   const [searching, setSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
+
+  // Talent pool tabs (CEO spec §25): local (default) vs offshore.
+  const [pool, setPool] = useState("local");
+  // Lock state learned from API responses (overseasHidden) when the
+  // offshoreEntitled prop wasn't provided by the server page.
+  const [apiOffshoreLocked, setApiOffshoreLocked] = useState(null);
+  const offshoreLocked =
+    offshoreEntitled === false || (offshoreEntitled === undefined && apiOffshoreLocked === true);
   const [introSent, setIntroSent] = useState(new Set());
   const [showFilters, setShowFilters] = useState(false);
 
@@ -276,8 +300,9 @@ export default function TalentSearchClient({
     setSelectedJobId(jobId);
     setJobDropdownOpen(false);
     setJobSearch("");
-    // Auto-search
-    if (jobId) {
+    // Auto-search. Job matching (match-to-job) only serves the local pool —
+    // on the offshore tab, fall through to the pool-aware general search.
+    if (jobId && pool !== "offshore") {
       setSearching(true);
       setHasSearched(true);
       fetch(`/api/talent/match-to-job?jobId=${jobId}`)
@@ -297,11 +322,13 @@ export default function TalentSearchClient({
 
   const totalPages = Math.ceil(total / pageSize);
 
-  const handleSearch = async (searchPage = 1) => {
+  const handleSearch = async (searchPage = 1, poolOverride = null) => {
+    const activePool = poolOverride || pool;
     setSearching(true);
     setHasSearched(true);
     try {
       const params = new URLSearchParams();
+      if (activePool === "offshore") params.set("pool", "offshore");
       if (ciscoCode) params.set("ciscoCode", ciscoCode);
       if (educationCode) params.set("educationCode", educationCode);
       if (experienceCode) params.set("experienceCode", experienceCode);
@@ -316,12 +343,31 @@ export default function TalentSearchClient({
 
       const res = await fetch(`/api/talent/search?${params}`);
       const data = await res.json();
+      if (typeof data.overseasHidden === "boolean") setApiOffshoreLocked(data.overseasHidden);
       setResults(data.candidates || []);
       setTotal(data.total || 0);
       setPage(data.page || searchPage);
       setSelectedCandidates(new Set());
     } finally {
       setSearching(false);
+    }
+  };
+
+  const handlePoolSwitch = (newPool) => {
+    if (newPool === pool) return;
+    setPool(newPool);
+    setSelectedCandidates(new Set());
+    setExpandedIntro(null);
+    if (newPool === "offshore" && offshoreLocked) {
+      setResults([]);
+      setTotal(0);
+      return;
+    }
+    if (hasSearched) {
+      handleSearch(1, newPool);
+    } else {
+      setResults([]);
+      setTotal(0);
     }
   };
 
@@ -408,6 +454,10 @@ export default function TalentSearchClient({
 
   if (loading) return <div className="py-20" />;
 
+  // Offshore tab selected but not entitled: show the lock state instead of
+  // filters/results (the API refuses overseas rows to these tiers anyway).
+  const offshoreLockView = pool === "offshore" && offshoreLocked;
+
   return (
     <>
       <div className="mb-8">
@@ -431,295 +481,336 @@ export default function TalentSearchClient({
       {/* Search Filters */}
       {session?.employerAccountId && (
         <>
-          <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-8">
-            <CardContent className="p-5 space-y-0">
-              {/* Job Selector — searchable dropdown */}
-              {employerPostings.length > 0 && (
-                <div className="relative" ref={jobDropdownRef}>
-                  <label className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-2 block">
-                    Recruiting for
-                  </label>
-                  <button
-                    onClick={() => setJobDropdownOpen(!jobDropdownOpen)}
-                    className="w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 transition text-left"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-500/15 grid place-items-center shrink-0">
-                        {selectedJobId ? (
-                          <Briefcase className="w-4 h-4 text-primary-500" />
-                        ) : (
-                          <Search className="w-4 h-4 text-primary-500" />
-                        )}
-                      </div>
-                      <div className="min-w-0">
-                        <div className="text-sm font-medium text-neutral-900 dark:text-neutral-100 truncate">
-                          {selectedJobId
-                            ? employerPostings.find((p) => p.cJobId === selectedJobId)?.cTitle ||
-                              selectedJobId
-                            : "General Search"}
-                        </div>
-                        <div className="text-xs text-neutral-500">
-                          {selectedJobId ? selectedJobId : "No specific job — search all talent"}
-                        </div>
-                      </div>
-                    </div>
-                    <ChevronDown
-                      className={`w-4 h-4 text-neutral-500 shrink-0 transition-transform ${jobDropdownOpen ? "rotate-180" : ""}`}
-                    />
-                  </button>
+          {/* Pool tabs — Local vs Offshore Talent (CEO spec §25) */}
+          <div className="flex items-center gap-1 mb-6 border-b border-neutral-200 dark:border-neutral-700">
+            <button
+              onClick={() => handlePoolSwitch("local")}
+              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition ${
+                pool === "local"
+                  ? "border-primary-500 text-primary-600 dark:text-primary-300"
+                  : "border-transparent text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
+              }`}
+            >
+              <Shield className="w-4 h-4" /> Local Talent
+            </button>
+            <button
+              onClick={() => handlePoolSwitch("offshore")}
+              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition ${
+                pool === "offshore"
+                  ? "border-primary-500 text-primary-600 dark:text-primary-300"
+                  : "border-transparent text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
+              }`}
+            >
+              <Globe className="w-4 h-4" /> Offshore Talent
+              {offshoreLocked && <Lock className="w-3.5 h-3.5 opacity-60" />}
+            </button>
+          </div>
 
-                  {jobDropdownOpen && (
-                    <div className="absolute z-30 left-0 right-0 mt-2 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 shadow-2xl overflow-hidden">
-                      <div className="p-2 border-b border-neutral-200 dark:border-neutral-700">
-                        <div className="relative">
-                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-500" />
-                          <input
-                            type="text"
-                            value={jobSearch}
-                            onChange={(e) => setJobSearch(e.target.value)}
-                            placeholder="Search postings..."
-                            className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-lg pl-9 pr-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 placeholder:text-neutral-600 focus:outline-none focus:border-primary-300 dark:focus:border-primary-500/40"
-                            autoFocus
-                          />
+          {/* Offshore lock state — tier without overseas_talent entitlement */}
+          {offshoreLockView && (
+            <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
+              <CardContent className="p-12 text-center">
+                <Lock className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-500" />
+                <h3 className="text-lg font-medium mb-2">Offshore talent is a Pro feature</h3>
+                <p className="text-neutral-500 max-w-md mx-auto">
+                  Your current plan includes the local talent pool only. Upgrade to Pro to search
+                  overseas candidates open to relocating to Cayman under work-permit sponsorship.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {!offshoreLockView && (
+            <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-8">
+              <CardContent className="p-5 space-y-0">
+                {/* Job Selector — searchable dropdown */}
+                {employerPostings.length > 0 && (
+                  <div className="relative" ref={jobDropdownRef}>
+                    <label className="text-xs font-medium text-neutral-500 uppercase tracking-wider mb-2 block">
+                      Recruiting for
+                    </label>
+                    <button
+                      onClick={() => setJobDropdownOpen(!jobDropdownOpen)}
+                      className="w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 hover:border-neutral-300 dark:hover:border-neutral-600 transition text-left"
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-500/15 grid place-items-center shrink-0">
+                          {selectedJobId ? (
+                            <Briefcase className="w-4 h-4 text-primary-500" />
+                          ) : (
+                            <Search className="w-4 h-4 text-primary-500" />
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-sm font-medium text-neutral-900 dark:text-neutral-100 truncate">
+                            {selectedJobId
+                              ? employerPostings.find((p) => p.cJobId === selectedJobId)?.cTitle ||
+                                selectedJobId
+                              : "General Search"}
+                          </div>
+                          <div className="text-xs text-neutral-500">
+                            {selectedJobId ? selectedJobId : "No specific job — search all talent"}
+                          </div>
                         </div>
                       </div>
-                      <div className="max-h-64 overflow-y-auto py-1">
-                        <button
-                          onClick={() => handleSelectJob("")}
-                          className={`w-full text-left px-3 py-2.5 flex items-center gap-3 text-sm transition ${
-                            selectedJobId === ""
-                              ? "bg-primary-50 dark:bg-primary-500/15 text-primary-600 dark:text-primary-300"
-                              : "hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-500"
-                          }`}
-                        >
-                          <Search className="w-3.5 h-3.5 shrink-0 text-neutral-500" />
-                          <span>General Search</span>
-                        </button>
-                        {filteredPostings.map((p) => (
+                      <ChevronDown
+                        className={`w-4 h-4 text-neutral-500 shrink-0 transition-transform ${jobDropdownOpen ? "rotate-180" : ""}`}
+                      />
+                    </button>
+
+                    {jobDropdownOpen && (
+                      <div className="absolute z-30 left-0 right-0 mt-2 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 shadow-2xl overflow-hidden">
+                        <div className="p-2 border-b border-neutral-200 dark:border-neutral-700">
+                          <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-500" />
+                            <input
+                              type="text"
+                              value={jobSearch}
+                              onChange={(e) => setJobSearch(e.target.value)}
+                              placeholder="Search postings..."
+                              className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-lg pl-9 pr-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 placeholder:text-neutral-600 focus:outline-none focus:border-primary-300 dark:focus:border-primary-500/40"
+                              autoFocus
+                            />
+                          </div>
+                        </div>
+                        <div className="max-h-64 overflow-y-auto py-1">
                           <button
-                            key={p.cJobId}
-                            onClick={() => handleSelectJob(p.cJobId)}
+                            onClick={() => handleSelectJob("")}
                             className={`w-full text-left px-3 py-2.5 flex items-center gap-3 text-sm transition ${
-                              selectedJobId === p.cJobId
+                              selectedJobId === ""
                                 ? "bg-primary-50 dark:bg-primary-500/15 text-primary-600 dark:text-primary-300"
                                 : "hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-500"
                             }`}
                           >
-                            <Briefcase className="w-3.5 h-3.5 shrink-0 text-neutral-500" />
-                            <span className="truncate">{p.cTitle}</span>
-                            <span className="text-xs text-neutral-600 font-mono ml-auto shrink-0">
-                              {p.cJobId}
-                            </span>
+                            <Search className="w-3.5 h-3.5 shrink-0 text-neutral-500" />
+                            <span>General Search</span>
                           </button>
-                        ))}
-                        {filteredPostings.length === 0 && (
-                          <div className="px-3 py-4 text-sm text-neutral-500 text-center">
-                            No postings match "{jobSearch}"
-                          </div>
-                        )}
+                          {filteredPostings.map((p) => (
+                            <button
+                              key={p.cJobId}
+                              onClick={() => handleSelectJob(p.cJobId)}
+                              className={`w-full text-left px-3 py-2.5 flex items-center gap-3 text-sm transition ${
+                                selectedJobId === p.cJobId
+                                  ? "bg-primary-50 dark:bg-primary-500/15 text-primary-600 dark:text-primary-300"
+                                  : "hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-500"
+                              }`}
+                            >
+                              <Briefcase className="w-3.5 h-3.5 shrink-0 text-neutral-500" />
+                              <span className="truncate">{p.cTitle}</span>
+                              <span className="text-xs text-neutral-600 font-mono ml-auto shrink-0">
+                                {p.cJobId}
+                              </span>
+                            </button>
+                          ))}
+                          {filteredPostings.length === 0 && (
+                            <div className="px-3 py-4 text-sm text-neutral-500 text-center">
+                              No postings match "{jobSearch}"
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Divider + Refine toggle */}
+                <div className="pt-4">
+                  <button
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="flex items-center gap-2 text-xs font-medium text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-500 transition uppercase tracking-wider"
+                  >
+                    <Filter className="w-3.5 h-3.5" /> Refine Filters
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 transition-transform ${showFilters ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                </div>
+
+                {showFilters && (
+                  <div className="pt-4 space-y-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <div>
+                        <label className="text-sm font-medium mb-2 block text-neutral-500">
+                          Career Interest (CISCO)
+                        </label>
+                        <Input
+                          value={ciscoSearch}
+                          onChange={(e) => setCiscoSearch(e.target.value)}
+                          placeholder="Search occupations..."
+                          className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-2"
+                        />
+                        <select
+                          value={ciscoCode}
+                          onChange={(e) => setCiscoCode(e.target.value)}
+                          className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
+                          size={4}
+                        >
+                          <option value="">Any occupation</option>
+                          {filteredCisco.map((c) => (
+                            <option key={c.code} value={c.code}>
+                              {c.title} ({c.code})
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="text-sm font-medium mb-2 block text-neutral-500">
+                            Education
+                          </label>
+                          <select
+                            value={educationCode}
+                            onChange={(e) => setEducationCode(e.target.value)}
+                            className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
+                          >
+                            <option value="">Any education</option>
+                            {Array.from(eduTypes.entries()).map(([k, v]) => (
+                              <option key={k} value={k}>
+                                {v}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium mb-2 block text-neutral-500">
+                            Experience
+                          </label>
+                          <select
+                            value={experienceCode}
+                            onChange={(e) => setExperienceCode(e.target.value)}
+                            className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
+                          >
+                            <option value="">Any experience</option>
+                            {Array.from(expTypes.entries()).map(([k, v]) => (
+                              <option key={k} value={k}>
+                                {v}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="space-y-4">
+                        <div>
+                          <label className="text-sm font-medium mb-2 block text-neutral-500">
+                            Location
+                          </label>
+                          <select
+                            value={locationCode}
+                            onChange={(e) => setLocationCode(e.target.value)}
+                            className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
+                          >
+                            <option value="">Any location</option>
+                            {Array.from(locTypes.entries()).map(([k, v]) => (
+                              <option key={k} value={k}>
+                                {v}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium mb-2 block text-neutral-500">
+                            Availability
+                          </label>
+                          <select
+                            value={availability}
+                            onChange={(e) => setAvailability(e.target.value)}
+                            className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
+                          >
+                            <option value="">Any availability</option>
+                            <option value="actively_looking">Actively Looking</option>
+                            <option value="open_to_offers">Open to Offers</option>
+                          </select>
+                        </div>
                       </div>
                     </div>
-                  )}
-                </div>
-              )}
 
-              {/* Divider + Refine toggle */}
-              <div className="pt-4">
-                <button
-                  onClick={() => setShowFilters(!showFilters)}
-                  className="flex items-center gap-2 text-xs font-medium text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-500 transition uppercase tracking-wider"
-                >
-                  <Filter className="w-3.5 h-3.5" /> Refine Filters
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform ${showFilters ? "rotate-180" : ""}`}
-                  />
-                </button>
-              </div>
-
-              {showFilters && (
-                <div className="pt-4 space-y-5">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {/* Skills Filter */}
                     <div>
                       <label className="text-sm font-medium mb-2 block text-neutral-500">
-                        Career Interest (CISCO)
+                        Skills
                       </label>
-                      <Input
-                        value={ciscoSearch}
-                        onChange={(e) => setCiscoSearch(e.target.value)}
-                        placeholder="Search occupations..."
-                        className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-2"
-                      />
-                      <select
-                        value={ciscoCode}
-                        onChange={(e) => setCiscoCode(e.target.value)}
-                        className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
-                        size={4}
-                      >
-                        <option value="">Any occupation</option>
-                        {filteredCisco.map((c) => (
-                          <option key={c.code} value={c.code}>
-                            {c.title} ({c.code})
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="text-sm font-medium mb-2 block text-neutral-500">
-                          Education
-                        </label>
-                        <select
-                          value={educationCode}
-                          onChange={(e) => setEducationCode(e.target.value)}
-                          className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
-                        >
-                          <option value="">Any education</option>
-                          {Array.from(eduTypes.entries()).map(([k, v]) => (
-                            <option key={k} value={k}>
-                              {v}
-                            </option>
-                          ))}
-                        </select>
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+                        <Input
+                          value={skillSearch}
+                          onChange={(e) => setSkillSearch(e.target.value)}
+                          placeholder="Search skills to filter by..."
+                          className="pl-10 bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
+                        />
                       </div>
-                      <div>
-                        <label className="text-sm font-medium mb-2 block text-neutral-500">
-                          Experience
-                        </label>
-                        <select
-                          value={experienceCode}
-                          onChange={(e) => setExperienceCode(e.target.value)}
-                          className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
-                        >
-                          <option value="">Any experience</option>
-                          {Array.from(expTypes.entries()).map(([k, v]) => (
-                            <option key={k} value={k}>
-                              {v}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="text-sm font-medium mb-2 block text-neutral-500">
-                          Location
-                        </label>
-                        <select
-                          value={locationCode}
-                          onChange={(e) => setLocationCode(e.target.value)}
-                          className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
-                        >
-                          <option value="">Any location</option>
-                          {Array.from(locTypes.entries()).map(([k, v]) => (
-                            <option key={k} value={k}>
-                              {v}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-2 block text-neutral-500">
-                          Availability
-                        </label>
-                        <select
-                          value={availability}
-                          onChange={(e) => setAvailability(e.target.value)}
-                          className="w-full bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 rounded-xl px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300"
-                        >
-                          <option value="">Any availability</option>
-                          <option value="actively_looking">Actively Looking</option>
-                          <option value="open_to_offers">Open to Offers</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Skills Filter */}
-                  <div>
-                    <label className="text-sm font-medium mb-2 block text-neutral-500">
-                      Skills
-                    </label>
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
-                      <Input
-                        value={skillSearch}
-                        onChange={(e) => setSkillSearch(e.target.value)}
-                        placeholder="Search skills to filter by..."
-                        className="pl-10 bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700"
-                      />
-                    </div>
-                    {skillSuggestions.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {skillSuggestions.slice(0, 10).map((s) => (
-                          <button
-                            key={s.id}
-                            onClick={() => {
-                              setSelectedSkills([...selectedSkills, s]);
-                              setSkillSearch("");
-                            }}
-                          >
-                            <Badge className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-500 hover:border-purple-300/40 cursor-pointer">
-                              <Plus className="w-3 h-3 mr-1" /> {s.name}
-                            </Badge>
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                    {selectedSkills.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {selectedSkills.map((s) => (
-                          <div key={s.id} className="flex items-center gap-1">
-                            <Badge className="bg-purple-500/20 text-purple-300 border-purple-300/30">
-                              {s.name}
-                            </Badge>
+                      {skillSuggestions.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {skillSuggestions.slice(0, 10).map((s) => (
                             <button
-                              onClick={() =>
-                                setSelectedSkills(selectedSkills.filter((sk) => sk.id !== s.id))
-                              }
-                              className="text-neutral-500 hover:text-red-400"
+                              key={s.id}
+                              onClick={() => {
+                                setSelectedSkills([...selectedSkills, s]);
+                                setSkillSearch("");
+                              }}
                             >
-                              <X className="w-3 h-3" />
+                              <Badge className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-500 hover:border-purple-300/40 cursor-pointer">
+                                <Plus className="w-3 h-3 mr-1" /> {s.name}
+                              </Badge>
                             </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                          ))}
+                        </div>
+                      )}
+                      {selectedSkills.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {selectedSkills.map((s) => (
+                            <div key={s.id} className="flex items-center gap-1">
+                              <Badge className="bg-purple-500/20 text-purple-300 border-purple-300/30">
+                                {s.name}
+                              </Badge>
+                              <button
+                                onClick={() =>
+                                  setSelectedSkills(selectedSkills.filter((sk) => sk.id !== s.id))
+                                }
+                                className="text-neutral-500 hover:text-red-400"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
 
-                  <div className="flex items-center gap-4">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={isCaymanian}
-                        onChange={(e) => setIsCaymanian(e.target.checked)}
-                        className="rounded"
-                      />
-                      <span className="text-sm flex items-center gap-1">
-                        <Shield className="w-3 h-3 text-primary-500" /> Caymanian Only
-                      </span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={immediateStart}
-                        onChange={(e) => setImmediateStart(e.target.checked)}
-                        className="rounded"
-                      />
-                      <span className="text-sm">Immediate start</span>
-                    </label>
-                  </div>
+                    <div className="flex items-center gap-4">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={isCaymanian}
+                          onChange={(e) => setIsCaymanian(e.target.checked)}
+                          className="rounded"
+                        />
+                        <span className="text-sm flex items-center gap-1">
+                          <Shield className="w-3 h-3 text-primary-500" /> Caymanian Only
+                        </span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={immediateStart}
+                          onChange={(e) => setImmediateStart(e.target.checked)}
+                          className="rounded"
+                        />
+                        <span className="text-sm">Immediate start</span>
+                      </label>
+                    </div>
 
-                  <Button
-                    onClick={() => handleSearch(1)}
-                    disabled={searching}
-                    className="gap-2 w-full sm:w-auto"
-                  >
-                    <Search className="w-4 h-4" /> {searching ? "Searching..." : "Search Talent"}
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                    <Button
+                      onClick={() => handleSearch(1)}
+                      disabled={searching}
+                      className="gap-2 w-full sm:w-auto"
+                    >
+                      <Search className="w-4 h-4" /> {searching ? "Searching..." : "Search Talent"}
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
 
           {/* Loading Skeleton */}
           {searching && (
@@ -839,7 +930,10 @@ export default function TalentSearchClient({
                   </button>
                 </div>
                 <span className="flex items-center gap-1">
-                  <TrendingUp className="w-3 h-3" /> Ranked by match score
+                  <TrendingUp className="w-3 h-3" />{" "}
+                  {pool === "offshore"
+                    ? "Offshore pool — ranked by match score"
+                    : "Ranked by match score"}
                 </span>
               </div>
               {results.map((c, i) => (
@@ -879,7 +973,9 @@ export default function TalentSearchClient({
                                     className={
                                       (c.status || "caymanian") === "caymanian"
                                         ? "bg-primary-50 dark:bg-primary-500/15 text-primary-500 border-primary-200 dark:border-primary-500/30"
-                                        : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border-neutral-200 dark:border-neutral-700"
+                                        : c.status === "overseas"
+                                          ? "bg-amber-50 dark:bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-500/30"
+                                          : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border-neutral-200 dark:border-neutral-700"
                                     }
                                   >
                                     <Shield className="w-3 h-3 mr-1" />
@@ -887,7 +983,15 @@ export default function TalentSearchClient({
                                     {c.status_verified ? " ✓" : ""}
                                   </Badge>
                                 )}
-                                {c.notice_period &&
+                                {/* Offshore timeline signal: notice period (spec §25) */}
+                                {pool === "offshore" && c.notice_period && (
+                                  <Badge className="bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-300 border-neutral-200 dark:border-neutral-700">
+                                    <Clock className="w-3 h-3 mr-1" />
+                                    {NOTICE_PERIOD_LABELS[c.notice_period] || c.notice_period}
+                                  </Badge>
+                                )}
+                                {pool !== "offshore" &&
+                                  c.notice_period &&
                                   ["immediate", "1_week"].includes(c.notice_period) && (
                                     <Badge className="bg-emerald-50 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30">
                                       Immediate start
@@ -1089,17 +1193,19 @@ export default function TalentSearchClient({
             </div>
           )}
 
-          {!searching && hasSearched && results.length === 0 && (
+          {!searching && hasSearched && results.length === 0 && !offshoreLockView && (
             <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
               <CardContent className="p-12 text-center">
                 <Users className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-500" />
-                <h3 className="text-lg font-medium mb-2">No candidates found</h3>
+                <h3 className="text-lg font-medium mb-2">
+                  {pool === "offshore" ? "No offshore candidates found" : "No candidates found"}
+                </h3>
                 <p className="text-neutral-500">Try broadening your search filters.</p>
               </CardContent>
             </Card>
           )}
 
-          {!searching && !hasSearched && (
+          {!searching && !hasSearched && !offshoreLockView && (
             <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
               <CardContent className="p-12 text-center">
                 <Users className="w-12 h-12 mx-auto mb-4 opacity-50 text-neutral-500" />
