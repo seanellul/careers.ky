@@ -6,6 +6,7 @@ import ThemeProvider from "@/components/ThemeProvider";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import DevToolbar from "@/components/DevToolbar";
+import CookieConsent from "@/components/CookieConsent";
 
 export const metadata = {
   title: {
@@ -55,6 +56,7 @@ export default function RootLayout({ children }) {
               <Navigation />
               {children}
               <Footer />
+              <CookieConsent />
               <DevToolbar />
             </ThemeProvider>
           </SessionProvider>

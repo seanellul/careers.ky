@@ -4,6 +4,7 @@ import posthog from "posthog-js";
 import { PostHogProvider as PHProvider } from "posthog-js/react";
 import { useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { CONSENT_EVENT, getConsent } from "@/lib/consent";
 
 export default function PostHogProvider({ children }) {
   useEffect(() => {
@@ -13,28 +14,46 @@ export default function PostHogProvider({ children }) {
     // Respect Do Not Track
     if (navigator.doNotTrack === "1") return;
 
-    posthog.init(key, {
-      api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com",
-      capture_pageview: false, // We capture manually for SPA nav
-      capture_pageleave: true,
-    });
+    const init = () => {
+      if (posthog.__loaded) return;
 
-    // Identify signed-in users so retention and funnels stitch across
-    // sessions/devices. IDs match lib/analytics-server.js (no PII).
-    fetch("/api/auth/session")
-      .then((r) => r.json())
-      .then((s) => {
-        if (!s?.authenticated || !posthog.__loaded) return;
-        if (s.candidateId) {
-          posthog.identify(`candidate-${s.candidateId}`, { role: "candidate" });
-        } else if (s.employerAccountId) {
-          posthog.identify(`employer-${s.employerAccountId}`, {
-            role: "employer",
-            employer_id: s.employerId || null,
-          });
-        }
-      })
-      .catch(() => {});
+      posthog.init(key, {
+        api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com",
+        capture_pageview: false, // We capture manually for SPA nav
+        capture_pageleave: true,
+      });
+
+      // Identify signed-in users so retention and funnels stitch across
+      // sessions/devices. IDs match lib/analytics-server.js (no PII).
+      fetch("/api/auth/session")
+        .then((r) => r.json())
+        .then((s) => {
+          if (!s?.authenticated || !posthog.__loaded) return;
+          if (s.candidateId) {
+            posthog.identify(`candidate-${s.candidateId}`, { role: "candidate" });
+          } else if (s.employerAccountId) {
+            posthog.identify(`employer-${s.employerAccountId}`, {
+              role: "employer",
+              employer_id: s.employerId || null,
+            });
+          }
+        })
+        .catch(() => {});
+    };
+
+    // Cookie consent gate: analytics only ever runs after an explicit
+    // "Accept analytics" choice (stored by CookieConsent). Declining or not
+    // answering means PostHog is never initialized.
+    if (getConsent() === "analytics") {
+      init();
+      return;
+    }
+
+    const onConsent = (event) => {
+      if (event.detail === "analytics") init();
+    };
+    window.addEventListener(CONSENT_EVENT, onConsent);
+    return () => window.removeEventListener(CONSENT_EVENT, onConsent);
   }, []);
 
   return <PHProvider client={posthog}>{children}</PHProvider>;
