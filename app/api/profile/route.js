@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import { getSession } from "@/lib/auth";
+import { getDb } from "@/lib/db";
+import { rateLimit, getClientIp, rateLimitResponse } from "@/lib/rate-limit";
+import { uploadsConfigured } from "@/lib/documents";
 import {
   upsertCandidate,
   updateCandidateInterests,
@@ -91,5 +95,77 @@ export async function PUT(request) {
   } catch (error) {
     console.error("Profile update error:", error);
     return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
+  }
+}
+
+// DELETE /api/profile — self-serve candidate account deletion (Cayman DPA
+// right to erasure). Removes the candidate row (interests, skills, documents,
+// introductions, alerts, blocked-employer rows, and sessions cascade via FK),
+// plus rows that do NOT cascade: notifications, auth tokens, newsletter
+// subscription, and referred_by back-references. Uploaded documents are
+// removed from the private blob store best-effort.
+export async function DELETE(request) {
+  const session = await getSession();
+  if (!session?.candidateId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const check = rateLimit(`account-delete:${getClientIp(request)}`, 5, 60 * 60 * 1000);
+  if (check.limited) return rateLimitResponse(3600);
+
+  const body = await request.json().catch(() => ({}));
+  if (body?.confirm !== "DELETE") {
+    return NextResponse.json({ error: "Type DELETE to confirm account deletion" }, { status: 400 });
+  }
+
+  const candidateId = session.candidateId;
+  const email = session.candidateEmail;
+
+  try {
+    const sql = getDb();
+
+    // Best-effort blob cleanup before the rows cascade away. Row deletion is
+    // not blocked by storage failures (orphaned blobs are logged instead).
+    const docs = await sql`
+      SELECT blob_pathname FROM candidate_documents WHERE candidate_id = ${candidateId}
+    `;
+    if (docs.length && uploadsConfigured()) {
+      try {
+        const { del } = await import("@vercel/blob");
+        await del(docs.map((d) => d.blob_pathname));
+      } catch (blobErr) {
+        console.error(
+          `Account deletion: failed to delete ${docs.length} blob(s) for candidate ${candidateId} (rows still deleted):`,
+          blobErr.message
+        );
+      }
+    } else if (docs.length) {
+      console.warn(
+        `Account deletion: blob store not configured — ${docs.length} blob(s) orphaned for candidate ${candidateId}`
+      );
+    }
+
+    // referred_by has no ON DELETE action — null it out so the delete succeeds.
+    await sql`UPDATE candidates SET referred_by = NULL WHERE referred_by = ${candidateId}`;
+    await sql`
+      DELETE FROM notifications WHERE recipient_type = 'candidate' AND recipient_id = ${candidateId}
+    `;
+    if (email) {
+      await sql`DELETE FROM auth_tokens WHERE LOWER(email) = LOWER(${email})`;
+      await sql`DELETE FROM newsletter_subscribers WHERE LOWER(email) = LOWER(${email})`;
+    }
+
+    // Cascades: candidate_interests, candidate_skills, candidate_documents,
+    // candidate_blocked_employers, introductions (+ introduction_messages),
+    // match_alerts, shortlist_candidates, sessions.
+    await sql`DELETE FROM candidates WHERE id = ${candidateId}`;
+
+    const cookieStore = await cookies();
+    cookieStore.delete("ck_session");
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Account deletion error:", error);
+    return NextResponse.json({ error: "Failed to delete account" }, { status: 500 });
   }
 }

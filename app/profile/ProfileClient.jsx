@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { STATUS_BADGES } from "@/lib/candidate-status";
 import VerificationCard from "@/components/VerificationCard";
 import BlockedEmployersCard from "@/components/BlockedEmployersCard";
+import DeleteAccountCard from "@/components/DeleteAccountCard";
 import {
   User,
   BookOpen,
@@ -1483,6 +1484,11 @@ export default function ProfileClient({
               </CardContent>
             </Card>
           </div>
+        </div>
+
+        {/* Danger zone — self-serve account deletion (Cayman DPA erasure) */}
+        <div className="mt-6">
+          <DeleteAccountCard endpoint="/api/profile" />
         </div>
       </div>
     </div>

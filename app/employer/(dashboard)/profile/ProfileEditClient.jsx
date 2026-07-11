@@ -25,6 +25,7 @@ import {
   Check,
 } from "lucide-react";
 import { PREDEFINED_PERKS, PERK_CATEGORIES } from "@/lib/perks";
+import DeleteAccountCard from "@/components/DeleteAccountCard";
 
 const SIZE_OPTIONS = [
   { value: "", label: "Select size..." },
@@ -500,7 +501,7 @@ export default function ProfileEditClient({ employer }) {
       </Card>
 
       {/* Save button (bottom) */}
-      <div className="flex justify-end pb-8">
+      <div className="flex justify-end pb-2">
         <Button onClick={handleSave} disabled={saving} className="gap-2">
           {saved ? (
             <>
@@ -514,6 +515,14 @@ export default function ProfileEditClient({ employer }) {
             </>
           )}
         </Button>
+      </div>
+
+      {/* Danger zone — self-serve account deletion (Cayman DPA erasure) */}
+      <div className="pb-8">
+        <DeleteAccountCard
+          endpoint="/api/employer/account"
+          description="Permanently delete your employer sign-in account: your sessions, introductions, shortlists, saved searches, and alerts. Your company's public page and job postings are not deleted. This cannot be undone."
+        />
       </div>
     </div>
   );
