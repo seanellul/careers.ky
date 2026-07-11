@@ -23,6 +23,29 @@ export default function AdminEmployersClient({ employers, stats }) {
   const [search, setSearch] = useState("");
   const [tierOverrides, setTierOverrides] = useState({});
   const [tierSaving, setTierSaving] = useState(null);
+  const [detached, setDetached] = useState({});
+  const [detaching, setDetaching] = useState(null);
+
+  const detachAccount = async (account, employerName) => {
+    if (
+      !window.confirm(
+        `Detach ${account.email} from ${employerName}? Their account stays, but the company link and any pending verification are removed.`
+      )
+    ) {
+      return;
+    }
+    setDetaching(account.id);
+    try {
+      const res = await fetch("/api/admin/employers", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "detach", accountId: account.id }),
+      });
+      if (res.ok) setDetached((p) => ({ ...p, [account.id]: true }));
+    } finally {
+      setDetaching(null);
+    }
+  };
 
   const updateTier = async (employerId, tier) => {
     // B2B case-by-case pricing: capture the commercial context with the change
@@ -146,6 +169,7 @@ export default function AdminEmployersClient({ employers, stats }) {
             <tbody>
               {sorted.map((e) => {
                 const emails = (e.admin_emails || []).filter(Boolean);
+                const accounts = (e.accounts || []).filter((a) => a && !detached[a.id]);
                 return (
                   <tr
                     key={e.id}
@@ -173,7 +197,27 @@ export default function AdminEmployersClient({ employers, stats }) {
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      {emails.length > 0 ? (
+                      {accounts.length > 0 ? (
+                        <div className="space-y-1">
+                          {accounts.map((a) => (
+                            <div key={a.id} className="flex items-center gap-2 text-xs">
+                              <span className="text-neutral-600 dark:text-neutral-500">
+                                {a.email}
+                                {a.verification_status !== "verified" && (
+                                  <span className="text-neutral-400"> ({a.verification_status})</span>
+                                )}
+                              </span>
+                              <button
+                                onClick={() => detachAccount(a, e.name)}
+                                disabled={detaching === a.id}
+                                className="text-[10px] px-1.5 py-0.5 rounded border border-red-500/30 text-red-400 hover:bg-red-500/10 disabled:opacity-50"
+                              >
+                                {detaching === a.id ? "…" : "detach"}
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      ) : emails.length > 0 ? (
                         <span className="text-neutral-600 dark:text-neutral-500 text-xs">
                           {emails.join(", ")}
                         </span>
