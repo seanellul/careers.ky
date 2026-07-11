@@ -4,10 +4,121 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { FileText, Download, Eye, Users, CheckCircle, Briefcase, ArrowLeft } from "lucide-react";
+import {
+  FileText,
+  Download,
+  Eye,
+  Users,
+  CheckCircle,
+  Briefcase,
+  ArrowLeft,
+  TrendingUp,
+  Lock,
+} from "lucide-react";
 import ComplianceRollupCard from "@/components/ComplianceRollupCard";
+import TrendChart from "./TrendChart";
 
-export default function ReportsClient({ postings, employerName, rollup }) {
+function TrendSection({ analytics }) {
+  const months = analytics.trend.months.map((m) => m.month);
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
+      <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 lg:col-span-2">
+        <CardContent className="p-5 sm:p-6">
+          <div className="flex items-center gap-2 font-medium mb-4">
+            <TrendingUp className="w-4 h-4 text-primary-500" /> Candidates considered — last 12
+            months
+          </div>
+          <TrendChart
+            months={months}
+            series={[
+              {
+                label: "Caymanian",
+                color: "var(--wf-s1)",
+                values: analytics.trend.months.map((m) => m.considered.caymanian),
+              },
+              {
+                label: "PR / RERC",
+                color: "var(--wf-s2)",
+                values: analytics.trend.months.map((m) => m.considered.prRerc),
+              },
+              {
+                label: "Work permit",
+                color: "var(--wf-s3)",
+                values: analytics.trend.months.map((m) => m.considered.workPermit),
+              },
+              {
+                label: "Undeclared",
+                color: "var(--wf-mut)",
+                values: analytics.trend.months.map((m) => m.considered.undeclared),
+              },
+            ]}
+          />
+        </CardContent>
+      </Card>
+
+      <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
+        <CardContent className="p-5 sm:p-6">
+          <div className="font-medium mb-4">Hires through platform</div>
+          <TrendChart
+            months={months}
+            series={[
+              {
+                label: "Caymanian",
+                color: "var(--wf-s1)",
+                values: analytics.trend.months.map((m) => m.hires.caymanian),
+              },
+              {
+                label: "Non-Caymanian",
+                color: "var(--wf-s3)",
+                values: analytics.trend.months.map((m) => m.hires.nonCaymanian),
+              },
+            ]}
+          />
+        </CardContent>
+      </Card>
+
+      <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">
+        <CardContent className="p-5 sm:p-6">
+          <div className="font-medium mb-4">Express Interest on your postings</div>
+          <TrendChart
+            months={months}
+            series={[
+              {
+                label: "Caymanian",
+                color: "var(--wf-s1)",
+                values: analytics.trend.months.map((m) => m.interests.caymanian),
+              },
+              {
+                label: "Other status",
+                color: "var(--wf-s2)",
+                values: analytics.trend.months.map((m) => m.interests.total - m.interests.caymanian),
+              },
+            ]}
+          />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function AnalyticsUpsell() {
+  return (
+    <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700 mb-8">
+      <CardContent className="p-5 sm:p-6 flex items-start gap-3">
+        <Lock className="w-4 h-4 text-neutral-400 mt-0.5 shrink-0" />
+        <div>
+          <div className="font-medium mb-1">Workforce analytics — available on paid plans</div>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">
+            12-month hiring and consideration trends, platform benchmark comparison, and a
+            WORC-ready exportable report. Contact us to upgrade.
+          </p>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+export default function ReportsClient({ postings, employerName, rollup, analytics }) {
   return (
     <div>
       <div className="flex items-center gap-3 mb-2">
@@ -24,7 +135,16 @@ export default function ReportsClient({ postings, employerName, rollup }) {
         Track recruitment efforts per job posting for work permit compliance.
       </p>
 
-      {rollup && <ComplianceRollupCard rollup={rollup} employerName={employerName} />}
+      {rollup && (
+        <ComplianceRollupCard
+          rollup={rollup}
+          employerName={employerName}
+          benchmark={analytics?.benchmark}
+          reportHref={analytics ? "/employer/reports/compliance" : undefined}
+        />
+      )}
+
+      {analytics ? <TrendSection analytics={analytics} /> : <AnalyticsUpsell />}
 
       {postings.length === 0 ? (
         <Card className="bg-white dark:bg-neutral-800 shadow-sm border-neutral-200 dark:border-neutral-700">

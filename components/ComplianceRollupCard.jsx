@@ -1,8 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Shield, Download, Users, Briefcase, BadgeCheck } from "lucide-react";
+import { Shield, Download, FileText, BadgeCheck } from "lucide-react";
 
 function Stat({ label, value, sub }) {
   return (
@@ -14,9 +15,34 @@ function Stat({ label, value, sub }) {
   );
 }
 
+// Compares a rate against the platform median without ever exposing
+// another employer's individual numbers (benchmark is aggregate-only and
+// suppressed upstream when the cohort is too small).
+function BenchmarkNote({ benchmark }) {
+  if (!benchmark || (benchmark.medianConsiderationRate == null && benchmark.medianHireRate == null))
+    return null;
+
+  const parts = [];
+  if (benchmark.medianConsiderationRate != null) {
+    parts.push(`Caymanian consideration ${benchmark.medianConsiderationRate}%`);
+  }
+  if (benchmark.medianHireRate != null) {
+    parts.push(`Caymanian hire rate ${benchmark.medianHireRate}%`);
+  }
+
+  return (
+    <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-4 flex items-center gap-1.5">
+      <BadgeCheck className="w-3.5 h-3.5 text-primary-500 shrink-0" />
+      Platform median ({benchmark.cohort.employerCount} employers with{" "}
+      {benchmark.cohort.minIntroductions}+ introductions): {parts.join(" · ")}
+    </p>
+  );
+}
+
 // Employer-level compliance summary (free tier per D3 — the full audit
-// trail export is the paid feature).
-export default function ComplianceRollupCard({ rollup, employerName }) {
+// trail export is the paid feature). `benchmark` and `reportHref` are only
+// passed on paid tiers (workforce analytics, CEO spec §24).
+export default function ComplianceRollupCard({ rollup, employerName, benchmark, reportHref }) {
   const downloadSummary = () => {
     const lines = [
       `careers.ky — Caymanian-First Compliance Summary`,
@@ -59,9 +85,18 @@ export default function ComplianceRollupCard({ rollup, employerName }) {
           <div className="flex items-center gap-2 font-medium">
             <Shield className="w-4 h-4 text-primary-500" /> Caymanian-first summary
           </div>
-          <Button size="sm" variant="secondary" className="gap-1" onClick={downloadSummary}>
-            <Download className="w-3 h-3" /> Download summary
-          </Button>
+          <div className="flex gap-2">
+            {reportHref && (
+              <Link href={reportHref}>
+                <Button size="sm" variant="secondary" className="gap-1">
+                  <FileText className="w-3 h-3" /> WORC report
+                </Button>
+              </Link>
+            )}
+            <Button size="sm" variant="secondary" className="gap-1" onClick={downloadSummary}>
+              <Download className="w-3 h-3" /> Download summary
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -84,6 +119,8 @@ export default function ComplianceRollupCard({ rollup, employerName }) {
             sub={`${rollup.postings.native} posted directly`}
           />
         </div>
+
+        <BenchmarkNote benchmark={benchmark} />
 
         <p className="text-xs text-neutral-400 mt-4">
           Every introduction, response, and stage change is timestamped — open a posting below for

@@ -4,6 +4,8 @@ import { getSession } from "@/lib/auth";
 import { getDb } from "@/lib/db";
 import { getEmployerPostings } from "@/lib/data";
 import { getComplianceRollup } from "@/lib/compliance";
+import { getEmployerTier, hasFeature } from "@/lib/entitlements";
+import { getWorkforceAnalytics } from "@/lib/workforce-analytics";
 import ReportsClient from "./ReportsClient";
 
 export const metadata = {
@@ -18,6 +20,14 @@ export default async function ReportsPage() {
 
   const postings = await getEmployerPostings(session.employerId);
   const rollup = await getComplianceRollup(session.employerAccountId, session.employerId);
+
+  // Workforce analytics (trend + benchmark, CEO spec §24) — paid tiers only,
+  // same entitlement as the audit-trail export
+  const tier = await getEmployerTier(session.employerId);
+  const hasAnalytics = hasFeature(tier, "audit_export");
+  const analytics = hasAnalytics
+    ? await getWorkforceAnalytics(session.employerAccountId, session.employerId)
+    : null;
 
   const introCounts = await sql`
     SELECT job_id,
@@ -50,6 +60,7 @@ export default async function ReportsPage() {
       postings={postingsWithCounts}
       employerName={employers[0]?.name}
       rollup={rollup}
+      analytics={analytics}
     />
   );
 }
